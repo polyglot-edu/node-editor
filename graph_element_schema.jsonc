@@ -1,0 +1,48 @@
+{
+    // concept-specific data
+    "id": "string",
+    "author": "string",
+    "description": "string",
+    "difficulty": "string",
+    "competences_requirements": [
+        "string"
+    ],
+    "competences_acquired": [
+        "string"
+    ],
+    "tags": [
+        "string"
+    ],
+
+    // metadata
+    "creation_date": "data",
+    "content_language": "language-code",
+    "polyglot_version": "version",
+
+    // exercise-specific data
+    "setup": [
+        "string"
+    ],
+    "validation": [
+        "string"
+    ],
+    "display": [
+        "string"
+    ],
+    "post_execution": [
+        "string"
+    ],
+    "exercise_kind": "string",
+    "kind_specific_data": {}, // exercise kind specific metadata
+    "custom_data": {}, // custom data
+    
+    // graph-specific data
+    "outgoing_edges": [
+        {
+            "id": "string",
+            "condition": "string",
+            "target": "string",
+            "effect": "string"
+        }
+    ]
+}

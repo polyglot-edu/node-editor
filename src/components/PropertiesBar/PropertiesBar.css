@@ -1,0 +1,11 @@
+:root {
+    --properties-bar-width: 500px;
+}
+
+.PropertiesBar {
+    width: var(--properties-bar-width);
+    transition-duration: 500ms;
+    display: flex;
+    flex-direction: column;
+}
+

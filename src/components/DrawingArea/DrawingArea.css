@@ -1,0 +1,11 @@
+.DrawingArea {
+    display: flex;
+    flex-direction: column;
+    flex: 1;
+    /* width: calc(100% - var(--properties-bar-width)); */
+    transition-duration: 500ms;
+  }
+
+.react-flow {
+    flex: 1;
+}
