@@ -1,12 +1,11 @@
 import { useMemo, useState } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import { v4 as UUIDv4 } from "uuid";
-import { NodeData, HandleData } from "../../../types/polyglotElements";
+import { HandleData, CodingNode } from "../../../types/polyglotElements";
+import { ReactFlowNodeProps } from "../ReactFlowNode";
 import "./ReactFlowCodingNode.css";
 
-type ReactFlowCodingElementProps = {
-    data: NodeData
-}
+type ReactFlowCodingElementProps = ReactFlowNodeProps & CodingNode;
 
 const ReactFlowCodingNode = ({ data }: ReactFlowCodingElementProps) => {
     const [handles, setHandles] = useState<HandleData[]>([]);
@@ -34,7 +33,7 @@ const ReactFlowCodingNode = ({ data }: ReactFlowCodingElementProps) => {
 
                 return (
                     <Handle
-                        className="bg-red-500"
+                        className="bg-slate-500"
                         id={id}
                         type={type}
                         position={position}
@@ -52,7 +51,7 @@ const ReactFlowCodingNode = ({ data }: ReactFlowCodingElementProps) => {
     return (
         <>
             <Handle
-                className="bg-red-500"
+                className="bg-slate-500"
                 type="target"
                 position={Position.Left}
                 onConnect={(params) => console.log("onConnect", params)}
@@ -61,7 +60,7 @@ const ReactFlowCodingNode = ({ data }: ReactFlowCodingElementProps) => {
             <div>
                 {data.label}
             </div>
-            <button className="border border-red-400 border-solid" onClick={handleChange}>+</button>
+            <button className="border border-slate-400 border-solid" onClick={handleChange}>+</button>
         </>
     );
 }

@@ -1,22 +1,12 @@
 import "./Properties.css";
-import { useFormInput } from "../../utils/utils";
 import { PolyglotNode } from "../../types/polyglotElements";
 
-export type PropertyProps = PolyglotNode
+export type PropertiesProps = PolyglotNode & {};
 
-const Property = ({ }: PropertyProps) => {
-    const title = useFormInput("Title");
-    const description = useFormInput("Description");
-
+const Properties = (props: PropertiesProps) => {
     return (
-        <div>
-            <span>Title: </span>
-            <input {...title} />
-            <br />
-            <span>Description: </span>
-            <input {...description} />
-        </div>
+        <></>
     )
 };
 
-export default Property;
+export default Properties;

@@ -1,7 +1,7 @@
 import { useEffect, useState } from 'react';
 import { Elements } from 'react-flow-renderer/dist/types';
 import loadFlowElements from '../../data/flowElements';
-import { nodePropertiesType, PolyglotEdge, PolyglotNode } from '../../types/polyglotElements';
+import { polyglotNodeComponentMapping, PolyglotEdge, PolyglotNode } from '../../types/polyglotElements';
 import DrawingArea from '../DrawingArea/DrawingArea';
 import PropertiesBar from '../PropertiesBar/PropertiesBar';
 import './App.css';
@@ -16,8 +16,6 @@ const sas = async () => {
   nodeMap = Object.fromEntries(initialNodes.map(node => [node.id, node]));
   return initialNodes;
 };
-
-console.log(nodePropertiesType["multipleChoice"]);
 
 const App = () => {
   const [nodes, setNodes] = useState<PolyglotNode[]>([]);
@@ -60,7 +58,7 @@ const useElementSelection = () => {
 
   return {
     polyglotNode: selectedElement,
-    PropertiesComponent: nodePropertiesType[selectedElement?.type ?? "noElement"],
+    PropertiesComponent: polyglotNodeComponentMapping.getPropertiesComponent(selectedElement?.type),
     onChange: handleChange
   };
 }

@@ -1,5 +1,5 @@
 import ReactFlow, { Background, BackgroundVariant, Controls, Elements } from 'react-flow-renderer';
-import { nodeTypes } from '../../types/polyglotElements';
+import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
 import "./DrawingArea.css";
 
 type DrawingAreaProps = {
@@ -14,7 +14,7 @@ const DrawingArea = ({ onSelectionChange, elements }: DrawingAreaProps) => {
                 elements={elements}
                 multiSelectionKeyCode={"DISABLED"}
                 onSelectionChange={onSelectionChange}
-                nodeTypes={nodeTypes}
+                nodeTypes={polyglotNodeComponentMapping.getElementComponentMapping()}
             >
                 <Background variant={BackgroundVariant.Dots} />
                 <Controls />

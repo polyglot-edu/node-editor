@@ -1,14 +1,13 @@
 import { useMemo, useState } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import { v4 as UUIDv4 } from "uuid";
-import { NodeData, HandleData } from "../../../types/polyglotElements";
+import { HandleData, MultipleChoiceNode } from "../../../types/polyglotElements";
+import { ReactFlowNodeProps } from "../ReactFlowNode";
 import "./ReactFlowMultipleChoiceNode.css";
 
-type ReactFlowMultipleChoiceElementProps = {
-    data: NodeData
-}
+type ReactFlowMultipleChoiceNodeProps = ReactFlowNodeProps & MultipleChoiceNode;
 
-const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceElementProps) => {
+const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps) => {
     const [handles, setHandles] = useState<HandleData[]>([]);
 
     const handleChange = () => {

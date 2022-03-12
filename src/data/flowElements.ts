@@ -1,10 +1,10 @@
-import { PolyglotNode, PolyglotEdge, NodeType, MultipleChoiceNode } from "../types/polyglotElements";
+import { PolyglotNode, PolyglotEdge, MultipleChoiceNode } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 
 const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
-        type: NodeType.MultipleChoice,
+        type: "multipleChoiceNode",
         title: 'Default',
         description: 'Some description',
         data: { label: 'Default Node', options: ["Option 1", "Option 2", "Option 3"] },
@@ -12,15 +12,15 @@ const multiple: MultipleChoiceNode[] = [
     },
     {
         id: UUIDv4(),
-        type: NodeType.MultipleChoice,
+        type: "multipleChoiceNode",
         title: 'Input',
         description: 'Some description',
-        data: { label: 'Input Node', options: ["Option dasdfasdf"] },
+        data: { label: 'Input Node', options: ["Option test"] },
         position: { x: 250, y: 25 },
     },
     {
         id: UUIDv4(),
-        type: NodeType.MultipleChoice,
+        type: "multipleChoiceNode",
         title: 'Output',
         description: 'Some description',
         data: { label: 'Output Node', options: ["Option 11233444"] },
@@ -28,7 +28,7 @@ const multiple: MultipleChoiceNode[] = [
     },
     {
         id: UUIDv4(),
-        type: NodeType.MultipleChoice,
+        type: "multipleChoiceNode",
         title: 'Multiple Choice',
         description: 'Some description',
         data: { label: 'Multiple Choice Node', options: ["Option 1 Option 2"] },
@@ -40,7 +40,7 @@ const flowElements: PolyglotNode[] = [
     ...multiple,
     {
         id: UUIDv4(),
-        type: NodeType.Coding,
+        type: "codingNode",
         title: 'Coding',
         description: 'Some description',
         data: { label: 'Coding Node' },
@@ -48,7 +48,7 @@ const flowElements: PolyglotNode[] = [
     },
     {
         id: UUIDv4(),
-        type: NodeType.Coding,
+        type: "codingNode",
         title: 'Other Coding',
         description: 'Some description',
         data: { label: 'Coding Node' },
