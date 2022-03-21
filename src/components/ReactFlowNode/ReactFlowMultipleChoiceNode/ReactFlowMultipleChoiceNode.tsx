@@ -2,6 +2,7 @@ import { useMemo, useState } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import { v4 as UUIDv4 } from "uuid";
 import { HandleData, MultipleChoiceNode } from "../../../types/polyglotElements";
+import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
 import "./ReactFlowMultipleChoiceNode.css";
 
@@ -49,7 +50,7 @@ const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps)
 
 
     return (
-        <>
+        <Card style={{ border: "1px solid black" }}>
             <Handle
                 className="bg-slate-500"
                 type="target"
@@ -61,7 +62,7 @@ const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps)
                 {data.label}
             </div>
             <button className="border border-slate-400 border-solid" onClick={handleChange}>+</button>
-        </>
+        </Card>
     );
 }
 

@@ -1,2 +1,2 @@
-export { default as MultipleChoiceProperties } from "./MultipleChoiceProperties/MultipleChoiceProperties";
-export { default as CodingProperties } from "./CodingProperties/CodingProperties";
+export { default as MultipleChoiceNodeProperties } from "./MultipleChoiceNodeProperties/MultipleChoiceNodeProperties";
+export { default as CodingNodeProperties } from "./CodingNodeProperties/CodingNodeProperties";

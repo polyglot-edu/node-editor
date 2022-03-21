@@ -1,20 +1,18 @@
-import { HandleProps } from 'react-flow-renderer';
+import { Node, HandleProps } from 'react-flow-renderer';
 
 export type HandleData = {
     handleProps: HandleProps;
 }
 
-export interface NodeData {
+export type NodeData = {
     label: string;
 }
 
-export abstract class PolyglotNode {
-    abstract id: string;
-    abstract type: string;
-    abstract title: string;
-    abstract data: NodeData;
-    abstract position: { x: number; y: number };
-    abstract description: string;
+export type PolyglotNode = Node<unknown> & {
+    type: string;
+    title: string;
+    description: string;
+    data: NodeData;
     // TODO: remove optional from here: it's only for development
-    abstract handleData?: HandleData[];
-}
+    // handleData?: HandleData[];
+};

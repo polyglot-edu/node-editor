@@ -13,12 +13,10 @@
     "tags": [
         "string"
     ],
-
     // metadata
     "creation_date": "data",
     "content_language": "language-code",
     "polyglot_version": "version",
-
     // exercise-specific data
     "setup": [
         "string"
@@ -35,7 +33,6 @@
     "exercise_kind": "string",
     "kind_specific_data": {}, // exercise kind specific metadata
     "custom_data": {}, // custom data
-    
     // graph-specific data
     "outgoing_edges": [
         {

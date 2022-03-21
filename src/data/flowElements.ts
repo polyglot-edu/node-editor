@@ -36,7 +36,7 @@ const multiple: MultipleChoiceNode[] = [
     },
 ]
 
-const flowElements: PolyglotNode[] = [
+const flowNodes: PolyglotNode[] = [
     ...multiple,
     {
         id: UUIDv4(),
@@ -50,9 +50,9 @@ const flowElements: PolyglotNode[] = [
         id: UUIDv4(),
         type: "codingNode",
         title: 'Other Coding',
-        description: 'Some description',
+        description: 'Some other description',
         data: { label: 'Coding Node' },
-        position: { x: 700, y: 850 },
+        position: { x: 600, y: 350 },
     }
 ];
 
@@ -62,8 +62,12 @@ const flowEdges: PolyglotEdge[] = [
     { id: 'e2-3', source: '2', target: '3', type: "default", label: 'Edge 2-3', data: { label: 'Edge 2-3', conditions: [] } },
 ]
 
-const loadFlowElements = () => {
-    return Promise.resolve({ nodes: flowElements, edges: flowEdges });
+const loadFlowElementsAsync = () => {
+    return Promise.resolve({ nodes: flowNodes, edges: flowEdges });
 }
 
-export default loadFlowElements
+export const loadFlowElements = () => {
+    return { nodes: flowNodes, edges: flowEdges };
+}
+
+export default loadFlowElementsAsync

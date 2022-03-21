@@ -1,66 +1,65 @@
-import { useEffect, useState } from 'react';
-import { Elements } from 'react-flow-renderer/dist/types';
-import loadFlowElements from '../../data/flowElements';
-import { polyglotNodeComponentMapping, PolyglotEdge, PolyglotNode } from '../../types/polyglotElements';
+import { OnSelectionChangeParams } from 'react-flow-renderer';
+import useStore from '../../store';
+import { polyglotNodeComponentMapping, polyglotEdgeComponentMapping } from '../../types/polyglotElements';
 import DrawingArea from '../DrawingArea/DrawingArea';
 import PropertiesBar from '../PropertiesBar/PropertiesBar';
 import './App.css';
 
-let iNodes: PolyglotNode[] = [];
-let iEdges: PolyglotEdge[] = [];
-let nodeMap: Record<string, PolyglotNode> = {};
-const sas = async () => {
-  let { nodes: initialNodes, edges: initialEdges } = await loadFlowElements()
-  iNodes = initialNodes;
-  iEdges = initialEdges;
-  nodeMap = Object.fromEntries(initialNodes.map(node => [node.id, node]));
-  return initialNodes;
-};
-
 const App = () => {
-  const [nodes, setNodes] = useState<PolyglotNode[]>([]);
-  const selectedElement = useElementSelection();
-  const elements = nodes;
-  let first = true;
+    const selectedElement = useElementSelection();
 
-  useEffect(() => {
-    if (first) {
-      first = false;
-      (async () => { setNodes(await sas()) })();
-    }
-  })
-
-  return (
-    <div className="App">
-      <header className="App-header">
-        <DrawingArea onSelectionChange={selectedElement.onChange} elements={elements} />
-        <PropertiesBar >
-          <selectedElement.PropertiesComponent {...selectedElement.polyglotNode!} />
-        </PropertiesBar>
-      </header>
-    </div>
-  );
+    return (
+        <div className="App">
+            <header className="App-header">
+                <DrawingArea onSelectionChange={selectedElement.onChange} />
+                <PropertiesBar>
+                    <selectedElement.NodePropertiesComponent />
+                    <selectedElement.EdgePropertiesComponent />
+                </PropertiesBar>
+            </header>
+        </div>
+    );
 }
 
 const useElementSelection = () => {
-  const [selectedElement, setSelectedElement] = useState<Nullable<PolyglotNode>>(null);
+    const {
+        nodeMap,
+        edgeMap,
+        selectedNode,
+        selectedEdge,
+        setSelectedNode,
+        setSelectedEdge,
+        clearSelection
+    } = useStore();
 
-  function handleChange(elements: Nullable<Elements>) {
-    const firstSelectedElement = elements?.[0] ?? null;
-    if (firstSelectedElement) {
-      const node = nodeMap[firstSelectedElement.id];
-      setSelectedElement(node);
-    } else {
-      setSelectedElement(null);
+    let selectedNodeType = undefined;
+    let selectedEdgeType = undefined;
+
+    function handleChange({ nodes, edges }: OnSelectionChangeParams) {
+        if (nodes.length != 0) {
+            console.log("Selected node: ", nodes[0].id);
+            setSelectedNode(nodes[0].id);
+        } else if (edges.length != 0) {
+            console.log("Selected edge: ", edges[0].id);
+            setSelectedEdge(edges[0].id);
+        } else {
+            console.log("Selection empty");
+            clearSelection()
+        }
     }
-    console.log("Selected element: ", elements?.[0]);
-  }
 
-  return {
-    polyglotNode: selectedElement,
-    PropertiesComponent: polyglotNodeComponentMapping.getPropertiesComponent(selectedElement?.type),
-    onChange: handleChange
-  };
+    if (selectedNode) {
+        selectedNodeType = nodeMap[selectedNode].type;
+    }
+    if (selectedEdge) {
+        selectedEdgeType = edgeMap[selectedEdge].type;
+    }
+
+    return {
+        NodePropertiesComponent: polyglotNodeComponentMapping.getElementPropertiesComponent(selectedNodeType),
+        EdgePropertiesComponent: polyglotEdgeComponentMapping.getElementPropertiesComponent(selectedEdgeType),
+        onChange: handleChange
+    };
 }
 
 

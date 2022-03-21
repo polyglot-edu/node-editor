@@ -1,15 +1,15 @@
-import { CodingProperties } from "../../../components/NodeProperties";
-import { ReactFlowCodingNode } from "../../../components/ReactFlowNodes";
+import { CodingNodeProperties } from "../../../components/NodeProperties";
+import { ReactFlowCodingNode } from "../../../components/ReactFlowNode";
 import { polyglotNodeComponentMapping } from "../elementMapping";
 import { NodeData, PolyglotNode } from "./Node";
 
-export interface CodingNodeData extends NodeData {
+export type CodingNodeData = NodeData & {
     other: number;
 }
 
-export interface CodingNode extends PolyglotNode {
+export type CodingNode = PolyglotNode & {
     type: "codingNode";
     data: CodingNodeData;
 }
 
-polyglotNodeComponentMapping.registerNodeType("codingNode", CodingProperties, ReactFlowCodingNode);
+polyglotNodeComponentMapping.registerNodeType("codingNode", CodingNodeProperties, ReactFlowCodingNode);

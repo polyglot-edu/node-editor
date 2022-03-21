@@ -1,15 +1,15 @@
-import { MultipleChoiceProperties } from "../../../components/NodeProperties";
-import { ReactFlowMultipleChoiceNode } from "../../../components/ReactFlowNodes";
+import { MultipleChoiceNodeProperties } from "../../../components/NodeProperties";
+import { ReactFlowMultipleChoiceNode } from "../../../components/ReactFlowNode";
 import { polyglotNodeComponentMapping } from "../elementMapping";
 import { NodeData, PolyglotNode } from "./Node";
 
-export interface MultipleChoiceNodeData extends NodeData {
+export type MultipleChoiceNodeData = NodeData & {
     options: string[];
-}
+};
 
-export interface MultipleChoiceNode extends PolyglotNode {
+export type MultipleChoiceNode = PolyglotNode & {
     type: "multipleChoiceNode";
     data: MultipleChoiceNodeData;
-}
+};
 
-polyglotNodeComponentMapping.registerNodeType("multipleChoiceNode", MultipleChoiceProperties, ReactFlowMultipleChoiceNode);
+polyglotNodeComponentMapping.registerNodeType("multipleChoiceNode", MultipleChoiceNodeProperties, ReactFlowMultipleChoiceNode);
