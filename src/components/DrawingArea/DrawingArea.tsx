@@ -32,7 +32,7 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
             onEdgesChange={onEdgesChange}
             // multiSelectionKeyCode={null}
             onSelectionChange={onSelectionChange}
-            nodeTypes={polyglotNodeComponentMapping.getElementComponentMapping()}
+            nodeTypes={polyglotNodeComponentMapping.componentMapping}
         >
             <Background variant={BackgroundVariant.Dots} />
             <Controls />

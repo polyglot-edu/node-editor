@@ -1,22 +1,16 @@
 import { useState } from "react";
 
-export type FormInputEvent =
-    | React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
-    | React.ChangeEvent<HTMLInputElement | HTMLTextAreaElement>;
-
-export const useFormInput = (initialValue: string) => {
-    const [value, setValue] = useState(initialValue);
-
-    function handleChange(e: FormInputEvent) {
-        setValue(e.currentTarget.value);
-        console.warn(e.currentTarget.value);
+// https://medium.com/codex/currying-in-typescript-ca5226c85b85
+// TODO: FIXME: IT DOES NOT WORK FOR GENERICS BECAUSE IT RESOLVES TO UNKNOWN
+export function curry<FN extends (...args: any[]) => any, STARTING_ARGS extends PartialParameters<FN>>(targetFn: FN, ...existingArgs: STARTING_ARGS): CurriedFunction<STARTING_ARGS, FN> {
+    return function (...args) {
+        const totalArgs = [...existingArgs, ...args]
+        if (totalArgs.length >= targetFn.length) {
+            return targetFn(...totalArgs)
+        }
+        return curry(targetFn, ...totalArgs as PartialParameters<FN>)
     }
-
-    return {
-        value,
-        onChange: handleChange
-    };
-};
+}
 
 export const useToggleCSSVariable = (variable: string, values: string[]) => {
     if (values.length <= 0) {
@@ -51,6 +45,21 @@ export function useHookPostActionWrapper<T, V>(prevHook: WrappableHook<T, V>, po
         function newOnChange(e: V) {
             onChange(e);
             postAction(e);
+        }
+
+        h.onChange = newOnChange;
+
+        return h;
+    })
+}
+
+export function useHookPreActionWrapper<T, V>(prevHook: WrappableHook<T, V>, preAction: ((e: V) => void)) {
+    return useHookWrapper(prevHook, h => {
+        const { onChange } = h;
+
+        function newOnChange(e: V) {
+            preAction(e);
+            onChange(e);
         }
 
         h.onChange = newOnChange;

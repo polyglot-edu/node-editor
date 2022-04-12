@@ -7,7 +7,8 @@ const multiple: MultipleChoiceNode[] = [
         type: "multipleChoiceNode",
         title: 'Default',
         description: 'Some description',
-        data: { label: 'Default Node', options: ["Option 1", "Option 2", "Option 3"] },
+        difficulty: 1,
+        data: { label: 'Default', options: ["Option 1", "Option 2", "Option 3"] },
         position: { x: 100, y: 125 },
     },
     {
@@ -15,7 +16,8 @@ const multiple: MultipleChoiceNode[] = [
         type: "multipleChoiceNode",
         title: 'Input',
         description: 'Some description',
-        data: { label: 'Input Node', options: ["Option test"] },
+        difficulty: 1,
+        data: { label: 'Input', options: ["Option test"] },
         position: { x: 250, y: 25 },
     },
     {
@@ -23,7 +25,8 @@ const multiple: MultipleChoiceNode[] = [
         type: "multipleChoiceNode",
         title: 'Output',
         description: 'Some description',
-        data: { label: 'Output Node', options: ["Option 11233444"] },
+        difficulty: 5,
+        data: { label: 'Output', options: ["Option 11233444"] },
         position: { x: 250, y: 250 },
     },
     {
@@ -31,7 +34,8 @@ const multiple: MultipleChoiceNode[] = [
         type: "multipleChoiceNode",
         title: 'Multiple Choice',
         description: 'Some description',
-        data: { label: 'Multiple Choice Node', options: ["Option 1 Option 2"] },
+        difficulty: 4,
+        data: { label: 'Multiple Choice', options: ["Option 1 Option 2"] },
         position: { x: 100, y: 250 },
     },
 ]
@@ -43,7 +47,8 @@ const flowNodes: PolyglotNode[] = [
         type: "codingNode",
         title: 'Coding',
         description: 'Some description',
-        data: { label: 'Coding Node' },
+        difficulty: 4,
+        data: { label: 'Coding' },
         position: { x: 600, y: 650 },
     },
     {
@@ -51,7 +56,8 @@ const flowNodes: PolyglotNode[] = [
         type: "codingNode",
         title: 'Other Coding',
         description: 'Some other description',
-        data: { label: 'Coding Node' },
+        difficulty: 3,
+        data: { label: 'Other Coding' },
         position: { x: 600, y: 350 },
     }
 ];

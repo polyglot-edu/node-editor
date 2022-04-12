@@ -9,17 +9,16 @@ type PropertiesBarProps = {};
 
 const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>) => {
     const [selectedNode, selectedEdge] = useStore(state => [state.getSelectedNode(), state.getSelectedEdge()]);
-    const { index, toggle: toggleSidebarWidth } = useToggleCSSVariable("--properties-bar-width", ["400px", "600px"]);
+    const { index, toggle: toggleSidebarWidth } = useToggleCSSVariable("--properties-bar-width", ["500px", "600px"]);
     const icons = ["Code", "SidePanelMirrored"]
-
 
     function isCodeMode() {
         return index === 1;
     }
 
     return (
-        <div id="PropertiesBar" className="absolute right-0 h-full w-[var(--properties-bar-width)] z-10 ease-in-out duration-300" style={{ backgroundColor: NeutralColors.gray10, padding: 10 }}>
-            <div style={{ padding: 20 }}>
+        <div id="PropertiesBar" className="absolute right-0 h-full w-[var(--properties-bar-width)] z-10 ease-in-out duration-300 p-[10px]" style={{ backgroundColor: NeutralColors.gray10 }}>
+            <div id="PropertiesBarHeader" className="p-5">
                 <Text variant="xxLarge">
                     Properties
                 </Text>
@@ -31,12 +30,19 @@ const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>
                     style={{ float: "right" }}
                 />
             </div>
-            {isCodeMode()
-                ? <Editor
-                    language="json"
-                    value={JSON.stringify(selectedNode ?? selectedEdge, null, 4) ?? ""}
-                />
-                : <PropertiesStack>{children}</PropertiesStack>}
+            {
+                isCodeMode()
+                    ? <Editor
+                        height={`calc(100% - ${document.getElementById('PropertiesBarHeader')?.clientHeight}px)`}
+                        language="json"
+                        value={JSON.stringify(selectedNode ?? selectedEdge, null, 4) ?? ""}
+                    />
+                    : <PropertiesStack
+                        height={`calc(100% - ${document.getElementById('PropertiesBarHeader')?.clientHeight}px)`}
+                    >
+                        {children}
+                    </PropertiesStack>
+            }
         </div>
     );
 };

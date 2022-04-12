@@ -1,7 +1,8 @@
-import { StackItem, TextField } from "@fluentui/react";
+import { Label, Stack, StackItem, TextField } from "@fluentui/react";
+import Editor from "@monaco-editor/react";
 import useStore from "../../../store";
 import { CodingNode } from "../../../types/polyglotElements";
-import { FormInputEvent } from "../../../utils/utils";
+import { TextInputEvent } from "../../../utils/formHandling";
 import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
 
@@ -13,24 +14,43 @@ const CodingNodeProperties = (props: CodingNodePropertiesProps) => {
 
     const updateNode = useStore(state => state.updateNode);
 
-    const handleTitleChange = (e: FormInputEvent) => {
+    const handleTitleChange = (e: TextInputEvent) => {
         const newTitle = e.currentTarget.value;
         console.log("Updating node with id: ", id, " title to: ", newTitle, " prev title was: ", selectedNode.title, " with label: ", selectedNode.data.label);
         updateNode(id, { title: newTitle, data: { label: newTitle } });
     }
-    const handleDescriptionChange = (e: FormInputEvent) => {
-        const newDescription = e.currentTarget.value;
-        console.log("Updating node with id: ", id, " description to: ", newDescription);
-        updateNode(id, { description: newDescription });
-    }
 
     return (
-        <StackItem>
-            <Card>
-                <TextField label="Title" id={`titleInput-${id}`} value={selectedNode.title} onChange={handleTitleChange} />
-                <TextField label="Description" id={`descriptionInput-${id}`} multiline autoAdjustHeight value={selectedNode.description} onChange={handleDescriptionChange} />
-            </Card>
-        </StackItem>
+        <Stack tokens={{ childrenGap: 15 }}>
+            <StackItem>
+                <Card>
+                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={handleTitleChange} />
+                </Card>
+            </StackItem>
+            <StackItem>
+                <Card className="h-[200px]">
+                    <Label id={`solutionInput-${id}`}>
+                        Solution
+                    </Label>
+                    <Editor
+                        height={`calc(100% - 30px)`}
+                        language="csharp"
+                        defaultValue={`using System;
+
+int main() {
+    Console.WriteLine("Hello World!");
+    return 0;
+}
+`}
+                    />
+                </Card>
+            </StackItem>
+            <StackItem>
+                <Card>
+                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={handleTitleChange} />
+                </Card>
+            </StackItem>
+        </Stack>
     );
 }
 

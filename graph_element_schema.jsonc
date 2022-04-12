@@ -3,7 +3,7 @@
     "id": "string",
     "author": "string",
     "description": "string",
-    "difficulty": "string",
+    "difficulty": "number", // between 0.5 and 5
     "competences_requirements": [
         "string"
     ],
@@ -14,7 +14,8 @@
         "string"
     ],
     // metadata
-    "creation_date": "data",
+    "creation_date": "date",
+    "last_modified": "date",
     "content_language": "language-code",
     "polyglot_version": "version",
     // exercise-specific data

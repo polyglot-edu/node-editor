@@ -12,4 +12,4 @@ export type MultipleChoiceNode = PolyglotNode & {
     data: MultipleChoiceNodeData;
 };
 
-polyglotNodeComponentMapping.registerNodeType("multipleChoiceNode", MultipleChoiceNodeProperties, ReactFlowMultipleChoiceNode);
+polyglotNodeComponentMapping.registerNodeType("multipleChoiceNode", "Multiple Choice", MultipleChoiceNodeProperties, ReactFlowMultipleChoiceNode);

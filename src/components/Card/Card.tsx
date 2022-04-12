@@ -4,11 +4,13 @@ import "./Card.css";
 type CardProps = {
     children?: any;
     style?: CSSProperties;
+    // TODO: handle className as react does
+    className?: string;
 }
 
-const Card = ({ children, style }: CardProps) => {
+const Card = ({ children, style, className }: CardProps) => {
     return (
-        <div className="Card" style={style}>
+        <div className={"Card " + className} style={style}>
             {children}
         </div>
     );

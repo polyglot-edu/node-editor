@@ -12,6 +12,7 @@ export type PolyglotNode = Node<unknown> & {
     type: string;
     title: string;
     description: string;
+    difficulty: number;
     data: NodeData;
     // TODO: remove optional from here: it's only for development
     // handleData?: HandleData[];
