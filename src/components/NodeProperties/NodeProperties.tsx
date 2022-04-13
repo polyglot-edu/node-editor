@@ -1,8 +1,7 @@
-import { Dropdown, IDropdownOption, ITag, Label, Rating, Stack, StackItem, TagPicker, TextField } from "@fluentui/react";
-import useStore from "../../store";
+import { Dropdown, IDropdownOption, Label, Rating, Stack, StackItem, TagPicker, TextField } from "@fluentui/react";
+import useStore, { curriedUpdate } from "../../store";
 import { PolyglotNode, polyglotNodeComponentMapping } from "../../types/polyglotElements";
-import { dropdownHandler, eventHandlerFactory, ratingHandler, simpleStringUpdater, textInputHandler } from "../../utils/formHandling";
-import { curry } from "../../utils/utils";
+import { dropdownEventAdapter, eventHandlerFactory, ratingEventAdapter, textInputEventAdapter, updater } from "../../utils/formHandling";
 import Card from "../Card/Card";
 import "./NodeProperties.css";
 
@@ -20,14 +19,13 @@ const Properties = (props: NodePropertiesProps) => {
 
     const { id } = selectedNode;
 
-    const genericNodeUpdater = eventHandlerFactory(curry(updateNode)(selectedNode?.id));
-    const textInputNodeUpdater = genericNodeUpdater(textInputHandler);
+    const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
+    const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
+    const dropdownNodeUpdater = genericNodeUpdater(dropdownEventAdapter);
+    const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
 
-    const titleChangeHandler = textInputNodeUpdater(newTitle => ({ title: newTitle, data: { label: newTitle } }));
-    const descriptionChangeHandler = textInputNodeUpdater(simpleStringUpdater("description"));
     // TODO: handle type change properly
-    const typeChangeHandler = genericNodeUpdater(dropdownHandler)(simpleStringUpdater("type"));
-    const ratingChangeHandler = genericNodeUpdater(ratingHandler)(simpleStringUpdater("difficulty"));
+    const typeChangeHandler = dropdownNodeUpdater(updater<PolyglotNode>()("type"));
 
     const allowed = "Software Engineering,CSharp,Statistics,UniPi,MODELS 2021,Software Development";
 
@@ -35,8 +33,20 @@ const Properties = (props: NodePropertiesProps) => {
         <Stack tokens={{ childrenGap: 15 }}>
             <StackItem>
                 <Card>
-                    <TextField label="Title" id={`titleInput-${id}`} value={selectedNode.title} onChange={titleChangeHandler} />
-                    <TextField label="Description" id={`descriptionInput-${id}`} multiline autoAdjustHeight value={selectedNode.description} onChange={descriptionChangeHandler} />
+                    <TextField
+                        label="Title"
+                        id={`titleInput-${id}`}
+                        value={selectedNode.title}
+                        onChange={textInputNodeUpdater(newTitle => ({ title: newTitle, data: { label: newTitle } }))}
+                    />
+                    <TextField
+                        label="Description"
+                        id={`descriptionInput-${id}`}
+                        multiline
+                        autoAdjustHeight
+                        value={selectedNode.description}
+                        onChange={textInputNodeUpdater(updater<PolyglotNode>()("description"))}
+                    />
                     <Dropdown
                         label="Type"
                         id={`typeInput-${id}`}
@@ -49,7 +59,7 @@ const Properties = (props: NodePropertiesProps) => {
                         Difficulty
                     </Label>
                     <Rating
-                        onChange={ratingChangeHandler}
+                        onChange={ratingNodeUpdater(updater<PolyglotNode>()("difficulty"))}
                         id={`ratingInput-${id}`}
                         rating={selectedNode.difficulty}
                         icon="CircleFill"
@@ -70,7 +80,29 @@ const Properties = (props: NodePropertiesProps) => {
             </StackItem>
             <StackItem>
                 <Card>
+                    <Label htmlFor={`prerequisitesInput-${id}`} >
+                        Prerequisites
+                    </Label>
+                    <TagPicker
+                        inputProps={{
+                            id: `prerequisitesInput-${id}`,
+                        }}
+                        onResolveSuggestions={(filterText: string) => {
+                            return filterText ? allowed.split(",").filter(tag => tag.startsWith(filterText)).map(tag => ({ key: tag, name: tag })) : [];
+                        }}
+                    />
 
+                    <Label htmlFor={`competencesAcquiredInput-${id}`} >
+                        Competences Acquired
+                    </Label>
+                    <TagPicker
+                        inputProps={{
+                            id: `competencesAcquiredInput-${id}`,
+                        }}
+                        onResolveSuggestions={(filterText: string) => {
+                            return filterText ? allowed.split(",").filter(tag => tag.startsWith(filterText)).map(tag => ({ key: tag, name: tag })) : [];
+                        }}
+                    />
                 </Card>
             </StackItem>
         </Stack>

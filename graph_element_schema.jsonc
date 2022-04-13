@@ -4,7 +4,7 @@
     "author": "string",
     "description": "string",
     "difficulty": "number", // between 0.5 and 5
-    "competences_requirements": [
+    "competences_required": [
         "string"
     ],
     "competences_acquired": [

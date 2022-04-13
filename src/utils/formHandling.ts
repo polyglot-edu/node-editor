@@ -15,15 +15,15 @@ export type RatingEvent =
 type EventAction<T> = ((v: T) => void)
 type EventHandler<T, K> = (action: EventAction<K>) => ((e: T, ...args: any[]) => void);
 
-export const textInputHandler: EventHandler<TextInputEvent, string> = (action) => {
+export const textInputEventAdapter: EventHandler<TextInputEvent, string> = (action) => {
     return (e: TextInputEvent) => action(e.currentTarget.value);
 }
 
-export const dropdownHandler: EventHandler<DropdownEvent, string> = (action) => {
+export const dropdownEventAdapter: EventHandler<DropdownEvent, string> = (action) => {
     return (e: DropdownEvent, option: IDropdownOption) => action(option.key as string);
 }
 
-export const ratingHandler: EventHandler<RatingEvent, number> = (action) => {
+export const ratingEventAdapter: EventHandler<RatingEvent, number> = (action) => {
     return (e: RatingEvent, rating: number) => action(rating);
 }
 

@@ -17,3 +17,5 @@ export type PolyglotNode = Node<unknown> & {
     // TODO: remove optional from here: it's only for development
     // handleData?: HandleData[];
 };
+
+// TODO: add type TextualQuestion or similar to standardize textual questions such as multiple choice, open questions, coding exercises, ecc.
