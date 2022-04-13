@@ -1,4 +1,4 @@
-import { IDropdownOption } from "@fluentui/react";
+import { BaseButton, IDropdownOption } from "@fluentui/react";
 import type { PartialDeep } from 'type-fest';
 
 
@@ -12,7 +12,16 @@ export type DropdownEvent =
 export type RatingEvent =
     | React.FormEvent<HTMLElement>;
 
-type EventAction<T> = ((v: T) => void)
+export type ButtonEvent =
+    | React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLDivElement | BaseButton | HTMLSpanElement, MouseEvent>
+
+// TODO: maybe change this to
+/*
+    type EventActionWithParameter<T, K> = ((v: K, e?: T) => void)
+    type EventAction<T> = ((e: T) => void);
+
+*/
+type EventAction<K> = ((v: K) => void)
 type EventHandler<T, K> = (action: EventAction<K>) => ((e: T, ...args: any[]) => void);
 
 export const textInputEventAdapter: EventHandler<TextInputEvent, string> = (action) => {
@@ -25,6 +34,10 @@ export const dropdownEventAdapter: EventHandler<DropdownEvent, string> = (action
 
 export const ratingEventAdapter: EventHandler<RatingEvent, number> = (action) => {
     return (e: RatingEvent, rating: number) => action(rating);
+}
+
+export const buttonEventAdapter: EventHandler<ButtonEvent, ButtonEvent | undefined> = (action) => {
+    return (e: ButtonEvent) => action(e);
 }
 
 // manually curried version of 
