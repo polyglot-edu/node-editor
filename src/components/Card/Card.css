@@ -1,8 +1,12 @@
+/* https://developer.microsoft.com/en-us/fluentui#/controls/web/stack */
+/* Card component comes from inspecting Microsoft FluentUI website  */
+
 .Card {
     background: #ffffff;
     padding: 10px;
     border-radius: 2px;
     background-clip: padding-box;
-    -webkit-box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
-    box-shadow: 0 1.6px 3.6px 0 rgba(0,0,0,.132),0 .3px .9px 0 rgba(0,0,0,.108);
+    margin: 2px;
+    -webkit-box-shadow: 0 1.6px 3.6px 0 rgb(0 0 0 / 13%), 0 0.3px 0.9px 0 rgb(0 0 0 / 11%);
+    box-shadow: 0 1.6px 3.6px 0 rgb(0 0 0 / 13%), 0 0.3px 0.9px 0 rgb(0 0 0 / 11%);
 }

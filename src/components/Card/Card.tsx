@@ -10,7 +10,7 @@ type CardProps = {
 
 const Card = ({ children, style, className }: CardProps) => {
     return (
-        <div className={"Card " + className} style={style}>
+        <div className={`Card ${className}`} style={style}>
             {children}
         </div>
     );
