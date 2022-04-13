@@ -17,7 +17,12 @@ const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>
     }
 
     return (
-        <div id="PropertiesBar" className="absolute right-0 h-full w-[var(--properties-bar-width)] z-10 ease-in-out duration-300 p-[10px]" style={{ backgroundColor: NeutralColors.gray10 }}>
+        <div
+            id="PropertiesBar"
+            className={`absolute right-0 h-full w-[calc(var(--properties-bar-width)-(2*var(--properties-bar-padding-x)))]
+                z-10 ease-in-out duration-300 px-[var(--properties-bar-padding-x)] flex flex-col`}
+            style={{ backgroundColor: NeutralColors.gray10 }}
+        >
             <div id="PropertiesBarHeader" className="p-5">
                 <Text variant="xxLarge">
                     Properties
@@ -33,13 +38,12 @@ const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>
             {
                 isCodeMode()
                     ? <Editor
+                        className="pb-3"
                         height={`calc(100% - ${document.getElementById('PropertiesBarHeader')?.clientHeight}px)`}
                         language="json"
                         value={JSON.stringify(selectedNode ?? selectedEdge, null, 4) ?? ""}
                     />
-                    : <PropertiesStack
-                        height={`calc(100% - ${document.getElementById('PropertiesBarHeader')?.clientHeight}px)`}
-                    >
+                    : <PropertiesStack>
                         {children}
                     </PropertiesStack>
             }

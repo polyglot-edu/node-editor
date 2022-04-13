@@ -4,19 +4,14 @@ import EdgeProperties from "../EdgeProperties/EdgeProperties"
 import NodeProperties from "../NodeProperties/NodeProperties"
 import "./PropertiesStack.css"
 
-type PropertiesStackProps = {
-    // TODO: any should be specialized here
-    // children?: ((...args: any[]) => JSX.Element)[] | undefined
-    height?: string | number | undefined
-}
+type PropertiesStackProps = {}
 
-const PropertiesStack = ({ children, height }: React.PropsWithChildren<PropertiesStackProps>) => {
+const PropertiesStack = ({ children }: React.PropsWithChildren<PropertiesStackProps>) => {
 
     return (
-        <Stack tokens={{ childrenGap: 15 }} style={{ height: height, paddingRight: 10 }} className="my-[15px] overflow-y-scroll">
+        <Stack tokens={{ childrenGap: 15 }} className="my-4 pr-3 h-full overflow-y-scroll">
             <NodeProperties />
             <EdgeProperties />
-            {/* {children?.map(C => <StackItem><C /></StackItem>)} */}
             {Children.map(children, c => <StackItem>{c}</StackItem>)}
         </Stack>
     )
