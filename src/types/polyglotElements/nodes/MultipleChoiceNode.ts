@@ -4,7 +4,10 @@ import { polyglotNodeComponentMapping } from "../elementMapping";
 import { NodeData, PolyglotNode } from "./Node";
 
 export type MultipleChoiceNodeData = NodeData & {
+    question: string;
     options: string[];
+    // TODO: correctAnswers should be number[] with a correctness score for each option
+    correctAnswers: string[];
 };
 
 export type MultipleChoiceNode = PolyglotNode & {
