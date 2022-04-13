@@ -3,6 +3,9 @@ import { devtools } from 'zustand/middleware'
 import { Node, Edge } from "react-flow-renderer";
 import { loadFlowElements } from "./data/flowElements";
 import { PolyglotEdge, PolyglotNode } from "./types/polyglotElements";
+import { merge } from "@fluentui/react";
+import type { PartialDeep } from "type-fest";
+
 
 const flowElements = loadFlowElements();
 
@@ -30,8 +33,8 @@ interface ApplicationState {
     applyNodeChanges: (changes: Node[]) => void;
     applyEdgeChanges: (changes: Edge[]) => void;
 
-    updateNode(id: string, newValue: Partial<PolyglotNode>): void;
-    updateEdge(id: string, newValue: Partial<PolyglotEdge>): void;
+    updateNode(id: string, newValue: PartialDeep<PolyglotNode>): void;
+    updateEdge(id: string, newValue: PartialDeep<PolyglotEdge>): void;
 }
 
 const useStore = create<ApplicationState>(devtools((set, get) => ({
@@ -86,16 +89,22 @@ const useStore = create<ApplicationState>(devtools((set, get) => ({
         }));
     },
 
-    updateNode: (id: string, newValue: Partial<PolyglotNode>) => {
+    updateNode: (id: string, newValue: PartialDeep<PolyglotNode>) => {
         set(state => ({
-            nodeMap: { ...state.nodeMap, [id]: { ...state.nodeMap[id], ...newValue } }
+            nodeMap: { ...state.nodeMap, [id]: merge(state.nodeMap[id], newValue as Partial<PolyglotNode>) }
         }));
     },
-    updateEdge: (id: string, newValue: Partial<PolyglotEdge>) => {
+    updateEdge: (id: string, newValue: PartialDeep<PolyglotEdge>) => {
         set(state => ({
-            edgeMap: { ...state.edgeMap, [id]: { ...state.edgeMap[id], ...newValue } }
+            edgeMap: { ...state.edgeMap, [id]: merge(state.edgeMap[id], newValue as Partial<PolyglotEdge>) }
         }));
     }
 })));
+
+export const curriedUpdate = <T>(updateFunc: (id: string, newValue: PartialDeep<T>) => void, id: string) => {
+    return (newValue: PartialDeep<T>) => {
+        updateFunc(id, newValue);
+    };
+};
 
 export default useStore;
