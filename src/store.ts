@@ -5,6 +5,7 @@ import { loadFlowElements } from "./data/flowElements";
 import { PolyglotEdge, PolyglotNode } from "./types/polyglotElements";
 import { merge } from "@fluentui/react";
 import type { PartialDeep } from "type-fest";
+import produce from "immer";
 
 
 const flowElements = loadFlowElements();
@@ -79,24 +80,28 @@ const useStore = create<ApplicationState>(devtools((set, get) => ({
     },
 
     applyNodeChanges: (changes: Node[]) => {
-        set(state => ({
-            nodeMap: { ...state.nodeMap, ...Object.fromEntries(changes.map(c => ([c.id, { ...state.nodeMap[c.id], ...c } as PolyglotNode]))) },
+        set(produce(draft => {
+            changes.forEach(change => {
+                draft.nodeMap[change.id] = merge<PolyglotNode>(draft.nodeMap[change.id], change);
+            });
         }));
     },
     applyEdgeChanges: (changes: Edge[]) => {
-        set(state => ({
-            edgeMap: { ...state.edgeMap, ...Object.fromEntries(changes.map(c => ([c.id, { ...state.edgeMap[c.id], ...c } as PolyglotEdge]))) },
+        set(produce(draft => {
+            changes.forEach(change => {
+                draft.edgeMap[change.id] = merge<PolyglotEdge>(draft.edgeMap[change.id], change);
+            });
         }));
     },
 
     updateNode: (id: string, newValue: PartialDeep<PolyglotNode>) => {
-        set(state => ({
-            nodeMap: { ...state.nodeMap, [id]: merge(state.nodeMap[id], newValue as Partial<PolyglotNode>) }
+        set(produce(draft => {
+            draft.nodeMap[id] = merge(draft.nodeMap[id], newValue);
         }));
     },
     updateEdge: (id: string, newValue: PartialDeep<PolyglotEdge>) => {
-        set(state => ({
-            edgeMap: { ...state.edgeMap, [id]: merge(state.edgeMap[id], newValue as Partial<PolyglotEdge>) }
+        set(produce(draft => {
+            draft.edgeMap[id] = merge(draft.edgeMap[id], newValue);
         }));
     }
 })));
