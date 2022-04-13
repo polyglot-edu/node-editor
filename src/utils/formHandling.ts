@@ -1,5 +1,6 @@
 import { IDropdownOption } from "@fluentui/react";
-import { curry } from "./utils";
+import type { PartialDeep } from 'type-fest';
+
 
 export type TextInputEvent =
     | React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -11,30 +12,32 @@ export type DropdownEvent =
 export type RatingEvent =
     | React.FormEvent<HTMLElement>;
 
-type EventAction = ((v: string) => void)
-type EventHandler<T> = (action: EventAction) => ((e: T, ...args: any[]) => void);
+type EventAction<T> = ((v: T) => void)
+type EventHandler<T, K> = (action: EventAction<K>) => ((e: T, ...args: any[]) => void);
 
-export const textInputHandler: EventHandler<TextInputEvent> = (action: EventAction) => {
+export const textInputHandler: EventHandler<TextInputEvent, string> = (action) => {
     return (e: TextInputEvent) => action(e.currentTarget.value);
 }
 
-export const dropdownHandler: EventHandler<DropdownEvent> = (action: EventAction) => {
+export const dropdownHandler: EventHandler<DropdownEvent, string> = (action) => {
     return (e: DropdownEvent, option: IDropdownOption) => action(option.key as string);
 }
 
-export const ratingHandler: EventHandler<RatingEvent> = (action: EventAction) => {
-    return (e: RatingEvent, rating: number) => action(`${rating}`);
+export const ratingHandler: EventHandler<RatingEvent, number> = (action) => {
+    return (e: RatingEvent, rating: number) => action(rating);
 }
-// export const dropdownHandler: EventHandler<DropdownEvent> = (action: EventAction) => {
-//     return (e: DropdownEvent, option: IDropdownOption) => action(option.key as string);
-// }
 
-const x = dropdownHandler(x => console.log(x));
-
-
-function _eventHandlerFactory<T>(applyUpdate: (value: Partial<T>) => void) {
-    return <K>(eventHandler: EventHandler<K>) => {
-        return (updateValue: (value: string) => Partial<T>, logging = false, loggingLine = "") => {
+// manually curried version of 
+// function eventHandlerFactory<T, K, V>(
+//     applyUpdate: (value: Partial<T>) => void,
+//     eventHandler: EventHandler<K, V>,
+//     updateValue: (value: V) => Partial<T>,
+//     logging = false,
+//     loggingLine = ""
+// )
+export function eventHandlerFactory<T>(applyUpdate: (value: PartialDeep<T>) => void) {
+    return <K, V>(eventHandler: EventHandler<K, V>) => {
+        return (updateValue: (value: V) => PartialDeep<T>, logging = false, loggingLine = "") => {
             return eventHandler(value => {
                 const newValue = updateValue(value);
                 if (logging) {
@@ -47,11 +50,16 @@ function _eventHandlerFactory<T>(applyUpdate: (value: Partial<T>) => void) {
     }
 }
 
-const curriedEventHandlerFactory = curry(_eventHandlerFactory);
-// const curriedEventHandlerFactory = _eventHandlerFactory;
-
-export { curriedEventHandlerFactory as eventHandlerFactory };
-
-export const simpleStringUpdater = (fieldToUpdate: string) => {
-    return (value: string) => ({ [fieldToUpdate]: value });
+// TODO: test this function
+export function updater<T>() {
+    return function <K extends Path<T>>(fieldToUpdate: K) {
+        return function <W extends PathValue<T, K>>(value: W): PartialDeep<T> {
+            if (typeof fieldToUpdate === "string") {
+                // TODO: maybe remove 'any' for a bit more type safety
+                return fieldToUpdate.split(".").reverse().reduce((obj, curr) => ({ [curr]: obj }), value as any);
+            }
+            // TODO: maybe remove 'as' for a bit more type safety
+            return { [fieldToUpdate]: value } as unknown as PartialDeep<T>;
+        }
+    }
 }
