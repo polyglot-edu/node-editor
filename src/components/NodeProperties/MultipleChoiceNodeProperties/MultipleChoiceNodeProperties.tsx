@@ -20,9 +20,9 @@ const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) 
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
     const buttonNodeUpdater = genericNodeUpdater(buttonEventAdapter);
 
-    function addOption(): PartialDeep<MultipleChoiceNode> {
+    function addChoice(): PartialDeep<MultipleChoiceNode> {
         return produce(selectedNode, draft => {
-            draft.data.options.push("");
+            draft.data.choices.push("");
         })
     }
 
@@ -33,7 +33,6 @@ const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) 
                     <TextField
                         label="Question"
                         id={`questionInput-${id}`}
-                        // className="pb-[20px]"
                         multiline
                         autoAdjustHeight
                         value={selectedNode.data.question}
@@ -41,27 +40,27 @@ const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) 
                     />
                     <Separator />
                     {
-                        selectedNode.data.options.map((option, index) => {
-                            function updateOption(newValue: string): PartialDeep<MultipleChoiceNode> {
+                        selectedNode.data.choices.map((choice, index) => {
+                            function updateChoice(newValue: string): PartialDeep<MultipleChoiceNode> {
                                 return produce(selectedNode, draft => {
-                                    draft.data.options[index] = newValue;
+                                    draft.data.choices[index] = newValue;
                                 })
                             }
 
                             return (
                                 <StackItem key={index}>
                                     <TextField
-                                        label={`Option ${index + 1}`}
-                                        id={`optionInput-${id}-${index}`}
-                                        value={option}
-                                        placeholder={`Type here option #${index + 1}`}
-                                        onChange={textInputNodeUpdater(updateOption)}
+                                        label={`Choice ${index + 1}`}
+                                        id={`choiceInput-${id}-${index}`}
+                                        value={choice}
+                                        placeholder={`Type here choice #${index + 1}`}
+                                        onChange={textInputNodeUpdater(updateChoice)}
                                     />
                                 </StackItem>
                             )
                         })
                     }
-                    <PrimaryButton text="Add option" className="mt-4 self-center w-1/2" onClick={buttonNodeUpdater(addOption)} />
+                    <PrimaryButton text="Add choice" className="mt-4 self-center w-1/2" onClick={buttonNodeUpdater(addChoice)} />
                 </Card>
             </StackItem>
         </Stack>

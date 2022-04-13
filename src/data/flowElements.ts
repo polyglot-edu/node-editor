@@ -8,7 +8,7 @@ const multiple: MultipleChoiceNode[] = [
         title: 'Default',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Default', question: "Test", correctAnswers: [], options: ["Option 1", "Option 2", "Option 3"] },
+        data: { label: 'Default', question: "Test", correctAnswers: [], choices: ["Choice 1", "Choice 2", "Choice 3"] },
         position: { x: 100, y: 125 },
     },
     {
@@ -17,7 +17,7 @@ const multiple: MultipleChoiceNode[] = [
         title: 'Input',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Input', question: "Test", correctAnswers: [], options: ["Option test"] },
+        data: { label: 'Input', question: "Test", correctAnswers: [], choices: ["Choice test"] },
         position: { x: 250, y: 25 },
     },
     {
@@ -26,7 +26,7 @@ const multiple: MultipleChoiceNode[] = [
         title: 'Output',
         description: 'Some description',
         difficulty: 5,
-        data: { label: 'Output', question: "Test", correctAnswers: [], options: ["Option 11233444"] },
+        data: { label: 'Output', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
         position: { x: 250, y: 250 },
     },
     {
@@ -35,7 +35,7 @@ const multiple: MultipleChoiceNode[] = [
         title: 'Multiple Choice',
         description: 'Some description',
         difficulty: 4,
-        data: { label: 'Multiple Choice', question: "Test", correctAnswers: [], options: ["Option 1 Option 2"] },
+        data: { label: 'Multiple Choice', question: "Test", correctAnswers: [], choices: ["Choice 1 Choice 2"] },
         position: { x: 100, y: 250 },
     },
 ]

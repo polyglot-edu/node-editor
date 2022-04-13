@@ -5,8 +5,8 @@ import { NodeData, PolyglotNode } from "./Node";
 
 export type MultipleChoiceNodeData = NodeData & {
     question: string;
-    options: string[];
-    // TODO: correctAnswers should be number[] with a correctness score for each option
+    choices: string[];
+    // TODO: correctAnswers should be number[] with a correctness score for each choice
     correctAnswers: string[];
 };
 
