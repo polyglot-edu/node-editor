@@ -1,1 +1,1 @@
-export { }
+export { default as PassFailEdgeProperties } from "./PassFailEdgeProperties/PassFailEdgeProperties";

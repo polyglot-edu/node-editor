@@ -1,6 +1,9 @@
 import { PolyglotNode, PolyglotEdge, MultipleChoiceNode } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 
+const id1 = UUIDv4();
+const id2 = UUIDv4();
+
 const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
@@ -23,7 +26,7 @@ const multiple: MultipleChoiceNode[] = [
         position: { x: 250, y: 25 },
     },
     {
-        id: UUIDv4(),
+        id: id1,
         type: "multipleChoiceNode",
         kind: "multipleChoiceNode",
         title: 'Output',
@@ -57,7 +60,7 @@ const flowNodes: PolyglotNode[] = [
         position: { x: 600, y: 650 },
     },
     {
-        id: UUIDv4(),
+        id: id2,
         type: "codingNode",
         kind: "codingNode",
         title: 'Other Coding',
@@ -70,8 +73,19 @@ const flowNodes: PolyglotNode[] = [
 
 const flowEdges: PolyglotEdge[] = [
     // animated edge
-    { id: 'e1-2', source: '1', target: '2', type: "default", label: 'Edge 1-2', data: { label: 'Edge 1-2', conditions: [] } },
-    { id: 'e2-3', source: '2', target: '3', type: "default", label: 'Edge 2-3', data: { label: 'Edge 2-3', conditions: [] } },
+    {
+        id: UUIDv4(),
+        title: "second",
+        source: id1,
+        target: id2,
+        type: "BezierEdge",
+        data: {
+            // label: "Animated Edge"
+        },
+        kind: "passFailEdge"
+    }
+    // { id: 'e1-2', source: '1', target: '2', type: "default", label: 'Edge 1-2', data: { label: 'Edge 1-2', conditions: [] } },
+    // { id: 'e2-3', source: '2', target: '3', type: "default", label: 'Edge 2-3', data: { label: 'Edge 2-3', conditions: [] } },
 ]
 
 const loadFlowElementsAsync = () => {
