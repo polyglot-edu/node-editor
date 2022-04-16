@@ -5,6 +5,7 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
+        kind: "multipleChoiceNode",
         title: 'Default',
         description: 'Some description',
         difficulty: 1,
@@ -14,6 +15,7 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
+        kind: "multipleChoiceNode",
         title: 'Input',
         description: 'Some description',
         difficulty: 1,
@@ -23,6 +25,7 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
+        kind: "multipleChoiceNode",
         title: 'Output',
         description: 'Some description',
         difficulty: 5,
@@ -32,6 +35,7 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
+        kind: "multipleChoiceNode",
         title: 'Multiple Choice',
         description: 'Some description',
         difficulty: 4,
@@ -45,6 +49,7 @@ const flowNodes: PolyglotNode[] = [
     {
         id: UUIDv4(),
         type: "codingNode",
+        kind: "codingNode",
         title: 'Coding',
         description: 'Some description',
         difficulty: 4,
@@ -54,6 +59,7 @@ const flowNodes: PolyglotNode[] = [
     {
         id: UUIDv4(),
         type: "codingNode",
+        kind: "codingNode",
         title: 'Other Coding',
         description: 'Some other description',
         difficulty: 3,

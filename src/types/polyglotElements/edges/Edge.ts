@@ -8,5 +8,6 @@ export interface EdgeData {
 
 export type PolyglotEdge = Edge & {
     type: string;
+    kind: string;
     data: EdgeData;
 }

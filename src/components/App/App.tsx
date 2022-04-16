@@ -25,7 +25,7 @@ const useElementSelection = () => {
     // this hook is updated every time something in the entire store changes.
     // if this needs to change, keep in mind that updates needs to be triggered when:
     // - the selection changes
-    // - the type of the selected item changes
+    // - the kind of the selected item changes
     // - everything else that would change the kind of propertiesComponent to display.
 
     const {
@@ -38,8 +38,8 @@ const useElementSelection = () => {
         clearSelection
     } = useStore();
 
-    let selectedNodeType = undefined;
-    let selectedEdgeType = undefined;
+    let selectedNodeKind = undefined;
+    let selectedEdgeKind = undefined;
 
     function handleChange({ nodes, edges }: OnSelectionChangeParams) {
         if (nodes.length !== 0) {
@@ -55,15 +55,15 @@ const useElementSelection = () => {
     }
 
     if (selectedNode) {
-        selectedNodeType = nodeMap[selectedNode].type;
+        selectedNodeKind = nodeMap[selectedNode].kind;
     }
     if (selectedEdge) {
-        selectedEdgeType = edgeMap[selectedEdge].type;
+        selectedEdgeKind = edgeMap[selectedEdge].kind;
     }
 
     return {
-        NodePropertiesComponent: polyglotNodeComponentMapping.getElementPropertiesComponent(selectedNodeType),
-        EdgePropertiesComponent: polyglotEdgeComponentMapping.getElementPropertiesComponent(selectedEdgeType),
+        NodePropertiesComponent: polyglotNodeComponentMapping.getElementPropertiesComponent(selectedNodeKind),
+        EdgePropertiesComponent: polyglotEdgeComponentMapping.getElementPropertiesComponent(selectedEdgeKind),
         onChange: handleChange
     };
 }

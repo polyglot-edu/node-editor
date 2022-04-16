@@ -9,7 +9,8 @@ export type CodingNodeData = NodeData & {
 
 export type CodingNode = PolyglotNode & {
     type: "codingNode";
+    kind: "codingNode";
     data: CodingNodeData;
 } 
 
-polyglotNodeComponentMapping.registerNodeType("codingNode", "Coding", CodingNodeProperties, ReactFlowCodingNode);
+polyglotNodeComponentMapping.registerMapping("codingNode", "Coding", CodingNodeProperties, ReactFlowCodingNode);

@@ -7,7 +7,7 @@ import "./NodeProperties.css";
 
 export type NodePropertiesProps = {};
 
-const typeDropdownOptions: IDropdownOption[] = Object.entries(polyglotNodeComponentMapping.nameMapping).map(([key, name]) => ({ key: key, text: name }));
+const kindDropdownOptions: IDropdownOption[] = Object.entries(polyglotNodeComponentMapping.nameMapping).map(([key, name]) => ({ key: key, text: name }));
 
 const Properties = (props: NodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as PolyglotNode;
@@ -24,8 +24,8 @@ const Properties = (props: NodePropertiesProps) => {
     const dropdownNodeUpdater = genericNodeUpdater(dropdownEventAdapter);
     const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
 
-    // TODO: handle type change properly
-    const typeChangeHandler = dropdownNodeUpdater(updater<PolyglotNode>()("type"));
+    // TODO: handle kind change properly
+    const kindChangeHandler = dropdownNodeUpdater(updater<PolyglotNode>()("kind"));
 
     const allowed = "Software Engineering,CSharp,Statistics,UniPi,MODELS 2021,Software Development";
 
@@ -48,12 +48,12 @@ const Properties = (props: NodePropertiesProps) => {
                         onChange={textInputNodeUpdater(updater<PolyglotNode>()("description"))}
                     />
                     <Dropdown
-                        label="Type"
-                        id={`typeInput-${id}`}
+                        label="Kind"
+                        id={`kindInput-${id}`}
                         placeholder="Select an option"
-                        options={typeDropdownOptions}
-                        onChange={typeChangeHandler}
-                        selectedKey={selectedNode.type}
+                        options={kindDropdownOptions}
+                        onChange={kindChangeHandler}
+                        selectedKey={selectedNode.kind}
                     />
                     <Label htmlFor={`ratingInput-${id}`} className="pt-[10px] pb-0" >
                         Difficulty
