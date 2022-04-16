@@ -8,10 +8,6 @@ export type PassFailEdgePropertiesProps = EdgePropertiesProps & {};
 const PassFailEdgeProperties = (props: PassFailEdgePropertiesProps) => {
     const selectedEdge = useStore(state => state.getSelectedEdge());
 
-    if (!selectedEdge) {
-        return <></>;
-    }
-
     return (
         <Stack tokens={{ childrenGap: 15 }}>
             <StackItem>

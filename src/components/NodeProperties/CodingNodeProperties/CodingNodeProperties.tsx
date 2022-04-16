@@ -10,9 +10,9 @@ export type CodingNodePropertiesProps = NodePropertiesProps & {};
 
 const CodingNodeProperties = (props: CodingNodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as CodingNode;
-    const { id } = selectedNode;
-
     const updateNode = useStore(state => state.updateNode);
+
+    const { id } = selectedNode;
 
     const handleTitleChange = (e: TextInputEvent) => {
         const newTitle = e.currentTarget.value;

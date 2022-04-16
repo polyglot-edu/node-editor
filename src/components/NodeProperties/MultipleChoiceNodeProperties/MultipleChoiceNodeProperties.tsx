@@ -13,8 +13,8 @@ export type MultipleChoiceNodePropertiesProps = MultipleChoiceNode & NodePropert
 const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as MultipleChoiceNode;
     const updateNode = useStore(state => state.updateNode);
-    const { id } = selectedNode;
 
+    const { id } = selectedNode;
 
     const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);

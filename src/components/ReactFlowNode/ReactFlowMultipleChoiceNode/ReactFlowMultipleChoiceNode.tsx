@@ -1,6 +1,7 @@
 import { useMemo, useState } from "react";
 import { Handle, Position } from "react-flow-renderer";
 import { v4 as UUIDv4 } from "uuid";
+import useStore from "../../../store";
 import { HandleData, MultipleChoiceNode } from "../../../types/polyglotElements";
 import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
@@ -9,6 +10,8 @@ import "./ReactFlowMultipleChoiceNode.css";
 type ReactFlowMultipleChoiceNodeProps = ReactFlowNodeProps & MultipleChoiceNode;
 
 const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps) => {
+    const onConnect = useStore(state => state.onConnect);
+
     const [handles, setHandles] = useState<HandleData[]>([]);
 
     const handleChange = () => {
@@ -19,7 +22,7 @@ const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps)
                 isConnectable: true,
                 onConnect: params => console.log(params),
                 isValidConnection: e => true,
-                id: UUIDv4().toString(),
+                id: UUIDv4(),
             }
         }
         setHandles([...handles, newHandle]);
@@ -53,9 +56,9 @@ const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps)
         <Card style={{ border: "1px solid black" }}>
             <Handle
                 className="bg-slate-500"
-                type="target"
-                position={Position.Left}
-                onConnect={(params) => console.log("onConnect", params)}
+                type="source"
+                position={Position.Right}
+                onConnect={onConnect}
             />
             {handleElements}
             <div>

@@ -12,7 +12,7 @@ const PropertiesStack = ({ children }: React.PropsWithChildren<PropertiesStackPr
         <Stack tokens={{ childrenGap: 15 }} className="my-4 pr-3 h-full overflow-y-scroll">
             <NodeProperties />
             <EdgeProperties />
-            {Children.map(children, c => <StackItem>{c}</StackItem>)}
+            {Children.map(children, c => (<>{c}</>))}
         </Stack>
     )
 }
