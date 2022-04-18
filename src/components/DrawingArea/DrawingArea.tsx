@@ -1,6 +1,6 @@
 import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Controls, EdgeChange, NodeChange, OnSelectionChangeParams } from 'react-flow-renderer';
 import useStore from '../../store';
-import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
+import { polyglotEdgeComponentMapping, polyglotNodeComponentMapping } from '../../types/polyglotElements';
 import "./DrawingArea.css";
 
 type DrawingAreaProps = {
@@ -33,6 +33,9 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
             // multiSelectionKeyCode={null}
             onSelectionChange={onSelectionChange}
             nodeTypes={polyglotNodeComponentMapping.componentMapping}
+            edgeTypes={polyglotEdgeComponentMapping.componentMapping}
+            snapToGrid={true}
+            snapGrid={[15, 15]}
         >
             <Background variant={BackgroundVariant.Dots} />
             <Controls />

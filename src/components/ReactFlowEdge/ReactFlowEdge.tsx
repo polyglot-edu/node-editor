@@ -1,11 +1,7 @@
-import { PolyglotEdge } from "../../types/polyglotElements"
+import { EdgeProps } from "react-flow-renderer"
 
-export type ReactFlowEdgeProps = PolyglotEdge & {}
+export type ReactFlowEdgeProps = EdgeProps & {};
 
-const ReactFlowEdge = (props: ReactFlowEdgeProps) => {
-    return (
-        <></>
-    )
-}
+declare const ReactFlowEdge: (props: ReactFlowEdgeProps) => JSX.Element;
 
-export default ReactFlowEdge
+export default ReactFlowEdge;

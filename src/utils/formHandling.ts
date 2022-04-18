@@ -1,5 +1,6 @@
 import { BaseButton, IDropdownOption } from "@fluentui/react";
 import type { PartialDeep } from 'type-fest';
+import * as t from "io-ts";
 
 
 export type TextInputEvent =
@@ -63,16 +64,32 @@ export function eventHandlerFactory<T>(applyUpdate: (value: PartialDeep<T>) => v
     }
 }
 
+function _actual_update<T, K extends Path<T>>(fieldToUpdate: K, value: PathValue<T, K>): PartialDeep<T> {
+    if (typeof fieldToUpdate === "string") {
+        return fieldToUpdate.split(".").reverse().reduce((obj, curr) => ({ [curr]: obj }), value as any);
+    }
+    return { [fieldToUpdate]: value } as PartialDeep<T>;
+}
+
 // TODO: test this function
 export function updater<T>() {
     return function <K extends Path<T>>(fieldToUpdate: K) {
         return function <W extends PathValue<T, K>>(value: W): PartialDeep<T> {
-            if (typeof fieldToUpdate === "string") {
-                // TODO: maybe remove 'any' for a bit more type safety
-                return fieldToUpdate.split(".").reverse().reduce((obj, curr) => ({ [curr]: obj }), value as any);
+            return _actual_update(fieldToUpdate, value);
+        }
+    }
+}
+
+// TODO: test this function
+export function updaterWithTypeGuard<T>() {
+    return function <K extends Path<T>>(fieldToUpdate: K, type: t.Type<PathValue<T, K>>) {
+        return function (value: unknown): PartialDeep<T> {
+            if (type.is(value)) {
+                return _actual_update(fieldToUpdate, value);
+            } else {
+                console.error("Value received: \"" + value + "\". Type " + typeof value + " and " + type.name + " are incompatible");
+                return {} as PartialDeep<T>;
             }
-            // TODO: maybe remove 'as' for a bit more type safety
-            return { [fieldToUpdate]: value } as unknown as PartialDeep<T>;
         }
     }
 }
