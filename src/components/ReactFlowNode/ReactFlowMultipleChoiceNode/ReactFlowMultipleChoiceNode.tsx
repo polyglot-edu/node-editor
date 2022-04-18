@@ -53,18 +53,13 @@ const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps)
 
 
     return (
-        <Card style={{ border: "1px solid black" }}>
+        <Card className="Card-react-flow" >
+            {data.label}
             <Handle
-                className="bg-slate-500"
                 type="source"
                 position={Position.Right}
                 onConnect={onConnect}
             />
-            {handleElements}
-            <div>
-                {data.label}
-            </div>
-            <button className="border border-slate-400 border-solid" onClick={handleChange}>+</button>
         </Card>
     );
 }

@@ -4,7 +4,6 @@ import { polyglotNodeComponentMapping } from "../elementMapping";
 import { NodeData, PolyglotNode } from "./Node";
 
 export type CodingNodeData = NodeData & {
-    other: number;
 }
 
 export type CodingNode = PolyglotNode & {

@@ -8,7 +8,7 @@ type ReactFlowCodingElementProps = ReactFlowNodeProps & CodingNode;
 
 const ReactFlowCodingNode = ({ data }: ReactFlowCodingElementProps) => {
     return (
-        <Card style={{ border: "1px solid black" }}>
+        <Card className="Card-react-flow">
             {data.label}
             <Handle
                 type={"target"}

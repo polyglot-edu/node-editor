@@ -1,18 +1,12 @@
-import { CSSProperties } from "react";
 import "./Card.css";
 
-type CardProps = {
-    children?: any;
-    style?: CSSProperties;
-    // TODO: handle className as react does
-    className?: string;
-}
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {}
 
-const Card = ({ children, style, className }: CardProps) => {
+const Card = (props: React.PropsWithChildren<CardProps>) => {
+    const { className } = props;
+
     return (
-        <div className={`Card ${className}`} style={style}>
-            {children}
-        </div>
+        <div {...props} className={"Card " + (className ?? "") } />
     );
 }
 

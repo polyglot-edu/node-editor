@@ -1,19 +1,10 @@
-import { PolyglotNode, PolyglotEdge, MultipleChoiceNode } from "../types/polyglotElements";
+import { PolyglotNode, PolyglotEdge, MultipleChoiceNode, CodingNode, PassFailEdge } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 
 const id1 = UUIDv4();
 const id2 = UUIDv4();
 
-const multiple: MultipleChoiceNode[] = [
-    {
-        id: UUIDv4(),
-        type: "multipleChoiceNode",
-        title: 'Default',
-        description: 'Some description',
-        difficulty: 1,
-        data: { label: 'Default', question: "Test", correctAnswers: [], choices: ["Choice 1", "Choice 2", "Choice 3"] },
-        position: { x: 100, y: 125 },
-    },
+const multipleChoiceNodes: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
@@ -21,7 +12,7 @@ const multiple: MultipleChoiceNode[] = [
         description: 'Some description',
         difficulty: 1,
         data: { label: 'Input', question: "Test", correctAnswers: [], choices: ["Choice test"] },
-        position: { x: 250, y: 25 },
+        position: { x: 250, y: 0 },
     },
     {
         id: id1,
@@ -30,21 +21,11 @@ const multiple: MultipleChoiceNode[] = [
         description: 'Some description',
         difficulty: 5,
         data: { label: 'Output', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
-        position: { x: 250, y: 250 },
-    },
-    {
-        id: UUIDv4(),
-        type: "multipleChoiceNode",
-        title: 'Multiple Choice',
-        description: 'Some description',
-        difficulty: 4,
-        data: { label: 'Multiple Choice', question: "Test", correctAnswers: [], choices: ["Choice 1 Choice 2"] },
-        position: { x: 100, y: 250 },
+        position: { x: 250, y: 300 },
     },
 ]
 
-const flowNodes: PolyglotNode[] = [
-    ...multiple,
+const codingNodes: CodingNode[] = [
     {
         id: UUIDv4(),
         type: "codingNode",
@@ -52,7 +33,7 @@ const flowNodes: PolyglotNode[] = [
         description: 'Some description',
         difficulty: 4,
         data: { label: 'Coding' },
-        position: { x: 600, y: 650 },
+        position: { x: 250, y: 75 },
     },
     {
         id: id2,
@@ -61,24 +42,42 @@ const flowNodes: PolyglotNode[] = [
         description: 'Some other description',
         difficulty: 3,
         data: { label: 'Other Coding' },
-        position: { x: 600, y: 350 },
+        position: { x: 600, y: 300 },
     }
 ];
 
-const flowEdges: PolyglotEdge[] = [
-    // animated edge
+const lessonNodes: PolyglotNode[] = [
     {
         id: UUIDv4(),
-        title: "second",
+        type: "multipleChoiceNode",
+        title: 'Input',
+        description: 'Some description',
+        difficulty: 1,
+        data: { label: 'Input' },
+        position: { x: 250, y: 150 },
+    }
+]
+
+const flowNodes: PolyglotNode[] = [
+    ...multipleChoiceNodes,
+    ...codingNodes,
+    ...lessonNodes,
+];
+
+const passFailEdges: PassFailEdge[] = [
+    {
+        id: UUIDv4(),
         source: id1,
         target: id2,
         type: "passFailEdge",
         data: {
-            // label: "Animated Edge"
+            conditionKind: "pass",
         },
-    }
-    // { id: 'e1-2', source: '1', target: '2', type: "default", label: 'Edge 1-2', data: { label: 'Edge 1-2', conditions: [] } },
-    // { id: 'e2-3', source: '2', target: '3', type: "default", label: 'Edge 2-3', data: { label: 'Edge 2-3', conditions: [] } },
+    },
+]
+
+const flowEdges: PolyglotEdge[] = [
+    ...passFailEdges,
 ]
 
 const loadFlowElementsAsync = () => {
