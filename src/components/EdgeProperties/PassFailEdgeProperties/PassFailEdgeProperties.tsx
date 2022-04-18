@@ -24,7 +24,7 @@ const PassFailEdgeProperties = (props: PassFailEdgePropertiesProps) => {
                         label="Condition"
                         id={`conditionKindInput-${id}`}
                         placeholder="Select an option"
-                        options={[{ key: "pass", text: "Pass" }, { key: "fail", text: "Fail" }, { key: "test", text: "Test" }]}
+                        options={[{ key: "pass", text: "Pass" }, { key: "fail", text: "Fail" }]}
                         onChange={dropdownEdgeUpdater(updaterWithTypeGuard<PassFailEdge>()("data.conditionKind", PassFailEdgeConditionKind_IoTs))}
                         selectedKey={selectedEdge.data.conditionKind}
                     />

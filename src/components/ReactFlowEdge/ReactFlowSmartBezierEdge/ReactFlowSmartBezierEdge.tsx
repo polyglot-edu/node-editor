@@ -1,10 +1,12 @@
 import { bezierEdgeFactory } from "@tisoap/react-flow-smart-edge";
+import useStore from "../../../store";
 import { ReactFlowEdgeProps } from "../ReactFlowEdge";
 
 type ReactFlowSmartBezierEdgeProps = ReactFlowEdgeProps & {};
 
 // wrapper around the default bezier edge with additional clickable area
 const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
+    const label = useStore(state => state.edgeMap[props.id]?.title);
     const { style } = props;
 
     const SmartBezierEdge = bezierEdgeFactory({
@@ -14,8 +16,8 @@ const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
 
     return (
         <>
-            <SmartBezierEdge {...props} />
-            <SmartBezierEdge {...props} style={{ ...style, strokeWidth: 10, opacity: 0 }} />
+            <SmartBezierEdge {...props} label={label} />
+            <SmartBezierEdge {...props} style={{ ...style, strokeWidth: 20, opacity: 0, zIndex: 10 }} />
         </>
     )
 }

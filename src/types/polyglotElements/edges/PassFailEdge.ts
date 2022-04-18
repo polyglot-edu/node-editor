@@ -19,4 +19,4 @@ export type PassFailEdge = PolyglotEdge & {
     data: PassFailEdgeData;
 }
 
-polyglotEdgeComponentMapping.registerMapping("passFailEdge", "PassFail", PassFailEdgeProperties, ReactFlowSmartBezierEdge);
+polyglotEdgeComponentMapping.registerMapping("passFailEdge", "Pass/Fail", PassFailEdgeProperties, ReactFlowSmartBezierEdge);

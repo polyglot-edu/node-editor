@@ -1,4 +1,4 @@
-import { Dropdown, IDropdownOption, Label, Rating, Stack, StackItem, TagPicker, TextField } from "@fluentui/react";
+import { Dropdown, IDropdownOption, Stack, StackItem, TextField } from "@fluentui/react";
 import useStore, { curriedUpdate } from "../../store";
 import { PolyglotEdge, polyglotEdgeComponentMapping } from "../../types/polyglotElements";
 import { dropdownEventAdapter, eventHandlerFactory, textInputEventAdapter, updater } from "../../utils/formHandling";
