@@ -1,4 +1,4 @@
-import { DefaultButton, Label, PrimaryButton, Separator, Stack, StackItem, TextField } from "@fluentui/react";
+import { PrimaryButton, Separator, Stack, StackItem, TextField } from "@fluentui/react";
 import useStore, { curriedUpdate } from "../../../store";
 import { MultipleChoiceNode } from "../../../types/polyglotElements";
 import { buttonEventAdapter, eventHandlerFactory, textInputEventAdapter, updater } from "../../../utils/formHandling";

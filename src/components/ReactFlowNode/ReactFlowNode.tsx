@@ -1,11 +1,7 @@
-import { PolyglotNode } from "../../types/polyglotElements"
+import { NodeProps } from "react-flow-renderer"
 
-export type ReactFlowNodeProps = PolyglotNode & {}
+export type ReactFlowNodeProps = NodeProps & {};
 
-const ReactFlowNode = (props: ReactFlowNodeProps) => {
-    return (
-        <></>
-    )
-}
+declare const ReactFlowNode: (props: ReactFlowNodeProps) => JSX.Element;
 
-export default ReactFlowNode
+export default ReactFlowNode;
