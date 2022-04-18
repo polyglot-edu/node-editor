@@ -8,7 +8,6 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
-        kind: "multipleChoiceNode",
         title: 'Default',
         description: 'Some description',
         difficulty: 1,
@@ -18,7 +17,6 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
-        kind: "multipleChoiceNode",
         title: 'Input',
         description: 'Some description',
         difficulty: 1,
@@ -28,7 +26,6 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: id1,
         type: "multipleChoiceNode",
-        kind: "multipleChoiceNode",
         title: 'Output',
         description: 'Some description',
         difficulty: 5,
@@ -38,7 +35,6 @@ const multiple: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
-        kind: "multipleChoiceNode",
         title: 'Multiple Choice',
         description: 'Some description',
         difficulty: 4,
@@ -52,7 +48,6 @@ const flowNodes: PolyglotNode[] = [
     {
         id: UUIDv4(),
         type: "codingNode",
-        kind: "codingNode",
         title: 'Coding',
         description: 'Some description',
         difficulty: 4,
@@ -62,7 +57,6 @@ const flowNodes: PolyglotNode[] = [
     {
         id: id2,
         type: "codingNode",
-        kind: "codingNode",
         title: 'Other Coding',
         description: 'Some other description',
         difficulty: 3,
@@ -78,11 +72,10 @@ const flowEdges: PolyglotEdge[] = [
         title: "second",
         source: id1,
         target: id2,
-        type: "BezierEdge",
+        type: "passFailEdge",
         data: {
             // label: "Animated Edge"
         },
-        kind: "passFailEdge"
     }
     // { id: 'e1-2', source: '1', target: '2', type: "default", label: 'Edge 1-2', data: { label: 'Edge 1-2', conditions: [] } },
     // { id: 'e2-3', source: '2', target: '3', type: "default", label: 'Edge 2-3', data: { label: 'Edge 2-3', conditions: [] } },

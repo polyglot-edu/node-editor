@@ -7,7 +7,7 @@ import "./NodeProperties.css";
 
 export type NodePropertiesProps = {};
 
-const kindDropdownOptions: IDropdownOption[] = Object.entries(polyglotNodeComponentMapping.nameMapping).map(([key, name]) => ({ key: key, text: name }));
+const typeDropdownOptions: IDropdownOption[] = Object.entries(polyglotNodeComponentMapping.nameMapping).map(([key, name]) => ({ key: key, text: name }));
 
 const Properties = (props: NodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as PolyglotNode;
@@ -24,8 +24,8 @@ const Properties = (props: NodePropertiesProps) => {
     const dropdownNodeUpdater = genericNodeUpdater(dropdownEventAdapter);
     const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
 
-    // TODO: handle kind change properly
-    const kindChangeHandler = dropdownNodeUpdater(updater<PolyglotNode>()("kind"));
+    // TODO: handle type change properly
+    const typeChangeHandler = dropdownNodeUpdater(updater<PolyglotNode>()("type"));
 
     const allowed = "Software Engineering,CSharp,Statistics,UniPi,MODELS 2021,Software Development";
 
@@ -49,11 +49,11 @@ const Properties = (props: NodePropertiesProps) => {
                     />
                     <Dropdown
                         label="Kind"
-                        id={`kindInput-${id}`}
+                        id={`typeInput-${id}`}
                         placeholder="Select an option"
-                        options={kindDropdownOptions}
-                        onChange={kindChangeHandler}
-                        selectedKey={selectedNode.kind}
+                        options={typeDropdownOptions}
+                        onChange={typeChangeHandler}
+                        selectedKey={selectedNode.type}
                     />
                     <Label htmlFor={`ratingInput-${id}`} className="pt-[10px] pb-0" >
                         Difficulty

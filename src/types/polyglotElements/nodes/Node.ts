@@ -10,7 +10,6 @@ export type NodeData = {
 
 export type PolyglotNode = Node<unknown> & {
     type: string;
-    kind: string;
     title: string;
     description: string;
     difficulty: number;

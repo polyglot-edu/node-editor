@@ -8,9 +8,9 @@ import { ReactFlowNodeProps } from "../../components/ReactFlowNode/ReactFlowNode
 type PropertiesComponent<T> = { bivarianceHack(props: T): JSX.Element }["bivarianceHack"];
 type ReactFlowComponent<T> = { bivarianceHack(props: T): JSX.Element }["bivarianceHack"];
 
-type ElementToPropertyComponentMapping<T> = { [elementKind: string]: PropertiesComponent<T> };
-type ElementToReactFlowComponentMapping<T> = { [elementKind: string]: ReactFlowComponent<T> | undefined };
-type ElementToNameMapping = { [elementKind: string]: string };
+type ElementToPropertyComponentMapping<T> = { [elementType: string]: PropertiesComponent<T> };
+type ElementToReactFlowComponentMapping<T> = { [elementType: string]: ReactFlowComponent<T> | undefined };
+type ElementToNameMapping = { [elementType: string]: string };
 class PolyglotComponentMapping<T, U> {
     private _propertiesMapping: ElementToPropertyComponentMapping<T> = {};
     private _elementMapping: ElementToReactFlowComponentMapping<U> = {};
@@ -18,15 +18,15 @@ class PolyglotComponentMapping<T, U> {
 
     // TODO: stricter type checking on the elementComponent
     // undefined should be allowed if and only if the registered element uses an already built-in ReactFlow type
-    public registerMapping(elementKind: string, name: string, propertiesComponent: PropertiesComponent<T>, elementComponent?: ReactFlowComponent<U> | undefined) {
-        if (elementKind in this._propertiesMapping) {
-            throw new Error(`Element kind ${elementKind} is already registered`);
+    public registerMapping(elementType: string, name: string, propertiesComponent: PropertiesComponent<T>, elementComponent?: ReactFlowComponent<U>) {
+        if (elementType in this._propertiesMapping) {
+            throw new Error(`Element type ${elementType} is already registered`);
         }
 
-        console.log("elementKind: " + elementKind + " registered");
-        this._propertiesMapping[elementKind] = propertiesComponent;
-        this._elementMapping[elementKind] = elementComponent;
-        this._nameMapping[elementKind] = name;
+        console.log("elementType: " + elementType + " registered");
+        this._propertiesMapping[elementType] = propertiesComponent;
+        this._elementMapping[elementType] = elementComponent;
+        this._nameMapping[elementType] = name;
     }
 
     get propertiesMapping(): Readonly<ElementToPropertyComponentMapping<T>> {
@@ -41,8 +41,8 @@ class PolyglotComponentMapping<T, U> {
         return this._nameMapping;
     }
 
-    getElementPropertiesComponent(elementKind: string | undefined): PropertiesComponent<T> {
-        return elementKind !== undefined ? this._propertiesMapping[elementKind] : (props: any) => <></>;
+    getElementPropertiesComponent(elementType: string | undefined): PropertiesComponent<T> {
+        return elementType !== undefined ? this._propertiesMapping[elementType] : (props: any) => <></>;
     }
 }
 

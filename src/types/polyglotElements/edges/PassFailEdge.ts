@@ -3,11 +3,11 @@ import { polyglotEdgeComponentMapping } from "../elementMapping";
 import { EdgeData, PolyglotEdge } from "./Edge";
 
 export type PassFailEdgeData = EdgeData & {
+    conditionKind: PassFailEdgeConditionKind;
 }
 
 export type PassFailEdge = PolyglotEdge & {
-    type: "BezierEdge"
-    kind: "passFailEdge";
+    type: "passFailEdge";
     data: PassFailEdgeData;
 }
 

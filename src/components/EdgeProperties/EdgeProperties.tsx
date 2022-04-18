@@ -7,7 +7,7 @@ import "./EdgeProperties.css";
 
 export type EdgePropertiesProps = {};
 
-const kindDropdownOptions: IDropdownOption[] = Object.entries(polyglotEdgeComponentMapping.nameMapping).map(([key, name]) => ({ key: key, text: name }));
+const typeDropdownOptions: IDropdownOption[] = Object.entries(polyglotEdgeComponentMapping.nameMapping).map(([key, name]) => ({ key: key, text: name }));
 
 const Properties = (props: EdgePropertiesProps) => {
     const selectedEdge = useStore(state => state.getSelectedEdge()) as PolyglotEdge;
@@ -23,8 +23,8 @@ const Properties = (props: EdgePropertiesProps) => {
     const textInputEdgeUpdater = genericEdgeUpdater(textInputEventAdapter);
     const dropdownEdgeUpdater = genericEdgeUpdater(dropdownEventAdapter);
 
-    // TODO: handle kind change properly
-    const kindChangeHandler = dropdownEdgeUpdater(updater<PolyglotEdge>()("kind"));
+    // TODO: handle type change properly
+    const typeChangeHandler = dropdownEdgeUpdater(updater<PolyglotEdge>()("type"));
 
     return (
         <Stack tokens={{ childrenGap: 15 }}>
@@ -38,11 +38,11 @@ const Properties = (props: EdgePropertiesProps) => {
                     />
                     <Dropdown
                         label="Kind"
-                        id={`kindInput-${id}`}
+                        id={`typeInput-${id}`}
                         placeholder="Select an option"
-                        options={kindDropdownOptions}
-                        onChange={kindChangeHandler}
-                        selectedKey={selectedEdge.kind}
+                        options={typeDropdownOptions}
+                        onChange={typeChangeHandler}
+                        selectedKey={selectedEdge.type}
                     />
                 </Card>
             </StackItem>

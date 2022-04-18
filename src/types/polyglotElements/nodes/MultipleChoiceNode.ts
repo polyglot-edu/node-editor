@@ -12,7 +12,6 @@ export type MultipleChoiceNodeData = NodeData & {
 
 export type MultipleChoiceNode = PolyglotNode & {
     type: "multipleChoiceNode";
-    kind: "multipleChoiceNode";
     data: MultipleChoiceNodeData;
 };
 

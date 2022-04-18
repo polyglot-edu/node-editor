@@ -25,8 +25,8 @@ const useElementSelection = () => {
     // this hook is updated every time something in the entire store changes.
     // if this needs to change, keep in mind that updates needs to be triggered when:
     // - the selection changes
-    // - the kind of the selected item changes
-    // - everything else that would change the kind of propertiesComponent to display.
+    // - the type of the selected item changes
+    // - everything else that would change the type of propertiesComponent to display.
 
     const {
         nodeMap,
@@ -55,10 +55,10 @@ const useElementSelection = () => {
     }
 
     if (selectedNode) {
-        selectedNodeKind = nodeMap[selectedNode].kind;
+        selectedNodeKind = nodeMap[selectedNode].type;
     }
     if (selectedEdge) {
-        selectedEdgeKind = edgeMap[selectedEdge].kind;
+        selectedEdgeKind = edgeMap[selectedEdge].type;
     }
 
     return {

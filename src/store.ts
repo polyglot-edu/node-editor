@@ -142,9 +142,10 @@ const useStore = create<ApplicationState>(devtools((set, get) => ({
                 title: "First Edge",
                 source: connection.source!,
                 target: connection.target!,
-                type: "BezierEdge",
-                kind: "passFailEdge",
-                data: {},
+                type: "passFailEdge",
+                data: {
+                    conditionKind: "pass",
+                },
             }
             draft.edgeMap[newEdge.id] = newEdge;
         }))
