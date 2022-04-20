@@ -9,7 +9,7 @@ const multipleChoiceNodes: MultipleChoiceNode[] = [
     {
         id: UUIDv4(),
         type: "multipleChoiceNode",
-        title: 'Input',
+        title: 'Multiple Choice Node',
         description: 'Some description',
         difficulty: 1,
         data: { label: 'Input', question: "Test", correctAnswers: [], choices: ["Choice test"] },
@@ -18,7 +18,7 @@ const multipleChoiceNodes: MultipleChoiceNode[] = [
     {
         id: id1,
         type: "multipleChoiceNode",
-        title: 'Output',
+        title: 'Other Multiple Choice',
         description: 'Some description',
         difficulty: 5,
         data: { label: 'Output', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
