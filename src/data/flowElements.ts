@@ -1,4 +1,4 @@
-import { PolyglotNode, PolyglotEdge, MultipleChoiceNode, CodingNode, PassFailEdge } from "../types/polyglotElements";
+import { PolyglotNode, PolyglotEdge, MultipleChoiceNode, CodingNode, PassFailEdge, SingleChoiceNode } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 
 const id1 = UUIDv4();
@@ -46,21 +46,34 @@ const codingNodes: CodingNode[] = [
     }
 ];
 
-const lessonNodes: PolyglotNode[] = [
+const singleChoiceNodes: SingleChoiceNode[] = [
     {
         id: UUIDv4(),
-        type: "multipleChoiceNode",
-        title: 'Input',
+        type: "singleChoiceNode",
+        title: 'Single Choice',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Input' },
-        position: { x: 250, y: 150 },
+        data: { label: 'Single Choice', question: "domandona", correctAnswer: "rispostona" },
+        position: { x: 250, y: 225 },
     }
+]
+
+const lessonNodes: PolyglotNode[] = [
+    // {
+    //     id: UUIDv4(),
+    //     type: "multipleChoiceNode",
+    //     title: 'Lesson',
+    //     description: 'Some description',
+    //     difficulty: 1,
+    //     data: { label: 'Lesson' },
+    //     position: { x: 250, y: 150 },
+    // }
 ]
 
 const flowNodes: PolyglotNode[] = [
     ...multipleChoiceNodes,
     ...codingNodes,
+    ...singleChoiceNodes,
     ...lessonNodes,
 ];
 
