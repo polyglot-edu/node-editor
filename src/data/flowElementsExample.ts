@@ -1,9 +1,9 @@
-import { PolyglotNode, PolyglotEdge, MultipleChoiceQuestionNode, CodingQuestionNode, PassFailEdge, LessonNode, CloseEndedQuestionNode } from "../types/polyglotElements";
+import { PolyglotNode, PolyglotEdge, MultipleChoiceQuestionNode, CodingQuestionNode, PassFailEdge, LessonNode, CloseEndedQuestionNode, ExactValueEdge, UnconditionalEdge, CustomValidationEdge } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 import { MarkerType } from "react-flow-renderer";
+import { CustomValidationEdgeProperties } from "../components/EdgeProperties";
 
-const id1 = UUIDv4();
-const id2 = UUIDv4();
+const ids = [...Array(8).keys()].map(i => UUIDv4());
 
 const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {
@@ -14,15 +14,6 @@ const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
         difficulty: 1,
         data: { label: 'Multiple Choice Question', question: "Test", correctAnswers: [], choices: ["Choice test"] },
         position: { x: 250, y: 0 },
-    },
-    {
-        id: id1,
-        type: "multipleChoiceQuestionNode",
-        title: 'Other Multiple Choice',
-        description: 'Some description',
-        difficulty: 5,
-        data: { label: 'Other Multiple Choice', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
-        position: { x: 250, y: 375 },
     },
 ]
 
@@ -36,15 +27,6 @@ const codingNodes: CodingQuestionNode[] = [
         data: { label: 'Coding Question' },
         position: { x: 250, y: 75 },
     },
-    {
-        id: id2,
-        type: "codingQuestionNode",
-        title: 'Other Coding',
-        description: 'Some other description',
-        difficulty: 3,
-        data: { label: 'Other Coding' },
-        position: { x: 600, y: 375 },
-    }
 ];
 
 const closeEndedQuestionNodes: CloseEndedQuestionNode[] = [
@@ -56,7 +38,16 @@ const closeEndedQuestionNodes: CloseEndedQuestionNode[] = [
         difficulty: 1,
         data: { label: 'Close Ended Question', question: "domandona", correctAnswer: "rispostona" },
         position: { x: 250, y: 150 },
-    }
+    },
+    ...ids.map((id, index) => ({
+            id: id,
+            type: "closeEndedQuestionNode",
+            title: ((index % 2) ? 'To' : 'From'),
+            description: 'Some description',
+            difficulty: 5,
+            data: { label: ((index % 2) ? 'To' : 'From'), question: "domandona", correctAnswer: "rispostona" },
+            position: { x: ((index % 2) ? 600 : 250), y: 375 + (Math.floor(index/2) * 75) },
+        } as CloseEndedQuestionNode)),
 ]
 
 const lessonNodes: LessonNode[] = [
@@ -81,8 +72,9 @@ const flowNodes: PolyglotNode[] = [
 const passFailEdges: PassFailEdge[] = [
     {
         id: UUIDv4(),
-        source: id1,
-        target: id2,
+        source: ids[0],
+        target: ids[1],
+        title: 'Pass/Fail',
         type: "passFailEdge",
         data: {
             conditionKind: "pass",
@@ -95,8 +87,65 @@ const passFailEdges: PassFailEdge[] = [
     },
 ]
 
+const exactValueEdges: ExactValueEdge[] = [
+    {
+        id: UUIDv4(),
+        source: ids[2],
+        target: ids[3],
+        title: 'Exact Value',
+        type: "exactValueEdge",
+        data: {
+            value: "Expected Value",
+        },
+        markerEnd: {
+            type: MarkerType.Arrow,
+            width: 25,
+            height: 25,
+        }
+    },
+]
+
+const unconditionalEdge: UnconditionalEdge[] = [
+    {
+        id: UUIDv4(),
+        source: ids[4],
+        target: ids[5],
+        title: 'Unconditional',
+        type: "unconditionalEdge",
+        data: {},
+        markerEnd: {
+            type: MarkerType.Arrow,
+            width: 25,
+            height: 25,
+        }
+    },
+]
+
+const customValidationEdge: CustomValidationEdge[] = [
+    {
+        id: UUIDv4(),
+        source: ids[6],
+        target: ids[7],
+        title: 'Custom Validation',
+        type: "customValidationEdge",
+        data: {
+            code: `bool validate(context) {
+    return context.answer == 'expected answer';
+}`,
+        },
+        markerEnd: {
+            type: MarkerType.Arrow,
+            width: 25,
+            height: 25,
+        }
+    },
+]
+
 const flowEdges: PolyglotEdge[] = [
     ...passFailEdges,
+    ...exactValueEdges,
+    ...unconditionalEdge,
+    ...customValidationEdge,
 ]
 
 const loadFlowElementsAsync = () => {

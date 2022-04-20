@@ -1,7 +1,7 @@
 import create from "zustand";
 import { devtools } from 'zustand/middleware'
 import { Node, Edge, Connection, MarkerType } from "react-flow-renderer";
-import { loadFlowElements } from "./data/flowElements";
+import { loadFlowElements } from "./data/flowElementsExample";
 import { PolyglotEdge, PolyglotNode } from "./types/polyglotElements";
 import { merge } from "@fluentui/react";
 import type { PartialDeep } from "type-fest";
