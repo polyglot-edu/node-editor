@@ -9,7 +9,7 @@ type PropertiesBarProps = {};
 
 const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>) => {
     const [selectedNode, selectedEdge] = useStore(state => [state.getSelectedNode(), state.getSelectedEdge()]);
-    const { index, toggle: toggleSidebarWidth } = useToggleCSSVariable("--properties-bar-width", ["500px", "600px"]);
+    const { index, toggle: toggleSidebarWidth } = useToggleCSSVariable("--properties-bar-width", ["550px", "600px"]);
     const icons = ["Code", "SidePanelMirrored"]
 
     function isCodeMode() {
@@ -38,6 +38,9 @@ const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>
                 isCodeMode()
                     ? <Editor
                         className="pb-3"
+                        options={{
+                            readOnly: true,
+                        }}
                         height={`calc(100% - ${document.getElementById('PropertiesBarHeader')?.clientHeight}px)`}
                         language="json"
                         value={JSON.stringify(selectedNode ?? selectedEdge, null, 4) ?? ""}
