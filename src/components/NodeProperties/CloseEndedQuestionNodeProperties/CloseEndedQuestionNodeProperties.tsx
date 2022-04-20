@@ -3,13 +3,13 @@ import useStore, { curriedUpdate } from "../../../store";
 import { eventHandlerFactory, textInputEventAdapter, updater } from "../../../utils/formHandling";
 import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
-import { SingleChoiceNode } from "../../../types/polyglotElements/nodes/SingleChoiceNode";
+import { CloseEndedQuestionNode } from "../../../types/polyglotElements/nodes/CloseEndedQuestionNode";
 
-export type SingleChoiceNodePropertiesProps = SingleChoiceNode & NodePropertiesProps;
+export type CloseEndedQuestionNodePropertiesProps = CloseEndedQuestionNode & NodePropertiesProps;
 
 
-const SingleChoiceNodeProperties = (props: SingleChoiceNodePropertiesProps) => {
-    const selectedNode = useStore(state => state.getSelectedNode()) as SingleChoiceNode;
+const CloseEndedQuestionNodeProperties = (props: CloseEndedQuestionNodePropertiesProps) => {
+    const selectedNode = useStore(state => state.getSelectedNode()) as CloseEndedQuestionNode;
     const updateNode = useStore(state => state.updateNode);
 
     const { id } = selectedNode;
@@ -26,7 +26,7 @@ const SingleChoiceNodeProperties = (props: SingleChoiceNodePropertiesProps) => {
                         multiline
                         autoAdjustHeight
                         value={selectedNode.data.question}
-                        onChange={textInputNodeUpdater(updater<SingleChoiceNode>()("data.question"))}
+                        onChange={textInputNodeUpdater(updater<CloseEndedQuestionNode>()("data.question"))}
                     />
                     <StackItem >
                         <TextField
@@ -34,7 +34,7 @@ const SingleChoiceNodeProperties = (props: SingleChoiceNodePropertiesProps) => {
                             id={`answerInput-${id}`}
                             value={selectedNode.data.correctAnswer}
                             placeholder={`Type here answer`}
-                            onChange={textInputNodeUpdater(updater<SingleChoiceNode>()("data.correctAnswer"))}
+                            onChange={textInputNodeUpdater(updater<CloseEndedQuestionNode>()("data.correctAnswer"))}
                         />
                     </StackItem>
                 </Card>
@@ -43,4 +43,4 @@ const SingleChoiceNodeProperties = (props: SingleChoiceNodePropertiesProps) => {
     );
 }
 
-export default SingleChoiceNodeProperties;
+export default CloseEndedQuestionNodeProperties;

@@ -1,44 +1,44 @@
-import { PolyglotNode, PolyglotEdge, MultipleChoiceNode, CodingNode, PassFailEdge, LessonNode, SingleChoiceNode } from "../types/polyglotElements";
+import { PolyglotNode, PolyglotEdge, MultipleChoiceQuestionNode, CodingQuestionNode, PassFailEdge, LessonNode, CloseEndedQuestionNode } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 import { MarkerType } from "react-flow-renderer";
 
 const id1 = UUIDv4();
 const id2 = UUIDv4();
 
-const multipleChoiceNodes: MultipleChoiceNode[] = [
+const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {
         id: UUIDv4(),
-        type: "multipleChoiceNode",
-        title: 'Multiple Choice Node',
+        type: "multipleChoiceQuestionNode",
+        title: 'Multiple Choice Question',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Multiple Choice Node', question: "Test", correctAnswers: [], choices: ["Choice test"] },
+        data: { label: 'Multiple Choice Question', question: "Test", correctAnswers: [], choices: ["Choice test"] },
         position: { x: 250, y: 0 },
     },
     {
         id: id1,
-        type: "multipleChoiceNode",
+        type: "multipleChoiceQuestionNode",
         title: 'Other Multiple Choice',
         description: 'Some description',
         difficulty: 5,
-        data: { label: 'Other Multiple Choice Node', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
+        data: { label: 'Other Multiple Choice', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
         position: { x: 250, y: 375 },
     },
 ]
 
-const codingNodes: CodingNode[] = [
+const codingNodes: CodingQuestionNode[] = [
     {
         id: UUIDv4(),
-        type: "codingNode",
-        title: 'Coding',
+        type: "codingQuestionNode",
+        title: 'Coding Question',
         description: 'Some description',
         difficulty: 4,
-        data: { label: 'Coding' },
+        data: { label: 'Coding Question' },
         position: { x: 250, y: 75 },
     },
     {
         id: id2,
-        type: "codingNode",
+        type: "codingQuestionNode",
         title: 'Other Coding',
         description: 'Some other description',
         difficulty: 3,
@@ -47,15 +47,15 @@ const codingNodes: CodingNode[] = [
     }
 ];
 
-const singleChoiceNodes: SingleChoiceNode[] = [
+const closeEndedQuestionNodes: CloseEndedQuestionNode[] = [
     {
         id: UUIDv4(),
-        type: "singleChoiceNode",
-        title: 'Single Choice',
+        type: "closeEndedQuestionNode",
+        title: 'Close Ended Question',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Single Choice', question: "domandona", correctAnswer: "rispostona" },
-        position: { x: 250, y: 225 },
+        data: { label: 'Close Ended Question', question: "domandona", correctAnswer: "rispostona" },
+        position: { x: 250, y: 150 },
     }
 ]
 
@@ -63,18 +63,18 @@ const lessonNodes: LessonNode[] = [
     {
         id: UUIDv4(),
         type: "lessonNode",
-        title: 'Lesson Node',
+        title: 'Lesson',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Lesson Node' },
-        position: { x: 250, y: 150 },
+        data: { label: 'Lesson' },
+        position: { x: 250, y: 225 },
     }
 ]
 
 const flowNodes: PolyglotNode[] = [
     ...multipleChoiceNodes,
     ...codingNodes,
-    ...singleChoiceNodes,
+    ...closeEndedQuestionNodes,
     ...lessonNodes,
 ];
 

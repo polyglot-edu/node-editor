@@ -1,17 +1,17 @@
 import { PrimaryButton, Separator, Stack, StackItem, TextField } from "@fluentui/react";
 import useStore, { curriedUpdate } from "../../../store";
-import { MultipleChoiceNode } from "../../../types/polyglotElements";
+import { MultipleChoiceQuestionNode } from "../../../types/polyglotElements";
 import { buttonEventAdapter, eventHandlerFactory, textInputEventAdapter, updater } from "../../../utils/formHandling";
 import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
 import type { PartialDeep } from "type-fest";
 import produce from "immer";
 
-export type MultipleChoiceNodePropertiesProps = MultipleChoiceNode & NodePropertiesProps;
+export type MultipleChoiceQuestionNodePropertiesProps = MultipleChoiceQuestionNode & NodePropertiesProps;
 
 
-const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) => {
-    const selectedNode = useStore(state => state.getSelectedNode()) as MultipleChoiceNode;
+const MultipleChoiceQuestionNodeProperties = (props: MultipleChoiceQuestionNodePropertiesProps) => {
+    const selectedNode = useStore(state => state.getSelectedNode()) as MultipleChoiceQuestionNode;
     const updateNode = useStore(state => state.updateNode);
 
     const { id } = selectedNode;
@@ -20,7 +20,7 @@ const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) 
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
     const buttonNodeUpdater = genericNodeUpdater(buttonEventAdapter);
 
-    function addChoice(): PartialDeep<MultipleChoiceNode> {
+    function addChoice(): PartialDeep<MultipleChoiceQuestionNode> {
         return produce(selectedNode, draft => {
             draft.data.choices.push("");
         })
@@ -36,12 +36,12 @@ const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) 
                         multiline
                         autoAdjustHeight
                         value={selectedNode.data.question}
-                        onChange={textInputNodeUpdater(updater<MultipleChoiceNode>()("data.question"))}
+                        onChange={textInputNodeUpdater(updater<MultipleChoiceQuestionNode>()("data.question"))}
                     />
                     <Separator />
                     {
                         selectedNode.data.choices.map((choice, index) => {
-                            function updateChoice(newValue: string): PartialDeep<MultipleChoiceNode> {
+                            function updateChoice(newValue: string): PartialDeep<MultipleChoiceQuestionNode> {
                                 return produce(selectedNode, draft => {
                                     draft.data.choices[index] = newValue;
                                 })
@@ -67,4 +67,4 @@ const MultipleChoiceNodeProperties = (props: MultipleChoiceNodePropertiesProps) 
     );
 }
 
-export default MultipleChoiceNodeProperties;
+export default MultipleChoiceQuestionNodeProperties;

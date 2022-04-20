@@ -1,4 +1,4 @@
-export { default as MultipleChoiceNodeProperties } from "./MultipleChoiceNodeProperties/MultipleChoiceNodeProperties";
-export { default as SingleChoiceNodeProperties } from "./SingleChoiceNodeProperties/SingleChoiceNodeProperties";
-export { default as CodingNodeProperties } from "./CodingNodeProperties/CodingNodeProperties";
+export { default as MultipleChoiceQuestionNodeProperties } from "./MultipleChoiceQuestionNodeProperties/MultipleChoiceQuestionNodeProperties";
+export { default as CloseEndedQuestionNodeProperties } from "./CloseEndedQuestionNodeProperties/CloseEndedQuestionNodeProperties";
+export { default as CodingQuestionNodeProperties } from "./CodingQuestionNodeProperties/CodingQuestionNodeProperties";
 export { default as LessonNodeProperties } from "./LessonNodeProperties/LessonNodeProperties";

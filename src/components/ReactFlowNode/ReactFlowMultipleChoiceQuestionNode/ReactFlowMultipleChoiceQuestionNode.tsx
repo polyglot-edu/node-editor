@@ -1,12 +1,12 @@
 import { Handle, Position } from "react-flow-renderer";
 import useStore from "../../../store";
-import { MultipleChoiceNode } from "../../../types/polyglotElements";
+import { MultipleChoiceQuestionNode } from "../../../types/polyglotElements";
 import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
 
-type ReactFlowMultipleChoiceNodeProps = ReactFlowNodeProps & MultipleChoiceNode;
+type ReactFlowMultipleChoiceQuestionNodeProps = ReactFlowNodeProps & MultipleChoiceQuestionNode;
 
-const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps) => {
+const ReactFlowMultipleChoiceQuestionNode = ({ data }: ReactFlowMultipleChoiceQuestionNodeProps) => {
     const onConnect = useStore(state => state.onConnect);
 
     return (
@@ -25,4 +25,4 @@ const ReactFlowMultipleChoiceNode = ({ data }: ReactFlowMultipleChoiceNodeProps)
     );
 }
 
-export default ReactFlowMultipleChoiceNode;
+export default ReactFlowMultipleChoiceQuestionNode;

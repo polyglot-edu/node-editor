@@ -1,16 +1,16 @@
 import { Handle, Position } from "react-flow-renderer";
 import useStore from "../../../store";
-import { CodingNode } from "../../../types/polyglotElements";
+import { CloseEndedQuestionNode } from "../../../types/polyglotElements";
 import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
 
-type ReactFlowCodingElementProps = ReactFlowNodeProps & CodingNode;
+type ReactFlowCloseEndedQuestionNodeProps = ReactFlowNodeProps & CloseEndedQuestionNode;
 
-const ReactFlowCodingNode = ({ data }: ReactFlowCodingElementProps) => {
+const ReactFlowCloseEndedQuestionNode = ({ data }: ReactFlowCloseEndedQuestionNodeProps) => {
     const onConnect = useStore(state => state.onConnect);
-    
+
     return (
-        <Card className="Card-react-flow">
+        <Card className="Card-react-flow" >
             {data.label}
             <Handle
                 type="source"
@@ -25,4 +25,4 @@ const ReactFlowCodingNode = ({ data }: ReactFlowCodingElementProps) => {
     );
 }
 
-export default ReactFlowCodingNode;
+export default ReactFlowCloseEndedQuestionNode;

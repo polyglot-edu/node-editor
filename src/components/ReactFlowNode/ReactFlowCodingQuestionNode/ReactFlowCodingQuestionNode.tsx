@@ -1,24 +1,28 @@
 import { Handle, Position } from "react-flow-renderer";
 import useStore from "../../../store";
-import { SingleChoiceNode } from "../../../types/polyglotElements";
+import { CodingQuestionNode } from "../../../types/polyglotElements";
 import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
 
-type ReactFlowSingleChoiceNodeProps = ReactFlowNodeProps & SingleChoiceNode;
+type ReactFlowCodingQuestionElementProps = ReactFlowNodeProps & CodingQuestionNode;
 
-const ReactFlowSingleChoiceNode = ({ data }: ReactFlowSingleChoiceNodeProps) => {
+const ReactFlowCodingQuestionNode = ({ data }: ReactFlowCodingQuestionElementProps) => {
     const onConnect = useStore(state => state.onConnect);
-
+    
     return (
-        <Card className="Card-react-flow" >
+        <Card className="Card-react-flow">
             {data.label}
             <Handle
                 type="source"
                 position={Position.Right}
                 onConnect={onConnect}
             />
+            <Handle
+                type="target"
+                position={Position.Left}
+            />
         </Card>
     );
 }
 
-export default ReactFlowSingleChoiceNode;
+export default ReactFlowCodingQuestionNode;

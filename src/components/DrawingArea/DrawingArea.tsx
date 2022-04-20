@@ -33,6 +33,8 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
             nodeTypes={polyglotNodeComponentMapping.componentMapping}
             edgeTypes={polyglotEdgeComponentMapping.componentMapping}
             snapToGrid={true}
+            fitView={true}
+            fitViewOptions={{ padding: 0.5 }}
         >
             <Background variant={BackgroundVariant.Dots} />
             <Controls />
