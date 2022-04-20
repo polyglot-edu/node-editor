@@ -1,4 +1,4 @@
-import { PolyglotNode, PolyglotEdge, MultipleChoiceNode, CodingNode, PassFailEdge, SingleChoiceNode } from "../types/polyglotElements";
+import { PolyglotNode, PolyglotEdge, MultipleChoiceNode, CodingNode, PassFailEdge, LessonNode, SingleChoiceNode } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 import { MarkerType } from "react-flow-renderer";
 
@@ -59,16 +59,16 @@ const singleChoiceNodes: SingleChoiceNode[] = [
     }
 ]
 
-const lessonNodes: PolyglotNode[] = [
-    // {
-    //     id: UUIDv4(),
-    //     type: "multipleChoiceNode",
-    //     title: 'Lesson',
-    //     description: 'Some description',
-    //     difficulty: 1,
-    //     data: { label: 'Lesson' },
-    //     position: { x: 250, y: 150 },
-    // }
+const lessonNodes: LessonNode[] = [
+    {
+        id: UUIDv4(),
+        type: "lessonNode",
+        title: 'Lesson Node',
+        description: 'Some description',
+        difficulty: 1,
+        data: { label: 'Lesson Node' },
+        position: { x: 250, y: 150 },
+    }
 ]
 
 const flowNodes: PolyglotNode[] = [
