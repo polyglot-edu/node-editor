@@ -1,1 +1,2 @@
 export { default as PassFailEdgeProperties } from "./PassFailEdgeProperties/PassFailEdgeProperties";
+export { default as ExactValueEdgeProperties } from "./ExactValueEdgeProperties/ExactValueEdgeProperties";
