@@ -1,4 +1,5 @@
 import { bezierEdgeFactory } from "@tisoap/react-flow-smart-edge";
+import { MarkerType } from "react-flow-renderer";
 import useStore from "../../../store";
 import { ReactFlowEdgeProps } from "../ReactFlowEdge";
 
@@ -10,7 +11,7 @@ const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
     const { style } = props;
 
     const SmartBezierEdge = bezierEdgeFactory({
-        gridRatio: 15,
+        gridRatio: 2,
         nodePadding: 15,
     })
 

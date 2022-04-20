@@ -25,17 +25,15 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
 
     return (
         <ReactFlow
-            // nodesDraggable
             nodes={nodes}
             edges={edges}
             onNodesChange={onNodesChange}
             onEdgesChange={onEdgesChange}
-            // multiSelectionKeyCode={null}
+            multiSelectionKeyCode={null}
             onSelectionChange={onSelectionChange}
             nodeTypes={polyglotNodeComponentMapping.componentMapping}
             edgeTypes={polyglotEdgeComponentMapping.componentMapping}
             snapToGrid={true}
-            snapGrid={[15, 15]}
         >
             <Background variant={BackgroundVariant.Dots} />
             <Controls />

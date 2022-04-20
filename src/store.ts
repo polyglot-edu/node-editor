@@ -1,6 +1,6 @@
 import create from "zustand";
 import { devtools } from 'zustand/middleware'
-import { Node, Edge, Connection } from "react-flow-renderer";
+import { Node, Edge, Connection, MarkerType } from "react-flow-renderer";
 import { loadFlowElements } from "./data/flowElements";
 import { PolyglotEdge, PolyglotNode } from "./types/polyglotElements";
 import { merge } from "@fluentui/react";
@@ -139,13 +139,18 @@ const useStore = create<ApplicationState>(devtools((set, get) => ({
         set(produce(draft => {
             const newEdge: PassFailEdge = {
                 id: UUIDv4(),
-                title: "First Edge",
+                title: "",
                 source: connection.source!,
                 target: connection.target!,
                 type: "passFailEdge",
                 data: {
                     conditionKind: "pass",
                 },
+                markerEnd: {
+                    type: MarkerType.Arrow,
+                    width: 25,
+                    height: 25,
+                }
             }
             draft.edgeMap[newEdge.id] = newEdge;
         }))

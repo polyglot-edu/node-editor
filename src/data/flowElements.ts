@@ -1,5 +1,6 @@
 import { PolyglotNode, PolyglotEdge, MultipleChoiceNode, CodingNode, PassFailEdge, SingleChoiceNode } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
+import { MarkerType } from "react-flow-renderer";
 
 const id1 = UUIDv4();
 const id2 = UUIDv4();
@@ -86,6 +87,11 @@ const passFailEdges: PassFailEdge[] = [
         data: {
             conditionKind: "pass",
         },
+        markerEnd: {
+            type: MarkerType.Arrow,
+            width: 25,
+            height: 25,
+        }
     },
 ]
 
