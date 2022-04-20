@@ -3,7 +3,6 @@ import useStore, { curriedUpdate } from "../../store";
 import { PolyglotNode, polyglotNodeComponentMapping } from "../../types/polyglotElements";
 import { dropdownEventAdapter, eventHandlerFactory, ratingEventAdapter, textInputEventAdapter, updater } from "../../utils/formHandling";
 import Card from "../Card/Card";
-import "./NodeProperties.css";
 
 export type NodePropertiesProps = {};
 

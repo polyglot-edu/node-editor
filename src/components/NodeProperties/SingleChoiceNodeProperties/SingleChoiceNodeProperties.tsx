@@ -1,4 +1,4 @@
-import { Separator, Stack, StackItem, TextField } from "@fluentui/react";
+import { Stack, StackItem, TextField } from "@fluentui/react";
 import useStore, { curriedUpdate } from "../../../store";
 import { eventHandlerFactory, textInputEventAdapter, updater } from "../../../utils/formHandling";
 import Card from "../../Card/Card";
@@ -28,7 +28,6 @@ const SingleChoiceNodeProperties = (props: SingleChoiceNodePropertiesProps) => {
                         value={selectedNode.data.question}
                         onChange={textInputNodeUpdater(updater<SingleChoiceNode>()("data.question"))}
                     />
-                    <Separator />
                     <StackItem >
                         <TextField
                             label={`Answer`}

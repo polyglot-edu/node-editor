@@ -3,7 +3,6 @@ import useStore from "../../../store";
 import { CodingNode } from "../../../types/polyglotElements";
 import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
-import "./ReactFlowCodingNode.css";
 
 type ReactFlowCodingElementProps = ReactFlowNodeProps & CodingNode;
 

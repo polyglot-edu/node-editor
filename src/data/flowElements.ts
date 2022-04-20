@@ -12,7 +12,7 @@ const multipleChoiceNodes: MultipleChoiceNode[] = [
         title: 'Multiple Choice Node',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Input', question: "Test", correctAnswers: [], choices: ["Choice test"] },
+        data: { label: 'Multiple Choice Node', question: "Test", correctAnswers: [], choices: ["Choice test"] },
         position: { x: 250, y: 0 },
     },
     {
@@ -21,8 +21,8 @@ const multipleChoiceNodes: MultipleChoiceNode[] = [
         title: 'Other Multiple Choice',
         description: 'Some description',
         difficulty: 5,
-        data: { label: 'Output', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
-        position: { x: 250, y: 300 },
+        data: { label: 'Other Multiple Choice Node', question: "Test", correctAnswers: [], choices: ["Choice 11233444"] },
+        position: { x: 250, y: 375 },
     },
 ]
 
@@ -43,7 +43,7 @@ const codingNodes: CodingNode[] = [
         description: 'Some other description',
         difficulty: 3,
         data: { label: 'Other Coding' },
-        position: { x: 600, y: 300 },
+        position: { x: 600, y: 375 },
     }
 ];
 

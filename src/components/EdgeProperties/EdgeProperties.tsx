@@ -3,7 +3,6 @@ import useStore, { curriedUpdate } from "../../store";
 import { PolyglotEdge, polyglotEdgeComponentMapping } from "../../types/polyglotElements";
 import { dropdownEventAdapter, eventHandlerFactory, textInputEventAdapter, updater } from "../../utils/formHandling";
 import Card from "../Card/Card";
-import "./EdgeProperties.css";
 
 export type EdgePropertiesProps = {};
 

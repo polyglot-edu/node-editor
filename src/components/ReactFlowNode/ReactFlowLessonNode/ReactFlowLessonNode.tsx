@@ -3,7 +3,6 @@ import useStore from "../../../store";
 import { LessonNode } from "../../../types/polyglotElements";
 import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
-import "./ReactFlowLessonNode.css";
 
 type ReactFlowLessonNodeProps = ReactFlowNodeProps & LessonNode;
 

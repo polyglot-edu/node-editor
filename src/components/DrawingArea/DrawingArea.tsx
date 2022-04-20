@@ -8,7 +8,6 @@ type DrawingAreaProps = {
 };
 
 const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
-    // const reactFlowInstance = useReactFlow();
     const [
         nodes,
         edges,

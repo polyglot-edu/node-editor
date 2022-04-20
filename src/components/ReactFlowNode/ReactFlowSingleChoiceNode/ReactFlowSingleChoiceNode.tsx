@@ -3,7 +3,6 @@ import useStore from "../../../store";
 import { SingleChoiceNode } from "../../../types/polyglotElements";
 import Card from "../../Card/Card";
 import { ReactFlowNodeProps } from "../ReactFlowNode";
-import "./ReactFlowSingleChoiceNode.css";
 
 type ReactFlowSingleChoiceNodeProps = ReactFlowNodeProps & SingleChoiceNode;
 

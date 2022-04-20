@@ -1,8 +1,7 @@
-import { Stack, StackItem } from "@fluentui/react"
+import { Stack } from "@fluentui/react"
 import { Children } from "react"
 import EdgeProperties from "../EdgeProperties/EdgeProperties"
 import NodeProperties from "../NodeProperties/NodeProperties"
-import "./PropertiesStack.css"
 
 type PropertiesStackProps = {}
 
