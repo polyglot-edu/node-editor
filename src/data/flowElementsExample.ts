@@ -1,7 +1,6 @@
 import { PolyglotNode, PolyglotEdge, MultipleChoiceQuestionNode, CodingQuestionNode, PassFailEdge, LessonNode, CloseEndedQuestionNode, ExactValueEdge, UnconditionalEdge, CustomValidationEdge } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from 'uuid';
 import { MarkerType } from "react-flow-renderer";
-import { CustomValidationEdgeProperties } from "../components/EdgeProperties";
 
 const ids = [...Array(8).keys()].map(i => UUIDv4());
 
@@ -40,14 +39,14 @@ const closeEndedQuestionNodes: CloseEndedQuestionNode[] = [
         position: { x: 250, y: 150 },
     },
     ...ids.map((id, index) => ({
-            id: id,
-            type: "closeEndedQuestionNode",
-            title: ((index % 2) ? 'To' : 'From'),
-            description: 'Some description',
-            difficulty: 5,
-            data: { label: ((index % 2) ? 'To' : 'From'), question: "domandona", correctAnswer: "rispostona" },
-            position: { x: ((index % 2) ? 600 : 250), y: 375 + (Math.floor(index/2) * 75) },
-        } as CloseEndedQuestionNode)),
+        id: id,
+        type: "closeEndedQuestionNode",
+        title: ((index % 2) ? 'To' : 'From'),
+        description: 'Some description',
+        difficulty: 5,
+        data: { label: ((index % 2) ? 'To' : 'From'), question: "domandona", correctAnswer: "rispostona" },
+        position: { x: ((index % 2) ? 600 : 250), y: 375 + (Math.floor(index / 2) * 75) },
+    } as CloseEndedQuestionNode)),
 ]
 
 const lessonNodes: LessonNode[] = [
