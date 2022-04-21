@@ -1,14 +1,21 @@
 import { CodingQuestionNodeProperties } from "../../../components/NodeProperties";
 import { ReactFlowCodingQuestionNode } from "../../../components/ReactFlowNode";
 import { polyglotNodeComponentMapping } from "../elementMapping";
-import { NodeData, PolyglotNode } from "./Node";
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from "./Node";
 
-export type CodingQuestionNodeData = NodeData & {
-}
+export type CodingQuestionNodeData = NodeData & {}
 
 export type CodingQuestionNode = PolyglotNode & {
     type: "codingQuestionNode";
     data: CodingQuestionNodeData;
 }
 
-polyglotNodeComponentMapping.registerMapping("codingQuestionNode", "Coding Question", CodingQuestionNodeProperties, ReactFlowCodingQuestionNode);
+polyglotNodeComponentMapping.registerMapping<CodingQuestionNode>(
+    "codingQuestionNode",
+    "Coding Question",
+    CodingQuestionNodeProperties,
+    ReactFlowCodingQuestionNode,
+    {
+        ...defaultPolyglotNodeData,
+    }
+);

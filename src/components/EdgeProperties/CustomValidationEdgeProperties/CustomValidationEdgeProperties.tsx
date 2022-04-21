@@ -12,7 +12,7 @@ const CustomValidationEdgeProperties = (props: CustomValidationEdgePropertiesPro
     const selectedEdge = useStore(state => state.getSelectedEdge()) as CustomValidationEdge;
     const updateEdge = useStore(state => state.updateEdge);
 
-    const { id } = selectedEdge;
+    const { id } = selectedEdge.reactFlow;
 
     function onCodeChange(newValue: string | undefined) {
         const newLessonEdge = produce(selectedEdge, draft => {

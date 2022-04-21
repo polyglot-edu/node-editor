@@ -1,13 +1,17 @@
 import { Edge } from "react-flow-renderer";
+import * as t from "io-ts";
 
-export interface EdgeData {
-    // duplicate data because the object returned by the react-flow callback lacks some data
-    // label: string;
-    // conditions: string[];
-}
+export const EdgeData_IoTs = t.type({});
+export type EdgeData = t.TypeOf<typeof EdgeData_IoTs>;
+export const defaultPolyglotEdgeData: EdgeData = {}; 
 
-export type PolyglotEdge = Edge<unknown> & {
-    type: string;
-    title?: string;
-    data: EdgeData;
+export const PolyglotEdge_IoTs = t.type({
+    type: t.string,
+    title: t.string,
+    data: EdgeData_IoTs,
+}, "PolyglotEdge");
+
+
+export type PolyglotEdge = t.TypeOf<typeof PolyglotEdge_IoTs> & {
+    reactFlow: Edge<unknown>;
 }

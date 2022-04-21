@@ -1,7 +1,7 @@
 import { polyglotEdgeComponentMapping } from "../elementMapping";
 import { PassFailEdgeProperties } from "../../../components/EdgeProperties";
 import { ReactFlowSmartBezierEdge } from "../../../components/ReactFlowEdge";
-import { EdgeData, PolyglotEdge } from "./Edge";
+import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from "./Edge";
 import * as t from "io-ts";
 
 export const PassFailEdgeConditionKind_IoTs = t.union([
@@ -19,4 +19,13 @@ export type PassFailEdge = PolyglotEdge & {
     data: PassFailEdgeData;
 }
 
-polyglotEdgeComponentMapping.registerMapping("passFailEdge", "Pass/Fail", PassFailEdgeProperties, ReactFlowSmartBezierEdge);
+polyglotEdgeComponentMapping.registerMapping<PassFailEdge>(
+    "passFailEdge",
+    "Pass/Fail",
+    PassFailEdgeProperties,
+    ReactFlowSmartBezierEdge,
+    {
+        ...defaultPolyglotEdgeData,
+        conditionKind: "pass",
+    }
+);

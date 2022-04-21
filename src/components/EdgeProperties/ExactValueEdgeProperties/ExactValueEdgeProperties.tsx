@@ -11,7 +11,7 @@ const ExactValueEdgeProperties = (props: ExactValueEdgePropertiesProps) => {
     const selectedEdge = useStore(state => state.getSelectedEdge()) as ExactValueEdge;
     const updateEdge = useStore(state => state.updateEdge);
 
-    const { id } = selectedEdge;
+    const { id } = selectedEdge.reactFlow;
 
     const genericEdgeUpdater = eventHandlerFactory(curriedUpdate(updateEdge, id));
     const textInputEdgeUpdater = genericEdgeUpdater(textInputEventAdapter);

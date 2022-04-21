@@ -1,7 +1,7 @@
 import { MultipleChoiceQuestionNodeProperties } from "../../../components/NodeProperties";
 import { ReactFlowMultipleChoiceQuestionNode } from "../../../components/ReactFlowNode";
 import { polyglotNodeComponentMapping } from "../elementMapping";
-import { NodeData, PolyglotNode } from "./Node";
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from "./Node";
 
 export type MultipleChoiceQuestionNodeData = NodeData & {
     question: string;
@@ -15,4 +15,15 @@ export type MultipleChoiceQuestionNode = PolyglotNode & {
     data: MultipleChoiceQuestionNodeData;
 };
 
-polyglotNodeComponentMapping.registerMapping("multipleChoiceQuestionNode", "Multiple Choice Question", MultipleChoiceQuestionNodeProperties, ReactFlowMultipleChoiceQuestionNode);
+polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>(
+    "multipleChoiceQuestionNode",
+    "Multiple Choice Question",
+    MultipleChoiceQuestionNodeProperties,
+    ReactFlowMultipleChoiceQuestionNode,
+    {
+        ...defaultPolyglotNodeData,
+        choices: [],
+        correctAnswers: [],
+        question: "",
+    },
+);

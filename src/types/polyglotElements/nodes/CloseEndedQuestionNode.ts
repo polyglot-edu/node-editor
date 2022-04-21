@@ -1,7 +1,7 @@
 import { CloseEndedQuestionNodeProperties } from "../../../components/NodeProperties";
 import { ReactFlowCloseEndedQuestionNode } from "../../../components/ReactFlowNode";
 import { polyglotNodeComponentMapping } from "../elementMapping";
-import { NodeData, PolyglotNode } from "./Node";
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from "./Node";
 
 export type CloseEndedQuestionNodeData = NodeData & {
     question: string;
@@ -13,4 +13,14 @@ export type CloseEndedQuestionNode = PolyglotNode & {
     data: CloseEndedQuestionNodeData;
 };
 
-polyglotNodeComponentMapping.registerMapping("closeEndedQuestionNode", "Close Ended Question", CloseEndedQuestionNodeProperties, ReactFlowCloseEndedQuestionNode);
+polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>(
+    "closeEndedQuestionNode",
+    "Close Ended Question",
+    CloseEndedQuestionNodeProperties,
+    ReactFlowCloseEndedQuestionNode,
+    {
+        ...defaultPolyglotNodeData,
+        question: "",
+        correctAnswer: "",
+    }
+);

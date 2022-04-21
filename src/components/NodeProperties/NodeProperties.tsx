@@ -1,7 +1,7 @@
 import { Dropdown, IDropdownOption, Label, Rating, Stack, StackItem, TagPicker, TextField } from "@fluentui/react";
-import useStore, { curriedUpdate } from "../../store";
+import useStore, { changeNodeType, curriedUpdate } from "../../store";
 import { PolyglotNode, polyglotNodeComponentMapping } from "../../types/polyglotElements";
-import { dropdownEventAdapter, eventHandlerFactory, ratingEventAdapter, textInputEventAdapter, updater } from "../../utils/formHandling";
+import { eventHandlerFactory, ratingEventAdapter, textInputEventAdapter, updater } from "../../utils/formHandling";
 import Card from "../Card/Card";
 
 export type NodePropertiesProps = {};
@@ -16,15 +16,11 @@ const Properties = (props: NodePropertiesProps) => {
         return <></>;
     }
 
-    const { id } = selectedNode;
+    const { id } = selectedNode.reactFlow;
 
     const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
-    const dropdownNodeUpdater = genericNodeUpdater(dropdownEventAdapter);
     const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
-
-    // TODO: handle type change properly
-    const typeChangeHandler = dropdownNodeUpdater(updater<PolyglotNode>()("type"));
 
     const allowed = "Software Engineering,CSharp,Statistics,UniPi,MODELS 2021,Software Development";
 
@@ -36,7 +32,7 @@ const Properties = (props: NodePropertiesProps) => {
                         label="Title"
                         id={`titleInput-${id}`}
                         value={selectedNode.title}
-                        onChange={textInputNodeUpdater(newTitle => ({ title: newTitle, data: { label: newTitle } }))}
+                        onChange={textInputNodeUpdater(newTitle => ({ title: newTitle, reactFlow: { data: { label: newTitle } } }))}
                     />
                     <TextField
                         label="Description"
@@ -51,7 +47,7 @@ const Properties = (props: NodePropertiesProps) => {
                         id={`typeInput-${id}`}
                         placeholder="Select an option"
                         options={typeDropdownOptions}
-                        onChange={typeChangeHandler}
+                        onChange={(_, option) => { changeNodeType(selectedNode, option?.key?.toString() ?? "") }}
                         selectedKey={selectedNode.type}
                     />
                     <Label htmlFor={`ratingInput-${id}`} className="pt-[10px] pb-0" >

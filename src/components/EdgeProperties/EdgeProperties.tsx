@@ -1,5 +1,5 @@
 import { Dropdown, IDropdownOption, Stack, StackItem, TextField } from "@fluentui/react";
-import useStore, { curriedUpdate } from "../../store";
+import useStore, { changeEdgeType, curriedUpdate } from "../../store";
 import { PolyglotEdge, polyglotEdgeComponentMapping } from "../../types/polyglotElements";
 import { dropdownEventAdapter, eventHandlerFactory, textInputEventAdapter, updater } from "../../utils/formHandling";
 import Card from "../Card/Card";
@@ -16,14 +16,10 @@ const Properties = (props: EdgePropertiesProps) => {
         return <></>;
     }
 
-    const { id } = selectedEdge;
+    const { id } = selectedEdge.reactFlow;
 
     const genericEdgeUpdater = eventHandlerFactory(curriedUpdate(updateEdge, id));
     const textInputEdgeUpdater = genericEdgeUpdater(textInputEventAdapter);
-    const dropdownEdgeUpdater = genericEdgeUpdater(dropdownEventAdapter);
-
-    // TODO: handle type change properly
-    const typeChangeHandler = dropdownEdgeUpdater(updater<PolyglotEdge>()("type"));
 
     return (
         <Stack tokens={{ childrenGap: 15 }}>
@@ -40,7 +36,7 @@ const Properties = (props: EdgePropertiesProps) => {
                         id={`typeInput-${id}`}
                         placeholder="Select an option"
                         options={typeDropdownOptions}
-                        onChange={typeChangeHandler}
+                        onChange={(_, option) => { changeEdgeType(selectedEdge, option?.key?.toString() ?? "") }}
                         selectedKey={selectedEdge.type}
                     />
                 </Card>

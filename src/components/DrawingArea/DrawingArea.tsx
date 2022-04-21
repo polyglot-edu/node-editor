@@ -8,12 +8,17 @@ type DrawingAreaProps = {
 };
 
 const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
-    const [
+    const {
         nodes,
         edges,
         setNodes,
         setEdges,
-    ] = useStore(store => [store.nodes(), store.edges(), store.applyNodeChanges, store.applyEdgeChanges]);
+    } = useStore(store => ({
+        nodes: store.reactFlowNodes(),
+        edges: store.reactFlowEdges(),
+        setNodes: store.applyNodeChanges,
+        setEdges: store.applyEdgeChanges
+    }));
 
     function onNodesChange(changes: NodeChange[]) {
         setNodes(applyNodeChanges(changes, nodes));

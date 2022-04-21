@@ -11,7 +11,7 @@ const LessonNodeProperties = (props: LessonNodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as LessonNode;
     const updateNode = useStore(state => state.updateNode);
 
-    const { id } = selectedNode;
+    const { id } = selectedNode.reactFlow;
 
     function onFilePick(e: React.ChangeEvent<HTMLInputElement>) {
         const newLessonNode = produce(selectedNode, draft => {

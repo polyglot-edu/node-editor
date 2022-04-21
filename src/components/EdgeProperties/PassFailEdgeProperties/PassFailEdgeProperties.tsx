@@ -11,7 +11,7 @@ const PassFailEdgeProperties = (props: PassFailEdgePropertiesProps) => {
     const selectedEdge = useStore(state => state.getSelectedEdge()) as PassFailEdge;
     const updateEdge = useStore(state => state.updateEdge);
 
-    const { id } = selectedEdge;
+    const { id } = selectedEdge.reactFlow;
 
     const genericEdgeUpdater = eventHandlerFactory(curriedUpdate(updateEdge, id));
     const dropdownEdgeUpdater = genericEdgeUpdater(dropdownEventAdapter);

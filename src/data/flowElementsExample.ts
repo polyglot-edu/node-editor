@@ -6,58 +6,79 @@ const ids = [...Array(8).keys()].map(i => UUIDv4());
 
 const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {
-        id: UUIDv4(),
         type: "multipleChoiceQuestionNode",
         title: 'Multiple Choice Question',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Multiple Choice Question', question: "Test", correctAnswers: [], choices: ["Choice test"] },
-        position: { x: 250, y: 0 },
+        data: { question: "Test", correctAnswers: [], choices: ["Choice test"] },
+        reactFlow: {
+            id: UUIDv4(),
+            type: "multipleChoiceQuestionNode",
+            position: { x: 250, y: 0 },
+            data: { label: 'Multiple Choice Question' },
+
+        },
     },
 ]
 
 const codingNodes: CodingQuestionNode[] = [
     {
-        id: UUIDv4(),
         type: "codingQuestionNode",
         title: 'Coding Question',
         description: 'Some description',
         difficulty: 4,
-        data: { label: 'Coding Question' },
-        position: { x: 250, y: 75 },
+        data: {},
+        reactFlow: {
+            id: UUIDv4(),
+            type: "codingQuestionNode",
+            position: { x: 250, y: 75 },
+            data: { label: 'Coding Question' },
+        },
     },
 ];
 
 const closeEndedQuestionNodes: CloseEndedQuestionNode[] = [
     {
-        id: UUIDv4(),
         type: "closeEndedQuestionNode",
         title: 'Close Ended Question',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Close Ended Question', question: "domandona", correctAnswer: "rispostona" },
-        position: { x: 250, y: 150 },
+        data: { question: "domandona", correctAnswer: "rispostona" },
+        reactFlow: {
+            id: UUIDv4(),
+            type: "closeEndedQuestionNode",
+            position: { x: 250, y: 150 },
+            data: { label: 'Close Ended Question' },
+        },
     },
     ...ids.map((id, index) => ({
-        id: id,
         type: "closeEndedQuestionNode",
         title: ((index % 2) ? 'To' : 'From'),
         description: 'Some description',
         difficulty: 5,
-        data: { label: ((index % 2) ? 'To' : 'From'), question: "domandona", correctAnswer: "rispostona" },
-        position: { x: ((index % 2) ? 600 : 250), y: 375 + (Math.floor(index / 2) * 75) },
+        data: { question: "domandona", correctAnswer: "rispostona" },
+        reactFlow: {
+            id: id,
+            type: "closeEndedQuestionNode",
+            position: { x: ((index % 2) ? 600 : 250), y: 375 + (Math.floor(index / 2) * 75) },
+            data: { label: ((index % 2) ? 'To' : 'From') },
+        },
     } as CloseEndedQuestionNode)),
 ]
 
 const lessonNodes: LessonNode[] = [
     {
-        id: UUIDv4(),
         type: "lessonNode",
         title: 'Lesson',
         description: 'Some description',
         difficulty: 1,
-        data: { label: 'Lesson' },
-        position: { x: 250, y: 225 },
+        data: {},
+        reactFlow: {
+            id: UUIDv4(),
+            type: "lessonNode",
+            position: { x: 250, y: 225 },
+            data: { label: 'Lesson' },
+        },
     }
 ]
 
@@ -70,73 +91,85 @@ const flowNodes: PolyglotNode[] = [
 
 const passFailEdges: PassFailEdge[] = [
     {
-        id: UUIDv4(),
-        source: ids[0],
-        target: ids[1],
         title: 'Pass/Fail',
         type: "passFailEdge",
         data: {
             conditionKind: "pass",
         },
-        markerEnd: {
-            type: MarkerType.Arrow,
-            width: 25,
-            height: 25,
-        }
+        reactFlow: {
+            id: UUIDv4(),
+            source: ids[0],
+            target: ids[1],
+            type: "passFailEdge",
+            markerEnd: {
+                type: MarkerType.Arrow,
+                width: 25,
+                height: 25,
+            }
+        },
     },
 ]
 
 const exactValueEdges: ExactValueEdge[] = [
     {
-        id: UUIDv4(),
-        source: ids[2],
-        target: ids[3],
         title: 'Exact Value',
         type: "exactValueEdge",
         data: {
             value: "Expected Value",
         },
-        markerEnd: {
-            type: MarkerType.Arrow,
-            width: 25,
-            height: 25,
-        }
+        reactFlow: {
+            id: UUIDv4(),
+            source: ids[2],
+            target: ids[3],
+            type: "exactValueEdge",
+            markerEnd: {
+                type: MarkerType.Arrow,
+                width: 25,
+                height: 25,
+            }
+        },
     },
 ]
 
 const unconditionalEdge: UnconditionalEdge[] = [
     {
-        id: UUIDv4(),
-        source: ids[4],
-        target: ids[5],
         title: 'Unconditional',
         type: "unconditionalEdge",
         data: {},
-        markerEnd: {
-            type: MarkerType.Arrow,
-            width: 25,
-            height: 25,
-        }
+        reactFlow: {
+            id: UUIDv4(),
+            source: ids[4],
+            target: ids[5],
+            type: "unconditionalEdge",
+            markerEnd: {
+                type: MarkerType.Arrow,
+                width: 25,
+                height: 25,
+            }
+        },
     },
 ]
 
 const customValidationEdge: CustomValidationEdge[] = [
     {
-        id: UUIDv4(),
-        source: ids[6],
-        target: ids[7],
         title: 'Custom Validation',
         type: "customValidationEdge",
         data: {
             code: `bool validate(context) {
-    return context.answer == 'expected answer';
-}`,
+                return context.answer == 'expected answer';
+            }`,
         },
-        markerEnd: {
-            type: MarkerType.Arrow,
-            width: 25,
-            height: 25,
-        }
+        reactFlow: {
+            id: UUIDv4(),
+            source: ids[6],
+            target: ids[7],
+            type: "customValidationEdge",
+            markerEnd: {
+                type: MarkerType.Arrow,
+                width: 25,
+                height: 25,
+            }
+        },
     },
 ]
 

@@ -1,7 +1,7 @@
 import { polyglotEdgeComponentMapping } from "../elementMapping";
 import { CustomValidationEdgeProperties } from "../../../components/EdgeProperties";
 import { ReactFlowSmartBezierEdge } from "../../../components/ReactFlowEdge";
-import { EdgeData, PolyglotEdge } from "./Edge";
+import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from "./Edge";
 
 export type CustomValidationEdgeData = EdgeData & {
     // TODO: this should be generic and should match the type of the answer of the node it is connected to
@@ -13,4 +13,15 @@ export type CustomValidationEdge = PolyglotEdge & {
     data: CustomValidationEdgeData;
 }
 
-polyglotEdgeComponentMapping.registerMapping("customValidationEdge", "Custom Validation", CustomValidationEdgeProperties, ReactFlowSmartBezierEdge);
+polyglotEdgeComponentMapping.registerMapping<CustomValidationEdge>(
+    "customValidationEdge",
+    "Custom Validation",
+    CustomValidationEdgeProperties,
+    ReactFlowSmartBezierEdge,
+    {
+        ...defaultPolyglotEdgeData,
+        code: `bool validate(PolyglotContext context, Exercise exercise) {
+    // your validation code goes here
+}`,
+    }
+);

@@ -14,7 +14,7 @@ const MultipleChoiceQuestionNodeProperties = (props: MultipleChoiceQuestionNodeP
     const selectedNode = useStore(state => state.getSelectedNode()) as MultipleChoiceQuestionNode;
     const updateNode = useStore(state => state.updateNode);
 
-    const { id } = selectedNode;
+    const { id } = selectedNode.reactFlow;
 
     const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);

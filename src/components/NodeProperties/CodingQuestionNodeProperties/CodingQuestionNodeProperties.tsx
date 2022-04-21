@@ -12,19 +12,13 @@ const CodingQuestionNodeProperties = (props: CodingQuestionNodePropertiesProps) 
     const selectedNode = useStore(state => state.getSelectedNode()) as CodingQuestionNode;
     const updateNode = useStore(state => state.updateNode);
 
-    const { id } = selectedNode;
-
-    const handleTitleChange = (e: TextInputEvent) => {
-        const newTitle = e.currentTarget.value;
-        console.log("Updating node with id: ", id, " title to: ", newTitle, " prev title was: ", selectedNode.title, " with label: ", selectedNode.data.label);
-        updateNode(id, { title: newTitle, data: { label: newTitle } });
-    }
+    const { id } = selectedNode.reactFlow;
 
     return (
         <Stack tokens={{ childrenGap: 15 }}>
             <StackItem>
                 <Card>
-                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={handleTitleChange} />
+                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={() => { throw new Error("not implemented") }} />
                 </Card>
             </StackItem>
             <StackItem>
@@ -47,7 +41,7 @@ int main() {
             </StackItem>
             <StackItem>
                 <Card>
-                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={handleTitleChange} />
+                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={() => { throw new Error("not implemented") }} />
                 </Card>
             </StackItem>
         </Stack>

@@ -1,7 +1,7 @@
 import { LessonNodeProperties } from "../../../components/NodeProperties";
 import { ReactFlowLessonNode } from "../../../components/ReactFlowNode";
 import { polyglotNodeComponentMapping } from "../elementMapping";
-import { NodeData, PolyglotNode } from "./Node";
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from "./Node";
 
 export type LessonNodeData = NodeData & {
     file?: {
@@ -15,4 +15,12 @@ export type LessonNode = PolyglotNode & {
     data: LessonNodeData;
 }
 
-polyglotNodeComponentMapping.registerMapping("lessonNode", "Lesson", LessonNodeProperties, ReactFlowLessonNode);
+polyglotNodeComponentMapping.registerMapping<LessonNode>(
+    "lessonNode",
+    "Lesson",
+    LessonNodeProperties,
+    ReactFlowLessonNode,
+    {
+        ...defaultPolyglotNodeData,
+    }
+);
