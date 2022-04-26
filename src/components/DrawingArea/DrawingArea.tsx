@@ -1,6 +1,6 @@
 import { useBoolean } from '@fluentui/react-hooks';
 import { useState } from 'react';
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Controls, EdgeChange, NodeChange, OnSelectionChangeParams, Node, Edge } from 'react-flow-renderer';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Controls, EdgeChange, NodeChange, OnSelectionChangeParams, Node } from 'react-flow-renderer';
 import useStore from '../../store';
 import { polyglotEdgeComponentMapping, polyglotNodeComponentMapping } from '../../types/polyglotElements';
 import ContextMenu from '../ContextMenu/ContextMenu';
