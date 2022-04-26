@@ -1,55 +1,90 @@
-import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Controls, EdgeChange, NodeChange, OnSelectionChangeParams } from 'react-flow-renderer';
+import { useBoolean } from '@fluentui/react-hooks';
+import { useState } from 'react';
+import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, BackgroundVariant, Controls, EdgeChange, NodeChange, OnSelectionChangeParams, Node, Edge } from 'react-flow-renderer';
 import useStore from '../../store';
 import { polyglotEdgeComponentMapping, polyglotNodeComponentMapping } from '../../types/polyglotElements';
+import ContextMenu from '../ContextMenu/ContextMenu';
 import "./DrawingArea.css";
 
 type DrawingAreaProps = {
     onSelectionChange: (selection: OnSelectionChangeParams) => void;
 };
 
+const deleteKeyCodes = ['Backspace', 'Delete'];
+
 const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
-    const {
-        nodes,
-        edges,
-        setNodes,
-        setEdges,
-    } = useStore(store => ({
-        nodes: store.reactFlowNodes(),
-        edges: store.reactFlowEdges(),
+    const { getNodes, getEdges, setNodes, setEdges, removeNode, removeEdge } = useStore(store => ({
+        getNodes: store.reactFlowNodes,
+        getEdges: store.reactFlowEdges,
         setNodes: store.applyNodeChanges,
-        setEdges: store.applyEdgeChanges
+        setEdges: store.applyEdgeChanges,
+        removeNode: store.removeNode,
+        removeEdge: store.removeEdge,
     }));
 
+    // const nodes = getNodes();
+    // const edges = getEdges();
+
+    const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
+    const [showingContextMenu, { setTrue: showContextMenu, setFalse: hideContextMenu }] = useBoolean(false);
+
     function onNodesChange(changes: NodeChange[]) {
-        setNodes(applyNodeChanges(changes, nodes));
+        setNodes(applyNodeChanges(changes, getNodes()));
     }
     function onEdgesChange(changes: EdgeChange[]) {
-        setEdges(applyEdgeChanges(changes, edges));
+        setEdges(applyEdgeChanges(changes, getEdges()));
+    }
+
+    function onNodesDelete(nodes: Node[]) {
+        nodes.forEach(n => removeNode(n.id));
+        setNodes(getNodes());
     }
 
     return (
-        <ReactFlow
-            nodes={nodes}
-            edges={edges}
-            onNodesChange={onNodesChange}
-            onEdgesChange={onEdgesChange}
-            multiSelectionKeyCode={null}
-            onSelectionChange={onSelectionChange}
-            nodeTypes={polyglotNodeComponentMapping.componentMapping}
-            edgeTypes={polyglotEdgeComponentMapping.componentMapping}
-            snapToGrid={true}
-            fitView={true}
-            fitViewOptions={{ padding: 0.2 }}
-        >
-            <Background variant={BackgroundVariant.Dots} />
-            <Controls />
-        </ReactFlow>
+        <>
+            <ReactFlow
+                // nodes setup
+                nodes={getNodes()}
+                nodeTypes={polyglotNodeComponentMapping.componentMapping}
+                onNodesChange={onNodesChange}
+                onNodesDelete={onNodesDelete}
+
+                // edges setup
+                edges={getEdges()}
+                edgeTypes={polyglotEdgeComponentMapping.componentMapping}
+                onEdgesChange={onEdgesChange}
+                onEdgesDelete={(edges) => edges.forEach(e => removeEdge(e.id))}
+
+                multiSelectionKeyCode={null}
+                deleteKeyCode={deleteKeyCodes}
+                onSelectionChange={onSelectionChange}
+
+                // view setup
+                snapToGrid={true}
+                fitView={true}
+                fitViewOptions={{ padding: 0.2 }}
+
+                // context menu event handlers
+                onContextMenu={e => { e.preventDefault(); }}
+                onClick={hideContextMenu}
+                onMoveStart={hideContextMenu}
+                onPaneContextMenu={e => {
+                    showContextMenu();
+                    setContextMenuPos({ x: e.clientX - (e.clientX % 15), y: e.clientY - (e.clientY % 15) });
+                    e.preventDefault();
+                }}
+            >
+                <Background variant={BackgroundVariant.Dots} />
+                <Controls />
+            </ReactFlow>
+            <ContextMenu pos={contextMenuPos} showing={showingContextMenu} onDismiss={hideContextMenu} />
+        </>
     )
 }
 
 const DrawingArea = (props: DrawingAreaProps) => {
     return (
-        <div className="flex flex-col flex-1 w-[calc(100%_-_var(--properties-bar-width))] ease-in-out duration-300" onContextMenu={e => e.preventDefault()}>
+        <div className="flex flex-col flex-1 w-[calc(100%_-_var(--properties-bar-width))] ease-in-out duration-300">
             <Flow {...props} />
         </div>
     );

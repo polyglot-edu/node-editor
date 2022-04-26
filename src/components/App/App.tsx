@@ -55,10 +55,10 @@ const useElementSelection = () => {
     }
 
     if (selectedNode) {
-        selectedNodeKind = nodeMap[selectedNode].type;
+        selectedNodeKind = nodeMap.get(selectedNode)?.type;
     }
     if (selectedEdge) {
-        selectedEdgeKind = edgeMap[selectedEdge].type;
+        selectedEdgeKind = edgeMap.get(selectedEdge)?.type;
     }
 
     return {

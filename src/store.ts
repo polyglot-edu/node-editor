@@ -1,27 +1,29 @@
 import create from "zustand";
 import { devtools } from 'zustand/middleware'
-import { Node, Edge, Connection, MarkerType } from "react-flow-renderer";
+import { Node, Edge, Connection } from "react-flow-renderer";
 import { loadFlowElements } from "./data/flowElementsExample";
 import { PolyglotEdge, polyglotEdgeComponentMapping, PolyglotEdge_IoTs, PolyglotNode, polyglotNodeComponentMapping, PolyglotNode_IoTs } from "./types/polyglotElements";
 import { merge } from "@fluentui/react";
 import type { PartialDeep } from "type-fest";
 import produce from "immer";
-import { v4 as UUIDv4 } from 'uuid';
-import { PassFailEdge } from "./types/polyglotElements/edges/PassFailEdge";
+import { createNewDefaultPolyglotEdge } from "./utils/utils";
+import { enableMapSet } from 'immer'
 
+enableMapSet();
 
 const flowElements = loadFlowElements();
 
 function createElementMapping<T extends (PolyglotNode | PolyglotEdge)>(arr: T[]) {
-    return arr.reduce((acc, el) => {
-        acc[el.reactFlow.id] = el;
-        return acc;
-    }, {} as Record<string, T>);
+    const mapping = new Map<string, T>();
+    arr.forEach(el => {
+        mapping.set(el.reactFlow.id, el);
+    });
+    return mapping;
 }
 
 interface ApplicationState {
-    nodeMap: Record<string, PolyglotNode>;
-    edgeMap: Record<string, PolyglotEdge>;
+    nodeMap: Map<string, PolyglotNode>;
+    edgeMap: Map<string, PolyglotEdge>;
     reactFlowNodes: () => Node[];
     reactFlowEdges: () => Edge[];
 
@@ -50,22 +52,22 @@ interface ApplicationState {
 const useStore = create<ApplicationState>(devtools((set, get) => ({
     nodeMap: createElementMapping(flowElements.nodes),
     edgeMap: createElementMapping(flowElements.edges),
-    reactFlowNodes: () => Object.entries(get().nodeMap).map(([_, node]) => Object.assign({}, node.reactFlow)),
-    reactFlowEdges: () => Object.entries(get().edgeMap).map(([_, edge]) => Object.assign({}, edge.reactFlow)),
+    reactFlowNodes: () => Array.from(get().nodeMap.values()).map(node => Object.assign({}, node.reactFlow)),
+    reactFlowEdges: () => Array.from(get().edgeMap.values()).map(edge => Object.assign({}, edge.reactFlow)),
 
     selectedNode: null,
     selectedEdge: null,
     getSelectedNode: () => {
         const state = get();
         if (state.selectedNode !== null) {
-            return state.nodeMap[state.selectedNode];
+            return state.nodeMap.get(state.selectedNode)!;
         }
         return null;
     },
     getSelectedEdge: () => {
         const state = get();
         if (state.selectedEdge !== null) {
-            return state.edgeMap[state.selectedEdge];
+            return state.edgeMap.get(state.selectedEdge)!;
         }
         return null;
     },
@@ -91,73 +93,63 @@ const useStore = create<ApplicationState>(devtools((set, get) => ({
     applyNodeChanges: (changes: Node[]) => {
         set(state => (produce(state, draft => {
             changes.forEach(change => {
-                draft.nodeMap[change.id].reactFlow = merge(draft.nodeMap[change.id].reactFlow, change);
+                let node = draft.nodeMap.get(change.id)!;
+                node.reactFlow = merge(node.reactFlow, change);
             });
         })));
     },
     applyEdgeChanges: (changes: Edge[]) => {
         set(state => (produce(state, draft => {
             changes.forEach(change => {
-                draft.edgeMap[change.id].reactFlow = merge(draft.edgeMap[change.id].reactFlow, change);
+                let edge = draft.edgeMap.get(change.id)!;
+                edge.reactFlow = merge(edge.reactFlow, change);
             });
         })));
     },
 
     addNode: (initialValue: PolyglotNode) => {
         set(state => (produce(state, draft => {
-            draft.nodeMap[initialValue.reactFlow.id] = initialValue;
+            draft.nodeMap.set(initialValue.reactFlow.id, initialValue);
         })));
     },
     updateNode: (id: string, newValue: PartialDeep<PolyglotNode>) => {
         set(state => (produce(state, draft => {
             // TODO: FIXME: make sure that newValue as PolyglotNode is correct!!!
-            draft.nodeMap[id] = merge<PolyglotNode>(draft.nodeMap[id], newValue as PolyglotNode);
+            draft.nodeMap.set(id, merge<PolyglotNode>(draft.nodeMap.get(id)!, newValue as PolyglotNode));
         })));
     },
     removeNode: (id: string) => {
         set(state => (produce(state, draft => {
-            delete draft.nodeMap[id];
+            draft.nodeMap.delete(id);
+            Object.entries(draft.edgeMap).forEach(([edgeId, edge]) => {
+                if (edge.reactFlow.source === id || edge.reactFlow.target === id) {
+                    draft.edgeMap.delete(edgeId);
+                }
+            })
         })));
     },
 
     addEdge: (initialValue: PolyglotEdge) => {
         set(state => (produce(state, draft => {
-            draft.edgeMap[initialValue.reactFlow.id] = initialValue;
+            draft.edgeMap.set(initialValue.reactFlow.id, initialValue);
         })));
     },
     updateEdge: (id: string, newValue: PartialDeep<PolyglotEdge>) => {
         set(state => (produce(state, draft => {
             // TODO: FIXME: make sure that newValue as PolyglotEdge is correct!!!
-            draft.edgeMap[id] = merge<PolyglotEdge>(draft.edgeMap[id], newValue as PolyglotEdge);
+            draft.edgeMap.set(id, merge<PolyglotEdge>(draft.edgeMap.get(id)!, newValue as PolyglotEdge));
         })));
     },
     removeEdge: (id: string) => {
         set(state => (produce(state, draft => {
-            delete draft.edgeMap[id];
+            draft.edgeMap.delete(id);
         })));
     },
 
     onConnect: (connection: Connection) => {
         set(state => (produce(state, draft => {
-            const newEdge: PassFailEdge = {
-                reactFlow: {
-                    id: UUIDv4(),
-                    source: connection.source!,
-                    target: connection.target!,
-                    type: "passFailEdge",
-                    markerEnd: {
-                        type: MarkerType.Arrow,
-                        width: 25,
-                        height: 25,
-                    }
-                },
-                type: "passFailEdge",
-                title: "",
-                data: {
-                    conditionKind: "pass",
-                },
-            }
-            draft.edgeMap[newEdge.reactFlow.id] = newEdge;
+            const newEdge = createNewDefaultPolyglotEdge(connection.source!, connection.target!);
+            draft.edgeMap.set(newEdge.reactFlow.id, newEdge);
         })))
     },
 })));

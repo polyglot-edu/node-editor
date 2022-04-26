@@ -1,4 +1,7 @@
 import { useState } from "react";
+import { MultipleChoiceQuestionNode, PassFailEdge, PolyglotEdge, PolyglotNode } from "../types/polyglotElements";
+import { v4 as UUIDv4 } from "uuid";
+import { MarkerType } from "react-flow-renderer";
 
 export const useToggleCSSVariable = (variable: string, values: string[]) => {
     if (values.length <= 0) {
@@ -18,4 +21,45 @@ export const useToggleCSSVariable = (variable: string, values: string[]) => {
         value: values[currentIndex],
         toggle: handleChange,
     };
+}
+
+export const createNewDefaultPolyglotNode = (pos: { x: number, y: number}): PolyglotNode => {
+    const newNode: MultipleChoiceQuestionNode = {
+        type: "multipleChoiceQuestionNode",
+        title: 'New Node',
+        description: '',
+        difficulty: 1,
+        data: { question: "", correctAnswers: [], choices: [] },
+        reactFlow: {
+            id: UUIDv4(),
+            type: "multipleChoiceQuestionNode",
+            position: pos,
+            data: { label: 'New Node' },
+        },
+    };
+
+    return newNode;
+}
+
+export const createNewDefaultPolyglotEdge = (sourceId: string, targetId: string): PolyglotEdge => {
+    const newEdge: PassFailEdge = {
+        reactFlow: {
+            id: UUIDv4(),
+            source: sourceId,
+            target: targetId,
+            type: "passFailEdge",
+            markerEnd: {
+                type: MarkerType.Arrow,
+                width: 25,
+                height: 25,
+            }
+        },
+        type: "passFailEdge",
+        title: "",
+        data: {
+            conditionKind: "pass",
+        },
+    }
+
+    return newEdge;
 }
