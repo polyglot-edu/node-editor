@@ -2,6 +2,7 @@
   "name": "exercise_editor",
   "version": "0.1.0",
   "private": true,
+  "author": "Tommaso Martorella (tom.martorella@gmail.com)",
   "dependencies": {
     "@fluentui/react": "^8.60.3",
     "@monaco-editor/react": "^4.3.1",

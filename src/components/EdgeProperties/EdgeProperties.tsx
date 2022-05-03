@@ -1,7 +1,7 @@
 import { Dropdown, IDropdownOption, Stack, StackItem, TextField } from "@fluentui/react";
 import useStore, { changeEdgeType, curriedUpdate } from "../../store";
 import { PolyglotEdge, polyglotEdgeComponentMapping } from "../../types/polyglotElements";
-import { dropdownEventAdapter, eventHandlerFactory, textInputEventAdapter, updater } from "../../utils/formHandling";
+import { eventHandlerFactory, textInputEventAdapter, updater } from "../../utils/formHandling";
 import Card from "../Card/Card";
 
 export type EdgePropertiesProps = {};
