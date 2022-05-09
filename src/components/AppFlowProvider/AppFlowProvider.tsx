@@ -1,17 +1,18 @@
-import { getTheme, Modal, Spinner, SpinnerSize, Text, useTheme } from "@fluentui/react";
+import { Modal, Spinner, SpinnerSize, Text, useTheme } from "@fluentui/react";
 import { useEffect, useState } from "react";
 import { useParams } from "react-router-dom";
 import { useBoolean } from "@fluentui/react-hooks";
 import useStore from "../../store";
 import AppMain from "../AppMain/AppMain";
-import { AxiosResponse } from "axios";
+import { AxiosError, AxiosResponse } from "axios";
 import { PolyglotFlow } from "../../types/polyglotElements";
 
 type AppFlowProviderProps = {
     fetchFunction: (flowId: string) => Promise<AxiosResponse<PolyglotFlow>>;
+    canSaveFlow?: boolean;
 }
 
-const AppFlowProvider = ({ fetchFunction }: AppFlowProviderProps) => {
+const AppFlowProvider = ({ fetchFunction, canSaveFlow = true }: AppFlowProviderProps) => {
     let { flowId } = useParams<"flowId">();
     const [isLoading, setLoading] = useBoolean(false);
     const [error, setError] = useState<Nullable<string>>(null);
@@ -28,23 +29,27 @@ const AppFlowProvider = ({ fetchFunction }: AppFlowProviderProps) => {
                     setLoading.setFalse();
                     useStore.getState().loadFlow(flowElements.data);
                 } else {
-                    console.error("flow elements not loaded 🆘");
+                    console.error("flow elements not loaded 😢");
                     setError("Error loading flow elements");
                     if (flowElements.status === 404) {
                         setError("Flow not found");
                     }
                 }
-            } catch (e) {
-                console.error(e);
+            } catch (error) {
+                console.error(error);
                 setError("Error loading flow elements");
+
+                if ((error as AxiosError).response?.status === 404) {
+                    setError("Flow not found");
+                }
             }
             setLoading.setFalse();
         })();
-    }, [flowId]);
+    }, [fetchFunction, flowId]);
 
     return (
         <>
-            <AppMain />
+            <AppMain canSaveFlow={canSaveFlow} />
 
             {/* if is error */}
             <Modal
@@ -54,7 +59,7 @@ const AppFlowProvider = ({ fetchFunction }: AppFlowProviderProps) => {
                 scrollableContentClassName="flex flex-1"
             >
                 <div className="flex flex-1 flex-col justify-center items-center border-0 border-t-4 border-solid" style={{ color: theme.palette.red }}>
-                    <Text className="pb-5" variant="large">{error}</Text>
+                    <Text className="pb-5" variant="xLarge">{error}</Text>
                 </div>
             </Modal>
 

@@ -10,12 +10,24 @@ export type UnconditionalEdge = PolyglotEdge & {
     data: UnconditionalEdgeData;
 }
 
-polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>(
-    "unconditionalEdge",
-    "Unconditional",
-    (props: EdgePropertiesProps) => (<></>),
-    ReactFlowSmartBezierEdge,
-    {
+polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
+    elementType: "unconditionalEdge",
+    name: "Unconditional",
+    propertiesComponent: (props: EdgePropertiesProps) => (<></>),
+    elementComponent: ReactFlowSmartBezierEdge,
+    defaultData: {
         ...defaultPolyglotEdgeData,
-    }
-);
+    },
+    transformData: (edge) => {
+        const code = `
+(bool, string) validate(PolyglotValidationContext context) {
+    return (true, "Unconditional edge");
+}`;
+
+
+        return {
+            ...edge,
+            code
+        };
+    },
+});

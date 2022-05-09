@@ -13,14 +13,14 @@ export type CloseEndedQuestionNode = PolyglotNode & {
     data: CloseEndedQuestionNodeData;
 };
 
-polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>(
-    "closeEndedQuestionNode",
-    "Close Ended Question",
-    CloseEndedQuestionNodeProperties,
-    ReactFlowCloseEndedQuestionNode,
-    {
+polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
+    elementType: "closeEndedQuestionNode",
+    name: "Close Ended Question",
+    propertiesComponent: CloseEndedQuestionNodeProperties,
+    elementComponent: ReactFlowCloseEndedQuestionNode,
+    defaultData: {
         ...defaultPolyglotNodeData,
         question: "",
         correctAnswer: "",
     }
-);
+});

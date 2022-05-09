@@ -13,15 +13,24 @@ export type CustomValidationEdge = PolyglotEdge & {
     data: CustomValidationEdgeData;
 }
 
-polyglotEdgeComponentMapping.registerMapping<CustomValidationEdge>(
-    "customValidationEdge",
-    "Custom Validation",
-    CustomValidationEdgeProperties,
-    ReactFlowSmartBezierEdge,
-    {
+polyglotEdgeComponentMapping.registerMapping<CustomValidationEdge>({
+    elementType: "customValidationEdge",
+    name: "Custom Validation",
+    propertiesComponent: CustomValidationEdgeProperties,
+    elementComponent: ReactFlowSmartBezierEdge,
+    defaultData: {
         ...defaultPolyglotEdgeData,
-        code: `bool validate(PolyglotContext context, Exercise exercise) {
+        code: `(bool, string) validate(PolyglotValidationContext context) {
     // your validation code goes here
 }`,
-    }
-);
+    },
+    transformData: (edge) => {
+        const customValidationEdge = edge as CustomValidationEdge;
+        const code = customValidationEdge.data.code;
+
+        return {
+            ...edge,
+            code
+        };
+    },
+});

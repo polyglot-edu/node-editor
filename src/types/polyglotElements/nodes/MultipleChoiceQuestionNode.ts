@@ -15,15 +15,15 @@ export type MultipleChoiceQuestionNode = PolyglotNode & {
     data: MultipleChoiceQuestionNodeData;
 };
 
-polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>(
-    "multipleChoiceQuestionNode",
-    "Multiple Choice Question",
-    MultipleChoiceQuestionNodeProperties,
-    ReactFlowMultipleChoiceQuestionNode,
-    {
+polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
+    elementType: "multipleChoiceQuestionNode",
+    name: "Multiple Choice Question",
+    propertiesComponent: MultipleChoiceQuestionNodeProperties,
+    elementComponent: ReactFlowMultipleChoiceQuestionNode,
+    defaultData: {
         ...defaultPolyglotNodeData,
         choices: [],
         correctAnswers: [],
         question: "",
-    },
-);
+    }
+});

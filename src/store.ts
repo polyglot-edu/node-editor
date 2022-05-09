@@ -20,6 +20,7 @@ function createElementMapping<T extends (PolyglotNode | PolyglotEdge)>(arr: T[])
 
 interface ApplicationState {
     loadFlow: (flow: PolyglotFlow) => void;
+    getFlow: () => Nullable<PolyglotFlow>;
     activeFlowId: Nullable<string>;
     nodeMap: Map<string, PolyglotNode>;
     edgeMap: Map<string, PolyglotEdge>;
@@ -56,6 +57,18 @@ const useStore = create<ApplicationState>(devtools((set, get) => ({
             draft.edgeMap = createElementMapping(flow.edges);
             draft.clearSelection();
         })));
+    },
+    getFlow: () => {
+        const state = get();
+        if (!state.activeFlowId) {
+            return null;
+        }
+
+        return {
+            id: state.activeFlowId,
+            nodes: Array.from(state.nodeMap.values()),
+            edges: Array.from(state.edgeMap.values())
+        }
     },
     activeFlowId: null,
     nodeMap: new Map<string, PolyglotNode>(),
@@ -202,7 +215,8 @@ export const changeEdgeType = (currentValue: PolyglotEdge, newType: string) => {
     }
 
     // copy only general properties
-    const newObj = Object.keys(PolyglotEdge_IoTs.props).reduce((acc, prop) => {
+    var propsArray = PolyglotEdge_IoTs.types.reduce((acc, t) => ({ ...acc, ...t.props }), {} as object);
+    const newObj = Object.keys(propsArray).reduce((acc, prop) => {
         acc[prop] = (currentValue as any)[prop];
         return acc;
     }, {} as any) as PolyglotEdge;

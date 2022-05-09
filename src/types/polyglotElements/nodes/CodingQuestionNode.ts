@@ -10,12 +10,12 @@ export type CodingQuestionNode = PolyglotNode & {
     data: CodingQuestionNodeData;
 }
 
-polyglotNodeComponentMapping.registerMapping<CodingQuestionNode>(
-    "codingQuestionNode",
-    "Coding Question",
-    CodingQuestionNodeProperties,
-    ReactFlowCodingQuestionNode,
-    {
+polyglotNodeComponentMapping.registerMapping<CodingQuestionNode>({
+    elementType: "codingQuestionNode",
+    name: "Coding Question",
+    propertiesComponent: CodingQuestionNodeProperties,
+    elementComponent: ReactFlowCodingQuestionNode,
+    defaultData: {
         ...defaultPolyglotNodeData,
     }
-);
+});

@@ -13,23 +13,35 @@ type ElementToPropertyComponentMapping<T> = { [elementType: string]: PropertiesC
 type ElementToReactFlowComponentMapping<T> = { [elementType: string]: ReactFlowComponent<T> };
 type ElementToNameMapping = { [elementType: string]: string };
 type ElementToDefaultDataMapping<T> = { [elementType: string]: T };
+type ElementToTransformDataMapping<T> = { [elementType: string]: (data: T) => T };
 
-type TypeWithData = { data: unknown }
+type TypeWithData = { data: unknown, type: string };
+type MappingType<T, U, K extends TypeWithData, V extends TypeWithData> = {
+    elementType: string,
+    name: string,
+    propertiesComponent: PropertiesComponent<T>,
+    elementComponent: ReactFlowComponent<U>,
+    defaultData: K['data'] & V['data'],
+    transformData?: (data: K) => K,
+}
 
 class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     private _propertiesMapping: ElementToPropertyComponentMapping<T> = {};
     private _elementMapping: ElementToReactFlowComponentMapping<U> = {};
     private _nameMapping: ElementToNameMapping = {};
     private _defaultDataMapping: ElementToDefaultDataMapping<K["data"]> = {};
+    private _transformMapping: ElementToTransformDataMapping<K> = {};
 
     // TODO: stricter type checking on the elementComponent
     // undefined should be allowed if and only if the registered element uses an already built-in ReactFlow type
-    public registerMapping<V extends TypeWithData>(
-        elementType: string,
-        name: string,
-        propertiesComponent: PropertiesComponent<T>,
-        elementComponent: ReactFlowComponent<U>,
-        defaultData: K['data'] & V['data']) {
+    public registerMapping<V extends TypeWithData>({
+        elementType,
+        name,
+        propertiesComponent,
+        elementComponent,
+        defaultData,
+        transformData = (data => data)
+    }: MappingType<T, U, K, V>) {
 
         if (elementType in this._propertiesMapping) {
             throw new Error(`Element type ${elementType} is already registered`);
@@ -40,6 +52,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
         this._elementMapping[elementType] = elementComponent;
         this._nameMapping[elementType] = name;
         this._defaultDataMapping[elementType] = defaultData;
+        this._transformMapping[elementType] = transformData;
     }
 
     get propertiesMapping(): Readonly<ElementToPropertyComponentMapping<T>> {
@@ -58,8 +71,17 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
         return this._defaultDataMapping;
     }
 
+    get transformMapping(): Readonly<ElementToTransformDataMapping<K>> {
+        return this._transformMapping;
+    }
+
+    applyTransformFunction(element: K): K {
+        const transformFunction = this._transformMapping[element.type];
+        return transformFunction ? transformFunction(element) : element;
+    }
+
     getElementPropertiesComponent(elementType: string | undefined): PropertiesComponent<T> {
-        return elementType !== undefined ? this._propertiesMapping[elementType] : (props: any) => <></>;
+        return elementType !== undefined ? (this._propertiesMapping[elementType] ?? ((_) => <></>)) : (_) => <></>;
     }
 }
 

@@ -19,13 +19,26 @@ export type PassFailEdge = PolyglotEdge & {
     data: PassFailEdgeData;
 }
 
-polyglotEdgeComponentMapping.registerMapping<PassFailEdge>(
-    "passFailEdge",
-    "Pass/Fail",
-    PassFailEdgeProperties,
-    ReactFlowSmartBezierEdge,
-    {
+polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
+    elementType: "passFailEdge",
+    name: "Pass/Fail",
+    propertiesComponent: PassFailEdgeProperties,
+    elementComponent: ReactFlowSmartBezierEdge,
+    defaultData: {
         ...defaultPolyglotEdgeData,
         conditionKind: "pass",
-    }
-);
+    },
+    transformData: (edge) => {
+        const code = `
+(bool, string) validate(PolyglotValidationContext context) {
+    var isSubmissionCorrect = context.Exercise.CorrectAnswers.Contains(context.JourneyContext.SubmittedCode);
+    return (context.Exercise.Data.ConditionKind == isSubmissionCorrect, "Pass/Fail edge");
+}`;
+
+
+        return {
+            ...edge,
+            code
+        };
+    },
+});

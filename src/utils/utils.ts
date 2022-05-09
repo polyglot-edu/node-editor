@@ -23,7 +23,7 @@ export const useToggleCSSVariable = (variable: string, values: string[]) => {
     };
 }
 
-export const createNewDefaultPolyglotNode = (pos: { x: number, y: number}): PolyglotNode => {
+export const createNewDefaultPolyglotNode = (pos: { x: number, y: number }): PolyglotNode => {
     const newNode: MultipleChoiceQuestionNode = {
         type: "multipleChoiceQuestionNode",
         title: 'New Node',
