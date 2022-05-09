@@ -1,8 +1,7 @@
 import create from "zustand";
 import { devtools } from 'zustand/middleware'
 import { Node, Edge, Connection } from "react-flow-renderer";
-import { loadFlowElements } from "./data/flowElementsExample";
-import { PolyglotEdge, polyglotEdgeComponentMapping, PolyglotEdge_IoTs, PolyglotNode, polyglotNodeComponentMapping, PolyglotNode_IoTs } from "./types/polyglotElements";
+import { PolyglotFlow, PolyglotEdge, polyglotEdgeComponentMapping, PolyglotEdge_IoTs, PolyglotNode, polyglotNodeComponentMapping, PolyglotNode_IoTs } from "./types/polyglotElements";
 import { merge } from "@fluentui/react";
 import type { PartialDeep } from "type-fest";
 import produce from "immer";
@@ -10,8 +9,6 @@ import { createNewDefaultPolyglotEdge } from "./utils/utils";
 import { enableMapSet } from 'immer'
 
 enableMapSet();
-
-const flowElements = loadFlowElements();
 
 function createElementMapping<T extends (PolyglotNode | PolyglotEdge)>(arr: T[]) {
     const mapping = new Map<string, T>();
@@ -22,6 +19,8 @@ function createElementMapping<T extends (PolyglotNode | PolyglotEdge)>(arr: T[])
 }
 
 interface ApplicationState {
+    loadFlow: (flow: PolyglotFlow) => void;
+    activeFlowId: Nullable<string>;
     nodeMap: Map<string, PolyglotNode>;
     edgeMap: Map<string, PolyglotEdge>;
     reactFlowNodes: () => Node[];
@@ -50,8 +49,17 @@ interface ApplicationState {
 }
 
 const useStore = create<ApplicationState>(devtools((set, get) => ({
-    nodeMap: createElementMapping(flowElements.nodes),
-    edgeMap: createElementMapping(flowElements.edges),
+    loadFlow: (flow: PolyglotFlow) => {
+        set(state => (produce(state, draft => {
+            draft.activeFlowId = flow.id;
+            draft.nodeMap = createElementMapping(flow.nodes);
+            draft.edgeMap = createElementMapping(flow.edges);
+            draft.clearSelection();
+        })));
+    },
+    activeFlowId: null,
+    nodeMap: new Map<string, PolyglotNode>(),
+    edgeMap: new Map<string, PolyglotEdge>(),
     reactFlowNodes: () => Array.from(get().nodeMap.values()).map(node => Object.assign({}, node.reactFlow)),
     reactFlowEdges: () => Array.from(get().edgeMap.values()).map(edge => Object.assign({}, edge.reactFlow)),
 

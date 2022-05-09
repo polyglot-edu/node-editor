@@ -5,13 +5,16 @@ import App from './components/App/App';
 import reportWebVitals from './reportWebVitals';
 import { ThemeProvider } from '@fluentui/react';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
+import { BrowserRouter } from 'react-router-dom';
 
 initializeIcons();
 
 ReactDOM.render(
   <React.StrictMode>
     <ThemeProvider>
-      <App />
+      <BrowserRouter>
+        <App />
+      </BrowserRouter>
     </ThemeProvider>
   </React.StrictMode>,
   document.getElementById('root')
