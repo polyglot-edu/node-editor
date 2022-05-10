@@ -1,5 +1,5 @@
 import { useState } from "react";
-import { MultipleChoiceQuestionNode, PassFailEdge, PolyglotEdge, PolyglotNode } from "../types/polyglotElements";
+import { MultipleChoiceQuestionNode, PassFailEdge, PolyglotEdge, PolyglotFlow, PolyglotNode } from "../types/polyglotElements";
 import { v4 as UUIDv4 } from "uuid";
 import { MarkerType } from "react-flow-renderer";
 
@@ -21,6 +21,16 @@ export const useToggleCSSVariable = (variable: string, values: string[]) => {
         value: values[currentIndex],
         toggle: handleChange,
     };
+}
+
+export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
+    return {
+        id: UUIDv4(),
+        title: "New Flow",
+        description: "",
+        nodes: [],
+        edges: [],
+    }
 }
 
 export const createNewDefaultPolyglotNode = (pos: { x: number, y: number }): PolyglotNode => {

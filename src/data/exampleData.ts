@@ -199,6 +199,8 @@ const exampleFlows = new Map<string, PolyglotFlow>();
 
     exampleFlows.set("1", {
         id: UUIDv4(),
+        title: "Example Flow #1",
+        description: "This is an example flow",
         nodes: flowNodes,
         edges: flowEdges
     })

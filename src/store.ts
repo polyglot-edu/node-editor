@@ -1,7 +1,7 @@
 import create from "zustand";
 import { devtools } from 'zustand/middleware'
 import { Node, Edge, Connection } from "react-flow-renderer";
-import { PolyglotFlow, PolyglotEdge, polyglotEdgeComponentMapping, PolyglotEdge_IoTs, PolyglotNode, polyglotNodeComponentMapping, PolyglotNode_IoTs } from "./types/polyglotElements";
+import { PolyglotFlow, PolyglotEdge, polyglotEdgeComponentMapping, PolyglotEdge_IoTs, PolyglotNode, polyglotNodeComponentMapping, PolyglotNode_IoTs, PolyglotFlowInfo } from "./types/polyglotElements";
 import { merge } from "@fluentui/react";
 import type { PartialDeep } from "type-fest";
 import produce from "immer";
@@ -20,8 +20,9 @@ function createElementMapping<T extends (PolyglotNode | PolyglotEdge)>(arr: T[])
 
 interface ApplicationState {
     loadFlow: (flow: PolyglotFlow) => void;
+    updateFlowInfo: (newValue: PartialDeep<PolyglotFlowInfo>) => void;
     getFlow: () => Nullable<PolyglotFlow>;
-    activeFlowId: Nullable<string>;
+    activeFlowInfo: Nullable<PolyglotFlowInfo>;
     nodeMap: Map<string, PolyglotNode>;
     edgeMap: Map<string, PolyglotEdge>;
     reactFlowNodes: () => Node[];
@@ -52,25 +53,31 @@ interface ApplicationState {
 const useStore = create<ApplicationState>(devtools((set, get) => ({
     loadFlow: (flow: PolyglotFlow) => {
         set(state => (produce(state, draft => {
-            draft.activeFlowId = flow.id;
+            draft.activeFlowInfo = flow;
             draft.nodeMap = createElementMapping(flow.nodes);
             draft.edgeMap = createElementMapping(flow.edges);
             draft.clearSelection();
         })));
     },
+    updateFlowInfo: (newValue: PartialDeep<PolyglotFlowInfo>) => {
+        set(state => (produce(state, draft => {
+            draft.activeFlowInfo = merge<PolyglotFlowInfo>(draft.activeFlowInfo!, newValue);
+        })));
+    },
     getFlow: () => {
         const state = get();
-        if (!state.activeFlowId) {
+        if (!state.activeFlowInfo) {
             return null;
         }
 
         return {
-            id: state.activeFlowId,
+            ...state.activeFlowInfo,
             nodes: Array.from(state.nodeMap.values()),
             edges: Array.from(state.edgeMap.values())
         }
     },
-    activeFlowId: null,
+    activeFlowInfo: null,
+
     nodeMap: new Map<string, PolyglotNode>(),
     edgeMap: new Map<string, PolyglotEdge>(),
     reactFlowNodes: () => Array.from(get().nodeMap.values()).map(node => Object.assign({}, node.reactFlow)),

@@ -1,8 +1,8 @@
 import axiosCreate, { AxiosResponse } from "axios";
-import { PolyglotFlow } from "../types/polyglotElements/PolyglotFlow";
-import { v4 as UUIDv4 } from "uuid";
+import { PolyglotFlow } from "../types/polyglotElements";
 import exampleFlows from "./exampleData";
 import { polyglotEdgeComponentMapping } from "../types/polyglotElements";
+import { createNewDefaultPolyglotFlow } from "../utils/utils";
 
 const axios = axiosCreate.create({
     baseURL: "http://localhost",
@@ -27,11 +27,7 @@ export const API = {
         return axios.get<PolyglotFlow>(`/api/flows/${flowId}`);
     },
     createNewFlowAsync: (): Promise<AxiosResponse> => {
-        return axios.post<{}, AxiosResponse, PolyglotFlow>(`/api/flows`, {
-            id: UUIDv4(),
-            nodes: [],
-            edges: [],
-        });
+        return axios.post<{}, AxiosResponse, PolyglotFlow>(`/api/flows`, createNewDefaultPolyglotFlow());
     },
     saveFlowAsync: (flow: PolyglotFlow): Promise<AxiosResponse> => {
         flow.edges = flow.edges.map(e => polyglotEdgeComponentMapping.applyTransformFunction(e));
