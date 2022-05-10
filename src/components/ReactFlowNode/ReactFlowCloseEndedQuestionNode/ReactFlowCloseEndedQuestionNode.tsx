@@ -1,3 +1,4 @@
+import { useTheme } from "@fluentui/react";
 import { Handle, Position } from "react-flow-renderer";
 import useStore from "../../../store";
 import { CloseEndedQuestionNode } from "../../../types/polyglotElements";
@@ -8,9 +9,10 @@ type ReactFlowCloseEndedQuestionNodeProps = ReactFlowNodeProps & CloseEndedQuest
 
 const ReactFlowCloseEndedQuestionNode = ({ data }: ReactFlowCloseEndedQuestionNodeProps) => {
     const onConnect = useStore(state => state.onConnect);
+    const theme = useTheme();
 
     return (
-        <Card className="Card-react-flow" >
+        <Card className="Card-react-flow" style={{ borderColor: theme.palette.orangeLight, background: `${theme.palette.orangeLight}08` }} >
             {data.label}
             <Handle
                 type="source"
