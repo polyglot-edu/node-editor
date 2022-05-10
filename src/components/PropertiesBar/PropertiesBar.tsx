@@ -1,4 +1,4 @@
-import { DefaultButton, NeutralColors, Text, useTheme } from "@fluentui/react";
+import { DefaultButton, Text, useTheme } from "@fluentui/react";
 import Editor from "@monaco-editor/react";
 import useStore from "../../store";
 import { useToggleCSSVariable } from "../../utils/utils";
