@@ -45,7 +45,7 @@ const AppFlowProvider = ({ fetchFunction, canSaveFlow = true }: AppFlowProviderP
             }
             setLoading.setFalse();
         })();
-    }, [fetchFunction, flowId, setLoading]);
+    }, [fetchFunction, flowId]);
 
     return (
         <>
