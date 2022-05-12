@@ -21,17 +21,21 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
         async function onKeyDown(e: KeyboardEvent) {
             if (e.key.toLowerCase() === "n" && e.altKey) {
                 try {
-                    const response = await API.createNewFlowAsync();
+                    const newFlowPromise = API.createNewFlowAsync();
+                    toast.promise(newFlowPromise, {
+                        loading: "Creating new flow...",
+                        success: (response) => response.status === 200 ? "New flow created!" : "Failed to create new flow!",
+                        error: "Failed to create new flow!"
+                    });
+
+                    const response = await newFlowPromise;
                     if (response.status !== 200) {
                         console.log("Error creating new flow", response.statusText);
-                        toast.error("Error creating new flow");
                         return;
                     }
-                    toast.success("Flow created successfully");
                     navigate(`/id/${response.data.id}`, { replace: true });
                 } catch (error) {
                     console.log(error);
-                    alert("Error creating new flow");
                 }
             } else if (e.key.toLowerCase() === "s" && e.altKey) {
                 if (!canSaveFlow) {
@@ -46,16 +50,20 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
                         return;
                     }
 
-                    const response = await API.saveFlowAsync(flow);
+                    const saveFlowPromise = API.saveFlowAsync(flow);
+                    toast.promise(saveFlowPromise, {
+                        loading: "Saving flow...",
+                        success: (response) => response.status === 200 ? "Flow saved successfully" : "Error saving flow",
+                        error: "Error saving flow"
+                    });
+
+                    const response = await saveFlowPromise;
                     if (response.status !== 200) {
                         console.log("Error saving flow", response.statusText);
-                        toast.error("Error saving flow");
                         return;
                     }
-                    toast.success("Flow saved successfully");
                 } catch (error) {
                     console.log(error);
-                    toast.error("Error saving flow");
                 }
             }
         }
