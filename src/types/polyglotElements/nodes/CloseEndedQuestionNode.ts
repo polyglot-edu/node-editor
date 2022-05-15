@@ -5,7 +5,7 @@ import { defaultPolyglotNodeData, NodeData, PolyglotNode } from "./Node";
 
 export type CloseEndedQuestionNodeData = NodeData & {
     question: string;
-    correctAnswer: string;
+    correctAnswers: string[];
 };
 
 export type CloseEndedQuestionNode = PolyglotNode & {
@@ -21,6 +21,6 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
     defaultData: {
         ...defaultPolyglotNodeData,
         question: "",
-        correctAnswer: "",
+        correctAnswers: [""],
     }
 });

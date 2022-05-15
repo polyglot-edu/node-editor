@@ -51,7 +51,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
             title: 'Close Ended Question',
             description: 'Some description',
             difficulty: 1,
-            data: { question: "domandona", correctAnswer: "rispostona" },
+            data: { question: "domandona", correctAnswers: ["rispostona"] },
             reactFlow: {
                 id: UUIDv4(),
                 type: "closeEndedQuestionNode",
@@ -64,7 +64,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
             title: ((index % 2) ? 'To' : 'From'),
             description: 'Some description',
             difficulty: 5,
-            data: { question: "domandona", correctAnswer: "rispostona" },
+            data: { question: "domandona", correctAnswers: ["rispostona"] },
             reactFlow: {
                 id: id,
                 type: "closeEndedQuestionNode",

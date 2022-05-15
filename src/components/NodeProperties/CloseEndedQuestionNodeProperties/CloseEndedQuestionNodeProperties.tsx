@@ -4,6 +4,8 @@ import { eventHandlerFactory, textInputEventAdapter, updater } from "../../../ut
 import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
 import { CloseEndedQuestionNode } from "../../../types/polyglotElements/nodes/CloseEndedQuestionNode";
+import { PartialDeep } from "type-fest";
+import produce from "immer";
 
 export type CloseEndedQuestionNodePropertiesProps = CloseEndedQuestionNode & NodePropertiesProps;
 
@@ -15,6 +17,12 @@ const CloseEndedQuestionNodeProperties = (props: CloseEndedQuestionNodePropertie
     const { id } = selectedNode.reactFlow;
     const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
+
+    function updateCorrectAnswer(newValue: string): PartialDeep<CloseEndedQuestionNode> {
+        return produce(selectedNode, draft => {
+            draft.data.correctAnswers[0] = newValue;
+        })
+    }
 
     return (
         <Stack tokens={{ childrenGap: 15 }}>
@@ -32,9 +40,9 @@ const CloseEndedQuestionNodeProperties = (props: CloseEndedQuestionNodePropertie
                         <TextField
                             label={`Answer`}
                             id={`answerInput-${id}`}
-                            value={selectedNode.data.correctAnswer}
+                            value={selectedNode.data.correctAnswers[0]}
                             placeholder={`Type here answer`}
-                            onChange={textInputNodeUpdater(updater<CloseEndedQuestionNode>()("data.correctAnswer"))}
+                            onChange={textInputNodeUpdater(updateCorrectAnswer)}
                         />
                     </StackItem>
                 </Card>
