@@ -31,8 +31,14 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
     transformData: (edge) => {
         const code = `
 (bool, string) validate(PolyglotValidationContext context) {
-    var isSubmissionCorrect = context.Exercise.CorrectAnswers.Contains(context.JourneyContext.SubmittedCode);
-    return (context.Exercise.Data.ConditionKind == isSubmissionCorrect, "Pass/Fail edge");
+    var isSubmissionCorrect = context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode);
+    var conditionKind = context.Condition.Data.conditionKind switch
+    {
+        "pass" => true,
+        "fail" => false,
+        _ => throw new Exception("Unknown condition kind")
+    };
+    return (conditionKind == isSubmissionCorrect, "Pass/Fail edge");
 }`;
 
 

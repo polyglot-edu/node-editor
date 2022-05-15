@@ -25,7 +25,7 @@ polyglotEdgeComponentMapping.registerMapping<ExactValueEdge>({
     transformData: (edge) => {
         const code = `
 (bool, string) validate(PolyglotValidationContext context) {
-    return (String.Equals(context.Exercise.Data.ExactValue, context.JourneyContext.SubmittedCode), "Exact value edge");
+    return (String.Equals(context.Condition.Data.value, context.JourneyContext.SubmittedCode), "Exact value edge");
 }`;
 
 
