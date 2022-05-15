@@ -1,5 +1,5 @@
 import axiosCreate, { AxiosResponse } from "axios";
-import { PolyglotFlow } from "../types/polyglotElements";
+import { PolyglotFlow, polyglotNodeComponentMapping } from "../types/polyglotElements";
 import exampleFlows from "./exampleData";
 import { polyglotEdgeComponentMapping } from "../types/polyglotElements";
 import { createNewDefaultPolyglotFlow } from "../utils/utils";
@@ -30,6 +30,7 @@ export const API = {
         return axios.post<{}, AxiosResponse, PolyglotFlow>(`/api/flows`, createNewDefaultPolyglotFlow());
     },
     saveFlowAsync: (flow: PolyglotFlow): Promise<AxiosResponse> => {
+        flow.nodes = flow.nodes.map(e => polyglotNodeComponentMapping.applyTransformFunction(e));
         flow.edges = flow.edges.map(e => polyglotEdgeComponentMapping.applyTransformFunction(e));
         return axios.put<{}, AxiosResponse, PolyglotFlow>(`/api/flows/${flow.id}`, flow);
     }

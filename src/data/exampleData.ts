@@ -18,7 +18,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
             title: 'Multiple Choice Question',
             description: 'Some description',
             difficulty: 1,
-            data: { question: "Test", correctAnswers: [], choices: ["Choice test"] },
+            data: { question: "Test", correctAnswers: [], isChoiceCorrect: [false], choices: ["Choice test"] },
             reactFlow: {
                 id: UUIDv4(),
                 type: "multipleChoiceQuestionNode",

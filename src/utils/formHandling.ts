@@ -16,6 +16,9 @@ export type RatingEvent =
 export type ButtonEvent =
     | React.MouseEvent<HTMLAnchorElement | HTMLButtonElement | HTMLDivElement | BaseButton | HTMLSpanElement, MouseEvent>
 
+export type CheckboxEvent =
+    | React.FormEvent<HTMLElement | HTMLInputElement>;
+
 // TODO: maybe change this to
 /*
     type EventActionWithParameter<T, K> = ((v: K, e?: T) => void)
@@ -39,6 +42,10 @@ export const ratingEventAdapter: EventHandler<RatingEvent, number> = (action) =>
 
 export const buttonEventAdapter: EventHandler<ButtonEvent, ButtonEvent | undefined> = (action) => {
     return (e: ButtonEvent) => action(e);
+}
+
+export const checkboxEventAdapter: EventHandler<CheckboxEvent | undefined, boolean> = (action) => {
+    return (e: CheckboxEvent | undefined, checked: boolean) => action(checked);
 }
 
 // manually curried version of 

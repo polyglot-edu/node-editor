@@ -23,6 +23,8 @@ export const useToggleCSSVariable = (variable: string, values: string[]) => {
     };
 }
 
+export const zip = <T, K>(a: T[], b: K[]) => a.map((k, i) => ({ first: k, second: b[i] }));
+
 export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
     return {
         id: UUIDv4(),
@@ -39,7 +41,7 @@ export const createNewDefaultPolyglotNode = (pos: { x: number, y: number }): Pol
         title: 'New Node',
         description: '',
         difficulty: 1,
-        data: { question: "", correctAnswers: [], choices: [] },
+        data: { question: "", correctAnswers: [], isChoiceCorrect: [], choices: [] },
         reactFlow: {
             id: UUIDv4(),
             type: "multipleChoiceQuestionNode",
