@@ -1,6 +1,7 @@
 import { DefaultButton, Text, useTheme } from "@fluentui/react";
 import Editor from "@monaco-editor/react";
 import useStore from "../../store";
+import { polyglotEdgeComponentMapping, polyglotNodeComponentMapping } from "../../types/polyglotElements";
 import { useToggleCSSVariable } from "../../utils/utils";
 import PropertiesStack from "../PropertiesStack/PropertiesStack";
 import "./PropertiesBar.css";
@@ -18,6 +19,32 @@ const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>
     }
 
     const propertiesKindText = selectedNode ? "Node" : selectedEdge ? "Edge" : "Flow";
+
+    function getEditor(): JSX.Element {
+        let value = {};
+
+        // apply transformation before displaying json
+        if (selectedNode) {
+            value = polyglotNodeComponentMapping.applyTransformFunction(selectedNode);
+        } else if (selectedEdge) {
+            value = polyglotEdgeComponentMapping.applyTransformFunction(selectedEdge);
+        } else {
+            const flow = useStore.getState().getFlow()!;
+            flow.nodes = flow.nodes.map(e => polyglotNodeComponentMapping.applyTransformFunction(e));
+            flow.edges = flow.edges.map(e => polyglotEdgeComponentMapping.applyTransformFunction(e));
+            value = flow;
+        }
+
+        return <Editor
+            className="pb-3"
+            options={{
+                readOnly: true,
+            }}
+            height={`calc(100% - ${document.getElementById('PropertiesBarHeader')?.clientHeight}px)`}
+            language="json"
+            value={JSON.stringify(value, null, 4) ?? ""}
+        />
+    }
 
     return (
         <div
@@ -39,16 +66,10 @@ const PropertiesBar = ({ children }: React.PropsWithChildren<PropertiesBarProps>
             </div>
             {
                 isCodeMode()
-                    ? <Editor
-                        className="pb-3"
-                        options={{
-                            readOnly: true,
-                        }}
-                        height={`calc(100% - ${document.getElementById('PropertiesBarHeader')?.clientHeight}px)`}
-                        language="json"
-                        value={JSON.stringify(selectedNode ?? selectedEdge ?? useStore.getState().getFlow(), null, 4) ?? ""}
-                    />
-                    : <PropertiesStack>
+                    ?
+                    getEditor()
+                    :
+                    <PropertiesStack>
                         {children}
                     </PropertiesStack>
             }
