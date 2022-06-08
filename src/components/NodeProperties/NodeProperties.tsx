@@ -68,7 +68,7 @@ const Properties = (props: NodePropertiesProps) => {
                             id: `tagsInput-${id}`,
                         }}
                         onResolveSuggestions={(filterText: string) => {
-                            return filterText ? allowed.split(",").filter(tag => tag.startsWith(filterText)).map(tag => ({ key: tag, name: tag })) : [];
+                            return filterText ? allowed.split(",").filter(tag => tag.toLowerCase().startsWith(filterText.toLowerCase())).map(tag => ({ key: tag, name: tag })) : [];
                         }}
                     />
                 </Card>
