@@ -35,5 +35,3 @@ export const API = {
         return axios.put<{}, AxiosResponse, PolyglotFlow>(`/api/flows/${flow.id}`, flow);
     }
 }
-
-export default API;

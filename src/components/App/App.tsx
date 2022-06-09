@@ -2,7 +2,7 @@ import { BrowserRouter, Navigate, Route, Routes } from 'react-router-dom';
 import { ThemeProvider } from '@fluentui/react';
 import { Toaster } from 'react-hot-toast';
 import AppFlowProvider from '../AppFlowProvider/AppFlowProvider';
-import API from '../../data/api';
+import { API } from '../../data/api';
 import { useEffect, useState } from 'react';
 
 const App = () => {

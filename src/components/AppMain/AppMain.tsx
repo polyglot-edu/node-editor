@@ -2,7 +2,7 @@ import { useEffect } from 'react';
 import { OnSelectionChangeParams } from 'react-flow-renderer';
 import toast from 'react-hot-toast';
 import { useNavigate } from 'react-router-dom';
-import API from '../../data/api';
+import { API } from '../../data/api';
 import useStore from '../../store';
 import { polyglotNodeComponentMapping, polyglotEdgeComponentMapping } from '../../types/polyglotElements';
 import DrawingArea from '../DrawingArea/DrawingArea';

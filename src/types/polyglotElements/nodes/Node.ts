@@ -8,7 +8,7 @@ import * as t from "io-ts";
 
 export const NodeData_IoTs = t.type({});
 export type NodeData = t.TypeOf<typeof NodeData_IoTs>;
-export const defaultPolyglotNodeData: NodeData = {}; 
+export const defaultPolyglotNodeData: NodeData = {};
 
 export const PolyglotNode_IoTs = t.type({
     type: t.string,
@@ -19,6 +19,10 @@ export const PolyglotNode_IoTs = t.type({
 }, "PolyglotNode");
 
 
+/**
+ * A node in the polyglot graph.
+ * @param sas comment
+ */
 export type PolyglotNode = t.TypeOf<typeof PolyglotNode_IoTs> & {
     reactFlow: Node<unknown>;
 };
