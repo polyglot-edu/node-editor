@@ -12,7 +12,7 @@ const ReactFlowAbstractNode = ({ data }: ReactFlowAbstractNodeProps) => {
     const theme = useTheme();
 
     return (
-        <Card className="Card-react-flow" style={{ borderColor: theme.palette.orangeLight, background: `${theme.palette.orangeLight}08` }} >
+        <Card className="Card-react-flow" style={{ borderColor: theme.palette.yellowDark, background: `${theme.palette.orangeLight}08` }} >
             {data.label}
             <Handle
                 type="source"
