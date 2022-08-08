@@ -39,9 +39,10 @@ interface ApplicationState {
     applyNodeChanges: (changes: Node[]) => void;
     applyEdgeChanges: (changes: Edge[]) => void;
 
+    addSubFlow: (flow: PolyglotFlow) => void; 
     addNode: (initialValue: PolyglotNode) => void;
     updateNode: (id: string, newValue: PartialDeep<PolyglotNode>) => void;
-    removeNode: (id: string) => void;
+    removeNode: (id: string) => void;  
 
     addEdge: (initialValue: PolyglotEdge) => void;
     updateEdge: (id: string, newValue: PartialDeep<PolyglotEdge>) => void;
@@ -134,7 +135,15 @@ const useStore = create<ApplicationState>(devtools((set, get) => ({
             });
         })));
     },
-
+    addSubFlow: (flow: PolyglotFlow) => {
+        set(state => (produce(state, draft => {
+            let subflowNodeMap = createElementMapping(flow.nodes)
+            let subflowEdgeMap = createElementMapping(flow.edges)
+            subflowNodeMap.forEach((v, k) => draft.nodeMap.set(k, v));
+            subflowEdgeMap.forEach((v, k) => draft.edgeMap.set(k, v));
+            draft.clearSelection();
+        })));
+    },
     addNode: (initialValue: PolyglotNode) => {
         set(state => (produce(state, draft => {
             draft.nodeMap.set(initialValue.reactFlow.id, initialValue);

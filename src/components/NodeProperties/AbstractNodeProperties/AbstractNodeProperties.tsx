@@ -1,10 +1,9 @@
 import { Stack, StackItem, TextField, PrimaryButton} from "@fluentui/react";
 import useStore from "../../../store";
-//import { eventHandlerFactory, textInputEventAdapter, updater } from "../../../utils/formHandling";
 import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
 import { AbstractNode } from "../../../types/polyglotElements/nodes/AbstractNode";
-import { createNewDefaultPolyglotNode } from "../../../utils/utils";
+import subFlow from "../../../data/abstractExample";
 
 
 export type AbstractNodePropertiesProps = AbstractNode & NodePropertiesProps;
@@ -12,15 +11,10 @@ export type AbstractNodePropertiesProps = AbstractNode & NodePropertiesProps;
 
 const AbstractNodeProperties = (props: AbstractNodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as AbstractNode;
-    //const updateNode = useStore(state => state.updateNode);
-
-    /*const { id } = selectedNode.reactFlow;
-    const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
-    const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);*/
 
     function generateSubtree () {
-        const nodeToAdd = createNewDefaultPolyglotNode({x:50,y:50});
-        useStore.getState().addNode(nodeToAdd);
+        
+        useStore.getState().addSubFlow(subFlow));
     }
 
     return (
