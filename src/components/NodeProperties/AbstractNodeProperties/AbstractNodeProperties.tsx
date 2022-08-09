@@ -4,6 +4,7 @@ import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
 import { AbstractNode } from "../../../types/polyglotElements/nodes/AbstractNode";
 import subFlow from "../../../data/abstractExample";
+import { PolyglotFlow } from "../../../types/polyglotElements";
 
 
 export type AbstractNodePropertiesProps = AbstractNode & NodePropertiesProps;
@@ -13,8 +14,8 @@ const AbstractNodeProperties = (props: AbstractNodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as AbstractNode;
 
     function generateSubtree () {
-        
-        useStore.getState().addSubFlow(subFlow));
+        useStore.getState().removeNode("UUIDv4");
+        useStore.getState().addSubFlow(subFlow.values().next().value as PolyglotFlow);
     }
 
     return (

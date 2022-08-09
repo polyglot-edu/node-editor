@@ -15,9 +15,9 @@ const subFlow = new Map<string, PolyglotFlow>();
             difficulty: 1,
             data: { question: "Test", correctAnswers: [], isChoiceCorrect: [false], choices: ["Choice test"] },
             reactFlow: {
-                id: UUIDv4(),
+                id: "QWERTYUIOP",
                 type: "multipleChoiceQuestionNode",
-                position: { x: 150, y: 50 },
+                position: { x: 250, y: 300 },
                 data: { label: 'Multiple Choice Question' },
 
             },
@@ -32,9 +32,9 @@ const subFlow = new Map<string, PolyglotFlow>();
             difficulty: 4,
             data: {},
             reactFlow: {
-                id: UUIDv4(),
+                id: "ZXCVBNM",
                 type: "codingQuestionNode",
-                position: { x: 150, y: 75 },
+                position: { x: 500, y: 300 },
                 data: { label: 'Coding Question' },
             },
         },
@@ -54,8 +54,8 @@ const subFlow = new Map<string, PolyglotFlow>();
             },
             reactFlow: {
                 id: UUIDv4(),
-                source: ids[0],
-                target: ids[1],
+                source: "QWERTYUIOP",
+                target: "ZXCVBNM",
                 type: "passFailEdge",
                 markerEnd: {
                     type: MarkerType.Arrow,
@@ -71,8 +71,7 @@ const subFlow = new Map<string, PolyglotFlow>();
     ]
 
     subFlow.set("1", {
-       // id: UUIDv4(),
-        id: "ASDFGHJKL",
+        id: UUIDv4(),
         title: "Abstract subTree",
         description: "This is an example",
         nodes: flowNodes,

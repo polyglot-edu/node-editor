@@ -98,7 +98,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
             difficulty: 1,
             data: { question: "Goal?", correctAnswers:["ciao"]},
             reactFlow: {
-                id: UUIDv4(),
+                id: "UUIDv4",
                 type: "abstractNode",
                 position: { x: 250, y: 300 },
                 data: { label: 'Abstract Node' },
