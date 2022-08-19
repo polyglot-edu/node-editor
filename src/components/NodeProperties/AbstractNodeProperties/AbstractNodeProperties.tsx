@@ -12,9 +12,12 @@ export type AbstractNodePropertiesProps = AbstractNode & NodePropertiesProps;
 
 const AbstractNodeProperties = (props: AbstractNodePropertiesProps) => {
     const selectedNode = useStore(state => state.getSelectedNode()) as AbstractNode;
+    const updateNode = useStore(state => state.updateNode);
+
+    const { id } = selectedNode.reactFlow;
 
     function generateSubtree () {
-        useStore.getState().removeNode("UUIDv4");
+        useStore.getState().removeNode(id);
         useStore.getState().addSubFlow(subFlow.values().next().value as PolyglotFlow);
     }
 

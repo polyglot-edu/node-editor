@@ -5,7 +5,7 @@ import { MarkerType } from "react-flow-renderer";
 const subFlow = new Map<string, PolyglotFlow>();
 
 {
-    const ids = [...Array(8).keys()].map(i => UUIDv4());
+    const ids = [...Array(2).keys()].map(i => UUIDv4());
 
     const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
         {
@@ -15,16 +15,17 @@ const subFlow = new Map<string, PolyglotFlow>();
             difficulty: 1,
             data: { question: "Test", correctAnswers: [], isChoiceCorrect: [false], choices: ["Choice test"] },
             reactFlow: {
-                id: "QWERTYUIOP",
+                id: ids[0],
                 type: "multipleChoiceQuestionNode",
                 position: { x: 250, y: 300 },
                 data: { label: 'Multiple Choice Question' },
 
             },
-        },
+        }
     ]
 
     const codingNodes: CodingQuestionNode[] = [
+        
         {
             type: "codingQuestionNode",
             title: 'Coding Question',
@@ -32,12 +33,12 @@ const subFlow = new Map<string, PolyglotFlow>();
             difficulty: 4,
             data: {},
             reactFlow: {
-                id: "ZXCVBNM",
+                id: ids[1],
                 type: "codingQuestionNode",
                 position: { x: 500, y: 300 },
                 data: { label: 'Coding Question' },
             },
-        },
+        }  
     ];
 
     const flowNodes: PolyglotNode[] = [
@@ -54,8 +55,8 @@ const subFlow = new Map<string, PolyglotFlow>();
             },
             reactFlow: {
                 id: UUIDv4(),
-                source: "QWERTYUIOP",
-                target: "ZXCVBNM",
+                source: ids[0],
+                target: ids[1],
                 type: "passFailEdge",
                 markerEnd: {
                     type: MarkerType.Arrow,
