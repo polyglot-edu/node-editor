@@ -25,6 +25,7 @@ const MultipleChoiceQuestionNodeProperties = (props: MultipleChoiceQuestionNodeP
     function addChoice(): PartialDeep<MultipleChoiceQuestionNode> {
         return produce(selectedNode, draft => {
             draft.data.choices.push("");
+            draft.data.isChoiceCorrect.push(false);
         })
     }
 
