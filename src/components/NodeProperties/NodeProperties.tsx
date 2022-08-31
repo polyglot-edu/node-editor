@@ -22,7 +22,7 @@ const Properties = (props: NodePropertiesProps) => {
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
     const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
 
-    const allowed = "Software Engineering,CSharp,Statistics,UniPi,MODELS 2021,Software Development";
+    const allowed = "Software Engineering,CSharp,Statistics,UniPi,MODELS 2021,Software Development,Average and its calculation";
 
     return (
         <Stack tokens={{ childrenGap: 15 }}>
@@ -83,19 +83,19 @@ const Properties = (props: NodePropertiesProps) => {
                             id: `prerequisitesInput-${id}`,
                         }}
                         onResolveSuggestions={(filterText: string) => {
-                            return filterText ? allowed.split(",").filter(tag => tag.startsWith(filterText)).map(tag => ({ key: tag, name: tag })) : [];
+                            return filterText ? allowed.split(",").filter(tag => tag.toLowerCase().startsWith(filterText.toLowerCase())).map(tag => ({ key: tag, name: tag })) : [];
                         }}
                     />
 
-                    <Label htmlFor={`competencesAcquiredInput-${id}`} >
-                        Competences Acquired
+                    <Label htmlFor={`effectsInput-${id}`} >
+                        Effects
                     </Label>
                     <TagPicker
                         inputProps={{
-                            id: `competencesAcquiredInput-${id}`,
+                            id: `effectsInput-${id}`,
                         }}
                         onResolveSuggestions={(filterText: string) => {
-                            return filterText ? allowed.split(",").filter(tag => tag.startsWith(filterText)).map(tag => ({ key: tag, name: tag })) : [];
+                            return filterText ? allowed.split(",").filter(tag => tag.toLowerCase().startsWith(filterText.toLowerCase())).map(tag => ({ key: tag, name: tag })) : [];
                         }}
                     />
                 </Card>
