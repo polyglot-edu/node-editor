@@ -35,7 +35,11 @@ const exampleFlows = new Map<string, PolyglotFlow>();
             title: 'Coding Question',
             description: 'Some description',
             difficulty: 4,
-            data: {},
+            data: {
+                question: "Test",
+                codeTemplate: "// some C# code",
+                language: "C#",
+            },
             reactFlow: {
                 id: UUIDv4(),
                 type: "codingQuestionNode",

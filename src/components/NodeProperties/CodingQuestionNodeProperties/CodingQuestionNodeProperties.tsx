@@ -1,8 +1,8 @@
 import { Label, Stack, StackItem, TextField } from "@fluentui/react";
 import Editor from "@monaco-editor/react";
-import useStore from "../../../store";
+import useStore, { curriedUpdate } from "../../../store";
 import { CodingQuestionNode } from "../../../types/polyglotElements";
-import { TextInputEvent } from "../../../utils/formHandling";
+import { eventHandlerFactory, textInputEventAdapter, updater } from "../../../utils/formHandling";
 import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
 
@@ -14,34 +14,33 @@ const CodingQuestionNodeProperties = (props: CodingQuestionNodePropertiesProps) 
 
     const { id } = selectedNode.reactFlow;
 
+    const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
+    const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
+
     return (
         <Stack tokens={{ childrenGap: 15 }}>
             <StackItem>
                 <Card>
-                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={() => { throw new Error("not implemented") }} />
+                    <TextField
+                        label="Question"
+                        id={`questionInput-${id}`}
+                        multiline
+                        autoAdjustHeight
+                        value={selectedNode.data.question}
+                        onChange={textInputNodeUpdater(updater<CodingQuestionNode>()("data.question"))} />
                 </Card>
             </StackItem>
             <StackItem>
                 <Card className="h-[200px]">
-                    <Label id={`solutionInput-${id}`}>
-                        Solution
+                    <Label id={`codeTemplateInput-${id}`}>
+                        Code Template
                     </Label>
                     <Editor
                         height={`calc(100% - 30px)`}
-                        language="csharp"
-                        defaultValue={`using System;
-
-int main() {
-    Console.WriteLine("Hello World!");
-    return 0;
-}
-`}
+                        language={selectedNode.data.language}
+                        value={selectedNode.data.codeTemplate}
+                        onChange={str => updater<CodingQuestionNode>()("data.codeTemplate")(str ?? "")}
                     />
-                </Card>
-            </StackItem>
-            <StackItem>
-                <Card>
-                    <TextField label="Option1" id={`option1Input-${id}`} value={selectedNode.title} onChange={() => { throw new Error("not implemented") }} />
                 </Card>
             </StackItem>
         </Stack>
