@@ -15,12 +15,12 @@ export type LessonNode = PolyglotNode & {
     data: LessonNodeData;
 }
 
-polyglotNodeComponentMapping.registerMapping<LessonNode>({
-    elementType: "lessonNode",
-    name: "Lesson",
-    propertiesComponent: LessonNodeProperties,
-    elementComponent: ReactFlowLessonNode,
-    defaultData: {
-        ...defaultPolyglotNodeData,
-    }
-});
+// polyglotNodeComponentMapping.registerMapping<LessonNode>({
+//     elementType: "lessonNode",
+//     name: "Lesson",
+//     propertiesComponent: LessonNodeProperties,
+//     elementComponent: ReactFlowLessonNode,
+//     defaultData: {
+//         ...defaultPolyglotNodeData,
+//     }
+// });

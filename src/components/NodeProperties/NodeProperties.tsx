@@ -22,7 +22,7 @@ const Properties = (props: NodePropertiesProps) => {
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
     const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
 
-    const allowed = "Software Engineering,CSharp,Statistics,UniPi,MODELS 2021,Software Development,Average and its calculation";
+    const allowed = "Software Engineering,CSharp,Statistics,MODELS 2021,Software Development,Average/Mean Value, Mode, Median";
 
     return (
         <Stack tokens={{ childrenGap: 15 }}>
