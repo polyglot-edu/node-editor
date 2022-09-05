@@ -30,7 +30,7 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
     },
     transformData: (edge) => {
         const code = `
-(bool, string) validate(PolyglotValidationContext context) {
+async Task<(bool, string)> validate(PolyglotValidationContext context) {
     var isSubmissionCorrect = context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode);
     var conditionKind = context.Condition.Data.conditionKind switch
     {

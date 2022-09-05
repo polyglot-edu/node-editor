@@ -20,7 +20,7 @@ polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
     },
     transformData: (edge) => {
         const code = `
-(bool, string) validate(PolyglotValidationContext context) {
+async Task<(bool, string)> validate(PolyglotValidationContext context) {
     return (true, "Unconditional edge");
 }`;
 

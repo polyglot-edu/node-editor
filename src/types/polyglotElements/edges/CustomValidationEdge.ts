@@ -20,7 +20,7 @@ polyglotEdgeComponentMapping.registerMapping<CustomValidationEdge>({
     elementComponent: ReactFlowSmartBezierEdge,
     defaultData: {
         ...defaultPolyglotEdgeData,
-        code: `(bool, string) validate(PolyglotValidationContext context) {
+        code: `async Task<(bool, string)> validate(PolyglotValidationContext context) {
     // your validation code goes here
 }`,
     },
