@@ -30,7 +30,7 @@ const AbstractNodeProperties = (props: AbstractNodePropertiesProps) => {
                         //id={`questionInput-${id}`}
                         multiline
                         autoAdjustHeight
-                        value={selectedNode.data.question}
+                        value={selectedNode.data.target}
                         /*onChange={textInputNodeUpdater(updater<AbstractNode>()("data.question"))}*/
                     />
                     <PrimaryButton text ='Generate Sub-Tree' className="mt-4 self-center w-1/2 p-0" onClick={generateSubtree}/>

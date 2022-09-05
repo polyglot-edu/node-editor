@@ -96,7 +96,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
             title: 'Abstract Node',
             description: 'nice description',
             difficulty: 1,
-            data: { question: "Goal?", correctAnswers:["ciao"]},
+            data: { target: "Goal?" },
             reactFlow: {
                 id: UUIDv4(),
                 type: "abstractNode",

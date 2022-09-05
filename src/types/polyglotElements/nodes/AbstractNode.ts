@@ -4,8 +4,7 @@ import { polyglotNodeComponentMapping } from "../elementMapping";
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from "./Node";
 
 export type AbstractNodeData = NodeData & {
-    question: string;
-    correctAnswers: string[];
+    target: string;
 };
 
 export type AbstractNode = PolyglotNode & {
@@ -20,7 +19,6 @@ polyglotNodeComponentMapping.registerMapping<AbstractNode>({
     elementComponent: ReactFlowAbstractNode,
     defaultData: {
         ...defaultPolyglotNodeData,
-        question: "",
-        correctAnswers: [""],
+        target: "",
     }
 });
