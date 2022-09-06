@@ -1,3 +1,4 @@
+export { default as AbstractNodeProperties } from "./AbstractNodeProperties/AbstractNodeProperties";
 export { default as MultipleChoiceQuestionNodeProperties } from "./MultipleChoiceQuestionNodeProperties/MultipleChoiceQuestionNodeProperties";
 export { default as CloseEndedQuestionNodeProperties } from "./CloseEndedQuestionNodeProperties/CloseEndedQuestionNodeProperties";
 export { default as CodingQuestionNodeProperties } from "./CodingQuestionNodeProperties/CodingQuestionNodeProperties";

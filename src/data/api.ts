@@ -1,6 +1,7 @@
 import axiosCreate, { AxiosResponse } from "axios";
 import { PolyglotFlow, polyglotNodeComponentMapping } from "../types/polyglotElements";
 import exampleFlows from "./exampleData";
+import abstractFlows from "./abstractExample";
 import { polyglotEdgeComponentMapping } from "../types/polyglotElements";
 import { createNewDefaultPolyglotFlow } from "../utils/utils";
 
@@ -14,6 +15,16 @@ const axios = axiosCreate.create({
 export const API = {
     loadExampleFlowElementsAsync: (flowId: string): Promise<AxiosResponse<PolyglotFlow>> => {
         const flow = exampleFlows.get(flowId);
+        return Promise.resolve({
+            data: flow!,
+            status: flow ? 200 : 404,
+            statusText: flow ? "OK" : "Not Found",
+            headers: {},
+            config: {},
+        });
+    },
+    loadAbstractExampleFlowElementsAsync: (currentState: string, goal: string): Promise<AxiosResponse<PolyglotFlow>> => {
+        const flow = abstractFlows.get(`${currentState}, ${goal}`); // TODO: fix this, it's a hack but we need deep equality for the map keys
         return Promise.resolve({
             data: flow!,
             status: flow ? 200 : 404,
