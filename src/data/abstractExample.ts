@@ -2,7 +2,13 @@ import { PolyglotNode, PolyglotEdge, MultipleChoiceQuestionNode, CodingQuestionN
 import { v4 as UUIDv4 } from 'uuid';
 import { MarkerType } from "react-flow-renderer";
 
-const subFlow = new Map<string, PolyglotFlow>();
+// this should be the real data type
+// type PlanningGoal = {
+//     currentState: string,
+//     goal: string
+// }
+type PlanningGoal = string;
+const subFlow = new Map<PlanningGoal, PolyglotFlow>();
 
 {
     const ids = [...Array(2).keys()].map(i => UUIDv4());
@@ -25,7 +31,7 @@ const subFlow = new Map<string, PolyglotFlow>();
     ]
 
     const codingNodes: CodingQuestionNode[] = [
-        
+
         {
             type: "codingQuestionNode",
             title: 'Coding Question',
@@ -38,7 +44,7 @@ const subFlow = new Map<string, PolyglotFlow>();
                 position: { x: 500, y: 300 },
                 data: { label: 'Coding Question' },
             },
-        }  
+        }
     ];
 
     const flowNodes: PolyglotNode[] = [
@@ -71,7 +77,12 @@ const subFlow = new Map<string, PolyglotFlow>();
         ...passFailEdges,
     ]
 
-    subFlow.set("1", {
+    subFlow.set(
+        // {
+        //     currentState: "example",
+        //     goal: "example",
+        // }, {
+        "example, example", {
         id: UUIDv4(),
         title: "Abstract subTree",
         description: "This is an example",
