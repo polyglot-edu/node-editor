@@ -2,7 +2,7 @@ import { Label, Stack, StackItem, TextField } from "@fluentui/react";
 import Editor from "@monaco-editor/react";
 import useStore, { curriedUpdate } from "../../../store";
 import { CodingQuestionNode } from "../../../types/polyglotElements";
-import { eventHandlerFactory, textInputEventAdapter, updater } from "../../../utils/formHandling";
+import { eventHandlerFactory, monacoEventAdapter, textInputEventAdapter, updater } from "../../../utils/formHandling";
 import Card from "../../Card/Card";
 import { NodePropertiesProps } from "../NodeProperties";
 
@@ -16,6 +16,7 @@ const CodingQuestionNodeProperties = (props: CodingQuestionNodePropertiesProps) 
 
     const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
     const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
+    const monacoNodeUpdater = genericNodeUpdater(monacoEventAdapter);
 
     return (
         <Stack tokens={{ childrenGap: 15 }}>
@@ -39,7 +40,7 @@ const CodingQuestionNodeProperties = (props: CodingQuestionNodePropertiesProps) 
                         height={`calc(100% - 30px)`}
                         language={selectedNode.data.language}
                         value={selectedNode.data.codeTemplate}
-                        onChange={str => updater<CodingQuestionNode>()("data.codeTemplate")(str ?? "")}
+                        onChange={(str, e) => monacoNodeUpdater(updater<CodingQuestionNode>()("data.codeTemplate"))(e, str ?? "")}
                     />
                 </Card>
             </StackItem>
