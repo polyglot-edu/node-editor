@@ -19,7 +19,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
             title: 'Multiple Choice Question',
             description: 'Some description',
             difficulty: 1,
-            data: { question: "Test", correctAnswers: [], isChoiceCorrect: [false], choices: ["Choice test"] },
+            data: { question: "Test", isChoiceCorrect: [false], choices: ["Choice test"] },
             reactFlow: {
                 id: ids[0],
                 type: "multipleChoiceQuestionNode",
