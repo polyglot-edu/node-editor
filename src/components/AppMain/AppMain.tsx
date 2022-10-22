@@ -19,7 +19,7 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
 
     useEffect(() => {
         async function onKeyDown(e: KeyboardEvent) {
-            if (e.key.toLowerCase() === "n" && e.altKey) {
+            if (e.key.toLowerCase() === "n" && (e.altKey || e.metaKey)) {
                 try {
                     const newFlowPromise = API.createNewFlowAsync();
                     toast.promise(newFlowPromise, {
@@ -37,7 +37,7 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
                 } catch (error) {
                     console.log(error);
                 }
-            } else if (e.key.toLowerCase() === "s" && e.altKey) {
+            } else if (e.key.toLowerCase() === "s" && (e.altKey || e.metaKey)) {
                 if (!canSaveFlow) {
                     toast.error("Cannot override this flow");
                     return;
