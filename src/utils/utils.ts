@@ -27,7 +27,7 @@ export const zip = <T, K>(a: T[], b: K[]) => a.map((k, i) => ({ first: k, second
 
 export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
     return {
-        id: UUIDv4(),
+        _id: UUIDv4(),
         title: "New Flow",
         description: "",
         nodes: [],

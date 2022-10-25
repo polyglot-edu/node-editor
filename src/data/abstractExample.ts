@@ -83,7 +83,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
         //     goal: "example",
         // }, {
         "example, example", {
-        id: UUIDv4(),
+        _id: UUIDv4(),
         title: "Abstract subTree",
         description: "This is an example",
         nodes: flowNodes,

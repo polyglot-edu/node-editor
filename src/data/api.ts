@@ -43,11 +43,9 @@ export const API = {
     saveFlowAsync: (flow: PolyglotFlow): Promise<AxiosResponse> => {
         flow.nodes = flow.nodes.map(e => polyglotNodeComponentMapping.applyTransformFunction(e));
         flow.edges = flow.edges.map(e => polyglotEdgeComponentMapping.applyTransformFunction(e));
-        return axios.put<{}, AxiosResponse, PolyglotFlow>(`/api/flows/${flow.id}`, flow);
+        return axios.put<{}, AxiosResponse, PolyglotFlow>(`/api/flows/${flow._id}`, flow);
     },
-    uploadFile: (encoded_file : string): Promise<AxiosResponse> => {
-        return axios.post<{}, AxiosResponse, {}>(`/api/flows/uploadFile`, {
-            file: encoded_file
-        });
+    createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
+        return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
     },
 }

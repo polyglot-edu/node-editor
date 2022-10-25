@@ -17,7 +17,7 @@ const FlowProperties = (props: FlowPropertiesProps) => {
         return <></>;
     }
 
-    const { id } = activeFlowInfo;
+    const { _id } = activeFlowInfo;
 
     const genericFlowUpdater = eventHandlerFactory(updateFlowInfo);
     const textInputFlowUpdater = genericFlowUpdater(textInputEventAdapter);
@@ -28,13 +28,13 @@ const FlowProperties = (props: FlowPropertiesProps) => {
                 <Card>
                     <TextField
                         label="Title"
-                        id={`titleInput-${id}`}
+                        id={`titleInput-${_id}`}
                         value={activeFlowInfo.title}
                         onChange={textInputFlowUpdater(updater<PolyglotFlowInfo>()("title"))}
                     />
                     <TextField
                         label="Description"
-                        id={`descriptionInput-${id}`}
+                        id={`descriptionInput-${_id}`}
                         multiline
                         autoAdjustHeight
                         value={activeFlowInfo.description}
