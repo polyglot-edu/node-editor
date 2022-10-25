@@ -31,7 +31,18 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
     transformData: (edge) => {
         const code = `
 async Task<(bool, string)> validate(PolyglotValidationContext context) {
-    var isSubmissionCorrect = context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode);
+    var getMultipleChoiceAnswer = () => {
+        var index = Int32.Parse(context.JourneyContext.SubmittedCode) - 1;
+        var answersCorrect = context.Exercise.Data.isChoiceCorrect;
+        return (index >= 0 && index < answersCorrect.Count) ? answersCorrect[index] : false;
+    };
+
+    var isSubmissionCorrect = context.Exercise.NodeType switch
+    {
+        "multipleChoiceQuestionNode" => getMultipleChoiceAnswer(),
+        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),
+    };
+
     var conditionKind = context.Condition.Data.conditionKind switch
     {
         "pass" => true,
