@@ -6,7 +6,7 @@ import { polyglotEdgeComponentMapping } from "../types/polyglotElements";
 import { createNewDefaultPolyglotFlow } from "../utils/utils";
 
 const axios = axiosCreate.create({
-    baseURL: process.env.REACT_APP_BACK_URL || "http://localhost:3000",
+    baseURL: process.env.REACT_APP_BACK_URL || "http://localhost:5000",
     headers: {
         'Content-Type': 'application/json',
     }

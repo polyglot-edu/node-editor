@@ -1,4 +1,3 @@
-import "./Card.css";
 
 type CardProps = React.HTMLAttributes<HTMLDivElement> & {}
 

@@ -4,7 +4,6 @@ import ReactFlow, { applyEdgeChanges, applyNodeChanges, Background, BackgroundVa
 import useStore from '../../store';
 import { polyglotEdgeComponentMapping, polyglotNodeComponentMapping } from '../../types/polyglotElements';
 import ContextMenu from '../ContextMenu/ContextMenu';
-import "./DrawingArea.css";
 
 type DrawingAreaProps = {
     onSelectionChange: (selection: OnSelectionChangeParams) => void;
@@ -84,7 +83,7 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
 
 const DrawingArea = (props: DrawingAreaProps) => {
     return (
-        <div className="flex flex-col flex-1 w-[calc(100%_-_var(--properties-bar-width))] ease-in-out duration-300">
+        <div className="flex flex-col flex-1 h-screen w-full ease-in-out duration-300">
             <Flow {...props} />
         </div>
     );

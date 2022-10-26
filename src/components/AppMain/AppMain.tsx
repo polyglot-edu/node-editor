@@ -1,13 +1,13 @@
+import Editor from '@monaco-editor/react';
+import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { OnSelectionChangeParams } from 'react-flow-renderer';
 import toast from 'react-hot-toast';
-import { useNavigate } from 'react-router-dom';
 import { API } from '../../data/api';
 import useStore from '../../store';
 import { polyglotNodeComponentMapping, polyglotEdgeComponentMapping } from '../../types/polyglotElements';
 import DrawingArea from '../DrawingArea/DrawingArea';
 import PropertiesBar from '../PropertiesBar/PropertiesBar';
-import "./AppMain.css";
 
 type AppMainProps = {
     canSaveFlow?: boolean;
@@ -15,7 +15,7 @@ type AppMainProps = {
 
 const AppMain = ({ canSaveFlow }: AppMainProps) => {
     const selectedElement = useElementSelection();
-    const navigate = useNavigate();
+    const router = useRouter();
 
     useEffect(() => {
         async function onKeyDown(e: KeyboardEvent) {
@@ -33,7 +33,7 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
                         console.log("Error creating new flow", response.statusText);
                         return;
                     }
-                    navigate(`/id/${response.data.id}`, { replace: true });
+                    router.replace(`/id/${response.data.id}`);
                 } catch (error) {
                     console.log(error);
                 }
@@ -70,7 +70,7 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
 
         document.addEventListener("keydown", onKeyDown);
         return () => document.removeEventListener("keydown", onKeyDown);
-    }, [canSaveFlow, navigate])
+    }, [canSaveFlow, router])
 
 
 
@@ -78,13 +78,13 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
     return (
         <div>
             <header className="App-header">
-                <>
+                <div className='flex'>
                     <DrawingArea onSelectionChange={selectedElement.onChange} />
                     <PropertiesBar>
                         <selectedElement.NodePropertiesComponent />
                         <selectedElement.EdgePropertiesComponent />
                     </PropertiesBar>
-                </>
+                </div>
             </header>
         </div>
     );
