@@ -14,7 +14,7 @@ import { EdgePropertiesProps } from '../EdgeProperties';
 
 export type PassFailEdgePropertiesProps = EdgePropertiesProps & {};
 
-const PassFailEdgeProperties = (props: PassFailEdgePropertiesProps) => {
+const PassFailEdgeProperties = () => {
   const selectedEdge = useStore((state) =>
     state.getSelectedEdge()
   ) as PassFailEdge;

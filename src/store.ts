@@ -146,7 +146,7 @@ const useStore = create<ApplicationState>(
       set((state) =>
         produce(state, (draft) => {
           changes.forEach((change) => {
-            let node = draft.nodeMap.get(change.id)!;
+            const node = draft.nodeMap.get(change.id)!;
             node.reactFlow = merge(node.reactFlow, change);
           });
         })
@@ -156,7 +156,7 @@ const useStore = create<ApplicationState>(
       set((state) =>
         produce(state, (draft) => {
           changes.forEach((change) => {
-            let edge = draft.edgeMap.get(change.id)!;
+            const edge = draft.edgeMap.get(change.id)!;
             edge.reactFlow = merge(edge.reactFlow, change);
           });
         })
@@ -165,8 +165,8 @@ const useStore = create<ApplicationState>(
     addSubFlow: (flow: PolyglotFlow) => {
       set((state) =>
         produce(state, (draft) => {
-          let subflowNodeMap = createElementMapping(flow.nodes);
-          let subflowEdgeMap = createElementMapping(flow.edges);
+          const subflowNodeMap = createElementMapping(flow.nodes);
+          const subflowEdgeMap = createElementMapping(flow.edges);
           subflowNodeMap.forEach((v, k) => draft.nodeMap.set(k, v));
           subflowEdgeMap.forEach((v, k) => draft.edgeMap.set(k, v));
           draft.clearSelection();
@@ -297,7 +297,7 @@ export const changeEdgeType = (currentValue: PolyglotEdge, newType: string) => {
   }
 
   // copy only general properties
-  var propsArray = PolyglotEdge_IoTs.types.reduce(
+  const propsArray = PolyglotEdge_IoTs.types.reduce(
     (acc, t) => ({ ...acc, ...t.props }),
     {} as object
   );

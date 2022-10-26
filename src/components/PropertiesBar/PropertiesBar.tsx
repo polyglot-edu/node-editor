@@ -5,7 +5,6 @@ import {
   polyglotEdgeComponentMapping,
   polyglotNodeComponentMapping,
 } from '../../types/polyglotElements';
-import { useToggleCSSVariable } from '../../utils/utils';
 import PropertiesStack from '../PropertiesStack/PropertiesStack';
 
 type PropertiesBarProps = {};
@@ -77,7 +76,7 @@ const PropertiesBar = ({
           toggle
           checked={false}
           iconProps={{ iconName: icons[0] }}
-          onClick={() => {}}
+          // onClick={() => {}}
           style={{ float: 'right' }}
         />
       </div>

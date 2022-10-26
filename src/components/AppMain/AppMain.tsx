@@ -1,4 +1,3 @@
-import Editor from '@monaco-editor/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { OnSelectionChangeParams } from 'react-flow-renderer';

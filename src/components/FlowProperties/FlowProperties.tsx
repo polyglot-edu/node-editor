@@ -10,7 +10,7 @@ import Card from '../Card/Card';
 
 export type FlowPropertiesProps = {};
 
-const FlowProperties = (props: FlowPropertiesProps) => {
+const FlowProperties = () => {
   const [selectedNodeId, selectedEdgeId] = useStore((state) => [
     state.selectedNode,
     state.selectedEdge,

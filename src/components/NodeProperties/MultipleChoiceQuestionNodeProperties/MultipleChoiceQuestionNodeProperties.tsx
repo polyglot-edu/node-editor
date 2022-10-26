@@ -26,9 +26,7 @@ import produce from 'immer';
 export type MultipleChoiceQuestionNodePropertiesProps =
   MultipleChoiceQuestionNode & NodePropertiesProps;
 
-const MultipleChoiceQuestionNodeProperties = (
-  props: MultipleChoiceQuestionNodePropertiesProps
-) => {
+const MultipleChoiceQuestionNodeProperties = () => {
   const selectedNode = useStore((state) =>
     state.getSelectedNode()
   ) as MultipleChoiceQuestionNode;
@@ -102,7 +100,7 @@ const MultipleChoiceQuestionNodeProperties = (
                       className="flex-1"
                       label={`Choice ${index + 1}`}
                       onRenderLabel={(textFieldProps) => (
-                        <Text variant="small">{textFieldProps?.label!}</Text>
+                        <Text variant="small">{textFieldProps?.label}</Text>
                       )}
                       id={`choiceInput-${id}-${index}`}
                       value={choice}

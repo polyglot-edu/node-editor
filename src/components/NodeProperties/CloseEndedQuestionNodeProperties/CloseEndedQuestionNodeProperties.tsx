@@ -14,9 +14,7 @@ import produce from 'immer';
 export type CloseEndedQuestionNodePropertiesProps = CloseEndedQuestionNode &
   NodePropertiesProps;
 
-const CloseEndedQuestionNodeProperties = (
-  props: CloseEndedQuestionNodePropertiesProps
-) => {
+const CloseEndedQuestionNodeProperties = () => {
   const selectedNode = useStore((state) =>
     state.getSelectedNode()
   ) as CloseEndedQuestionNode;

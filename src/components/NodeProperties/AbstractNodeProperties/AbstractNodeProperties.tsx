@@ -21,7 +21,7 @@ import {
 
 export type AbstractNodePropertiesProps = AbstractNode & NodePropertiesProps;
 
-const AbstractNodeProperties = (props: AbstractNodePropertiesProps) => {
+const AbstractNodeProperties = () => {
   const selectedNode = useStore((state) =>
     state.getSelectedNode()
   ) as AbstractNode;

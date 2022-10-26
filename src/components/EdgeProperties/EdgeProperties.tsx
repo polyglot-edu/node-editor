@@ -23,7 +23,7 @@ const typeDropdownOptions: IDropdownOption[] = Object.entries(
   polyglotEdgeComponentMapping.nameMapping
 ).map(([key, name]) => ({ key: key, text: name }));
 
-const Properties = (props: EdgePropertiesProps) => {
+const Properties = () => {
   const selectedEdge = useStore((state) =>
     state.getSelectedEdge()
   ) as PolyglotEdge;

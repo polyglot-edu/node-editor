@@ -18,7 +18,7 @@ import { MarkerType } from 'react-flow-renderer';
 const exampleFlows = new Map<string, PolyglotFlow>();
 
 {
-  const ids = [...Array(8).keys()].map((i) => UUIDv4());
+  const ids = [...Array(8).keys()].map(() => UUIDv4());
 
   /*
         NODE EXAMPLE DATA #1:

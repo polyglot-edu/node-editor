@@ -14,7 +14,6 @@ type AppFlowProviderProps = {
 };
 
 const AppFlowProvider = ({
-  fetchFunction,
   canSaveFlow = true,
 }: AppFlowProviderProps) => {
   const [isLoading, setLoading] = useBoolean(false);

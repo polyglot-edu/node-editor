@@ -29,7 +29,7 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
   transformData: (node) => {
     const oldData = node.data as MultipleChoiceQuestionNodeData;
 
-    let data = {
+    const data = {
       ...oldData,
       correctAnswers: zip(oldData.choices, oldData.isChoiceCorrect).reduce(
         (acc, { first, second }) => {

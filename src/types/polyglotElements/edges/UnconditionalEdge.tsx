@@ -13,6 +13,7 @@ export type UnconditionalEdge = PolyglotEdge & {
 polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
   elementType: 'unconditionalEdge',
   name: 'Unconditional',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
   propertiesComponent: (props: EdgePropertiesProps) => <></>,
   elementComponent: ReactFlowSmartBezierEdge,
   defaultData: {

@@ -8,9 +8,7 @@ import { EdgePropertiesProps } from '../EdgeProperties';
 
 export type CustomValidationEdgePropertiesProps = EdgePropertiesProps & {};
 
-const CustomValidationEdgeProperties = (
-  props: CustomValidationEdgePropertiesProps
-) => {
+const CustomValidationEdgeProperties = () => {
   const selectedEdge = useStore((state) =>
     state.getSelectedEdge()
   ) as CustomValidationEdge;

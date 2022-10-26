@@ -11,7 +11,7 @@ import { EdgePropertiesProps } from '../EdgeProperties';
 
 export type ExactValueEdgePropertiesProps = EdgePropertiesProps & {};
 
-const ExactValueEdgeProperties = (props: ExactValueEdgePropertiesProps) => {
+const ExactValueEdgeProperties = () => {
   const selectedEdge = useStore((state) =>
     state.getSelectedEdge()
   ) as ExactValueEdge;

@@ -19,7 +19,7 @@ import { NodePropertiesProps } from '../NodeProperties';
 
 export type LessonNodePropertiesProps = NodePropertiesProps & {};
 
-const LessonNodeProperties = (props: LessonNodePropertiesProps) => {
+const LessonNodeProperties = () => {
   const selectedNode = useStore((state) =>
     state.getSelectedNode()
   ) as LessonNode;

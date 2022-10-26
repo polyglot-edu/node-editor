@@ -18,7 +18,7 @@ type PlanningGoal = string;
 const subFlow = new Map<PlanningGoal, PolyglotFlow>();
 
 {
-  const ids = [...Array(2).keys()].map((i) => UUIDv4());
+  const ids = [...Array(2).keys()].map(() => UUIDv4());
 
   const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {

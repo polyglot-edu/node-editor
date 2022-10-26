@@ -27,7 +27,7 @@ const typeDropdownOptions: IDropdownOption[] = Object.entries(
   polyglotNodeComponentMapping.nameMapping
 ).map(([key, name]) => ({ key: key, text: name }));
 
-const Properties = (props: NodePropertiesProps) => {
+const Properties = () => {
   const selectedNode = useStore((state) =>
     state.getSelectedNode()
   ) as PolyglotNode;

@@ -2,19 +2,16 @@ import { Label, Stack, StackItem, TextField } from '@fluentui/react';
 import Editor from '@monaco-editor/react';
 import useStore from '../../../store';
 import { CodingQuestionNode } from '../../../types/polyglotElements';
-import { TextInputEvent } from '../../../utils/formHandling';
 import Card from '../../Card/Card';
 import { NodePropertiesProps } from '../NodeProperties';
 
 export type CodingQuestionNodePropertiesProps = NodePropertiesProps & {};
 
-const CodingQuestionNodeProperties = (
-  props: CodingQuestionNodePropertiesProps
-) => {
+const CodingQuestionNodeProperties = () => {
   const selectedNode = useStore((state) =>
     state.getSelectedNode()
   ) as CodingQuestionNode;
-  const updateNode = useStore((state) => state.updateNode);
+  // const updateNode = useStore((state) => state.updateNode);
 
   const { id } = selectedNode.reactFlow;
 
