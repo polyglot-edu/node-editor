@@ -1,12 +1,9 @@
-
-type CardProps = React.HTMLAttributes<HTMLDivElement> & {}
+type CardProps = React.HTMLAttributes<HTMLDivElement> & {};
 
 const Card = (props: React.PropsWithChildren<CardProps>) => {
-    const { className } = props;
+  const { className } = props;
 
-    return (
-        <div {...props} className={"Card " + (className ?? "") } />
-    );
-}
+  return <div {...props} className={'Card ' + (className ?? '')} />;
+};
 
-export default Card
+export default Card;

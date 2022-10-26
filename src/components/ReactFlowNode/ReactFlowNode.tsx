@@ -1,4 +1,4 @@
-import { NodeProps } from "react-flow-renderer"
+import { NodeProps } from 'react-flow-renderer';
 
 export type ReactFlowNodeProps = NodeProps & {};
 

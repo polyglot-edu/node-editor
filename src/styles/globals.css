@@ -3,18 +3,19 @@
 @tailwind utilities;
 
 html {
-overflow: hidden;
+  overflow: hidden;
 }
 
 body {
-margin: 0;
-font-family: "Segoe UI", "Segoe UI Web (West European)", "Segoe UI", -apple-system, BlinkMacSystemFont, Roboto, "Helvetica Neue", sans-serif;
--webkit-font-smoothing: antialiased;
--moz-osx-font-smoothing: grayscale;
-overflow: hidden;
+  margin: 0;
+  font-family: 'Segoe UI', 'Segoe UI Web (West European)', 'Segoe UI',
+    -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
+  -webkit-font-smoothing: antialiased;
+  -moz-osx-font-smoothing: grayscale;
+  overflow: hidden;
 }
 
 code {
-font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
+  font-family: source-code-pro, Menlo, Monaco, Consolas, 'Courier New',
     monospace;
 }
