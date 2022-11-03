@@ -1,21 +1,26 @@
 import axiosCreate, { AxiosResponse } from 'axios';
 import {
+  polyglotEdgeComponentMapping,
   PolyglotFlow,
   polyglotNodeComponentMapping,
 } from '../types/polyglotElements';
-import exampleFlows from './exampleData';
-import abstractFlows from './abstractExample';
-import { polyglotEdgeComponentMapping } from '../types/polyglotElements';
+import { User } from '../types/user';
 import { createNewDefaultPolyglotFlow } from '../utils/utils';
+import abstractFlows from './abstractExample';
+import exampleFlows from './exampleData';
 
 const axios = axiosCreate.create({
   baseURL: process.env.REACT_APP_BACK_URL || 'http://localhost:5000',
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true
 });
 
 export const API = {
+  getUserInfo: () : Promise<AxiosResponse<User>> => {
+    return axios.get('/api/user/me');
+  },
   loadExampleFlowElementsAsync: (
     flowId: string
   ): Promise<AxiosResponse<PolyglotFlow>> => {
@@ -46,6 +51,9 @@ export const API = {
     flowId: string
   ): Promise<AxiosResponse<PolyglotFlow>> => {
     return axios.get<PolyglotFlow>(`/api/flows/${flowId}`);
+  },
+  loadFlowList: (): Promise<AxiosResponse<PolyglotFlow[]>> => {
+    return axios.get(`/api/flows`)
   },
   createNewFlowAsync: (): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, PolyglotFlow>(
