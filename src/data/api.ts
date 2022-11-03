@@ -10,7 +10,7 @@ import abstractFlows from './abstractExample';
 import exampleFlows from './exampleData';
 
 const axios = axiosCreate.create({
-  baseURL: process.env.REACT_APP_BACK_URL || 'http://localhost:5000',
+  baseURL: process.env.BACK_URL,
   headers: {
     'Content-Type': 'application/json',
   },
