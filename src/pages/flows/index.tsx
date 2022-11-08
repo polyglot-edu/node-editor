@@ -1,6 +1,7 @@
+import { DefaultButton } from '@fluentui/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
-import FlowCard, { ScheletonFlowCards } from '../../components/Card/FlowCard';
+import FlowCard from '../../components/Card/FlowCard';
 import Navbar from '../../components/Layout/NavBar';
 import { useUser } from '../../context/user.context';
 import { API } from '../../data/api';
@@ -24,8 +25,7 @@ const FlowIndexPage = () => {
   return (
     <>
       <Navbar user={user}/>
-      <div className="flex flex-col items-center justify-center h-full w-screen">        
-        <ScheletonFlowCards/>
+      <div className="flex flex-col items-center justify-center h-full w-screen">
         {flows.length ? (
           flows.map((flow, id) => (
             <FlowCard flow={flow} key={id}/>
@@ -34,7 +34,12 @@ const FlowIndexPage = () => {
           )}
       </div>
       <Link href="/flows/create">
-        <div className="rounded-full w-10 h-10 bg-red-500 fixed right-10 bottom-10"></div>
+      <DefaultButton
+            toggle
+            checked={false}
+            iconProps={{ iconName: "Add" }} 
+            className="border-0 w-10 h-10 rounded-full fixed right-10 bottom-10 p-0 m-0 bg-green-300"
+          />
       </Link>
       
     </>

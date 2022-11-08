@@ -40,10 +40,10 @@ const PropertiesBar = ({
       value = polyglotEdgeComponentMapping.applyTransformFunction(selectedEdge);
     } else {
       const flow = useStore.getState().getFlow()!;
-      flow.nodes = flow.nodes.map((e) =>
+      flow.nodes = flow.nodes?.map((e) =>
         polyglotNodeComponentMapping.applyTransformFunction(e)
       );
-      flow.edges = flow.edges.map((e) =>
+      flow.edges = flow.edges?.map((e) =>
         polyglotEdgeComponentMapping.applyTransformFunction(e)
       );
       value = flow;
