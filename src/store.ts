@@ -66,8 +66,8 @@ const useStore = create<ApplicationState>(
       set((state) =>
         produce(state, (draft) => {
           draft.activeFlowInfo = flow;
-          draft.nodeMap = createElementMapping(flow.nodes);
-          draft.edgeMap = createElementMapping(flow.edges);
+          if (flow.nodes) draft.nodeMap = createElementMapping(flow.nodes);
+          if (flow.edges) draft.edgeMap = createElementMapping(flow.edges);
           draft.clearSelection();
         })
       );
@@ -165,10 +165,14 @@ const useStore = create<ApplicationState>(
     addSubFlow: (flow: PolyglotFlow) => {
       set((state) =>
         produce(state, (draft) => {
-          const subflowNodeMap = createElementMapping(flow.nodes);
-          const subflowEdgeMap = createElementMapping(flow.edges);
-          subflowNodeMap.forEach((v, k) => draft.nodeMap.set(k, v));
-          subflowEdgeMap.forEach((v, k) => draft.edgeMap.set(k, v));
+          if (flow.nodes){
+            const subflowNodeMap = createElementMapping(flow.nodes);
+            subflowNodeMap.forEach((v, k) => draft.nodeMap.set(k, v));
+          }
+          if (flow.edges) {
+            const subflowEdgeMap = createElementMapping(flow.edges);
+            subflowEdgeMap.forEach((v, k) => draft.edgeMap.set(k, v));
+          }
           draft.clearSelection();
         })
       );

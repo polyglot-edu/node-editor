@@ -76,9 +76,32 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
       }
     }
 
+    const flow = useStore.getState().getFlow();
+    if (!flow) {
+      toast.error('No flow loaded');
+      return;
+    }
+
+    const saveFlowPromise = API.saveFlowAsync(flow);
+    toast.promise(saveFlowPromise, {
+      loading: 'Saving flow...',
+      success: (response) =>
+        response.status === 200
+          ? 'Flow saved successfully'
+          : 'Error saving flow',
+      error: 'Error saving flow',
+    });
+
+    saveFlowPromise.then(resp =>{
+      if (resp.status !== 200) {
+        console.log('Error saving flow', resp.statusText);
+        return;
+      }
+    });
+
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
-  }, [canSaveFlow, router]);
+  }, [canSaveFlow, router, selectedElement]);
 
   return (
     <div>

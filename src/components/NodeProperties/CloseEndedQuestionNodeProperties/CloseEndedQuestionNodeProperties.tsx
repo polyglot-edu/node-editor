@@ -50,7 +50,7 @@ const CloseEndedQuestionNodeProperties = () => {
             <TextField
               label={`Answer`}
               id={`answerInput-${id}`}
-              value={selectedNode.data.correctAnswers[0]}
+              value={selectedNode.data.correctAnswers?.[0]}
               placeholder={`Type here answer`}
               onChange={textInputNodeUpdater(updateCorrectAnswer)}
             />

@@ -1,6 +1,9 @@
+import Image from "next/image";
 import Link from "next/link";
 import { useRouter } from "next/router";
 import { User } from "../../types/user"
+import brandLogo from '../../public/solo_logo.png';
+import brandWrite from '../../public/solo_scritta.png';
 
 type NavBarProps = {
     user: Nullable<User>;
@@ -15,10 +18,10 @@ export default function Navbar({user}: NavBarProps){
 
  return (
     <nav className="bg-black py-3 shadow">
-      <div className="container flex items-center justify-between mx-auto">
-        <div className="flex">
-          <img src="https://flowbite.com/docs/images/logo.svg" className="mr-3 h-6 sm:h-9" alt="Flowbite Logo" />
-          <span className="self-center text-xl font-semibold whitespace-nowrap dark:text-white">Polyglot</span>
+      <div className="flex items-center justify-between mx-2">
+        <div className="flex ">
+          <Image src={brandLogo} width={40} className="mr-3" alt="Polyglot Logo" />
+          <Image src={brandWrite} width={110} className="mr-3 self-center" alt="Polyglot Logo" />
         </div>
         {!user ? (
           <div className="rounded-lg bg-cyan-400 pr-2 pl-2 pt-1 pb-1">

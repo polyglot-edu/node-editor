@@ -1,15 +1,18 @@
 import { useBoolean } from '@fluentui/react-hooks';
-import { useState } from 'react';
+import { MouseEventHandler, useState } from 'react';
 import ReactFlow, {
   applyEdgeChanges,
   applyNodeChanges,
   Background,
   BackgroundVariant,
   Controls,
-  EdgeChange,
-  NodeChange,
   OnSelectionChangeParams,
   Node,
+  NodeMouseHandler,
+  OnNodesChange,
+  OnEdgesChange,
+  OnNodesDelete,
+  OnMoveStart,
 } from 'react-flow-renderer';
 import useStore from '../../store';
 import {
@@ -38,22 +41,47 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
   // const nodes = getNodes();
   // const edges = getEdges();
 
+  const [clickedNode, setClickedNode] = useState<Node | undefined>(undefined);
+  const [menuType, setMenuType] = useState("default");
+
   const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
   const [
     showingContextMenu,
     { setTrue: showContextMenu, setFalse: hideContextMenu },
   ] = useBoolean(false);
 
-  function onNodesChange(changes: NodeChange[]) {
+  const onNodesChange : OnNodesChange = (changes) => {
     setNodes(applyNodeChanges(changes, getNodes()));
   }
-  function onEdgesChange(changes: EdgeChange[]) {
+  const onEdgesChange : OnEdgesChange = (changes) => {
     setEdges(applyEdgeChanges(changes, getEdges()));
   }
 
-  function onNodesDelete(nodes: Node[]) {
+  const onNodesDelete : OnNodesDelete = (nodes) => {
     nodes.forEach((n) => removeNode(n.id));
     setNodes(getNodes());
+  }
+
+  const onMoveStart : OnMoveStart = () => {
+    hideContextMenu;
+    setClickedNode(undefined);
+  }
+
+  const onClick : MouseEventHandler | undefined = (e) => {
+    e.preventDefault();
+    hideContextMenu;
+    setClickedNode(undefined);
+  }
+
+  const onNodeContextMenu : NodeMouseHandler = (e, node) => {
+    e.preventDefault();
+    setMenuType("node");
+    setClickedNode(node);
+    showContextMenu();
+    setContextMenuPos({
+      x: e.clientX - (e.clientX % 15),
+      y: e.clientY - (e.clientY % 15),
+    });
   }
 
   return (
@@ -64,6 +92,7 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
         nodeTypes={polyglotNodeComponentMapping.componentMapping}
         onNodesChange={onNodesChange}
         onNodesDelete={onNodesDelete}
+        onNodeContextMenu={onNodeContextMenu}
         // edges setup
         edges={getEdges()}
         edgeTypes={polyglotEdgeComponentMapping.componentMapping}
@@ -80,15 +109,17 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
         onContextMenu={(e) => {
           e.preventDefault();
         }}
-        onClick={hideContextMenu}
-        onMoveStart={hideContextMenu}
+        onClick={onClick}
+        onMoveStart={onMoveStart}
         onPaneContextMenu={(e) => {
+          e.preventDefault();
+          setMenuType("default");
           showContextMenu();
           setContextMenuPos({
             x: e.clientX - (e.clientX % 15),
             y: e.clientY - (e.clientY % 15),
           });
-          e.preventDefault();
+          
         }}
       >
         <Background variant={BackgroundVariant.Dots} />
@@ -97,6 +128,8 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
       <ContextMenu
         pos={contextMenuPos}
         showing={showingContextMenu}
+        type={menuType}
+        node={clickedNode}
         onDismiss={hideContextMenu}
       />
     </>

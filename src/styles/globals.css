@@ -3,7 +3,7 @@
 @tailwind utilities;
 
 html {
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 body {
@@ -12,7 +12,7 @@ body {
     -apple-system, BlinkMacSystemFont, Roboto, 'Helvetica Neue', sans-serif;
   -webkit-font-smoothing: antialiased;
   -moz-osx-font-smoothing: grayscale;
-  overflow: hidden;
+  overflow-x: hidden;
 }
 
 code {

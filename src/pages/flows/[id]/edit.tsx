@@ -1,12 +1,12 @@
 import { Modal, Spinner, SpinnerSize, Text, useTheme } from '@fluentui/react';
 import { useEffect, useState } from 'react';
 import { useBoolean } from '@fluentui/react-hooks';
-import useStore from '../../store';
-import AppMain from '../../components/AppMain/AppMain';
+import useStore from '../../../store';
+import AppMain from '../../../components/AppMain/AppMain';
 import { AxiosError, AxiosResponse } from 'axios';
-import { PolyglotFlow } from '../../types/polyglotElements';
+import { PolyglotFlow } from '../../../types/polyglotElements';
 import { useRouter } from 'next/router';
-import { API } from '../../data/api';
+import { API } from '../../../data/api';
 
 type AppFlowProviderProps = {
   fetchFunction: (flowId: string) => Promise<AxiosResponse<PolyglotFlow>>;
@@ -20,15 +20,16 @@ const AppFlowProvider = ({
   const [error, setError] = useState<Nullable<string>>(null);
   const theme = useTheme();
   const router = useRouter();
-  const flowId = router.query?.id?.toString();
-
+  const flowId = router.query.id?.toString();
+  
   useEffect(() => {
+    if (!flowId) return;
     (async () => {
       // if (!flowId) router.replace("/");
       setLoading.setTrue();
       setError(null);
       try {
-        const flowElements = await API.loadFlowElementsAsync(flowId ?? '');
+        const flowElements = await API.loadFlowElementsAsync(flowId);
         if (flowElements.status === 200) {
           console.log('flow elements loaded 🆗');
           setLoading.setFalse();

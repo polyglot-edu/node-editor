@@ -62,10 +62,10 @@ export const API = {
     );
   },
   saveFlowAsync: (flow: PolyglotFlow): Promise<AxiosResponse> => {
-    flow.nodes = flow.nodes.map((e) =>
+    flow.nodes = flow.nodes?.map((e) =>
       polyglotNodeComponentMapping.applyTransformFunction(e)
     );
-    flow.edges = flow.edges.map((e) =>
+    flow.edges = flow.edges?.map((e) =>
       polyglotEdgeComponentMapping.applyTransformFunction(e)
     );
     return axios.put<{}, AxiosResponse, PolyglotFlow>(
