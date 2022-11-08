@@ -1,10 +1,9 @@
 import { NextRouter, useRouter } from 'next/router';
-import { FormEvent } from 'react';
 import Navbar from '../../components/Layout/NavBar';
 import { useUser } from '../../context/user.context';
 import { API } from '../../data/api';
 
-const handleFormSubmit = (router : NextRouter) => async (event: FormEvent) => {
+const handleFormSubmit = (router : NextRouter) => async (event: any) => {
   event.preventDefault();
   console.log(event.target.title.value)
   try {
