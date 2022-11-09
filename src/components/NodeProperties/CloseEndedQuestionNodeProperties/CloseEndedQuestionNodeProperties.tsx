@@ -1,5 +1,8 @@
 import { Stack, StackItem, TextField } from '@fluentui/react';
+import produce from 'immer';
+import { PartialDeep } from 'type-fest';
 import useStore, { curriedUpdate } from '../../../store';
+import { CloseEndedQuestionNode } from '../../../types/polyglotElements/nodes/CloseEndedQuestionNode';
 import {
   eventHandlerFactory,
   textInputEventAdapter,
@@ -7,9 +10,6 @@ import {
 } from '../../../utils/formHandling';
 import Card from '../../Card/Card';
 import { NodePropertiesProps } from '../NodeProperties';
-import { CloseEndedQuestionNode } from '../../../types/polyglotElements/nodes/CloseEndedQuestionNode';
-import { PartialDeep } from 'type-fest';
-import produce from 'immer';
 
 export type CloseEndedQuestionNodePropertiesProps = CloseEndedQuestionNode &
   NodePropertiesProps;

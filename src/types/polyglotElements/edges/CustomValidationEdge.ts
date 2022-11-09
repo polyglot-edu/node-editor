@@ -1,6 +1,6 @@
-import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { CustomValidationEdgeProperties } from '../../../components/EdgeProperties';
 import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
+import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
 export type CustomValidationEdgeData = EdgeData & {

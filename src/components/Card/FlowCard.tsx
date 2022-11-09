@@ -1,18 +1,18 @@
 import {
-  Text,
+  Avatar,
+  Badge,
+  Box,
+  Flex,
   Grid,
   GridItem,
   HStack,
   LinkBox,
   LinkOverlay,
-  Avatar,
-  Box,
-  Badge,
   Spacer,
-  Flex,
+  Text,
 } from '@chakra-ui/react';
-import { PolyglotFlow } from '../../types/polyglotElements';
 import cardImage from '../../public/test_card.png';
+import { PolyglotFlow } from '../../types/polyglotElements';
 
 type FlowCardProps = {
   flow: PolyglotFlow;

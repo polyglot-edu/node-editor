@@ -1,4 +1,6 @@
 import { useState } from 'react';
+import { MarkerType } from 'react-flow-renderer';
+import { v4 as UUIDv4 } from 'uuid';
 import {
   MultipleChoiceQuestionNode,
   PassFailEdge,
@@ -6,8 +8,6 @@ import {
   PolyglotFlow,
   PolyglotNode,
 } from '../types/polyglotElements';
-import { v4 as UUIDv4 } from 'uuid';
-import { MarkerType } from 'react-flow-renderer';
 
 export const useToggleCSSVariable = (variable: string, values: string[]) => {
   if (values.length <= 0) {

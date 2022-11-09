@@ -5,8 +5,8 @@ import toast from 'react-hot-toast';
 import { API } from '../../data/api';
 import useStore from '../../store';
 import {
-  polyglotNodeComponentMapping,
   polyglotEdgeComponentMapping,
+  polyglotNodeComponentMapping,
 } from '../../types/polyglotElements';
 import DrawingArea from '../DrawingArea/DrawingArea';
 import PropertiesBar from '../PropertiesBar/PropertiesBar';

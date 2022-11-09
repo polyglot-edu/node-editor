@@ -1,16 +1,15 @@
-import '../styles/globals.css';
-import '../components/AppMain.css';
-import '../components/DrawingArea.css';
-import '../components/Card.css';
 import '@fontsource/inter';
 import '@fontsource/work-sans';
+import '../components/AppMain.css';
+import '../components/Card.css';
+import '../components/DrawingArea.css';
+import '../styles/globals.css';
 
-import type { AppProps } from 'next/app';
-import reportWebVitals from '../reportWebVitals';
+import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
+import type { AppProps } from 'next/app';
 import { UserProvider } from '../context/user.context';
-import { ChakraProvider } from '@chakra-ui/react';
-import { extendTheme } from '@chakra-ui/react';
+import reportWebVitals from '../reportWebVitals';
 
 const theme = extendTheme({
   fonts: {

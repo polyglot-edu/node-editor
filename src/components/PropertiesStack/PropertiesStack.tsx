@@ -1,8 +1,8 @@
 import { Stack } from '@fluentui/react';
 import { Children } from 'react';
 import EdgeProperties from '../EdgeProperties/EdgeProperties';
-import NodeProperties from '../NodeProperties/NodeProperties';
 import FlowProperties from '../FlowProperties/FlowProperties';
+import NodeProperties from '../NodeProperties/NodeProperties';
 
 type PropertiesStackProps = {};
 

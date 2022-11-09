@@ -1,12 +1,12 @@
 import { Modal, Spinner, SpinnerSize, Text, useTheme } from '@fluentui/react';
-import { useEffect, useState } from 'react';
 import { useBoolean } from '@fluentui/react-hooks';
-import useStore from '../../../store';
-import AppMain from '../../../components/AppMain/AppMain';
 import { AxiosError, AxiosResponse } from 'axios';
-import { PolyglotFlow } from '../../../types/polyglotElements';
 import { useRouter } from 'next/router';
+import { useEffect, useState } from 'react';
+import AppMain from '../../../components/AppMain/AppMain';
 import { API } from '../../../data/api';
+import useStore from '../../../store';
+import { PolyglotFlow } from '../../../types/polyglotElements';
 
 type AppFlowProviderProps = {
   fetchFunction: (flowId: string) => Promise<AxiosResponse<PolyglotFlow>>;

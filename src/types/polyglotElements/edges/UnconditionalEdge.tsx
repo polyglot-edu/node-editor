@@ -1,7 +1,7 @@
-import { polyglotEdgeComponentMapping } from '../elementMapping';
-import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
-import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 import { EdgePropertiesProps } from '../../../components/EdgeProperties/EdgeProperties';
+import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
+import { polyglotEdgeComponentMapping } from '../elementMapping';
+import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
 export type UnconditionalEdgeData = EdgeData & {};
 

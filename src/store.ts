@@ -1,21 +1,20 @@
+import { merge } from '@fluentui/react';
+import produce, { enableMapSet } from 'immer';
+import { Connection, Edge, Node } from 'react-flow-renderer';
+import type { PartialDeep } from 'type-fest';
 import create from 'zustand';
 import { devtools } from 'zustand/middleware';
-import { Node, Edge, Connection } from 'react-flow-renderer';
 import {
-  PolyglotFlow,
   PolyglotEdge,
   polyglotEdgeComponentMapping,
   PolyglotEdge_IoTs,
+  PolyglotFlow,
+  PolyglotFlowInfo,
   PolyglotNode,
   polyglotNodeComponentMapping,
   PolyglotNode_IoTs,
-  PolyglotFlowInfo,
 } from './types/polyglotElements';
-import { merge } from '@fluentui/react';
-import type { PartialDeep } from 'type-fest';
-import produce from 'immer';
 import { createNewDefaultPolyglotEdge } from './utils/utils';
-import { enableMapSet } from 'immer';
 
 enableMapSet();
 

@@ -1,13 +1,13 @@
-import {
-  PolyglotNode,
-  PolyglotEdge,
-  MultipleChoiceQuestionNode,
-  CodingQuestionNode,
-  PassFailEdge,
-  PolyglotFlow,
-} from '../types/polyglotElements';
-import { v4 as UUIDv4 } from 'uuid';
 import { MarkerType } from 'react-flow-renderer';
+import { v4 as UUIDv4 } from 'uuid';
+import {
+  CodingQuestionNode,
+  MultipleChoiceQuestionNode,
+  PassFailEdge,
+  PolyglotEdge,
+  PolyglotFlow,
+  PolyglotNode,
+} from '../types/polyglotElements';
 
 // this should be the real data type
 // type PlanningGoal = {

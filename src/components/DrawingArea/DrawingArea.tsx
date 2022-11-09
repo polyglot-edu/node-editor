@@ -6,13 +6,13 @@ import ReactFlow, {
   Background,
   BackgroundVariant,
   Controls,
-  OnSelectionChangeParams,
   Node,
   NodeMouseHandler,
-  OnNodesChange,
   OnEdgesChange,
-  OnNodesDelete,
   OnMoveStart,
+  OnNodesChange,
+  OnNodesDelete,
+  OnSelectionChangeParams,
 } from 'react-flow-renderer';
 import useStore from '../../store';
 import {

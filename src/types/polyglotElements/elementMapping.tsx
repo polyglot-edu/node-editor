@@ -106,10 +106,10 @@ const polyglotNodeComponentMapping = new PolyglotComponentMapping<
   PolyglotNode
 >();
 export { polyglotNodeComponentMapping };
+export { polyglotEdgeComponentMapping };
 
 const polyglotEdgeComponentMapping = new PolyglotComponentMapping<
   EdgePropertiesProps,
   ReactFlowEdgeProps,
   PolyglotEdge
 >();
-export { polyglotEdgeComponentMapping };

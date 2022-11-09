@@ -1,9 +1,9 @@
+import { Button, Flex, HStack, Image } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
-import { User } from '../../types/user';
 import brandLogo from '../../public/solo_logo.png';
 import brandWrite from '../../public/solo_scritta.png';
-import { Button, Flex, HStack, Image } from '@chakra-ui/react';
+import { User } from '../../types/user';
 
 type NavBarProps = {
   user: Nullable<User>;

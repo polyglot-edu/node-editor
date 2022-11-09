@@ -1,6 +1,6 @@
 import { BaseButton, IDropdownOption } from '@fluentui/react';
-import type { PartialDeep } from 'type-fest';
 import * as t from 'io-ts';
+import type { PartialDeep } from 'type-fest';
 
 export type TextInputEvent =
   | React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
