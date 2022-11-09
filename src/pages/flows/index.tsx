@@ -1,3 +1,4 @@
+import { VStack } from '@chakra-ui/react';
 import { DefaultButton } from '@fluentui/react';
 import Link from 'next/link';
 import { useEffect, useState } from 'react';
@@ -25,14 +26,15 @@ const FlowIndexPage = () => {
   return (
     <>
       <Navbar user={user}/>
-      <div className="flex flex-col items-center justify-center h-full w-screen">
-        {flows.length ? (
-          flows.map((flow, id) => (
-            <FlowCard flow={flow} key={id}/>
-          ))) : (
-            <span className="text-xl font-bold text-center">No flows found! <br/>Sign in to access more content</span>
+
+      <VStack alignItems={"center"}>
+          {flows.length ? (
+            flows.map((flow, id) => (
+              <FlowCard key={id} flow={flow} />
+            ))) : (
+              <span className="text-xl font-bold text-center">No flows found! <br/>Sign in to access more content</span>
           )}
-      </div>
+      </VStack>
       <Link href="/flows/create">
       <DefaultButton
             toggle
