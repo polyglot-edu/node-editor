@@ -165,7 +165,7 @@ const useStore = create<ApplicationState>(
     addSubFlow: (flow: PolyglotFlow) => {
       set((state) =>
         produce(state, (draft) => {
-          if (flow.nodes){
+          if (flow.nodes) {
             const subflowNodeMap = createElementMapping(flow.nodes);
             subflowNodeMap.forEach((v, k) => draft.nodeMap.set(k, v));
           }

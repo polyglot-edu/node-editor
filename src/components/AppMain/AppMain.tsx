@@ -92,7 +92,7 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
       error: 'Error saving flow',
     });
 
-    saveFlowPromise.then(resp =>{
+    saveFlowPromise.then((resp) => {
       if (resp.status !== 200) {
         console.log('Error saving flow', resp.statusText);
         return;

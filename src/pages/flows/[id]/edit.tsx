@@ -13,15 +13,13 @@ type AppFlowProviderProps = {
   canSaveFlow?: boolean;
 };
 
-const AppFlowProvider = ({
-  canSaveFlow = true,
-}: AppFlowProviderProps) => {
+const AppFlowProvider = ({ canSaveFlow = true }: AppFlowProviderProps) => {
   const [isLoading, setLoading] = useBoolean(false);
   const [error, setError] = useState<Nullable<string>>(null);
   const theme = useTheme();
   const router = useRouter();
   const flowId = router.query.id?.toString();
-  
+
   useEffect(() => {
     if (!flowId) return;
     (async () => {

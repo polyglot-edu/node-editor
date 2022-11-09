@@ -42,7 +42,7 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
   // const edges = getEdges();
 
   const [clickedNode, setClickedNode] = useState<Node | undefined>(undefined);
-  const [menuType, setMenuType] = useState("default");
+  const [menuType, setMenuType] = useState('default');
 
   const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
   const [
@@ -50,39 +50,39 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
     { setTrue: showContextMenu, setFalse: hideContextMenu },
   ] = useBoolean(false);
 
-  const onNodesChange : OnNodesChange = (changes) => {
+  const onNodesChange: OnNodesChange = (changes) => {
     setNodes(applyNodeChanges(changes, getNodes()));
-  }
-  const onEdgesChange : OnEdgesChange = (changes) => {
+  };
+  const onEdgesChange: OnEdgesChange = (changes) => {
     setEdges(applyEdgeChanges(changes, getEdges()));
-  }
+  };
 
-  const onNodesDelete : OnNodesDelete = (nodes) => {
+  const onNodesDelete: OnNodesDelete = (nodes) => {
     nodes.forEach((n) => removeNode(n.id));
     setNodes(getNodes());
-  }
+  };
 
-  const onMoveStart : OnMoveStart = () => {
+  const onMoveStart: OnMoveStart = () => {
     hideContextMenu;
     setClickedNode(undefined);
-  }
+  };
 
-  const onClick : MouseEventHandler | undefined = (e) => {
+  const onClick: MouseEventHandler | undefined = (e) => {
     e.preventDefault();
     hideContextMenu;
     setClickedNode(undefined);
-  }
+  };
 
-  const onNodeContextMenu : NodeMouseHandler = (e, node) => {
+  const onNodeContextMenu: NodeMouseHandler = (e, node) => {
     e.preventDefault();
-    setMenuType("node");
+    setMenuType('node');
     setClickedNode(node);
     showContextMenu();
     setContextMenuPos({
       x: e.clientX - (e.clientX % 15),
       y: e.clientY - (e.clientY % 15),
     });
-  }
+  };
 
   return (
     <>
@@ -113,13 +113,12 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
         onMoveStart={onMoveStart}
         onPaneContextMenu={(e) => {
           e.preventDefault();
-          setMenuType("default");
+          setMenuType('default');
           showContextMenu();
           setContextMenuPos({
             x: e.clientX - (e.clientX % 15),
             y: e.clientY - (e.clientY % 15),
           });
-          
         }}
       >
         <Background variant={BackgroundVariant.Dots} />

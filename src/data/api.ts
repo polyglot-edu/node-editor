@@ -14,11 +14,11 @@ const axios = axiosCreate.create({
   headers: {
     'Content-Type': 'application/json',
   },
-  withCredentials: true
+  withCredentials: true,
 });
 
 export const API = {
-  getUserInfo: () : Promise<AxiosResponse<User>> => {
+  getUserInfo: (): Promise<AxiosResponse<User>> => {
     return axios.get('/api/user/me');
   },
   loadExampleFlowElementsAsync: (
@@ -53,7 +53,7 @@ export const API = {
     return axios.get<PolyglotFlow>(`/api/flows/${flowId}`);
   },
   loadFlowList: (): Promise<AxiosResponse<PolyglotFlow[]>> => {
-    return axios.get(`/api/flows`)
+    return axios.get(`/api/flows`);
   },
   createNewFlowAsync: (): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, PolyglotFlow>(

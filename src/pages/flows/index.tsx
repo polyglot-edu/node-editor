@@ -8,10 +8,9 @@ import { useUser } from '../../context/user.context';
 import { API } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
 
-
 const FlowIndexPage = () => {
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
-  const {user, loading} = useUser();
+  const { user, loading } = useUser();
 
   useEffect(() => {
     if (user) {
@@ -25,27 +24,27 @@ const FlowIndexPage = () => {
 
   return (
     <>
-      <Navbar user={user}/>
+      <Navbar user={user} />
 
-      <VStack alignItems={"center"}>
-          {flows.length ? (
-            flows.map((flow, id) => (
-              <FlowCard key={id} flow={flow} />
-            ))) : (
-              <span className="text-xl font-bold text-center">No flows found! <br/>Sign in to access more content</span>
-          )}
+      <VStack alignItems={'center'}>
+        {flows.length ? (
+          flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
+        ) : (
+          <span className="text-xl font-bold text-center">
+            No flows found! <br />
+            Sign in to access more content
+          </span>
+        )}
       </VStack>
       <Link href="/flows/create">
-      <DefaultButton
-            toggle
-            checked={false}
-            iconProps={{ iconName: "Add" }} 
-            className="border-0 w-10 h-10 rounded-full fixed right-10 bottom-10 p-0 m-0 bg-green-300"
-          />
+        <DefaultButton
+          toggle
+          checked={false}
+          iconProps={{ iconName: 'Add' }}
+          className="border-0 w-10 h-10 rounded-full fixed right-10 bottom-10 p-0 m-0 bg-green-300"
+        />
       </Link>
-      
     </>
-    
   );
 };
 

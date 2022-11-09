@@ -15,7 +15,13 @@ type ContextMenuProps = {
   onDismiss: () => void;
 };
 
-const ContextMenu = ({ pos, showing, type, node, onDismiss }: ContextMenuProps) => {
+const ContextMenu = ({
+  pos,
+  showing,
+  type,
+  node,
+  onDismiss,
+}: ContextMenuProps) => {
   const linkRef = useRef(null);
 
   const menuItems: IContextualMenuItem[] = [
@@ -34,8 +40,8 @@ const ContextMenu = ({ pos, showing, type, node, onDismiss }: ContextMenuProps) 
       iconProps: { iconName: 'Add' },
       onClick: () => {
         const nodeToAdd = createNewDefaultPolyglotNode(pos);
-        nodeToAdd.reactFlow.type = "abstractNode";
-        nodeToAdd.type = "abstractNode";
+        nodeToAdd.reactFlow.type = 'abstractNode';
+        nodeToAdd.type = 'abstractNode';
         useStore.getState().addNode(nodeToAdd);
       },
     },
@@ -45,8 +51,8 @@ const ContextMenu = ({ pos, showing, type, node, onDismiss }: ContextMenuProps) 
       iconProps: { iconName: 'Add' },
       onClick: () => {
         const nodeToAdd = createNewDefaultPolyglotNode(pos);
-        nodeToAdd.reactFlow.type = "closeEndedQuestionNode";
-        nodeToAdd.type = "closeEndedQuestionNode";
+        nodeToAdd.reactFlow.type = 'closeEndedQuestionNode';
+        nodeToAdd.type = 'closeEndedQuestionNode';
         useStore.getState().addNode(nodeToAdd);
       },
     },
@@ -56,8 +62,8 @@ const ContextMenu = ({ pos, showing, type, node, onDismiss }: ContextMenuProps) 
       iconProps: { iconName: 'Add' },
       onClick: () => {
         const nodeToAdd = createNewDefaultPolyglotNode(pos);
-        nodeToAdd.reactFlow.type = "lessonNode";
-        nodeToAdd.type = "lessonNode";
+        nodeToAdd.reactFlow.type = 'lessonNode';
+        nodeToAdd.type = 'lessonNode';
         useStore.getState().addNode(nodeToAdd);
       },
     },
@@ -67,8 +73,8 @@ const ContextMenu = ({ pos, showing, type, node, onDismiss }: ContextMenuProps) 
       iconProps: { iconName: 'Add' },
       onClick: () => {
         const nodeToAdd = createNewDefaultPolyglotNode(pos);
-        nodeToAdd.reactFlow.type = "codingQuestionNode";
-        nodeToAdd.type = "codingQuestionNode";
+        nodeToAdd.reactFlow.type = 'codingQuestionNode';
+        nodeToAdd.type = 'codingQuestionNode';
         useStore.getState().addNode(nodeToAdd);
       },
     },
@@ -83,10 +89,8 @@ const ContextMenu = ({ pos, showing, type, node, onDismiss }: ContextMenuProps) 
         if (!node) return;
         useStore.getState().removeNode(node.id);
       },
-    }
+    },
   ];
-
-  
 
   return (
     <>
@@ -99,7 +103,7 @@ const ContextMenu = ({ pos, showing, type, node, onDismiss }: ContextMenuProps) 
       <ContextualMenu
         className="pt-2"
         hidden={!showing}
-        items={type === "node" ? menuNodeActions : menuItems}
+        items={type === 'node' ? menuNodeActions : menuItems}
         styles={{ root: { top: pos.y, left: pos.x } }}
         target={linkRef}
         onDismiss={onDismiss}
