@@ -17,7 +17,14 @@ const axios = axiosCreate.create({
   withCredentials: true,
 });
 
+type AutocompleteOutput = string[];
+
 export const API = {
+  autocomplete: (
+    query?: string
+  ): Promise<AxiosResponse<AutocompleteOutput>> => {
+    return axios.get('/api/search/autocomplete?q=' + query);
+  },
   getUserInfo: (): Promise<AxiosResponse<User>> => {
     return axios.get('/api/user/me');
   },
@@ -52,8 +59,8 @@ export const API = {
   ): Promise<AxiosResponse<PolyglotFlow>> => {
     return axios.get<PolyglotFlow>(`/api/flows/${flowId}`);
   },
-  loadFlowList: (): Promise<AxiosResponse<PolyglotFlow[]>> => {
-    return axios.get(`/api/flows`);
+  loadFlowList: (query?: string): Promise<AxiosResponse<PolyglotFlow[]>> => {
+    return axios.get(`/api/flows?q=` + query);
   },
   createNewFlowAsync: (): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, PolyglotFlow>(

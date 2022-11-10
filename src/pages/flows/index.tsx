@@ -1,9 +1,11 @@
-import { VStack } from '@chakra-ui/react';
+import { Heading, VStack } from '@chakra-ui/react';
 import { DefaultButton } from '@fluentui/react';
 import Link from 'next/link';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
 import Navbar from '../../components/Layout/NavBar';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import { useUser } from '../../context/user.context';
 import { API } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
@@ -11,21 +13,39 @@ import { PolyglotFlow } from '../../types/polyglotElements';
 const FlowIndexPage = () => {
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
   const { user, loading } = useUser();
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  const [searchValue, setSearchValue] = useState('');
+  const router = useRouter();
+  const query = router.query?.q?.toString();
+
+  useEffect(() => {
+    API.autocomplete(searchValue).then((resp) => {
+      const payload = resp.data;
+      setSuggestions(payload);
+    });
+  }, [searchValue]);
 
   useEffect(() => {
     if (user) {
-      API.loadFlowList().then((resp) => {
+      API.loadFlowList(query).then((resp) => {
         setFlows(resp.data);
       });
     }
-  }, [user]);
+  }, [user, query]);
 
   if (!user && loading) return null;
 
   return (
     <>
       <Navbar user={user} />
-
+      <Heading px="10%" pt="5%">
+        Navigate Flows
+      </Heading>
+      <SearchBar
+        inputValue={searchValue}
+        setInputValue={setSearchValue}
+        items={suggestions}
+      />
       <VStack alignItems={'center'}>
         {flows.length ? (
           flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
