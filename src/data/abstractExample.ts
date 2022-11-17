@@ -22,6 +22,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
 
   const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {
+      _id: UUIDv4(),
       type: 'multipleChoiceQuestionNode',
       title: 'Multiple Choice Question',
       description: 'Some description',
@@ -42,11 +43,16 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
 
   const codingNodes: CodingQuestionNode[] = [
     {
+      _id: UUIDv4(),
       type: 'codingQuestionNode',
       title: 'Coding Question',
       description: 'Some description',
       difficulty: 4,
-      data: {},
+      data: {
+        question: '',
+        codeTemplate: '',
+        language: 'csharp',
+      },
       reactFlow: {
         id: ids[1],
         type: 'codingQuestionNode',
@@ -60,6 +66,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
 
   const passFailEdges: PassFailEdge[] = [
     {
+      _id: UUIDv4(),
       title: 'Pass/Fail',
       type: 'passFailEdge',
       data: {

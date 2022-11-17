@@ -4,7 +4,7 @@ import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
-import Navbar from '../../components/Layout/NavBar';
+import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useUser } from '../../context/user.context';
 import { API } from '../../data/api';

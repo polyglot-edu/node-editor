@@ -234,16 +234,16 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             </ModalBody>
 
             <ModalFooter>
-              <a
+              {/* <a
                 href={URL.createObjectURL(
                   new Blob([JSON.stringify(flow, null, 2)], {
                     type: 'application/json',
                   })
                 )}
                 download={flow?.title + '.json'}
-              >
-                <Button colorScheme="blue">Download</Button>
-              </a>
+              > */}
+              <Button colorScheme="blue">Download</Button>
+              {/* </a> */}
             </ModalFooter>
           </ModalContent>
         </Modal>

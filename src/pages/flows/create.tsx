@@ -1,5 +1,5 @@
 import { NextRouter, useRouter } from 'next/router';
-import Navbar from '../../components/Layout/NavBar';
+import Navbar from '../../components/NavBars/NavBar';
 import { useUser } from '../../context/user.context';
 import { API } from '../../data/api';
 
@@ -10,6 +10,8 @@ const handleFormSubmit = (router: NextRouter) => async (event: any) => {
     const resp = await API.createNewFlow({
       title: event.target.title.value,
       description: event.target.description.value,
+      nodes: [],
+      edges: [],
     });
     console.log(resp.data);
     const payload = resp.data;
