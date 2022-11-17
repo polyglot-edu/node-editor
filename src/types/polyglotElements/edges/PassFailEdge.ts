@@ -17,12 +17,12 @@ export type PassFailEdgeData = EdgeData & {
 };
 
 export type PassFailEdge = PolyglotEdge & {
-  type: 'passFailEdge';
+  type: 'PassFailEdge';
   data: PassFailEdgeData;
 };
 
 polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
-  elementType: 'passFailEdge',
+  elementType: 'PassFailEdge',
   name: 'Pass/Fail',
   propertiesComponent: PassFailEdgeProperties,
   elementComponent: ReactFlowSmartBezierEdge,

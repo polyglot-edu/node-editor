@@ -11,12 +11,12 @@ export type MultipleChoiceQuestionNodeData = NodeData & {
 };
 
 export type MultipleChoiceQuestionNode = PolyglotNode & {
-  type: 'multipleChoiceQuestionNode';
+  type: 'MultipleChoiceQuestionNode';
   data: MultipleChoiceQuestionNodeData;
 };
 
 polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
-  elementType: 'multipleChoiceQuestionNode',
+  elementType: 'MultipleChoiceQuestionNode',
   name: 'Multiple Choice Question',
   propertiesComponent: MultipleChoiceQuestionNodeProperties,
   elementComponent: ReactFlowMultipleChoiceQuestionNode,

@@ -1,4 +1,5 @@
 import axiosCreate, { AxiosResponse } from 'axios';
+import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   polyglotEdgeComponentMapping,
   PolyglotFlow,
@@ -20,6 +21,18 @@ const axios = axiosCreate.create({
 type AutocompleteOutput = string[];
 
 export const API = {
+  edgeMetadata: (type: string): Promise<AxiosResponse<Metadata>> => {
+    return axios.get('/api/metadata/edge/' + type);
+  },
+  nodeMetadata: (type: string): Promise<AxiosResponse<Metadata>> => {
+    return axios.get('/api/metadata/node/' + type);
+  },
+  generalNodeMetadata: (): Promise<AxiosResponse<GeneralMetadata>> => {
+    return axios.get('/api/metadata/node');
+  },
+  generalEdgeMetadata: (): Promise<AxiosResponse<GeneralMetadata>> => {
+    return axios.get('/api/metadata/edge');
+  },
   autocomplete: (
     query?: string
   ): Promise<AxiosResponse<AutocompleteOutput>> => {

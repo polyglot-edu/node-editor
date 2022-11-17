@@ -8,12 +8,12 @@ export type AbstractNodeData = NodeData & {
 };
 
 export type AbstractNode = PolyglotNode & {
-  type: 'abstractNode';
+  type: 'AbstractNode';
   data: AbstractNodeData;
 };
 
 polyglotNodeComponentMapping.registerMapping<AbstractNode>({
-  elementType: 'abstractNode',
+  elementType: 'AbstractNode',
   name: 'Abstract Node',
   propertiesComponent: AbstractNodeProperties,
   elementComponent: ReactFlowAbstractNode,

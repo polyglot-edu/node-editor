@@ -7,6 +7,6 @@ export type PolyglotFlowInfo = {
 };
 
 export type PolyglotFlow = PolyglotFlowInfo & {
-  nodes?: PolyglotNode[];
-  edges?: PolyglotEdge[];
+  nodes: PolyglotNode[];
+  edges: PolyglotEdge[];
 };

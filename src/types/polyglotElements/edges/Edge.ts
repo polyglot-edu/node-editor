@@ -8,6 +8,7 @@ export const defaultPolyglotEdgeData: EdgeData = {};
 export const PolyglotEdge_IoTs = t.intersection(
   [
     t.type({
+      _id: t.string,
       type: t.string,
       title: t.string,
       data: EdgeData_IoTs,

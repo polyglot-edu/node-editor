@@ -9,6 +9,14 @@ import {
   PolyglotNode,
 } from '../types/polyglotElements';
 
+export const isObject = (variable: any) => {
+  return (
+    typeof variable === 'object' &&
+    !Array.isArray(variable) &&
+    variable !== null
+  );
+};
+
 export const useToggleCSSVariable = (variable: string, values: string[]) => {
   if (values.length <= 0) {
     throw new Error(
@@ -48,15 +56,17 @@ export const createNewDefaultPolyglotNode = (pos: {
   x: number;
   y: number;
 }): PolyglotNode => {
+  const id = UUIDv4();
   const newNode: MultipleChoiceQuestionNode = {
-    type: 'multipleChoiceQuestionNode',
+    _id: id,
+    type: 'MultipleChoiceQuestionNode',
     title: 'New Node',
     description: '',
     difficulty: 1,
     data: { question: '', isChoiceCorrect: [], choices: [] },
     reactFlow: {
-      id: UUIDv4(),
-      type: 'multipleChoiceQuestionNode',
+      id: id,
+      type: 'MultipleChoiceQuestionNode',
       position: pos,
       data: { label: 'New Node' },
     },
@@ -69,19 +79,21 @@ export const createNewDefaultPolyglotEdge = (
   sourceId: string,
   targetId: string
 ): PolyglotEdge => {
+  const id = UUIDv4();
   const newEdge: PassFailEdge = {
+    _id: id,
     reactFlow: {
-      id: UUIDv4(),
+      id: id,
       source: sourceId,
       target: targetId,
-      type: 'passFailEdge',
+      type: 'PassFailEdge',
       markerEnd: {
         type: MarkerType.Arrow,
         width: 25,
         height: 25,
       },
     },
-    type: 'passFailEdge',
+    type: 'PassFailEdge',
     title: '',
     data: {
       conditionKind: 'pass',

@@ -9,12 +9,12 @@ export type CloseEndedQuestionNodeData = NodeData & {
 };
 
 export type CloseEndedQuestionNode = PolyglotNode & {
-  type: 'closeEndedQuestionNode';
+  type: 'CloseEndedQuestionNode';
   data: CloseEndedQuestionNodeData;
 };
 
 polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
-  elementType: 'closeEndedQuestionNode',
+  elementType: 'CloseEndedQuestionNode',
   name: 'Close Ended Question',
   propertiesComponent: CloseEndedQuestionNodeProperties,
   elementComponent: ReactFlowCloseEndedQuestionNode,

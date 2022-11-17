@@ -1,3 +1,4 @@
+import { useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { OnSelectionChangeParams } from 'react-flow-renderer';
@@ -9,15 +10,46 @@ import {
   polyglotNodeComponentMapping,
 } from '../../types/polyglotElements';
 import DrawingArea from '../DrawingArea/DrawingArea';
-import PropertiesBar from '../PropertiesBar/PropertiesBar';
+import { EdgePropertiesProps } from '../EdgeProperties/EdgeProperties';
+import { NodePropertiesProps } from '../NodeProperties/NodeProperties';
+import ElementProperties from '../Panels/ElementProperties';
 
 type AppMainProps = {
   canSaveFlow?: boolean;
 };
 
 const AppMain = ({ canSaveFlow }: AppMainProps) => {
-  const selectedElement = useElementSelection();
+  const { getSelectedElement, setSelectedElement, clearSelection } = useStore();
   const router = useRouter();
+  const {
+    isOpen: isOpenPanel,
+    onOpen: onOpenPanel,
+    onClose: onClosePanel,
+  } = useDisclosure();
+
+  const selectedElement = getSelectedElement();
+
+  function handleChange({ nodes, edges }: OnSelectionChangeParams) {
+    if (nodes.length !== 0) {
+      console.log('Selected node: ', nodes[0].id);
+      setSelectedElement({
+        type: 'Node',
+        id: nodes[0].id,
+      });
+      onOpenPanel();
+    } else if (edges.length !== 0) {
+      console.log('Selected edge: ', edges[0].id);
+      setSelectedElement({
+        type: 'Edge',
+        id: edges[0].id,
+      });
+      onOpenPanel();
+    } else {
+      onClosePanel();
+      console.log('Selection empty');
+      clearSelection();
+    }
+  }
 
   useEffect(() => {
     async function onKeyDown(e: KeyboardEvent) {
@@ -107,18 +139,24 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
     <div>
       <header className="App-header">
         <div className="flex">
-          <DrawingArea onSelectionChange={selectedElement.onChange} />
-          <PropertiesBar>
-            <selectedElement.NodePropertiesComponent />
-            <selectedElement.EdgePropertiesComponent />
-          </PropertiesBar>
+          <DrawingArea onSelectionChange={handleChange} />
+          <ElementProperties isOpen={isOpenPanel} />
         </div>
       </header>
     </div>
   );
 };
 
-const useElementSelection = () => {
+type ElementSelection = {
+  NodePropertiesComponent: (props: NodePropertiesProps) => JSX.Element;
+  EdgePropertiesComponent: (props: EdgePropertiesProps) => JSX.Element;
+  onChange: ({ nodes, edges }: OnSelectionChangeParams) => void;
+};
+
+/**
+ * @deprecated
+ */
+export const useElementSelection: () => ElementSelection = () => {
   // this hook is updated every time something in the entire store changes.
   // if this needs to change, keep in mind that updates needs to be triggered when:
   // - the selection changes

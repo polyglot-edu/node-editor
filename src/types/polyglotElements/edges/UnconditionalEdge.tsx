@@ -6,12 +6,12 @@ import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 export type UnconditionalEdgeData = EdgeData & {};
 
 export type UnconditionalEdge = PolyglotEdge & {
-  type: 'unconditionalEdge';
+  type: 'UnconditionalEdge';
   data: UnconditionalEdgeData;
 };
 
 polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
-  elementType: 'unconditionalEdge',
+  elementType: 'UnconditionalEdge',
   name: 'Unconditional',
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   propertiesComponent: (props: EdgePropertiesProps) => <></>,

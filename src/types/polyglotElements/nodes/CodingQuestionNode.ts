@@ -6,12 +6,12 @@ import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 export type CodingQuestionNodeData = NodeData & {};
 
 export type CodingQuestionNode = PolyglotNode & {
-  type: 'codingQuestionNode';
+  type: 'CodingQuestionNode';
   data: CodingQuestionNodeData;
 };
 
 polyglotNodeComponentMapping.registerMapping<CodingQuestionNode>({
-  elementType: 'codingQuestionNode',
+  elementType: 'CodingQuestionNode',
   name: 'Coding Question',
   propertiesComponent: CodingQuestionNodeProperties,
   elementComponent: ReactFlowCodingQuestionNode,

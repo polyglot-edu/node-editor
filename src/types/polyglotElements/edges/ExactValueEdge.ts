@@ -9,12 +9,12 @@ export type ExactValueEdgeData = EdgeData & {
 };
 
 export type ExactValueEdge = PolyglotEdge & {
-  type: 'exactValueEdge';
+  type: 'ExactValueEdge';
   data: ExactValueEdgeData;
 };
 
 polyglotEdgeComponentMapping.registerMapping<ExactValueEdge>({
-  elementType: 'exactValueEdge',
+  elementType: 'ExactValueEdge',
   name: 'Exact Value',
   propertiesComponent: ExactValueEdgeProperties,
   elementComponent: ReactFlowSmartBezierEdge,

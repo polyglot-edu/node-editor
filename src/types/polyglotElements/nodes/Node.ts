@@ -11,6 +11,7 @@ export const defaultPolyglotNodeData: NodeData = {};
 
 export const PolyglotNode_IoTs = t.type(
   {
+    _id: t.string,
     type: t.string,
     title: t.string,
     description: t.string,

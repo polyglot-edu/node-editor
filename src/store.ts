@@ -26,6 +26,11 @@ function createElementMapping<T extends PolyglotNode | PolyglotEdge>(arr: T[]) {
   return mapping;
 }
 
+export type SelectedElement = {
+  type: 'Node' | 'Edge' | 'none';
+  id: string;
+};
+
 interface ApplicationState {
   loadFlow: (flow: PolyglotFlow) => void;
   updateFlowInfo: (newValue: PartialDeep<PolyglotFlowInfo>) => void;
@@ -36,10 +41,13 @@ interface ApplicationState {
   reactFlowNodes: () => Node[];
   reactFlowEdges: () => Edge[];
 
+  selectedElement: Nullable<SelectedElement>;
   selectedNode: Nullable<string>;
   selectedEdge: Nullable<string>;
+  getSelectedElement: () => PolyglotEdge | PolyglotNode | undefined;
   getSelectedNode: () => Nullable<PolyglotNode>;
   getSelectedEdge: () => Nullable<PolyglotEdge>;
+  setSelectedElement: (element: SelectedElement) => void;
   setSelectedNode: (nodeId: string) => void;
   setSelectedEdge: (edgeId: string) => void;
   clearSelection: () => void;
@@ -61,7 +69,7 @@ interface ApplicationState {
 
 const useStore = create<ApplicationState>(
   devtools((set, get) => ({
-    loadFlow: (flow: PolyglotFlow) => {
+    loadFlow: (flow) => {
       set((state) =>
         produce(state, (draft) => {
           draft.activeFlowInfo = flow;
@@ -106,8 +114,24 @@ const useStore = create<ApplicationState>(
         Object.assign({}, edge.reactFlow)
       ),
 
+    selectedElement: null,
     selectedNode: null,
     selectedEdge: null,
+    getSelectedElement: () => {
+      const state = get();
+      const selectedElement = state.selectedElement;
+      if (!selectedElement) return undefined;
+
+      switch (selectedElement.type) {
+        case 'Node':
+          return state.nodeMap.get(selectedElement.id);
+        case 'Edge':
+          return state.edgeMap.get(selectedElement.id);
+        default:
+          console.log('Invalid selected type!');
+          return undefined;
+      }
+    },
     getSelectedNode: () => {
       const state = get();
       if (state.selectedNode !== null) {
@@ -121,6 +145,11 @@ const useStore = create<ApplicationState>(
         return state.edgeMap.get(state.selectedEdge)!;
       }
       return null;
+    },
+    setSelectedElement: (element) => {
+      set(() => ({
+        selectedElement: element,
+      }));
     },
     setSelectedNode: (nodeId: string) => {
       set(() => ({
@@ -136,6 +165,7 @@ const useStore = create<ApplicationState>(
     },
     clearSelection: () => {
       set(() => ({
+        selectedElement: null,
         selectedNode: null,
         selectedEdge: null,
       }));
@@ -186,14 +216,18 @@ const useStore = create<ApplicationState>(
     updateNode: (id: string, newValue: PartialDeep<PolyglotNode>) => {
       set((state) =>
         produce(state, (draft) => {
+          const node = draft.nodeMap.get(id);
+          if (!node) {
+            console.log('Node not present!');
+            return;
+          }
+          const mergeVal = merge<PolyglotNode>(node, newValue as PolyglotNode);
+          if (!mergeVal) {
+            console.log('error merging');
+            return;
+          }
           // TODO: FIXME: make sure that newValue as PolyglotNode is correct!!!
-          draft.nodeMap.set(
-            id,
-            merge<PolyglotNode>(
-              draft.nodeMap.get(id)!,
-              newValue as PolyglotNode
-            )
-          );
+          draft.nodeMap.set(id, mergeVal);
         })
       );
     },
@@ -263,6 +297,7 @@ export const curriedUpdate = <T>(
 };
 
 // TODO: remove duplication here
+// FIXME: broken right now
 export const changeNodeType = (currentValue: PolyglotNode, newType: string) => {
   if (
     !Object.keys(polyglotNodeComponentMapping.nameMapping).includes(newType)
