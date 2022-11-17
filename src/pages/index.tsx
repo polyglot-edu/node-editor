@@ -1,6 +1,6 @@
 import { Button, Center, Heading, Stack } from '@chakra-ui/react';
 import Link from 'next/link';
-import Navbar from '../components/Layout/NavBar';
+import Navbar from '../components/NavBars/NavBar';
 import { useUser } from '../context/user.context';
 
 const Home = () => {

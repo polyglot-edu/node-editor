@@ -1,4 +1,4 @@
-import { useDisclosure } from '@chakra-ui/react';
+import { Box, Flex, useDisclosure } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect } from 'react';
 import { OnSelectionChangeParams } from 'react-flow-renderer';
@@ -11,6 +11,7 @@ import {
 } from '../../types/polyglotElements';
 import DrawingArea from '../DrawingArea/DrawingArea';
 import { EdgePropertiesProps } from '../EdgeProperties/EdgeProperties';
+import EditorNav from '../NavBars/EditorNav';
 import { NodePropertiesProps } from '../NodeProperties/NodeProperties';
 import ElementProperties from '../Panels/ElementProperties';
 
@@ -28,6 +29,28 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
   } = useDisclosure();
 
   const selectedElement = getSelectedElement();
+
+  // can throw errors, handle them outside
+  const saveFlow = async () => {
+    const flow = useStore.getState().getFlow();
+    if (!flow) {
+      toast.error('No flow loaded');
+      return;
+    }
+
+    const saveFlowPromise = API.saveFlowAsync(flow);
+    toast.promise(saveFlowPromise, {
+      loading: 'Saving flow...',
+      success: (response) =>
+        response.status === 200
+          ? 'Flow saved successfully'
+          : 'Error saving flow',
+      error: 'Error saving flow',
+    });
+
+    const response = await saveFlowPromise;
+    return response;
+  };
 
   function handleChange({ nodes, edges }: OnSelectionChangeParams) {
     if (nodes.length !== 0) {
@@ -79,71 +102,23 @@ const AppMain = ({ canSaveFlow }: AppMainProps) => {
           toast.error('Cannot override this flow');
           return;
         }
-
-        try {
-          const flow = useStore.getState().getFlow();
-          if (!flow) {
-            toast.error('No flow loaded');
-            return;
-          }
-
-          const saveFlowPromise = API.saveFlowAsync(flow);
-          toast.promise(saveFlowPromise, {
-            loading: 'Saving flow...',
-            success: (response) =>
-              response.status === 200
-                ? 'Flow saved successfully'
-                : 'Error saving flow',
-            error: 'Error saving flow',
-          });
-
-          const response = await saveFlowPromise;
-          if (response.status !== 200) {
-            console.log('Error saving flow', response.statusText);
-            return;
-          }
-        } catch (error) {
-          console.log(error);
-        }
       }
     }
-
-    const flow = useStore.getState().getFlow();
-    if (!flow) {
-      toast.error('No flow loaded');
-      return;
-    }
-
-    const saveFlowPromise = API.saveFlowAsync(flow);
-    toast.promise(saveFlowPromise, {
-      loading: 'Saving flow...',
-      success: (response) =>
-        response.status === 200
-          ? 'Flow saved successfully'
-          : 'Error saving flow',
-      error: 'Error saving flow',
-    });
-
-    saveFlowPromise.then((resp) => {
-      if (resp.status !== 200) {
-        console.log('Error saving flow', resp.statusText);
-        return;
-      }
-    });
 
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [canSaveFlow, router, selectedElement]);
 
   return (
-    <div>
-      <header className="App-header">
-        <div className="flex">
+    <Box h="100vh">
+      <Flex direction={'column'} h="100%" w="full">
+        <EditorNav saveFunc={saveFlow} />
+        <Flex h="full">
           <DrawingArea onSelectionChange={handleChange} />
           <ElementProperties isOpen={isOpenPanel} />
-        </div>
-      </header>
-    </div>
+        </Flex>
+      </Flex>
+    </Box>
   );
 };
 

@@ -136,11 +136,7 @@ const Flow = ({ onSelectionChange }: DrawingAreaProps) => {
 };
 
 const DrawingArea = (props: DrawingAreaProps) => {
-  return (
-    <div className="flex flex-col flex-1 h-screen w-full ease-in-out duration-300">
-      <Flow {...props} />
-    </div>
-  );
+  return <Flow {...props} />;
 };
 
 export default DrawingArea;

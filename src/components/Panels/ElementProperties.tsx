@@ -54,7 +54,7 @@ const ElementProperties = ({
         setEdgeMeta(res.data);
       });
     }
-  }, [autoFetchMeta, selectedElement]);
+  }, [autoFetchMeta]);
 
   return (
     <Panel isOpen={isOpen}>

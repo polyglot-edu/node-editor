@@ -1,5 +1,4 @@
 import {
-  Button,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -130,7 +129,7 @@ const DynamicForm = ({
     handleSubmit,
     register,
     setValue,
-    formState: { errors, isSubmitting },
+    formState: { errors },
   } = useForm();
 
   useEffect(() => {
@@ -155,9 +154,6 @@ const DynamicForm = ({
           errors
         )}
       </>
-      <Button mt={4} colorScheme="teal" isLoading={isSubmitting} type="submit">
-        Submit
-      </Button>
     </form>
   );
 };
