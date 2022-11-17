@@ -29,6 +29,7 @@ const FileUpload = ({
 }: FileUploadProps) => {
   const inputRef = useRef<any>();
   const {
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     field: { ref, value, ...inputProps },
   } = useController({
     name,
@@ -48,7 +49,7 @@ const FileUpload = ({
           accept={acceptedFileTypes}
           ref={inputRef}
           {...inputProps}
-          inputRef={ref}
+          //inputRef={ref}
           style={{ display: 'none' }}
         ></input>
         <Input
