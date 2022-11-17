@@ -27,6 +27,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     */
   const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {
+      _id: ids[0],
       type: 'multipleChoiceQuestionNode',
       title: 'Multiple Choice Question',
       description: 'Some description',
@@ -45,24 +46,9 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     },
   ];
 
-  const codingNodes: CodingQuestionNode[] = [
-    {
-      type: 'codingQuestionNode',
-      title: 'Coding Question',
-      description: 'Some description',
-      difficulty: 4,
-      data: {},
-      reactFlow: {
-        id: UUIDv4(),
-        type: 'codingQuestionNode',
-        position: { x: 250, y: 75 },
-        data: { label: 'Coding Question' },
-      },
-    },
-  ];
-
   const closeEndedQuestionNodes: CloseEndedQuestionNode[] = [
     {
+      _id: UUIDv4(),
       type: 'closeEndedQuestionNode',
       title: 'Close Ended Question',
       description: 'Some description',
@@ -96,24 +82,30 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     ),
   ];
 
-  const lessonNodes: LessonNode[] = [
+  const codingNodes: CodingQuestionNode[] = [
     {
-      type: 'lessonNode',
-      title: 'Lesson',
+      _id: ids[2],
+      type: 'codingQuestionNode',
+      title: 'Coding Question',
       description: 'Some description',
-      difficulty: 1,
-      data: {},
+      difficulty: 4,
+      data: {
+        question: 'Test',
+        codeTemplate: '// some C# code',
+        language: 'C#',
+      },
       reactFlow: {
         id: UUIDv4(),
-        type: 'lessonNode',
-        position: { x: 250, y: 225 },
-        data: { label: 'Lesson' },
+        type: 'codingQuestionNode',
+        position: { x: 250, y: 75 },
+        data: { label: 'Coding Question' },
       },
     },
   ];
 
   const abstractNodes: AbstractNode[] = [
     {
+      _id: UUIDv4(),
       type: 'abstractNode',
       title: 'Abstract Node',
       description: 'nice description',
@@ -124,6 +116,23 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         type: 'abstractNode',
         position: { x: 250, y: 300 },
         data: { label: 'Abstract Node' },
+      },
+    },
+  ];
+
+  const lessonNodes: LessonNode[] = [
+    {
+      _id: UUIDv4(),
+      type: 'lessonNode',
+      title: 'Lesson',
+      description: 'Some description',
+      difficulty: 1,
+      data: {},
+      reactFlow: {
+        id: UUIDv4(),
+        type: 'lessonNode',
+        position: { x: 250, y: 225 },
+        data: { label: 'Lesson' },
       },
     },
   ];
@@ -144,6 +153,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
 
   const passFailEdges: PassFailEdge[] = [
     {
+      _id: UUIDv4(),
       title: 'Pass/Fail',
       type: 'passFailEdge',
       data: {
@@ -165,6 +175,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
 
   const exactValueEdges: ExactValueEdge[] = [
     {
+      _id: UUIDv4(),
       title: 'Exact Value',
       type: 'exactValueEdge',
       data: {
@@ -186,6 +197,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
 
   const unconditionalEdge: UnconditionalEdge[] = [
     {
+      _id: UUIDv4(),
       title: 'Unconditional',
       type: 'unconditionalEdge',
       data: {},
@@ -205,6 +217,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
 
   const customValidationEdge: CustomValidationEdge[] = [
     {
+      _id: UUIDv4(),
       title: 'Custom Validation',
       type: 'customValidationEdge',
       data: {

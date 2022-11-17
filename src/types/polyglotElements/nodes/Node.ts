@@ -30,3 +30,10 @@ export type PolyglotNode = t.TypeOf<typeof PolyglotNode_IoTs> & {
 };
 
 // TODO: add type TextualQuestion or similar to standardize textual questions such as multiple choice, open questions, coding exercises, ecc.
+
+export type ChallengeSetup = {};
+export type ChallengeContent = {
+  type: string;
+  content: string;
+  priority?: number;
+};

@@ -24,14 +24,16 @@ const ArrayField = <T extends string>({
     const resObj: any = {};
     resObj[name] = [];
     reset(resObj);
-    prepend(
-      array?.map((val) => {
-        return {
-          name: '',
-          value: val,
-        };
-      })
-    );
+    if (array && array.length > 0) {
+      prepend(
+        array?.map((val) => {
+          return {
+            name: '',
+            value: val,
+          };
+        })
+      );
+    }
   }, [array]);
 
   return (

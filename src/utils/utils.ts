@@ -2,11 +2,10 @@ import { useState } from 'react';
 import { MarkerType } from 'react-flow-renderer';
 import { v4 as UUIDv4 } from 'uuid';
 import {
-  MultipleChoiceQuestionNode,
   PassFailEdge,
   PolyglotEdge,
   PolyglotFlow,
-  PolyglotNode,
+  polyglotNodeComponentMapping,
 } from '../types/polyglotElements';
 
 export const isObject = (variable: any) => {
@@ -52,27 +51,24 @@ export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
   };
 };
 
-export const createNewDefaultPolyglotNode = (pos: {
-  x: number;
-  y: number;
-}): PolyglotNode => {
+export const createNewDefaultPolyglotNode: (
+  pos: { x: number; y: number },
+  nodeType?: string
+) => any = (pos, nodeType = 'multipleChoiceQuestionNode') => {
   const id = UUIDv4();
-  const newNode: MultipleChoiceQuestionNode = {
+  return {
     _id: id,
-    type: 'MultipleChoiceQuestionNode',
+    type: nodeType,
     title: 'New Node',
     description: '',
     difficulty: 1,
-    data: { question: '', isChoiceCorrect: [], choices: [] },
+    data: polyglotNodeComponentMapping.defaultDataMapping[nodeType],
     reactFlow: {
       id: id,
-      type: 'MultipleChoiceQuestionNode',
+      type: nodeType,
       position: pos,
-      data: { label: 'New Node' },
     },
   };
-
-  return newNode;
 };
 
 export const createNewDefaultPolyglotEdge = (
@@ -86,15 +82,19 @@ export const createNewDefaultPolyglotEdge = (
       id: id,
       source: sourceId,
       target: targetId,
-      type: 'PassFailEdge',
+      type: 'passFailEdge',
       markerEnd: {
         type: MarkerType.Arrow,
         width: 25,
         height: 25,
       },
     },
-    type: 'PassFailEdge',
+    type: 'passFailEdge',
     title: '',
+    code: `
+    async Task<(bool, string)> validate(PolyglotValidationContext context) {
+        return (String.Equals(context.Condition.Data.value, context.JourneyContext.SubmittedCode), "Exact value edge");
+    }`,
     data: {
       conditionKind: 'pass',
     },

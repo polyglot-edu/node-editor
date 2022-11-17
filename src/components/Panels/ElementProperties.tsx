@@ -114,15 +114,6 @@ const onChangeElement: OnChangeDynamicForm =
     );
 
     let update: any = {};
-    if (metaField.name === 'title') {
-      update = {
-        reactFlow: {
-          data: {
-            label: value,
-          },
-        },
-      };
-    }
     if (metaField.name === 'type') {
       update = {
         reactFlow: {

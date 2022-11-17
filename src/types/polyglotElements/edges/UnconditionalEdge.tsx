@@ -6,12 +6,12 @@ import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 export type UnconditionalEdgeData = EdgeData & {};
 
 export type UnconditionalEdge = PolyglotEdge & {
-  type: 'UnconditionalEdge';
+  type: 'unconditionalEdge';
   data: UnconditionalEdgeData;
 };
 
 polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
-  elementType: 'UnconditionalEdge',
+  elementType: 'unconditionalEdge',
   name: 'Unconditional',
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
   propertiesComponent: (props: EdgePropertiesProps) => <></>,
@@ -21,7 +21,7 @@ polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
   },
   transformData: (edge) => {
     const code = `
-(bool, string) validate(PolyglotValidationContext context) {
+async Task<(bool, string)> validate(PolyglotValidationContext context) {
     return (true, "Unconditional edge");
 }`;
 

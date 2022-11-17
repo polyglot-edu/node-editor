@@ -9,12 +9,12 @@ export type ExactValueEdgeData = EdgeData & {
 };
 
 export type ExactValueEdge = PolyglotEdge & {
-  type: 'ExactValueEdge';
+  type: 'exactValueEdge';
   data: ExactValueEdgeData;
 };
 
 polyglotEdgeComponentMapping.registerMapping<ExactValueEdge>({
-  elementType: 'ExactValueEdge',
+  elementType: 'exactValueEdge',
   name: 'Exact Value',
   propertiesComponent: ExactValueEdgeProperties,
   elementComponent: ReactFlowSmartBezierEdge,
@@ -24,7 +24,7 @@ polyglotEdgeComponentMapping.registerMapping<ExactValueEdge>({
   },
   transformData: (edge) => {
     const code = `
-(bool, string) validate(PolyglotValidationContext context) {
+async Task<(bool, string)> validate(PolyglotValidationContext context) {
     return (String.Equals(context.Condition.Data.value, context.JourneyContext.SubmittedCode), "Exact value edge");
 }`;
 

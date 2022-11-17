@@ -30,12 +30,10 @@ const ContextMenu = ({
   ).map((index, id) => {
     return {
       key: id.toString(),
-      text: 'New ' + index,
+      text: 'New ' + polyglotNodeComponentMapping.nameMapping[index],
       iconProps: { iconName: 'Add' },
       onClick: () => {
-        const nodeToAdd = createNewDefaultPolyglotNode(pos);
-        nodeToAdd.reactFlow.type = index;
-        nodeToAdd.type = index;
+        const nodeToAdd = createNewDefaultPolyglotNode(pos, index);
         useStore.getState().addNode(nodeToAdd);
       },
     };

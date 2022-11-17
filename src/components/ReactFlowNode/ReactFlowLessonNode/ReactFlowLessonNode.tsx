@@ -7,8 +7,11 @@ import { ReactFlowNodeProps } from '../ReactFlowNode';
 
 type ReactFlowLessonNodeProps = ReactFlowNodeProps & LessonNode;
 
-const ReactFlowLessonNode = ({ data }: ReactFlowLessonNodeProps) => {
-  const onConnect = useStore((state) => state.onConnect);
+const ReactFlowLessonNode = ({ id }: ReactFlowLessonNodeProps) => {
+  const [onConnect, label] = useStore((state) => [
+    state.onConnect,
+    state.nodeMap.get(id)?.title,
+  ]);
   const theme = useTheme();
 
   return (
@@ -19,7 +22,7 @@ const ReactFlowLessonNode = ({ data }: ReactFlowLessonNodeProps) => {
         background: `${theme.palette.purple}08`,
       }}
     >
-      {data.label}
+      {label}
       <Handle type="source" position={Position.Right} onConnect={onConnect} />
       <Handle type="target" position={Position.Left} />
     </Card>

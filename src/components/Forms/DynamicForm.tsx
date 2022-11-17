@@ -46,17 +46,16 @@ export type DynamicFormProps = {
   onSubmit?: SubmitHandler<FieldValues>;
 };
 
-const default_setFields = <T extends {}>(
-  element: T,
+const default_setFields = (
+  element: any,
   setValue: UseFormSetValue<FieldValues>
 ) => {
-  Object.keys(element).forEach((key) => {
-    if (isObject(element[key as keyof T])) {
-      Object.keys(element[key as keyof T] as {}).forEach((index) => {
-        console.log(key + ' ' + (element[key as keyof T] as any)[index]);
-        setValue(index, (element[key as keyof T] as any)[index]);
+  Object.keys(element).forEach((index) => {
+    if (isObject(element[index])) {
+      Object.keys(element[index]).forEach((field) => {
+        setValue(field, element[index][field]);
       });
-    } else setValue(key, element[key as keyof T]);
+    } else setValue(index, element[index]);
   });
 };
 
@@ -72,7 +71,7 @@ export const parseMetaField = (
   }
   switch (metaField.type) {
     case 'any':
-      console.log(element);
+      // TODO: need to be implemented
       break;
     case 'number':
       value = parseInt(value);
@@ -249,17 +248,18 @@ const generateElement = (
         inputObj = <FileUpload name={val.name.toString()} control={control} />;
         break;
       case 'code':
+        const tmpElem = parentKey ? element[parentKey] : element;
+        const value = tmpElem[val.name];
+        console.log(element);
+        const language = tmpElem?.language;
         inputObj = (
           <Editor
             height={200}
-            language="csharp"
-            defaultValue={`using System;
-
-  int main() {
-  Console.WriteLine("Hello World!");
-  return 0;
-  }
-  `}
+            language={language || 'csharp'}
+            defaultValue={value}
+            onChange={(value) =>
+              val.constraints.onChange?.({ currentTarget: { value: value } })
+            }
           />
         );
     }
