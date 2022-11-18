@@ -34,7 +34,7 @@ polyglotNodeComponentMapping.registerMapping<LessonTextNode>({
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: lessonTextNode.data.text,
+        content: lessonTextNode.data?.text,
       },
     ];
 

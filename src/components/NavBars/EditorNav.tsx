@@ -145,6 +145,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
                     });
                   }
                 } catch (err) {
+                  console.log(err);
                   toast({
                     title: 'Flow not saved',
                     description: 'Internal error',

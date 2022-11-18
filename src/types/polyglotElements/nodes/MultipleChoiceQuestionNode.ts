@@ -37,7 +37,7 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
 
     const data = {
       ...oldData,
-      correctAnswers: zip(oldData.choices, oldData.isChoiceCorrect).reduce(
+      correctAnswers: zip(oldData?.choices, oldData?.isChoiceCorrect).reduce(
         (acc, { first, second }) => {
           if (second) {
             acc.push(first);

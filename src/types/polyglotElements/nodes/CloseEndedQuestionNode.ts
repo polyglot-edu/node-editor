@@ -36,7 +36,7 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: lessonTextNode.data.question,
+        content: lessonTextNode.data?.question,
         priority: 0,
       },
       {

@@ -43,12 +43,12 @@ int main() {
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: lessonTextNode.data.question,
+        content: lessonTextNode.data?.question,
         priority: 0,
       },
       {
-        type: lessonTextNode.data.language,
-        content: lessonTextNode.data.codeTemplate,
+        type: lessonTextNode.data?.language,
+        content: lessonTextNode.data?.codeTemplate,
         priority: 1,
       },
     ];
