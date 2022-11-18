@@ -175,6 +175,9 @@ const generateElement = (
   return meta?.map((val, id) => {
     val.constraints.onChange = onChange(element, val, onChangeProps, parentKey);
     let inputObj;
+    const field = parentKey
+      ? element?.[parentKey]?.[val.name]
+      : element?.[val.name];
     switch (val.type) {
       case 'any':
         if (val.fields) {
@@ -228,13 +231,11 @@ const generateElement = (
         break;
       case 'array':
         // TODO: da riguardare
-        const array = parentKey
-          ? element[parentKey][val.name]
-          : element[val.name];
+
         inputObj = (
           <ArrayField<string>
             name={val.name.toString()}
-            array={array}
+            array={field}
             constraints={val.constraints}
           />
         );
@@ -243,14 +244,12 @@ const generateElement = (
         inputObj = <FileUpload name={val.name.toString()} control={control} />;
         break;
       case 'code':
-        const tmpElem = parentKey ? element[parentKey] : element;
-        const value = tmpElem?.[val.name];
-        const language = tmpElem?.language;
+        const language = element?.language;
         inputObj = (
           <Editor
             height={200}
             language={language || 'csharp'}
-            defaultValue={value}
+            defaultValue={field}
             onChange={(value) =>
               val.constraints.onChange?.({ currentTarget: { value: value } })
             }
