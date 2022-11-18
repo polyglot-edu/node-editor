@@ -205,7 +205,6 @@ const generateElement = (
           <Select
             key={id}
             id={val.name.toString()}
-            disabled={val.name === 'type'}
             {...register(val.name.toString(), val.constraints)}
           >
             {val.options?.map((opt, id) => {
@@ -245,8 +244,7 @@ const generateElement = (
         break;
       case 'code':
         const tmpElem = parentKey ? element[parentKey] : element;
-        const value = tmpElem[val.name];
-        console.log(element);
+        const value = tmpElem?.[val.name];
         const language = tmpElem?.language;
         inputObj = (
           <Editor

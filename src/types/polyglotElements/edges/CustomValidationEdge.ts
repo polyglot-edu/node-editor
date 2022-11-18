@@ -26,7 +26,7 @@ polyglotEdgeComponentMapping.registerMapping<CustomValidationEdge>({
   },
   transformData: (edge) => {
     const customValidationEdge = edge as CustomValidationEdge;
-    const code = customValidationEdge.data.code;
+    const code = customValidationEdge.data?.code;
 
     return {
       ...edge,

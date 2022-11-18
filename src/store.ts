@@ -297,7 +297,6 @@ export const curriedUpdate = <T>(
 };
 
 // TODO: remove duplication here
-// FIXME: broken right now
 export const changeNodeType = (currentValue: PolyglotNode, newType: string) => {
   if (
     !Object.keys(polyglotNodeComponentMapping.nameMapping).includes(newType)
