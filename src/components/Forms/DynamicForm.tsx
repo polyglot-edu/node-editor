@@ -17,7 +17,6 @@ import {
   UseFormRegister,
   UseFormSetValue,
 } from 'react-hook-form';
-import { changeNodeType } from '../../store';
 import { Metadata, MetadataField } from '../../types/metadata';
 import { isObject } from '../../utils/utils';
 import ArrayField from './Fields/ArrayField';
@@ -77,6 +76,7 @@ export const parseMetaField = (
       value = parseInt(value);
       break;
     case 'enum':
+      if (metaField.name === 'type') return null;
       if (metaField.sub === 'number') {
         value = parseInt(value);
       }
@@ -205,10 +205,6 @@ const generateElement = (
         );
         break;
       case 'enum':
-        if (val.name === 'type')
-          val.constraints.onChange = (e) => {
-            changeNodeType(element, e?.currentTarget?.value ?? '');
-          };
         inputObj = (
           <Select
             key={id}

@@ -2,7 +2,7 @@ import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
 import { API } from '../../data/api';
-import useStore from '../../store';
+import useStore, { changeEdgeType, changeNodeType } from '../../store';
 import { Metadata } from '../../types/metadata';
 import DynamicForm, {
   OnChangeDynamicForm,
@@ -89,6 +89,8 @@ const ElementProperties = ({
             onChange={onChangeElement}
             onChangeProps={{
               updateElement: seMeta?.type === 'Node' ? updateNode : updateEdge,
+              changeType:
+                seMeta?.type === 'Node' ? changeNodeType : changeEdgeType,
             }}
             element={selectedElement}
           />
@@ -112,6 +114,11 @@ const onChangeElement: OnChangeDynamicForm =
       e.currentTarget?.name,
       parentKey
     );
+
+    if (!value) {
+      if (metaField.name === 'type')
+        return props?.changeType(element, e?.currentTarget?.value ?? '');
+    }
 
     let update: any = {};
     if (metaField.name === 'type') {
