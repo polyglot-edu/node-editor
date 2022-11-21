@@ -236,6 +236,7 @@ const generateElement = (
         inputObj = (
           <ArrayField<string>
             name={val.name.toString()}
+            refreshFactor={element._id}
             array={field}
             constraints={val.constraints}
           />

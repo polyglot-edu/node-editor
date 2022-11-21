@@ -5,10 +5,12 @@ import { RegisterOptions, useFieldArray, useForm } from 'react-hook-form';
 
 const ArrayField = <T extends string>({
   name,
+  refreshFactor,
   array,
   constraints,
 }: {
   name: string;
+  refreshFactor: any;
   array: T[];
   constraints: RegisterOptions;
 }) => {
@@ -19,7 +21,6 @@ const ArrayField = <T extends string>({
     name: name, // unique name for your Field Array
   });
 
-  // FIXME: need to reset only when changing the selected element
   useEffect(() => {
     const resObj: any = {};
     resObj[name] = [];
@@ -34,7 +35,7 @@ const ArrayField = <T extends string>({
         })
       );
     }
-  }, [array]);
+  }, [refreshFactor]);
 
   return (
     <>
