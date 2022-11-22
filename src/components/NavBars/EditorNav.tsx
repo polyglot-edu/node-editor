@@ -46,10 +46,20 @@ const DropDown = ({
     onClick?: () => void;
   }[];
 }) => {
-  const { isOpen, onToggle } = useDisclosure();
+  const { isOpen, onToggle, onClose } = useDisclosure();
 
   return (
     <Box>
+      <Box
+        width="100vw"
+        height="100vh"
+        position="absolute"
+        left={0}
+        top={0}
+        onClick={onClose}
+        zIndex={9}
+        hidden={!isOpen}
+      />
       <Button
         p={0}
         color="gray.600"
