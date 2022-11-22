@@ -8,6 +8,7 @@ import {
 import {
   Box,
   Button,
+  Flex,
   HStack,
   Image,
   Modal,
@@ -17,20 +18,20 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Spacer,
   Spinner,
   Stack,
+  Text,
   Tooltip,
   useDisclosure,
-  useToast,
 } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
-import { AxiosResponse } from 'axios';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import brandLogo from '../../public/solo_logo.png';
 import useStore from '../../store';
 import Nav from '../Layout/NavBar';
 type EditorNavProps = {
-  saveFunc: () => Promise<AxiosResponse<any, any> | undefined>;
+  saveFunc: () => Promise<void>;
 };
 
 const DropDown = ({
@@ -38,7 +39,12 @@ const DropDown = ({
   options,
 }: {
   name: string;
-  options: { name: string; icon?: React.ReactElement; onClick?: () => void }[];
+  options: {
+    name: string;
+    shortcut?: string;
+    icon?: React.ReactElement;
+    onClick?: () => void;
+  }[];
 }) => {
   const { isOpen, onToggle } = useDisclosure();
 
@@ -74,8 +80,14 @@ const DropDown = ({
               onToggle();
             }}
           >
-            {val?.icon}
-            {val.name}
+            <Flex align={'center'}>
+              {val?.icon}
+              <Text>{val.name}</Text>
+              <Spacer minW={10} />
+              <Text fontSize={'sm'} fontWeight={'semibold'} color="gray.500">
+                {val.shortcut}
+              </Text>
+            </Flex>
           </Box>
         ))}
       </Box>
@@ -85,9 +97,27 @@ const DropDown = ({
 
 export default function EditorNav({ saveFunc }: EditorNavProps) {
   const flow = useStore.getState().getFlow();
-  const toast = useToast();
   const [saveLoading, setSaveLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+
+  useEffect(() => {
+    const isMac =
+      typeof window !== 'undefined'
+        ? navigator.platform.toUpperCase().indexOf('MAC') >= 0
+        : false;
+
+    async function onKeyDown(e: KeyboardEvent) {
+      if (e.key.toLowerCase() === 's' && (isMac ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        setSaveLoading(true);
+        await saveFunc();
+        setSaveLoading(false);
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [saveFunc]);
 
   return (
     <Nav p={2} bg="gray.200" justify="start">
@@ -117,91 +147,35 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
           </Tooltip>
           <Spinner color="blue.500" hidden={!saveLoading} />
           <Tooltip label="Save" hidden={saveLoading}>
-            <CopyIcon
-              w={6}
-              h={6}
-              color="blue.500"
+            <Button
+              disabled={false}
+              padding={0}
+              background="transparent"
               onClick={async () => {
-                try {
-                  setSaveLoading(true);
-                  const resp = await saveFunc();
-                  if (resp?.status === 200) {
-                    toast({
-                      title: 'Flow saved',
-                      description: 'The save was successful',
-                      status: 'success',
-                      duration: 3000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
-                  } else {
-                    toast({
-                      title: 'Flow not saved',
-                      description: 'Something is off with your flow!',
-                      status: 'warning',
-                      duration: 3000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
-                  }
-                } catch (err) {
-                  console.log(err);
-                  toast({
-                    title: 'Flow not saved',
-                    description: 'Internal error',
-                    status: 'error',
-                    duration: 3000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                } finally {
-                  setSaveLoading(false);
-                }
+                setSaveLoading(true);
+                await saveFunc();
+                setSaveLoading(false);
               }}
-            />
+            >
+              <CopyIcon w={6} h={6} color="blue.500" />
+            </Button>
           </Tooltip>
           <DropDown
             name="File"
             options={[
               {
                 name: 'Save',
+                shortcut: 'Ctrl+S',
                 icon: <CopyIcon mr={2} />,
                 onClick: async () => {
-                  try {
-                    const resp = await saveFunc();
-                    if (resp?.status === 200) {
-                      toast({
-                        title: 'Flow saved',
-                        description: 'The save was successful',
-                        status: 'success',
-                        duration: 3000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      });
-                    } else {
-                      toast({
-                        title: 'Flow not saved',
-                        description: 'Something is off with your flow!',
-                        status: 'warning',
-                        duration: 3000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      });
-                    }
-                  } catch (err) {
-                    toast({
-                      title: 'Flow not saved',
-                      description: 'Internal error',
-                      status: 'error',
-                      duration: 3000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
-                  }
+                  setSaveLoading(true);
+                  await saveFunc();
+                  setSaveLoading(false);
                 },
               },
               {
-                name: 'Export to JSON file',
+                name: 'Export JSON',
+                shortcut: 'Ctrl+E', // TODO: da implementare se c'è bisogno
                 icon: <ExternalLinkIcon mr={2} />,
                 onClick: onOpen,
               },

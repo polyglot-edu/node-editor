@@ -1,6 +1,5 @@
 import { ContextualMenu, IContextualMenuItem } from '@fluentui/react';
 import { useRef } from 'react';
-import { Node } from 'react-flow-renderer';
 import useStore from '../../store';
 import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
 import { createNewDefaultPolyglotNode } from '../../utils/utils';
@@ -11,7 +10,7 @@ type ContextMenuProps = {
     y: number;
   };
   showing: boolean;
-  node?: Node;
+  elementId?: string;
   type: string;
   onDismiss: () => void;
 };
@@ -20,7 +19,7 @@ const ContextMenu = ({
   pos,
   showing,
   type,
-  node,
+  elementId,
   onDismiss,
 }: ContextMenuProps) => {
   const linkRef = useRef(null);
@@ -45,8 +44,20 @@ const ContextMenu = ({
       text: 'Remove',
       iconProps: { iconName: 'Delete' },
       onClick: () => {
-        if (!node) return;
-        useStore.getState().removeNode(node.id);
+        if (!elementId) return;
+        useStore.getState().removeNode(elementId);
+      },
+    },
+  ];
+
+  const menuEdgeActions: IContextualMenuItem[] = [
+    {
+      key: '0',
+      text: 'Remove',
+      iconProps: { iconName: 'Delete' },
+      onClick: () => {
+        if (!elementId) return;
+        useStore.getState().removeEdge(elementId);
       },
     },
   ];
@@ -62,7 +73,13 @@ const ContextMenu = ({
       <ContextualMenu
         className="pt-2"
         hidden={!showing}
-        items={type === 'node' ? menuNodeActions : menuItems}
+        items={
+          type === 'node'
+            ? menuNodeActions
+            : type === 'edge'
+            ? menuEdgeActions
+            : menuItems
+        }
         styles={{ root: { top: pos.y, left: pos.x } }}
         target={linkRef}
         onDismiss={onDismiss}

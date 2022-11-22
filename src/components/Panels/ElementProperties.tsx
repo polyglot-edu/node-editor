@@ -3,7 +3,8 @@ import Editor from '@monaco-editor/react';
 import { useEffect, useState } from 'react';
 import { API } from '../../data/api';
 import useStore, { changeEdgeType, changeNodeType } from '../../store';
-import { Metadata } from '../../types/metadata';
+import { GeneralMetadata, Metadata } from '../../types/metadata';
+import { PolyglotEdge, PolyglotNode } from '../../types/polyglotElements';
 import DynamicForm, {
   OnChangeDynamicForm,
   parseMetaField,
@@ -11,6 +12,7 @@ import DynamicForm, {
 import Panel from '../Layout/Panel';
 
 export type ElementPropertiesProps = {
+  selectedElement: PolyglotNode | PolyglotEdge | undefined;
   meta?: Metadata;
   autoFetchMeta?: boolean;
   children?: React.ReactNode;
@@ -21,17 +23,13 @@ export type ElementPropertiesProps = {
 };
 
 const ElementProperties = ({
+  selectedElement,
   isOpen,
   children,
   autoFetchMeta = true,
   meta,
 }: ElementPropertiesProps) => {
-  const {
-    selectedElement: seMeta,
-    getSelectedElement,
-    updateNode,
-    updateEdge,
-  } = useStore();
+  const { selectedElement: seMeta, updateNode, updateEdge } = useStore();
 
   const {
     isOpen: editorOpen,
@@ -39,10 +37,8 @@ const ElementProperties = ({
     onClose: onEditorClose,
   } = useDisclosure();
 
-  const selectedElement = getSelectedElement();
-
-  const [nodeMeta, setNodeMeta] = useState<any>();
-  const [edgeMeta, setEdgeMeta] = useState<any>();
+  const [nodeMeta, setNodeMeta] = useState<GeneralMetadata>();
+  const [edgeMeta, setEdgeMeta] = useState<GeneralMetadata>();
 
   useEffect(() => {
     if (autoFetchMeta) {
@@ -78,7 +74,7 @@ const ElementProperties = ({
         <Button mb="2" onClick={onEditorOpen}>
           Edit Code
         </Button>
-        {selectedElement && nodeMeta && (
+        {selectedElement && nodeMeta && edgeMeta && (
           <DynamicForm
             metadata={
               meta ||
