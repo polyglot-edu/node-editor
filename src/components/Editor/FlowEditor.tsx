@@ -14,7 +14,9 @@ import ReactFlow, {
   OnNodesChange,
   OnNodesDelete,
   OnSelectionChangeParams,
-} from 'react-flow-renderer';
+  ReactFlowProvider,
+  useOnSelectionChange,
+} from 'reactflow';
 import { API } from '../../data/api';
 import useStore from '../../store';
 import {
@@ -125,6 +127,11 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     });
   };
 
+  // Need to use the hook with the reactflow's update 11
+  useOnSelectionChange({
+    onChange: onSelectionChange || default_onSelectionChange,
+  });
+
   function default_onSelectionChange({
     nodes,
     edges,
@@ -209,6 +216,35 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
             onNodeContextMenu={onNodeContextMenu}
             onNodeDoubleClick={onOpenPanel}
             onNodeDrag={onClosePanel}
+            onNodeDragStart={(_, node) => {
+              useStore.getState().addAction({
+                type: 'update',
+                element: {
+                  type: 'node',
+                  id: node.id,
+                },
+                value: { reactFlow: node },
+              });
+            }}
+            onNodeDragStop={(_, node) => {
+              const action = useStore.getState().popAction();
+              if (
+                !action ||
+                JSON.stringify(action.value.reactFlow.position) ===
+                  JSON.stringify(node.position)
+              ) {
+                console.log('no changes!');
+                return;
+              }
+              useStore.getState().addAction({
+                type: 'update',
+                element: {
+                  type: 'node',
+                  id: node.id,
+                },
+                value: { prev: action.value, update: { reactFlow: node } },
+              });
+            }}
             // edges setup
             edges={getEdges()}
             edgeTypes={polyglotEdgeComponentMapping.componentMapping}
@@ -220,7 +256,6 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
             deleteKeyCode={deleteKeyCodes}
             // selection setup
             multiSelectionKeyCode={null}
-            onSelectionChange={onSelectionChange || default_onSelectionChange}
             // view setup
             snapToGrid={true}
             fitView={true}
@@ -258,4 +293,12 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
   );
 };
 
-export default FlowEditor;
+function FlowWithProvider({ mode, onSelectionChange }: FlowEditorProps) {
+  return (
+    <ReactFlowProvider>
+      <FlowEditor mode={mode} onSelectionChange={onSelectionChange} />
+    </ReactFlowProvider>
+  );
+}
+
+export default FlowWithProvider;

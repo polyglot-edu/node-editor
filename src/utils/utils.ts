@@ -1,5 +1,5 @@
 import { useState } from 'react';
-import { MarkerType } from 'react-flow-renderer';
+import { MarkerType } from 'reactflow';
 import { v4 as UUIDv4 } from 'uuid';
 import {
   PassFailEdge,

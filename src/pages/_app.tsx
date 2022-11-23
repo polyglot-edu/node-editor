@@ -1,5 +1,6 @@
 import '@fontsource/inter';
 import '@fontsource/work-sans';
+import 'reactflow/dist/style.css';
 import '../components/AppMain.css';
 import '../components/Card.css';
 import '../components/DrawingArea.css';

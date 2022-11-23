@@ -106,7 +106,14 @@ const DropDown = ({
 };
 
 export default function EditorNav({ saveFunc }: EditorNavProps) {
-  const flow = useStore.getState().getFlow();
+  const [checkForwardAction, checkBackAction, flow, backAction, forwardAction] =
+    useStore((state) => [
+      state.checkForwardAction(),
+      state.checkBackAction(),
+      state.getFlow(),
+      state.backAction,
+      state.forwardAction,
+    ]);
   const [saveLoading, setSaveLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -138,22 +145,26 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
         alt="Polyglot Logo"
       />
       <Stack align="start">
-        <HStack spacing={2}>
+        <HStack>
           <Tooltip label="Back">
-            <ArrowBackIcon
-              w={6}
-              h={6}
-              color="blue.500"
-              onClick={() => console.log('Not implemented')}
-            />
+            <Button
+              disabled={!checkBackAction}
+              padding={0}
+              background="transparent"
+              onClick={backAction}
+            >
+              <ArrowBackIcon w={6} h={6} color="blue.500" />
+            </Button>
           </Tooltip>
           <Tooltip label="Forward">
-            <ArrowForwardIcon
-              w={6}
-              h={6}
-              color="blue.500"
-              onClick={() => console.log('Not implemented')}
-            />
+            <Button
+              disabled={!checkForwardAction}
+              padding={0}
+              background="transparent"
+              onClick={forwardAction}
+            >
+              <ArrowForwardIcon w={6} h={6} color="blue.500" />
+            </Button>
           </Tooltip>
           <Spinner color="blue.500" hidden={!saveLoading} />
           <Tooltip label="Save" hidden={saveLoading}>

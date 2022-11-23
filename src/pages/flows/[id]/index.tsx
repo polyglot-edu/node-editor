@@ -12,7 +12,10 @@ const FlowIndex = () => {
   const [error, setError] = useState<Nullable<string>>(null);
   const theme = useTheme();
   const router = useRouter();
+  const actions = useStore((state) => state.actions);
   const flowId = router.query?.id?.toString();
+
+  useEffect(() => console.log(actions), [actions]);
 
   useEffect(() => {
     if (!flowId) return;

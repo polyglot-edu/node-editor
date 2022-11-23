@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import { Edge } from 'react-flow-renderer';
+import { Edge } from 'reactflow';
 
 export const EdgeData_IoTs = t.type({});
 export type EdgeData = t.TypeOf<typeof EdgeData_IoTs>;

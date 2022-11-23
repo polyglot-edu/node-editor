@@ -1,5 +1,5 @@
 import { useTheme } from '@fluentui/react';
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, Position } from 'reactflow';
 import useStore from '../../../store';
 import { LessonNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
