@@ -15,9 +15,7 @@ import {
 } from '../../types/polyglotElements';
 import {
   eventHandlerFactory,
-  ratingEventAdapter,
   textInputEventAdapter,
-  updater,
 } from '../../utils/formHandling';
 import Card from '../Card/Card';
 
@@ -41,7 +39,7 @@ const Properties = () => {
 
   const genericNodeUpdater = eventHandlerFactory(curriedUpdate(updateNode, id));
   const textInputNodeUpdater = genericNodeUpdater(textInputEventAdapter);
-  const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
+  // const ratingNodeUpdater = genericNodeUpdater(ratingEventAdapter);
 
   const allowed =
     'Software Engineering,CSharp,Statistics,MODELS 2021,Software Development,Average/Mean Value, Mode, Median';
@@ -65,9 +63,9 @@ const Properties = () => {
             multiline
             autoAdjustHeight
             value={selectedNode.description}
-            onChange={textInputNodeUpdater(
-              updater<PolyglotNode>()('description')
-            )}
+            // onChange={textInputNodeUpdater(
+            //   updater<PolyglotNode>()('description')
+            // )}
           />
           <Dropdown
             label="Kind"
@@ -83,7 +81,7 @@ const Properties = () => {
             Difficulty
           </Label>
           <Rating
-            onChange={ratingNodeUpdater(updater<PolyglotNode>()('difficulty'))}
+            // onChange={ratingNodeUpdater(updater<PolyglotNode>()('difficulty'))}
             id={`ratingInput-${id}`}
             rating={selectedNode.difficulty}
             icon="CircleFill"
