@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import { Node } from 'react-flow-renderer';
+import { Node } from 'reactflow';
 
 // export type HandleData = {
 //     handleProps: HandleProps;
