@@ -73,7 +73,8 @@ export const API = {
     return axios.get<PolyglotFlow>(`/api/flows/${flowId}`);
   },
   loadFlowList: (query?: string): Promise<AxiosResponse<PolyglotFlow[]>> => {
-    return axios.get(`/api/flows?q=` + query);
+    const queryParams = query ? '?q=' + query : '';
+    return axios.get(`/api/flows` + queryParams);
   },
   createNewFlowAsync: (): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, PolyglotFlow>(

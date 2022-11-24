@@ -1,4 +1,4 @@
-import { Box, Flex, useDisclosure, useToast } from '@chakra-ui/react';
+import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
 import { useBoolean } from '@fluentui/react-hooks';
 import { MouseEventHandler, useState } from 'react';
 import ReactFlow, {
@@ -203,93 +203,91 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
   };
 
   return (
-    <Box h="100vh">
-      <Flex direction={'column'} h="100%" w="full">
-        <EditorNav saveFunc={saveFlow} />
-        <Flex h="full">
-          <ReactFlow
-            // nodes setup
-            nodes={getNodes()}
-            nodeTypes={polyglotNodeComponentMapping.componentMapping}
-            onNodesChange={onNodesChange}
-            onNodesDelete={onNodesDelete}
-            onNodeContextMenu={onNodeContextMenu}
-            onNodeDoubleClick={onOpenPanel}
-            onNodeDrag={onClosePanel}
-            onNodeDragStart={(_, node) => {
-              useStore.getState().addAction({
-                type: 'update',
-                element: {
-                  type: 'node',
-                  id: node.id,
-                },
-                value: { reactFlow: node },
-              });
-            }}
-            onNodeDragStop={(_, node) => {
-              const action = useStore.getState().popAction();
-              if (
-                !action ||
-                JSON.stringify(action.value.reactFlow.position) ===
-                  JSON.stringify(node.position)
-              ) {
-                console.log('no changes!');
-                return;
-              }
-              useStore.getState().addAction({
-                type: 'update',
-                element: {
-                  type: 'node',
-                  id: node.id,
-                },
-                value: { prev: action.value, update: { reactFlow: node } },
-              });
-            }}
-            // edges setup
-            edges={getEdges()}
-            edgeTypes={polyglotEdgeComponentMapping.componentMapping}
-            onEdgesChange={onEdgesChange}
-            onEdgesDelete={(edges) => edges.forEach((e) => removeEdge(e.id))}
-            onEdgeContextMenu={onEdgeContextMenu}
-            onEdgeDoubleClick={onOpenPanel}
-            // general setup node and edges
-            deleteKeyCode={deleteKeyCodes}
-            // selection setup
-            multiSelectionKeyCode={null}
-            // view setup
-            snapToGrid={true}
-            fitView={true}
-            fitViewOptions={{ padding: 0.2 }}
-            // context menu event handlers
-            onClick={onClick}
-            onMoveStart={onMoveStart}
-            onPaneContextMenu={(e) => {
-              e.preventDefault();
-              setMenuType('default');
-              showContextMenu();
-              setContextMenuPos({
-                x: e.clientX - (e.clientX % 15),
-                y: e.clientY - (e.clientY % 15),
-              });
-            }}
-          >
-            <Background variant={BackgroundVariant.Dots} />
-            <Controls />
-          </ReactFlow>
-          <ContextMenu
-            pos={contextMenuPos}
-            showing={showingContextMenu}
-            type={menuType}
-            elementId={selectedElement?._id}
-            onDismiss={hideContextMenu}
-          />
-          <ElementProperties
-            selectedElement={selectedElement}
-            isOpen={isOpenPanel}
-          />
-        </Flex>
+    <Flex direction={'column'} h="100vh">
+      <EditorNav saveFunc={saveFlow} />
+      <Flex h={'full'} overflow="hidden">
+        <ReactFlow
+          // nodes setup
+          nodes={getNodes()}
+          nodeTypes={polyglotNodeComponentMapping.componentMapping}
+          onNodesChange={onNodesChange}
+          onNodesDelete={onNodesDelete}
+          onNodeContextMenu={onNodeContextMenu}
+          onNodeDoubleClick={onOpenPanel}
+          onNodeDrag={onClosePanel}
+          onNodeDragStart={(_, node) => {
+            useStore.getState().addAction({
+              type: 'update',
+              element: {
+                type: 'node',
+                id: node.id,
+              },
+              value: { reactFlow: node },
+            });
+          }}
+          onNodeDragStop={(_, node) => {
+            const action = useStore.getState().popAction();
+            if (
+              !action ||
+              JSON.stringify(action.value.reactFlow.position) ===
+                JSON.stringify(node.position)
+            ) {
+              console.log('no changes!');
+              return;
+            }
+            useStore.getState().addAction({
+              type: 'update',
+              element: {
+                type: 'node',
+                id: node.id,
+              },
+              value: { prev: action.value, update: { reactFlow: node } },
+            });
+          }}
+          // edges setup
+          edges={getEdges()}
+          edgeTypes={polyglotEdgeComponentMapping.componentMapping}
+          onEdgesChange={onEdgesChange}
+          onEdgesDelete={(edges) => edges.forEach((e) => removeEdge(e.id))}
+          onEdgeContextMenu={onEdgeContextMenu}
+          onEdgeDoubleClick={onOpenPanel}
+          // general setup node and edges
+          deleteKeyCode={deleteKeyCodes}
+          // selection setup
+          multiSelectionKeyCode={null}
+          // view setup
+          snapToGrid={true}
+          fitView={true}
+          fitViewOptions={{ padding: 0.2 }}
+          // context menu event handlers
+          onClick={onClick}
+          onMoveStart={onMoveStart}
+          onPaneContextMenu={(e) => {
+            e.preventDefault();
+            setMenuType('default');
+            showContextMenu();
+            setContextMenuPos({
+              x: e.clientX - (e.clientX % 15),
+              y: e.clientY - (e.clientY % 15),
+            });
+          }}
+        >
+          <Background variant={BackgroundVariant.Dots} />
+          <Controls />
+        </ReactFlow>
+        <ContextMenu
+          pos={contextMenuPos}
+          showing={showingContextMenu}
+          type={menuType}
+          elementId={selectedElement?._id}
+          onDismiss={hideContextMenu}
+        />
+        <ElementProperties
+          selectedElement={selectedElement}
+          isOpen={isOpenPanel}
+        />
       </Flex>
-    </Box>
+    </Flex>
   );
 };
 

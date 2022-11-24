@@ -1,5 +1,5 @@
-import { Heading, VStack } from '@chakra-ui/react';
-import { DefaultButton } from '@fluentui/react';
+import { AddIcon } from '@chakra-ui/icons';
+import { Heading, IconButton, Tooltip, VStack } from '@chakra-ui/react';
 import Link from 'next/link';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -50,19 +50,27 @@ const FlowIndexPage = () => {
         {flows.length ? (
           flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
         ) : (
-          <span className="text-xl font-bold text-center">
+          <Heading size={'md'} textAlign="center">
             No flows found! <br />
-            Sign in to access more content
-          </span>
+            Search something different ;)
+          </Heading>
         )}
       </VStack>
       <Link href="/flows/create">
-        <DefaultButton
-          toggle
-          checked={false}
-          iconProps={{ iconName: 'Add' }}
-          className="border-0 w-10 h-10 rounded-full fixed right-10 bottom-10 p-0 m-0 bg-green-300"
-        />
+        <Tooltip label="Create Flow">
+          <IconButton
+            aria-label="Create Flow"
+            position={'fixed'}
+            right={10}
+            bottom={10}
+            rounded="full"
+            bg={'blue.400'}
+            w={12}
+            h={12}
+            _hover={{ bg: 'blue.600' }}
+            icon={<AddIcon fontSize={'xl'} color="white" />}
+          />
+        </Tooltip>
       </Link>
     </>
   );

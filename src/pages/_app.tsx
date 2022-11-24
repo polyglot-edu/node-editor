@@ -3,7 +3,6 @@ import '@fontsource/work-sans';
 import 'reactflow/dist/style.css';
 import '../components/AppMain.css';
 import '../components/Card.css';
-import '../components/DrawingArea.css';
 import '../styles/globals.css';
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';

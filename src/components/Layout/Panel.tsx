@@ -1,27 +1,31 @@
-import { Box } from '@chakra-ui/react';
+import { Box, Fade } from '@chakra-ui/react';
 
 export type PanelProps = {
-  width?: string;
   isOpen?: boolean;
   onClose?: () => void;
   onOpen?: () => void;
-  hidden?: boolean;
   children?: React.ReactNode;
 };
 
-const Panel = ({ children, hidden, isOpen, width }: PanelProps) => {
+const Panel = ({ children, isOpen }: PanelProps) => {
   return (
-    <Box
-      hidden={hidden || !isOpen}
-      width={width || '40%'}
-      maxHeight={'100vh'}
-      p="5"
-      overflowY="auto"
-      overflowX="hidden"
-      shadow={'md'}
+    <Fade
+      in={isOpen}
+      style={{
+        minWidth: isOpen ? '40%' : '0',
+      }}
     >
-      {children}
-    </Box>
+      <Box
+        hidden={!isOpen}
+        p="5"
+        height={'full'}
+        overflowY="auto"
+        overflowX="hidden"
+        shadow={'md'}
+      >
+        {children}
+      </Box>
+    </Fade>
   );
 };
 
