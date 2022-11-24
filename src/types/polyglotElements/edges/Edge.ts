@@ -1,5 +1,5 @@
-import { Edge } from 'react-flow-renderer';
 import * as t from 'io-ts';
+import { Edge } from 'reactflow';
 
 export const EdgeData_IoTs = t.type({});
 export type EdgeData = t.TypeOf<typeof EdgeData_IoTs>;
@@ -8,6 +8,7 @@ export const defaultPolyglotEdgeData: EdgeData = {};
 export const PolyglotEdge_IoTs = t.intersection(
   [
     t.type({
+      _id: t.string,
       type: t.string,
       title: t.string,
       data: EdgeData_IoTs,

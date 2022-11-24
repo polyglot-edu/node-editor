@@ -5,8 +5,8 @@ import {
   PassFailEdgeConditionKind_IoTs,
 } from '../../../types/polyglotElements';
 import {
-  eventHandlerFactory,
   dropdownEventAdapter,
+  eventHandlerFactory,
   updaterWithTypeGuard,
 } from '../../../utils/formHandling';
 import Card from '../../Card/Card';

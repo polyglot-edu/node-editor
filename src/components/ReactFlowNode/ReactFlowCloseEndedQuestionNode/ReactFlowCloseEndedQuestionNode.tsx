@@ -1,5 +1,5 @@
 import { useTheme } from '@fluentui/react';
-import { Handle, Position } from 'react-flow-renderer';
+import { Handle, Position } from 'reactflow';
 import useStore from '../../../store';
 import { CloseEndedQuestionNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -9,9 +9,12 @@ type ReactFlowCloseEndedQuestionNodeProps = ReactFlowNodeProps &
   CloseEndedQuestionNode;
 
 const ReactFlowCloseEndedQuestionNode = ({
-  data,
+  id,
 }: ReactFlowCloseEndedQuestionNodeProps) => {
-  const onConnect = useStore((state) => state.onConnect);
+  const [onConnect, label] = useStore((state) => [
+    state.onConnect,
+    state.nodeMap.get(id)?.title,
+  ]);
   const theme = useTheme();
 
   return (
@@ -22,7 +25,7 @@ const ReactFlowCloseEndedQuestionNode = ({
         background: `${theme.palette.orangeLight}08`,
       }}
     >
-      {data.label}
+      {label}
       <Handle type="source" position={Position.Right} onConnect={onConnect} />
       <Handle type="target" position={Position.Left} />
     </Card>

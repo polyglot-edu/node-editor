@@ -1,23 +1,23 @@
 import {
-  Stack,
-  StackItem,
-  TextField,
   PrimaryButton,
   Spinner,
   SpinnerSize,
+  Stack,
+  StackItem,
+  TextField,
 } from '@fluentui/react';
-import useStore, { curriedUpdate } from '../../../store';
-import Card from '../../Card/Card';
-import { NodePropertiesProps } from '../NodeProperties';
-import { AbstractNode } from '../../../types/polyglotElements/nodes/AbstractNode';
 import { useBoolean } from '@fluentui/react-hooks';
-import { API } from '../../../data/api';
 import toast from 'react-hot-toast';
+import { API } from '../../../data/api';
+import useStore, { curriedUpdate } from '../../../store';
+import { AbstractNode } from '../../../types/polyglotElements/nodes/AbstractNode';
 import {
   eventHandlerFactory,
   textInputEventAdapter,
   updater,
 } from '../../../utils/formHandling';
+import Card from '../../Card/Card';
+import { NodePropertiesProps } from '../NodeProperties';
 
 export type AbstractNodePropertiesProps = AbstractNode & NodePropertiesProps;
 

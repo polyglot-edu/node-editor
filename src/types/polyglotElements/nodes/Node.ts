@@ -1,5 +1,5 @@
-import { Node } from 'react-flow-renderer';
 import * as t from 'io-ts';
+import { Node } from 'reactflow';
 
 // export type HandleData = {
 //     handleProps: HandleProps;
@@ -11,6 +11,7 @@ export const defaultPolyglotNodeData: NodeData = {};
 
 export const PolyglotNode_IoTs = t.type(
   {
+    _id: t.string,
     type: t.string,
     title: t.string,
     description: t.string,
@@ -29,3 +30,10 @@ export type PolyglotNode = t.TypeOf<typeof PolyglotNode_IoTs> & {
 };
 
 // TODO: add type TextualQuestion or similar to standardize textual questions such as multiple choice, open questions, coding exercises, ecc.
+
+export type ChallengeSetup = {};
+export type ChallengeContent = {
+  type: string;
+  content: string;
+  priority?: number;
+};

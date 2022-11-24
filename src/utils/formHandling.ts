@@ -1,6 +1,7 @@
 import { BaseButton, IDropdownOption } from '@fluentui/react';
-import type { PartialDeep } from 'type-fest';
 import * as t from 'io-ts';
+import * as monaco from 'monaco-editor/esm/vs/editor/editor.api';
+import type { PartialDeep } from 'type-fest';
 
 export type TextInputEvent =
   | React.FormEvent<HTMLInputElement | HTMLTextAreaElement>
@@ -63,6 +64,14 @@ export const checkboxEventAdapter: EventHandler<
   boolean
 > = (action) => {
   return (e: CheckboxEvent | undefined, checked: boolean) => action(checked);
+};
+
+export const monacoEventAdapter: EventHandler<
+  monaco.editor.IModelContentChangedEvent,
+  string
+> = (action) => {
+  return (e: monaco.editor.IModelContentChangedEvent, value: string) =>
+    action(value);
 };
 
 // manually curried version of

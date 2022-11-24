@@ -2,7 +2,13 @@ import { MultipleChoiceQuestionNodeProperties } from '../../../components/NodePr
 import { ReactFlowMultipleChoiceQuestionNode } from '../../../components/ReactFlowNode';
 import { zip } from '../../../utils/utils';
 import { polyglotNodeComponentMapping } from '../elementMapping';
-import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
+import {
+  ChallengeContent,
+  ChallengeSetup,
+  defaultPolyglotNodeData,
+  NodeData,
+  PolyglotNode,
+} from './Node';
 
 export type MultipleChoiceQuestionNodeData = NodeData & {
   question: string;
@@ -31,7 +37,7 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
 
     const data = {
       ...oldData,
-      correctAnswers: zip(oldData.choices, oldData.isChoiceCorrect).reduce(
+      correctAnswers: zip(oldData?.choices, oldData?.isChoiceCorrect).reduce(
         (acc, { first, second }) => {
           if (second) {
             acc.push(first);
@@ -42,9 +48,29 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
       ),
     };
 
+    const challengeSetup: ChallengeSetup[] = [];
+    const challengeContent: ChallengeContent[] = [
+      {
+        type: 'csharp',
+        content: '',
+      },
+      {
+        type: 'markdown',
+        content:
+          data.question +
+          (data.choices.length > 0
+            ? '  \n- ' + data.choices.join('  \n- ')
+            : ''),
+      },
+    ];
+
     return {
       ...node,
       data,
+      runtimeData: {
+        challengeSetup,
+        challengeContent,
+      },
     };
   },
 });

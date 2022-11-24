@@ -1,14 +1,16 @@
 import {
   Checkbox,
+  IconButton,
   PrimaryButton,
   Separator,
   Stack,
   StackItem,
-  TextField,
   Text,
+  TextField,
   useTheme,
-  IconButton,
 } from '@fluentui/react';
+import produce from 'immer';
+import type { PartialDeep } from 'type-fest';
 import useStore, { curriedUpdate } from '../../../store';
 import { MultipleChoiceQuestionNode } from '../../../types/polyglotElements';
 import {
@@ -20,8 +22,6 @@ import {
 } from '../../../utils/formHandling';
 import Card from '../../Card/Card';
 import { NodePropertiesProps } from '../NodeProperties';
-import type { PartialDeep } from 'type-fest';
-import produce from 'immer';
 
 export type MultipleChoiceQuestionNodePropertiesProps =
   MultipleChoiceQuestionNode & NodePropertiesProps;

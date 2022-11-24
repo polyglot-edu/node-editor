@@ -1,21 +1,13 @@
 import { Modal, Spinner, SpinnerSize, Text, useTheme } from '@fluentui/react';
-import { useEffect, useState } from 'react';
 import { useBoolean } from '@fluentui/react-hooks';
-import useStore from '../../store';
-import AppMain from '../../components/AppMain/AppMain';
-import { AxiosError, AxiosResponse } from 'axios';
-import { PolyglotFlow } from '../../types/polyglotElements';
+import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
-import { API } from '../../data/api';
+import { useEffect, useState } from 'react';
+import FlowEditor from '../../../components/Editor/FlowEditor';
+import { API } from '../../../data/api';
+import useStore from '../../../store';
 
-type AppFlowProviderProps = {
-  fetchFunction: (flowId: string) => Promise<AxiosResponse<PolyglotFlow>>;
-  canSaveFlow?: boolean;
-};
-
-const AppFlowProvider = ({
-  canSaveFlow = true,
-}: AppFlowProviderProps) => {
+const FlowIndex = () => {
   const [isLoading, setLoading] = useBoolean(false);
   const [error, setError] = useState<Nullable<string>>(null);
   const theme = useTheme();
@@ -23,12 +15,13 @@ const AppFlowProvider = ({
   const flowId = router.query?.id?.toString();
 
   useEffect(() => {
+    if (!flowId) return;
     (async () => {
       // if (!flowId) router.replace("/");
       setLoading.setTrue();
       setError(null);
       try {
-        const flowElements = await API.loadExampleFlowElementsAsync('1');
+        const flowElements = await API.loadFlowElementsAsync(flowId ?? '');
         if (flowElements.status === 200) {
           console.log('flow elements loaded 🆗');
           setLoading.setFalse();
@@ -54,7 +47,7 @@ const AppFlowProvider = ({
 
   return (
     <>
-      <AppMain canSaveFlow={canSaveFlow} />
+      <FlowEditor mode={'write'} />
 
       {/* if is error */}
       <Modal
@@ -94,4 +87,4 @@ const AppFlowProvider = ({
   );
 };
 
-export default AppFlowProvider;
+export default FlowIndex;

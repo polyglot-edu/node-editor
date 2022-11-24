@@ -1,6 +1,6 @@
-import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { ExactValueEdgeProperties } from '../../../components/EdgeProperties';
 import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
+import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
 export type ExactValueEdgeData = EdgeData & {
@@ -24,7 +24,7 @@ polyglotEdgeComponentMapping.registerMapping<ExactValueEdge>({
   },
   transformData: (edge) => {
     const code = `
-(bool, string) validate(PolyglotValidationContext context) {
+async Task<(bool, string)> validate(PolyglotValidationContext context) {
     return (String.Equals(context.Condition.Data.value, context.JourneyContext.SubmittedCode), "Exact value edge");
 }`;
 

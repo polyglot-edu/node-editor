@@ -93,10 +93,10 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     elementType: string | undefined
   ): PropertiesComponent<T> {
     return elementType !== undefined
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      ? this._propertiesMapping[elementType] ?? ((_) => <></>)
-      // eslint-disable-next-line @typescript-eslint/no-unused-vars
-      : (_) => <></>;
+      ? // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        this._propertiesMapping[elementType] ?? ((_) => <></>)
+      : // eslint-disable-next-line @typescript-eslint/no-unused-vars
+        (_) => <></>;
   }
 }
 
@@ -106,10 +106,10 @@ const polyglotNodeComponentMapping = new PolyglotComponentMapping<
   PolyglotNode
 >();
 export { polyglotNodeComponentMapping };
+export { polyglotEdgeComponentMapping };
 
 const polyglotEdgeComponentMapping = new PolyglotComponentMapping<
   EdgePropertiesProps,
   ReactFlowEdgeProps,
   PolyglotEdge
 >();
-export { polyglotEdgeComponentMapping };

@@ -1,11 +1,11 @@
 import { Stack, StackItem, TextField } from '@fluentui/react';
+import useStore from '../../store';
 import { PolyglotFlowInfo } from '../../types/polyglotElements';
 import {
   eventHandlerFactory,
   textInputEventAdapter,
   updater,
 } from '../../utils/formHandling';
-import useStore from '../../store';
 import Card from '../Card/Card';
 
 export type FlowPropertiesProps = {};
