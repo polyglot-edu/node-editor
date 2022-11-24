@@ -1,5 +1,16 @@
-import { Modal, Spinner, SpinnerSize, Text, useTheme } from '@fluentui/react';
-import { useBoolean } from '@fluentui/react-hooks';
+import {
+  Button,
+  Flex,
+  Modal,
+  ModalBody,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Spinner,
+  Text,
+  useDisclosure,
+} from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
@@ -8,9 +19,12 @@ import { API } from '../../../data/api';
 import useStore from '../../../store';
 
 const FlowIndex = () => {
-  const [isLoading, setLoading] = useBoolean(false);
+  const {
+    isOpen: loading,
+    onOpen: onLoading,
+    onClose: stopLoading,
+  } = useDisclosure();
   const [error, setError] = useState<Nullable<string>>(null);
-  const theme = useTheme();
   const router = useRouter();
   const actions = useStore((state) => state.actions);
   const flowId = router.query?.id?.toString();
@@ -21,13 +35,12 @@ const FlowIndex = () => {
     if (!flowId) return;
     (async () => {
       // if (!flowId) router.replace("/");
-      setLoading.setTrue();
+      onLoading();
       setError(null);
       try {
         const flowElements = await API.loadFlowElementsAsync(flowId ?? '');
         if (flowElements.status === 200) {
           console.log('flow elements loaded 🆗');
-          setLoading.setFalse();
           useStore.getState().loadFlow(flowElements.data);
         } else {
           console.error('flow elements not loaded 😢');
@@ -44,7 +57,7 @@ const FlowIndex = () => {
           setError('Flow not found');
         }
       }
-      setLoading.setFalse();
+      stopLoading();
     })();
   }, [API.loadExampleFlowElementsAsync, flowId]);
 
@@ -54,37 +67,44 @@ const FlowIndex = () => {
 
       {/* if is error */}
       <Modal
-        isBlocking={true}
         isOpen={error !== null}
-        containerClassName="flex flex-col flex-nowrap items-stretch"
-        scrollableContentClassName="flex flex-1"
+        onClose={() => console.log('Not closed')}
+        isCentered
       >
-        <div
-          className="flex flex-1 flex-col justify-center items-center border-0 border-t-4 border-solid"
-          style={{ color: theme.palette.red }}
-        >
-          <Text className="pb-5" variant="xLarge">
-            {error}
-          </Text>
-        </div>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Error:</ModalHeader>
+          <ModalBody>{error}</ModalBody>
+          <ModalFooter>
+            <Button
+              bg={'red.500'}
+              color="white"
+              _hover={{ bg: 'red.600' }}
+              onClick={() => router.reload()}
+            >
+              Refresh page
+            </Button>
+          </ModalFooter>
+        </ModalContent>
       </Modal>
 
       {/* if is loading */}
       <Modal
-        isBlocking={true}
-        isOpen={isLoading}
-        containerClassName="flex flex-col flex-nowrap items-stretch"
-        scrollableContentClassName="flex flex-1"
+        isOpen={loading}
+        onClose={() => console.log('Not closed')}
+        isCentered
       >
-        <div
-          className="flex flex-1 flex-col justify-center items-center  border-0 border-t-4 border-solid"
-          style={{ color: theme.palette.themePrimary }}
-        >
-          <Text className="pb-5" variant="xLarge">
-            Loading flow...
-          </Text>
-          <Spinner size={SpinnerSize.large} />
-        </div>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalBody>
+            <Flex align={'center'}>
+              <Spinner size={'xl'} mr={5} />
+              <Text fontSize={'xl'} fontWeight="bold">
+                Loading flow...
+              </Text>
+            </Flex>
+          </ModalBody>
+        </ModalContent>
       </Modal>
     </>
   );
