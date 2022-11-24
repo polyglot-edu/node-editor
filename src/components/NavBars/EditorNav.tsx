@@ -167,8 +167,9 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             </Button>
           </Tooltip>
           <Spinner color="blue.500" hidden={!saveLoading} />
-          <Tooltip label="Save" hidden={saveLoading}>
+          <Tooltip label="Save">
             <Button
+              hidden={saveLoading}
               disabled={false}
               padding={0}
               background="transparent"
