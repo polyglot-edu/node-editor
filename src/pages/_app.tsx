@@ -7,6 +7,7 @@ import '../styles/globals.css';
 
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
+import { Analytics } from '@vercel/analytics/react';
 import type { AppProps } from 'next/app';
 import { UserProvider } from '../context/user.context';
 import reportWebVitals from '../reportWebVitals';
@@ -23,6 +24,7 @@ export default function App({ Component, pageProps }: AppProps) {
     <ChakraProvider theme={theme}>
       <UserProvider>
         <Component {...pageProps} />
+        <Analytics />
       </UserProvider>
     </ChakraProvider>
   );
