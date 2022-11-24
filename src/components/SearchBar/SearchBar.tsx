@@ -42,13 +42,13 @@ export default function SearchBar({
           }}
         />
         <AutoCompleteList>
-          {items.map((country, cid) => (
+          {items.map((item, id) => (
             <AutoCompleteItem
-              key={`option-${cid}`}
-              value={country}
+              key={`option-${id}`}
+              value={item}
               textTransform="capitalize"
             >
-              {country}
+              {item}
             </AutoCompleteItem>
           ))}
         </AutoCompleteList>

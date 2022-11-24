@@ -1,9 +1,15 @@
 import { AddIcon } from '@chakra-ui/icons';
-import { Heading, IconButton, Tooltip, VStack } from '@chakra-ui/react';
-import Link from 'next/link';
+import {
+  Heading,
+  IconButton,
+  Tooltip,
+  useDisclosure,
+  VStack,
+} from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
+import CreateFlowModal from '../../components/models/CreateFlowModal';
 import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useUser } from '../../context/user.context';
@@ -15,6 +21,12 @@ const FlowIndexPage = () => {
   const { user, loading } = useUser();
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
+  const {
+    isOpen: cfOpen,
+    onClose: cfOnClose,
+    onOpen: cfOnOpen,
+  } = useDisclosure();
+
   const router = useRouter();
   const query = router.query?.q?.toString();
 
@@ -56,22 +68,22 @@ const FlowIndexPage = () => {
           </Heading>
         )}
       </VStack>
-      <Link href="/flows/create">
-        <Tooltip label="Create Flow">
-          <IconButton
-            aria-label="Create Flow"
-            position={'fixed'}
-            right={10}
-            bottom={10}
-            rounded="full"
-            bg={'blue.400'}
-            w={12}
-            h={12}
-            _hover={{ bg: 'blue.600' }}
-            icon={<AddIcon fontSize={'xl'} color="white" />}
-          />
-        </Tooltip>
-      </Link>
+      <Tooltip label="Create Flow">
+        <IconButton
+          aria-label="Create Flow"
+          position={'fixed'}
+          right={10}
+          bottom={10}
+          rounded="full"
+          bg={'blue.400'}
+          w={12}
+          h={12}
+          _hover={{ bg: 'blue.600' }}
+          icon={<AddIcon fontSize={'xl'} color="white" />}
+          onClick={cfOnOpen}
+        />
+      </Tooltip>
+      <CreateFlowModal isOpen={cfOpen} onClose={cfOnClose} />
     </>
   );
 };
