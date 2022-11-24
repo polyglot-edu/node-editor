@@ -1,37 +1,36 @@
-import { polyglotEdgeComponentMapping } from "../elementMapping";
-import { ExactValueEdgeProperties } from "../../../components/EdgeProperties";
-import { ReactFlowSmartBezierEdge } from "../../../components/ReactFlowEdge";
-import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from "./Edge";
+import { polyglotEdgeComponentMapping } from '../elementMapping';
+import { ExactValueEdgeProperties } from '../../../components/EdgeProperties';
+import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
+import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
 export type ExactValueEdgeData = EdgeData & {
-    // TODO: this should be generic and should match the type of the answer of the node it is connected to
-    value: string;
-}
+  // TODO: this should be generic and should match the type of the answer of the node it is connected to
+  value: string;
+};
 
 export type ExactValueEdge = PolyglotEdge & {
-    type: "exactValueEdge";
-    data: ExactValueEdgeData;
-}
+  type: 'exactValueEdge';
+  data: ExactValueEdgeData;
+};
 
 polyglotEdgeComponentMapping.registerMapping<ExactValueEdge>({
-    elementType: "exactValueEdge",
-    name: "Exact Value",
-    propertiesComponent: ExactValueEdgeProperties,
-    elementComponent: ReactFlowSmartBezierEdge,
-    defaultData: {
-        ...defaultPolyglotEdgeData,
-        value: "",
-    },
-    transformData: (edge) => {
-        const code = `
+  elementType: 'exactValueEdge',
+  name: 'Exact Value',
+  propertiesComponent: ExactValueEdgeProperties,
+  elementComponent: ReactFlowSmartBezierEdge,
+  defaultData: {
+    ...defaultPolyglotEdgeData,
+    value: '',
+  },
+  transformData: (edge) => {
+    const code = `
 (bool, string) validate(PolyglotValidationContext context) {
     return (String.Equals(context.Condition.Data.value, context.JourneyContext.SubmittedCode), "Exact value edge");
 }`;
 
-
-        return {
-            ...edge,
-            code
-        };
-    },
+    return {
+      ...edge,
+      code,
+    };
+  },
 });

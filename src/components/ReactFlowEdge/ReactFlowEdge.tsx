@@ -1,4 +1,4 @@
-import { EdgeProps } from "react-flow-renderer"
+import { EdgeProps } from 'react-flow-renderer';
 
 export type ReactFlowEdgeProps = EdgeProps & {};
 
