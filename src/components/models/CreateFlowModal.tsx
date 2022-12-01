@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
-import { API } from '../../data/api';
+import { useUser } from '../../context/user.context';
 
 type CreateFlowModalProps = {
   isOpen: boolean;
@@ -28,6 +28,9 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
   const [description, setDescription] = useState('');
   const toast = useToast();
   const router = useRouter();
+  const { API } = useUser();
+
+  if (!API) return null;
 
   const createFlow = async () => {
     try {

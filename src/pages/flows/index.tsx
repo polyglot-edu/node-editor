@@ -7,18 +7,18 @@ import {
   VStack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
 import CreateFlowModal from '../../components/models/CreateFlowModal';
 import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useUser } from '../../context/user.context';
-import { API } from '../../data/api';
+import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
 
 const FlowIndexPage = () => {
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
-  const { user, loading } = useUser();
+  const { user, access_token, loading } = useUser();
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const {
@@ -30,12 +30,15 @@ const FlowIndexPage = () => {
   const router = useRouter();
   const query = router.query?.q?.toString();
 
+  // User need to be loaded
+  const API = useMemo(() => new APIV2({ access_token }), [access_token]);
+
   useEffect(() => {
     API.autocomplete(searchValue).then((resp) => {
       const payload = resp.data;
       setSuggestions(payload);
     });
-  }, [searchValue]);
+  }, [API, searchValue]);
 
   useEffect(() => {
     if (user) {
@@ -43,7 +46,7 @@ const FlowIndexPage = () => {
         setFlows(resp.data);
       });
     }
-  }, [user, query]);
+  }, [user, query, API]);
 
   if (!user && loading) return null;
 

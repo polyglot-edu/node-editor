@@ -1,15 +1,27 @@
-import React, { ReactNode, useContext, useEffect, useState } from 'react';
-import { API } from '../data/api';
+import { AxiosError } from 'axios';
+import React, {
+  ReactNode,
+  useContext,
+  useEffect,
+  useMemo,
+  useState,
+} from 'react';
+import { useCookies } from 'react-cookie';
+import { APIV2 } from '../data/api';
 import { User } from '../types/user';
 
 type UserContextType = {
-  user: Nullable<User>;
+  access_token: string | undefined;
+  API: APIV2 | undefined;
+  user: User | undefined;
   loading: boolean;
   error: boolean;
 };
 
 export const UserContext = React.createContext<UserContextType>({
-  user: null,
+  access_token: undefined,
+  API: undefined,
+  user: undefined,
   loading: true,
   error: false,
 });
@@ -21,19 +33,39 @@ type UserContextProps = {
 };
 
 export const UserProvider = ({ children }: UserContextProps) => {
-  const [user, setUser] = useState<Nullable<User>>(null);
+  const [user, setUser] = useState<User | undefined>();
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
+  const [cookies] = useCookies();
+  const access_token = cookies['x-auth-cookie'] as string | undefined;
+  const API = useMemo(
+    () => new APIV2({ access_token: access_token }),
+    [access_token]
+  );
+
   useEffect(() => {
     setLoading(true);
-    API.getUserInfo()
-      .then((resp) => setUser(resp.data))
-      .catch(() => setError(true))
-      .finally(() => setLoading(false));
-  }, []);
+    (async () => {
+      try {
+        const response = await API.getUserInfo();
+        const user = response.data;
+        setUser(user);
+      } catch (error) {
+        if (!(error instanceof AxiosError)) return setError(true); // TODO: set custom error
+
+        if (error.status === 401) {
+          console.log('Not Authorized!');
+        }
+        setError(true); // need refactor
+      }
+      setLoading(false);
+    })();
+  }, [API]);
 
   const value = {
+    access_token,
+    API,
     user,
     loading,
     error,
