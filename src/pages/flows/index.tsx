@@ -18,7 +18,7 @@ import { PolyglotFlow } from '../../types/polyglotElements';
 
 const FlowIndexPage = () => {
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
-  const { user, access_token, loading } = useUser();
+  const { user, loading } = useUser();
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const {
@@ -31,7 +31,7 @@ const FlowIndexPage = () => {
   const query = router.query?.q?.toString();
 
   // User need to be loaded
-  const API = useMemo(() => new APIV2({ access_token }), [access_token]);
+  const API = useMemo(() => new APIV2(), []);
 
   useEffect(() => {
     API.autocomplete(searchValue).then((resp) => {

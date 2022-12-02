@@ -1,6 +1,6 @@
 import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
 import { useBoolean } from '@fluentui/react-hooks';
-import { MouseEventHandler, useState } from 'react';
+import { MouseEventHandler, useMemo, useState } from 'react';
 import ReactFlow, {
   applyEdgeChanges,
   applyNodeChanges,
@@ -17,7 +17,7 @@ import ReactFlow, {
   ReactFlowProvider,
   useOnSelectionChange,
 } from 'reactflow';
-import { API } from '../../data/api';
+import { APIV2 } from '../../data/api';
 import useStore from '../../store';
 import {
   polyglotEdgeComponentMapping,
@@ -155,6 +155,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     }
   }
 
+  const API = useMemo(() => new APIV2(), []);
   const saveFlow = async () => {
     try {
       const flow = useStore.getState().getFlow();

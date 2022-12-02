@@ -15,7 +15,6 @@ import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import FlowEditor from '../../../components/Editor/FlowEditor';
-import { useUser } from '../../../context/user.context';
 import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
 
@@ -25,13 +24,12 @@ const FlowIndex = () => {
     onOpen: onLoading,
     onClose: stopLoading,
   } = useDisclosure();
-  const { access_token } = useUser();
   const [error, setError] = useState<Nullable<string>>(null);
   const router = useRouter();
   const actions = useStore((state) => state.actions);
   const flowId = router.query?.id?.toString();
 
-  const API = useMemo(() => new APIV2({ access_token }), [access_token]);
+  const API = useMemo(() => new APIV2(), []);
 
   useEffect(() => console.log(actions), [actions]);
 

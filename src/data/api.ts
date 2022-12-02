@@ -16,6 +16,7 @@ const axios = axiosCreate.create({
   headers: {
     'Content-Type': 'application/json',
   },
+  withCredentials: true,
 });
 
 type AutocompleteOutput = string[];
@@ -26,15 +27,15 @@ export class APIV2 {
   redirect401URL?: string;
   error401: boolean;
 
-  constructor({ access_token }: { access_token?: string }) {
+  constructor() {
     this.redirect401 = false;
     this.error401 = true;
     this.axios = axiosCreate.create({
       baseURL: process.env.BACK_URL,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: access_token,
       },
+      withCredentials: true,
     });
   }
 

@@ -6,21 +6,16 @@ import React, {
   useMemo,
   useState,
 } from 'react';
-import { useCookies } from 'react-cookie';
 import { APIV2 } from '../data/api';
 import { User } from '../types/user';
 
 type UserContextType = {
-  access_token: string | undefined;
-  API: APIV2 | undefined;
   user: User | undefined;
   loading: boolean;
   error: boolean;
 };
 
 export const UserContext = React.createContext<UserContextType>({
-  access_token: undefined,
-  API: undefined,
   user: undefined,
   loading: true,
   error: false,
@@ -37,12 +32,7 @@ export const UserProvider = ({ children }: UserContextProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(false);
 
-  const [cookies] = useCookies();
-  const access_token = cookies['x-auth-cookie'] as string | undefined;
-  const API = useMemo(
-    () => new APIV2({ access_token: access_token }),
-    [access_token]
-  );
+  const API = useMemo(() => new APIV2(), []);
 
   useEffect(() => {
     setLoading(true);
@@ -64,8 +54,6 @@ export const UserProvider = ({ children }: UserContextProps) => {
   }, [API]);
 
   const value = {
-    access_token,
-    API,
     user,
     loading,
     error,
