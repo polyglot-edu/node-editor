@@ -7,15 +7,24 @@ import { User } from '../../types/user';
 import Nav from '../Layout/NavBar';
 
 type NavBarProps = {
-  user: Nullable<User>;
+  user: User | undefined;
   redirectLogin?: string;
   redirectLogout?: string;
 };
 
-export default function Navbar({ user }: NavBarProps) {
+export default function Navbar({
+  user,
+  redirectLogout,
+  redirectLogin,
+}: NavBarProps) {
   const router = useRouter();
   const BACK_URL = process.env.BACK_URL;
-  const CURRENT_URL = process.env.CURRENT_HOST + router.asPath;
+  const LOGOUT_URL =
+    BACK_URL +
+    '/api/auth/logout?returnUrl=' +
+    (redirectLogout || router.asPath);
+  const LOGIN_URL =
+    BACK_URL + '/api/auth/google?returnUrl=' + (redirectLogin || router.asPath);
 
   return (
     <Nav>
@@ -36,7 +45,7 @@ export default function Navbar({ user }: NavBarProps) {
       {!user ? (
         <div className="rounded-lg bg-cyan-400 pr-2 pl-2 pt-1 pb-1">
           <Link
-            href={BACK_URL + '/api/auth/google?returnUrl=' + CURRENT_URL}
+            href={LOGIN_URL}
             className="text-white"
             style={{ textDecoration: 'none' }}
           >
@@ -46,10 +55,7 @@ export default function Navbar({ user }: NavBarProps) {
       ) : (
         <HStack>
           <div>{user.username}</div>
-          <Link
-            href={BACK_URL + '/api/auth/logout'}
-            style={{ textDecoration: 'none' }}
-          >
+          <Link href={LOGOUT_URL} style={{ textDecoration: 'none' }}>
             <Button colorScheme="red" size={['sm', 'md']}>
               Log out
             </Button>

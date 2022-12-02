@@ -13,9 +13,9 @@ import {
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import FlowEditor from '../../../components/Editor/FlowEditor';
-import { API } from '../../../data/api';
+import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
 
 const FlowIndex = () => {
@@ -28,6 +28,8 @@ const FlowIndex = () => {
   const router = useRouter();
   const actions = useStore((state) => state.actions);
   const flowId = router.query?.id?.toString();
+
+  const API = useMemo(() => new APIV2(), []);
 
   useEffect(() => console.log(actions), [actions]);
 
@@ -59,7 +61,7 @@ const FlowIndex = () => {
       }
       stopLoading();
     })();
-  }, [API.loadExampleFlowElementsAsync, flowId]);
+  }, [flowId, onLoading, stopLoading, API]);
 
   return (
     <>

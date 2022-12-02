@@ -1,7 +1,7 @@
 import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
-import { useEffect, useState } from 'react';
-import { API } from '../../data/api';
+import { useEffect, useMemo, useState } from 'react';
+import { APIV2 } from '../../data/api';
 import useStore, { changeEdgeType, changeNodeType } from '../../store';
 import { GeneralMetadata, Metadata } from '../../types/metadata';
 import { PolyglotEdge, PolyglotNode } from '../../types/polyglotElements';
@@ -29,6 +29,8 @@ const ElementProperties = ({
   autoFetchMeta = true,
   meta,
 }: ElementPropertiesProps) => {
+  const API = useMemo(() => new APIV2(), []);
+
   const { selectedElement: seMeta, updateNode, updateEdge } = useStore();
 
   const {
@@ -50,7 +52,7 @@ const ElementProperties = ({
         setEdgeMeta(res.data);
       });
     }
-  }, [autoFetchMeta]);
+  }, [API, autoFetchMeta]);
 
   return (
     <Panel isOpen={isOpen}>
