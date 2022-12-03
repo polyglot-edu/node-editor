@@ -139,7 +139,7 @@ export class APIV2 {
       flow
     );
   }
-  createNewFlow(flow: PolyglotFlow): Promise<AxiosResponse> {
+  createNewFlow(flow: Partial<PolyglotFlow>): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   }
 }
