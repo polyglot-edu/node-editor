@@ -31,10 +31,10 @@ const FlowCard = ({ flow }: FlowCardProps) => {
         objectFit="cover"
         maxW={{ base: '100%', sm: '200px' }}
         src={cardImage.src}
-        alt="Caffe Latte"
+        alt="Flow card"
       />
 
-      <Stack>
+      <Stack w="full">
         <CardBody>
           <LinkBox>
             <LinkOverlay href={`/flows/${flow._id}`} />

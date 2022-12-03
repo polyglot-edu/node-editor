@@ -5,7 +5,6 @@ import {
   IconButton,
   Tooltip,
   useDisclosure,
-  VStack,
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -62,16 +61,14 @@ const FlowIndexPage = () => {
           setInputValue={setSearchValue}
           items={suggestions}
         />
-        <VStack alignItems={'center'}>
-          {flows.length ? (
-            flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
-          ) : (
-            <Heading size={'md'} textAlign="center">
-              No flows found! <br />
-              Search something different ;)
-            </Heading>
-          )}
-        </VStack>
+        {flows.length ? (
+          flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
+        ) : (
+          <Heading size={'md'} textAlign="center">
+            No flows found! <br />
+            Search something different ;)
+          </Heading>
+        )}
         <Tooltip label="Create Flow">
           <IconButton
             hidden={!user}
