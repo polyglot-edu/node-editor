@@ -1,5 +1,5 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Flex, IconButton } from '@chakra-ui/react';
+import { Flex, IconButton, SpaceProps } from '@chakra-ui/react';
 import {
   AutoComplete,
   AutoCompleteInput,
@@ -15,16 +15,20 @@ type SearchBarProps = {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
   items: SearchItems;
+  px?: SpaceProps['px'];
+  py?: SpaceProps['py'];
 };
 
 export default function SearchBar({
   inputValue,
   setInputValue,
   items,
+  px,
+  py,
 }: SearchBarProps) {
   const router = useRouter();
   return (
-    <Flex align="center" px="10%" py="5%">
+    <Flex align="center" px={px} py={py}>
       <AutoComplete
         openOnFocus
         value={inputValue}
