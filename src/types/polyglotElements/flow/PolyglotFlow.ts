@@ -1,12 +1,16 @@
-import { PolyglotEdge, PolyglotNode } from "..";
+import { PolyglotEdge, PolyglotNode } from '..';
 
 export type PolyglotFlowInfo = {
-    id: string;
-    title: string;
-    description: string;
-}
+  _id?: string;
+  title: string;
+  author?: {
+    _id?: string;
+    username?: string;
+  };
+  description: string;
+};
 
 export type PolyglotFlow = PolyglotFlowInfo & {
-    nodes: PolyglotNode[];
-    edges: PolyglotEdge[];
+  nodes: PolyglotNode[];
+  edges: PolyglotEdge[];
 };

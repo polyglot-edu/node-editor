@@ -1,33 +1,33 @@
-import { polyglotEdgeComponentMapping } from "../elementMapping";
-import { ReactFlowSmartBezierEdge } from "../../../components/ReactFlowEdge";
-import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from "./Edge";
-import { EdgePropertiesProps } from "../../../components/EdgeProperties/EdgeProperties";
+import { EdgePropertiesProps } from '../../../components/EdgeProperties/EdgeProperties';
+import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
+import { polyglotEdgeComponentMapping } from '../elementMapping';
+import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
-export type UnconditionalEdgeData = EdgeData & {}
+export type UnconditionalEdgeData = EdgeData & {};
 
 export type UnconditionalEdge = PolyglotEdge & {
-    type: "unconditionalEdge";
-    data: UnconditionalEdgeData;
-}
+  type: 'unconditionalEdge';
+  data: UnconditionalEdgeData;
+};
 
 polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
-    elementType: "unconditionalEdge",
-    name: "Unconditional",
-    propertiesComponent: (props: EdgePropertiesProps) => (<></>),
-    elementComponent: ReactFlowSmartBezierEdge,
-    defaultData: {
-        ...defaultPolyglotEdgeData,
-    },
-    transformData: (edge) => {
-        const code = `
-(bool, string) validate(PolyglotValidationContext context) {
+  elementType: 'unconditionalEdge',
+  name: 'Unconditional',
+  // eslint-disable-next-line @typescript-eslint/no-unused-vars
+  propertiesComponent: (props: EdgePropertiesProps) => <></>,
+  elementComponent: ReactFlowSmartBezierEdge,
+  defaultData: {
+    ...defaultPolyglotEdgeData,
+  },
+  transformData: (edge) => {
+    const code = `
+async Task<(bool, string)> validate(PolyglotValidationContext context) {
     return (true, "Unconditional edge");
 }`;
 
-
-        return {
-            ...edge,
-            code
-        };
-    },
+    return {
+      ...edge,
+      code,
+    };
+  },
 });
