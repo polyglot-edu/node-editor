@@ -44,8 +44,7 @@ const FlowCard = ({ flow }: FlowCardProps) => {
               FBK
             </Badge>
             <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
-              {flow.description +
-                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum porta sagittis. Nullam eu dapibus sapien, at pharetra odio. Phasellus quis lorem sit amet arcu mattis volutpat sit amet finibus est. Morbi efficitur volutpat neque sit amet auctor. Vestibulum nec iaculis mi, sed vestibulum sapien. Vestibulum facilisis pulvinar tempus. Mauris non magna enim. Phasellus vulputate nisl ut mollis egestas. Morbi semper vehicula orci, sit amet tincidunt sapien consequat in. Pellentesque sodales gravida lorem ac rutrum. Curabitur convallis vel lacus a semper. Morbi lobortis fermentum lorem, et lacinia arcu venenatis in. Fusce pulvinar neque diam, in vulputate sem porta vitae. Donec euismod ex at ante commodo, non euismod nisl ultricies.'}
+              {flow.description}
             </Text>
           </LinkBox>
         </CardBody>
