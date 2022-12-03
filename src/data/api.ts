@@ -4,6 +4,7 @@ import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   polyglotEdgeComponentMapping,
   PolyglotFlow,
+  PolyglotFlowInfo,
   polyglotNodeComponentMapping,
 } from '../types/polyglotElements';
 import { User } from '../types/user';
@@ -139,8 +140,11 @@ export class APIV2 {
       flow
     );
   }
-  createNewFlow(flow: Partial<PolyglotFlow>): Promise<AxiosResponse> {
+  createNewFlow(flow: PolyglotFlowInfo): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
+  }
+  createNewFlowJson(flow: PolyglotFlow): Promise<AxiosResponse> {
+    return this.axios.post<{}, AxiosResponse, {}>(`/api/flows/json`, flow);
   }
 }
 
