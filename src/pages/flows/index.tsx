@@ -62,7 +62,7 @@ const FlowIndexPage = () => {
           items={suggestions}
         />
         {flows.length ? (
-          flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
+          flows.map((flow, id) => <FlowCard key={id} flow={flow} py={1} />)
         ) : (
           <Heading size={'md'} textAlign="center">
             No flows found! <br />
