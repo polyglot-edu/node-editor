@@ -1,14 +1,16 @@
 import {
   Avatar,
   Badge,
-  Box,
-  Flex,
-  Grid,
-  GridItem,
+  Card,
+  CardBody,
+  CardFooter,
+  Heading,
   HStack,
+  Image,
   LinkBox,
   LinkOverlay,
   Spacer,
+  Stack,
   Text,
 } from '@chakra-ui/react';
 import cardImage from '../../public/test_card.png';
@@ -18,59 +20,49 @@ type FlowCardProps = {
   flow: PolyglotFlow;
 };
 
-export default function FlowCard({ flow }: FlowCardProps) {
+const FlowCard = ({ flow }: FlowCardProps) => {
   return (
-    <LinkBox width={['100%', '80%', '70%', '60%', '50%']}>
-      <Grid
-        templateRows="repeat(5, 1fr)"
-        templateColumns="repeat(5, 1fr)"
-        rounded="lg"
-        borderWidth={1}
-        shadow="lg"
-      >
-        <GridItem rowSpan={5} colSpan={2}>
-          <Box
-            h="full"
-            backgroundImage={"url('" + cardImage.src + "')"}
-            backgroundPosition="center"
-            backgroundSize={'cover'}
-            roundedLeft="lg"
-          />
-        </GridItem>
+    <Card
+      direction={{ base: 'column', sm: 'row' }}
+      overflow="hidden"
+      variant="outline"
+    >
+      <Image
+        objectFit="cover"
+        maxW={{ base: '100%', sm: '200px' }}
+        src={cardImage.src}
+        alt="Caffe Latte"
+      />
 
-        <GridItem colSpan={3}>
-          <Box pl={5} as="b" lineHeight="10" h="full" fontSize={'lg'}>
-            {flow.title}
-          </Box>
-        </GridItem>
+      <Stack>
+        <CardBody>
+          <LinkBox>
+            <LinkOverlay href={`/flows/${flow._id}`} />
+            <Heading size="md">{flow.title}</Heading>
+            <Badge colorScheme="green">New</Badge>
+            <Badge ml={1} colorScheme="red">
+              FBK
+            </Badge>
+            <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
+              {flow.description +
+                'Lorem ipsum dolor sit amet, consectetur adipiscing elit. Sed elementum porta sagittis. Nullam eu dapibus sapien, at pharetra odio. Phasellus quis lorem sit amet arcu mattis volutpat sit amet finibus est. Morbi efficitur volutpat neque sit amet auctor. Vestibulum nec iaculis mi, sed vestibulum sapien. Vestibulum facilisis pulvinar tempus. Mauris non magna enim. Phasellus vulputate nisl ut mollis egestas. Morbi semper vehicula orci, sit amet tincidunt sapien consequat in. Pellentesque sodales gravida lorem ac rutrum. Curabitur convallis vel lacus a semper. Morbi lobortis fermentum lorem, et lacinia arcu venenatis in. Fusce pulvinar neque diam, in vulputate sem porta vitae. Donec euismod ex at ante commodo, non euismod nisl ultricies.'}
+            </Text>
+          </LinkBox>
+        </CardBody>
 
-        <GridItem colSpan={3} pl={5}>
-          <Badge colorScheme="green">New</Badge>
-          <Badge ml={1} colorScheme="red">
-            FBK
-          </Badge>
-        </GridItem>
-
-        <GridItem rowSpan={2} colSpan={3}>
-          <Text color={'gray.500'} pl={5} noOfLines={[1, 2, 3]}>
-            {flow.description}
-          </Text>
-        </GridItem>
-
-        <GridItem colSpan={3}>
-          <Flex pr="3">
-            <Spacer />
-            <HStack pl={5} spacing="2" align="center" h="full">
-              <Text fontSize={'xs'}>Davide Frageri</Text>
-              <Avatar name="Davide Frageri" size="sm" />
-            </HStack>
-          </Flex>
-        </GridItem>
-      </Grid>
-      <LinkOverlay href={`/flows/${flow._id}`} />
-    </LinkBox>
+        <CardFooter>
+          <Spacer />
+          <HStack pl={5} spacing="2" align="center" h="full">
+            <Text fontSize={'xs'}>Davide Frageri</Text>
+            <Avatar name="Davide Frageri" size="sm" />
+          </HStack>
+        </CardFooter>
+      </Stack>
+    </Card>
   );
-}
+};
+
+export default FlowCard;
 
 export function ScheletonFlowCards() {
   return (

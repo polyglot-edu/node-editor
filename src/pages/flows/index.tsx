@@ -1,5 +1,6 @@
 import { AddIcon } from '@chakra-ui/icons';
 import {
+  Box,
   Heading,
   IconButton,
   Tooltip,
@@ -53,40 +54,41 @@ const FlowIndexPage = () => {
   return (
     <>
       <Navbar user={user} />
-      <Heading px="10%" pt="5%">
-        Navigate Flows
-      </Heading>
-      <SearchBar
-        inputValue={searchValue}
-        setInputValue={setSearchValue}
-        items={suggestions}
-      />
-      <VStack alignItems={'center'}>
-        {flows.length ? (
-          flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
-        ) : (
-          <Heading size={'md'} textAlign="center">
-            No flows found! <br />
-            Search something different ;)
-          </Heading>
-        )}
-      </VStack>
-      <Tooltip label="Create Flow">
-        <IconButton
-          aria-label="Create Flow"
-          position={'fixed'}
-          right={10}
-          bottom={10}
-          rounded="full"
-          bg={'blue.400'}
-          w={12}
-          h={12}
-          _hover={{ bg: 'blue.600' }}
-          icon={<AddIcon fontSize={'xl'} color="white" />}
-          onClick={cfOnOpen}
+      <Box px="10%">
+        <Heading pt="5%">Navigate Flows</Heading>
+        <SearchBar
+          py="5%"
+          inputValue={searchValue}
+          setInputValue={setSearchValue}
+          items={suggestions}
         />
-      </Tooltip>
-      <CreateFlowModal isOpen={cfOpen} onClose={cfOnClose} />
+        <VStack alignItems={'center'}>
+          {flows.length ? (
+            flows.map((flow, id) => <FlowCard key={id} flow={flow} />)
+          ) : (
+            <Heading size={'md'} textAlign="center">
+              No flows found! <br />
+              Search something different ;)
+            </Heading>
+          )}
+        </VStack>
+        <Tooltip label="Create Flow">
+          <IconButton
+            aria-label="Create Flow"
+            position={'fixed'}
+            right={10}
+            bottom={10}
+            rounded="full"
+            bg={'blue.400'}
+            w={12}
+            h={12}
+            _hover={{ bg: 'blue.600' }}
+            icon={<AddIcon fontSize={'xl'} color="white" />}
+            onClick={cfOnOpen}
+          />
+        </Tooltip>
+        <CreateFlowModal isOpen={cfOpen} onClose={cfOnClose} />
+      </Box>
     </>
   );
 };
