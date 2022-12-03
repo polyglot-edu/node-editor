@@ -53,8 +53,8 @@ const FlowCard = ({ flow }: FlowCardProps) => {
         <CardFooter>
           <Spacer />
           <HStack pl={5} spacing="2" align="center" h="full">
-            <Text fontSize={'xs'}>Davide Frageri</Text>
-            <Avatar name="Davide Frageri" size="sm" />
+            <Text fontSize={'xs'}>{flow.author?.username}</Text>
+            <Avatar name={flow.author?.username} size="sm" />
           </HStack>
         </CardFooter>
       </Stack>

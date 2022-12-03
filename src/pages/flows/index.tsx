@@ -74,14 +74,15 @@ const FlowIndexPage = () => {
         </VStack>
         <Tooltip label="Create Flow">
           <IconButton
+            hidden={!user}
             aria-label="Create Flow"
             position={'fixed'}
             right={10}
             bottom={10}
-            rounded="full"
-            bg={'blue.400'}
-            w={12}
+            isRound={true}
             h={12}
+            w={12}
+            bg={'blue.400'}
             _hover={{ bg: 'blue.600' }}
             icon={<AddIcon fontSize={'xl'} color="white" />}
             onClick={cfOnOpen}
