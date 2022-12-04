@@ -1,6 +1,7 @@
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
+  CloseIcon,
   CopyIcon,
   EditIcon,
   ExternalLinkIcon,
@@ -26,6 +27,7 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import brandLogo from '../../public/solo_logo.png';
 import useStore from '../../store';
@@ -124,6 +126,8 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
   const [saveLoading, setSaveLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
+  const router = useRouter();
+
   useEffect(() => {
     const isMac =
       typeof window !== 'undefined'
@@ -145,14 +149,14 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
 
   return (
     <Nav p={2} bg="gray.200" justify="start">
-      <Image
-        src={brandLogo.src}
-        width={['30px']}
-        className="mr-3"
-        alt="Polyglot Logo"
-      />
-      <Stack align="start">
-        <HStack>
+      <Stack align="start" w="full">
+        <HStack w="full">
+          <Image
+            src={brandLogo.src}
+            width={['30px']}
+            className="mr-3"
+            alt="Polyglot Logo"
+          />
           <Tooltip label="Back">
             <Button
               disabled={!checkBackAction}
@@ -223,22 +227,35 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
               },
             ]}
           />
+          <Spacer />
+          <Button
+            leftIcon={<CloseIcon />}
+            size="sm"
+            colorScheme="red"
+            variant="solid"
+            onClick={() => {
+              router.push('/flows');
+            }}
+          >
+            Leave editor
+          </Button>
         </HStack>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Download JSON flow:</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Editor
-                height="500px"
-                defaultValue={JSON.stringify(flow, null, 2)}
-                language="json"
-              />
-            </ModalBody>
+      </Stack>
+      <Modal isOpen={isOpen} onClose={onClose}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Download JSON flow:</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Editor
+              height="500px"
+              defaultValue={JSON.stringify(flow, null, 2)}
+              language="json"
+            />
+          </ModalBody>
 
-            <ModalFooter>
-              {/* <a
+          <ModalFooter>
+            {/* <a
                 href={URL.createObjectURL(
                   new Blob([JSON.stringify(flow, null, 2)], {
                     type: 'application/json',
@@ -246,12 +263,11 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
                 )}
                 download={flow?.title + '.json'}
               > */}
-              <Button colorScheme="blue">Download</Button>
-              {/* </a> */}
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Stack>
+            <Button colorScheme="blue">Download</Button>
+            {/* </a> */}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
     </Nav>
   );
 }
