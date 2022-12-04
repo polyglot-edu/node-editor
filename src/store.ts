@@ -42,13 +42,16 @@ export type SelectedElement = {
 
 interface ApplicationState {
   currentAction: number;
+  lastSavedAction: number;
   actions: Action[];
+  setLastSavedAction: () => void;
   addAction: (action: Action) => void;
   backAction: () => void;
   forwardAction: () => void;
   popAction: () => Action | undefined;
   checkBackAction: () => boolean;
   checkForwardAction: () => boolean;
+  checkSave: () => boolean;
 
   loadFlow: (flow: PolyglotFlow) => void;
   updateFlowInfo: (newValue: PartialDeep<PolyglotFlowInfo>) => void;
@@ -100,7 +103,13 @@ const useStore = create<
   devtools(
     (set, get) => ({
       currentAction: -1,
+      lastSavedAction: -1,
       actions: [] as Action[],
+      setLastSavedAction: () => {
+        set((state) => ({
+          lastSavedAction: state.currentAction,
+        }));
+      },
       addAction: (action) => {
         set((state) => {
           const tmp = [...state.actions];
@@ -234,6 +243,13 @@ const useStore = create<
       checkForwardAction: () => {
         const state = get();
         return state.currentAction < state.actions.length - 1;
+      },
+      checkSave: () => {
+        const state = get();
+        return (
+          state.currentAction !== -1 &&
+          state.currentAction !== state.lastSavedAction
+        );
       },
 
       loadFlow: (flow) => {

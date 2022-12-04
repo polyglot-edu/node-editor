@@ -106,14 +106,21 @@ const DropDown = ({
 };
 
 export default function EditorNav({ saveFunc }: EditorNavProps) {
-  const [checkForwardAction, checkBackAction, flow, backAction, forwardAction] =
-    useStore((state) => [
-      state.checkForwardAction(),
-      state.checkBackAction(),
-      state.getFlow(),
-      state.backAction,
-      state.forwardAction,
-    ]);
+  const [
+    checkSave,
+    checkForwardAction,
+    checkBackAction,
+    flow,
+    backAction,
+    forwardAction,
+  ] = useStore((state) => [
+    state.checkSave(),
+    state.checkForwardAction(),
+    state.checkBackAction(),
+    state.getFlow(),
+    state.backAction,
+    state.forwardAction,
+  ]);
   const [saveLoading, setSaveLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
 
@@ -170,7 +177,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
           <Tooltip label="Save">
             <Button
               hidden={saveLoading}
-              disabled={false}
+              disabled={!checkSave}
               padding={0}
               background="transparent"
               onClick={async () => {

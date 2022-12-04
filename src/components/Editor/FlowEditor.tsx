@@ -49,6 +49,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     setSelectedElement,
     getSelectedElement,
     clearSelection,
+    setLastSavedAction,
   } = useStore((store) => ({
     getNodes: store.reactFlowNodes,
     getEdges: store.reactFlowEdges,
@@ -59,6 +60,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     getSelectedElement: store.getSelectedElement,
     setSelectedElement: store.setSelectedElement,
     clearSelection: store.clearSelection,
+    setLastSavedAction: store.setLastSavedAction,
   }));
   const { project } = useReactFlow();
 
@@ -186,6 +188,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
 
       const response = await API.saveFlowAsync(flow);
       if (response?.status === 200) {
+        setLastSavedAction();
         toast({
           title: 'Flow saved',
           description: 'The save was successful',
