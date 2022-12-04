@@ -4,22 +4,33 @@ import useStore from '../../store';
 import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
 import { createNewDefaultPolyglotNode } from '../../utils/utils';
 
-type ContextMenuProps = {
+export enum ContextMenuTypes {
+  DEFAULT,
+  NODE,
+  EDGE,
+}
+
+export type ContextMenuProps = {
   pos: {
     x: number;
     y: number;
   };
-  showing: boolean;
+  show: boolean;
   elementId?: string;
-  type: string;
-  onDismiss: () => void;
+  type: ContextMenuTypes;
+  relativePos?: {
+    x: number;
+    y: number;
+  };
+  onDismiss?: () => void;
 };
 
 const ContextMenu = ({
   pos,
-  showing,
+  show,
   type,
   elementId,
+  relativePos,
   onDismiss,
 }: ContextMenuProps) => {
   const linkRef = useRef(null);
@@ -32,7 +43,10 @@ const ContextMenu = ({
       text: 'New ' + polyglotNodeComponentMapping.nameMapping[index],
       iconProps: { iconName: 'Add' },
       onClick: () => {
-        const nodeToAdd = createNewDefaultPolyglotNode(pos, index);
+        const nodeToAdd = createNewDefaultPolyglotNode(
+          relativePos || pos,
+          index
+        );
         useStore.getState().addNode(nodeToAdd);
       },
     };
@@ -72,11 +86,11 @@ const ContextMenu = ({
 
       <ContextualMenu
         className="pt-2"
-        hidden={!showing}
+        hidden={!show}
         items={
-          type === 'node'
+          type === ContextMenuTypes.NODE
             ? menuNodeActions
-            : type === 'edge'
+            : type === ContextMenuTypes.EDGE
             ? menuEdgeActions
             : menuItems
         }
