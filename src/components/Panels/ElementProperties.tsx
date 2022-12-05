@@ -44,13 +44,15 @@ const ElementProperties = ({
 
   useEffect(() => {
     if (autoFetchMeta) {
-      API.generalNodeMetadata().then((res) => {
-        setNodeMeta(res.data);
-      });
+      // API.generalNodeMetadata().then((res) => {
+      //   setNodeMeta(res.data);
+      // });
+      setNodeMeta(nm as GeneralMetadata);
 
-      API.generalEdgeMetadata().then((res) => {
-        setEdgeMeta(res.data);
-      });
+      // API.generalEdgeMetadata().then((res) => {
+      //   setEdgeMeta(res.data);
+      // });
+      setEdgeMeta(em as GeneralMetadata);
     }
   }, [API, autoFetchMeta]);
 
@@ -137,3 +139,480 @@ const onChangeElement: OnChangeDynamicForm =
   };
 
 export default ElementProperties;
+
+const nm = {
+  abstractNode: [
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'string',
+          name: 'target',
+          constraints: {},
+        },
+      ],
+    },
+    {
+      type: 'string',
+      name: 'title',
+      constraints: {},
+    },
+    {
+      type: 'textarea',
+      name: 'description',
+      constraints: {},
+    },
+    {
+      type: 'enum',
+      name: 'difficulty',
+      constraints: {},
+      sub: 'number',
+      options: [1, 2, 3, 4, 5],
+    },
+    {
+      type: 'any',
+      name: 'reactFlow',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'runtimeData',
+      constraints: {},
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      options: [
+        'abstractNode',
+        'closeEndedQuestionNode',
+        'codingQuestionNode',
+        'lessonNode',
+        'lessonTextNode',
+        'multipleChoiceQuestionNode',
+      ],
+      constraints: {},
+    },
+  ],
+  closeEndedQuestionNode: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'textarea',
+      name: 'description',
+      label: 'Description',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'markdown',
+          name: 'question',
+          label: 'Question',
+          constraints: {},
+        },
+        {
+          type: 'array',
+          name: 'correctAnswers',
+          label: 'Correct Answers',
+          constraints: {},
+          sub: 'string',
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      name: 'difficulty',
+      label: 'Difficulty',
+      constraints: {},
+      sub: 'number',
+      options: [1, 2, 3, 4, 5],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'abstractNode',
+        'closeEndedQuestionNode',
+        'codingQuestionNode',
+        'lessonNode',
+        'lessonTextNode',
+        'multipleChoiceQuestionNode',
+      ],
+      constraints: {},
+    },
+  ],
+  codingQuestionNode: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'textarea',
+      name: 'description',
+      label: 'Description',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'markdown',
+          name: 'question',
+          label: 'Question',
+          constraints: {},
+        },
+        {
+          type: 'code',
+          name: 'codeTemplate',
+          label: 'Template code',
+          constraints: {},
+        },
+        {
+          type: 'enum',
+          name: 'language',
+          label: 'Language',
+          constraints: {},
+          sub: 'string',
+          options: ['csharp'],
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      name: 'difficulty',
+      label: 'Difficulty',
+      constraints: {},
+      sub: 'number',
+      options: [1, 2, 3, 4, 5],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'abstractNode',
+        'closeEndedQuestionNode',
+        'codingQuestionNode',
+        'lessonNode',
+        'lessonTextNode',
+        'multipleChoiceQuestionNode',
+      ],
+      constraints: {},
+    },
+  ],
+  lessonNode: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'textarea',
+      name: 'description',
+      label: 'Description',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'file',
+          name: 'file',
+          label: 'File',
+          constraints: {},
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      name: 'difficulty',
+      label: 'Difficulty',
+      constraints: {},
+      sub: 'number',
+      options: [1, 2, 3, 4, 5],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'abstractNode',
+        'closeEndedQuestionNode',
+        'codingQuestionNode',
+        'lessonNode',
+        'lessonTextNode',
+        'multipleChoiceQuestionNode',
+      ],
+      constraints: {},
+    },
+  ],
+  lessonTextNode: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'textarea',
+      name: 'description',
+      label: 'Description',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'markdown',
+          name: 'text',
+          label: 'Text',
+          constraints: {},
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      name: 'difficulty',
+      label: 'Difficulty',
+      constraints: {},
+      sub: 'number',
+      options: [1, 2, 3, 4, 5],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'abstractNode',
+        'closeEndedQuestionNode',
+        'codingQuestionNode',
+        'lessonNode',
+        'lessonTextNode',
+        'multipleChoiceQuestionNode',
+      ],
+      constraints: {},
+    },
+  ],
+  multipleChoiceQuestionNode: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'textarea',
+      name: 'description',
+      label: 'Description',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'markdown',
+          name: 'question',
+          label: 'Question',
+          constraints: {},
+        },
+        {
+          type: 'array',
+          name: 'choices',
+          label: 'Choices',
+          constraints: {},
+          sub: 'string',
+        },
+        {
+          type: 'array',
+          name: 'isChoiceCorrect',
+          label: 'IsChoiceCorrect',
+          constraints: {},
+          sub: 'boolean',
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      name: 'difficulty',
+      label: 'Difficulty',
+      constraints: {},
+      sub: 'number',
+      options: [1, 2, 3, 4, 5],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'abstractNode',
+        'closeEndedQuestionNode',
+        'codingQuestionNode',
+        'lessonNode',
+        'lessonTextNode',
+        'multipleChoiceQuestionNode',
+      ],
+      constraints: {},
+    },
+  ],
+};
+
+const em = {
+  customValidationEdge: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'code',
+          name: 'code',
+          label: 'Code',
+          constraints: {},
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'customValidationEdge',
+        'exactValueEdge',
+        'passFailEdge',
+        'unconditionalEdge',
+      ],
+      constraints: {},
+    },
+  ],
+  exactValueEdge: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'string',
+          name: 'value',
+          label: 'Value',
+          constraints: {},
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'customValidationEdge',
+        'exactValueEdge',
+        'passFailEdge',
+        'unconditionalEdge',
+      ],
+      constraints: {},
+    },
+  ],
+  passFailEdge: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [
+        {
+          type: 'enum',
+          name: 'conditionKind',
+          label: 'Condition Kind',
+          constraints: {},
+          sub: 'string',
+          options: ['pass', 'fail'],
+        },
+      ],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'customValidationEdge',
+        'exactValueEdge',
+        'passFailEdge',
+        'unconditionalEdge',
+      ],
+      constraints: {},
+    },
+  ],
+  unconditionalEdge: [
+    {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'any',
+      name: 'data',
+      constraints: {},
+      fields: [],
+    },
+    {
+      type: 'enum',
+      sub: 'string',
+      name: 'type',
+      label: 'Type',
+      options: [
+        'customValidationEdge',
+        'exactValueEdge',
+        'passFailEdge',
+        'unconditionalEdge',
+      ],
+      constraints: {},
+    },
+  ],
+};

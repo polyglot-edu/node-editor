@@ -17,6 +17,7 @@ import ReactFlow, {
   useOnSelectionChange,
   useReactFlow,
 } from 'reactflow';
+import 'reactflow/dist/style.css';
 import { APIV2 } from '../../data/api';
 import useStore from '../../store';
 import {

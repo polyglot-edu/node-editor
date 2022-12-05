@@ -21,6 +21,7 @@ import { Metadata, MetadataField } from '../../types/metadata';
 import { isObject } from '../../utils/utils';
 import ArrayField from './Fields/ArrayField';
 import FileUpload from './Fields/FileUpload';
+import MarkDownField from './Fields/MarkDownField';
 
 export type OnChangeDynamicForm = (
   element: any,
@@ -249,7 +250,7 @@ const generateElement = (
         const language = element?.language;
         inputObj = (
           <Editor
-            height={200}
+            height={400}
             language={language || 'csharp'}
             defaultValue={field}
             onChange={(value) =>
@@ -257,20 +258,29 @@ const generateElement = (
             }
           />
         );
+        break;
+      case 'markdown':
+        inputObj = (
+          <MarkDownField
+            value={field}
+            onChange={(data) =>
+              val.constraints.onChange?.({
+                currentTarget: { value: data.text },
+              })
+            }
+          />
+        );
     }
 
     return (
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      <FormControl
-        key={id}
-        isInvalid={errors[val.name.toString()] ? true : false}
-      >
-        <FormLabel htmlFor={val.name.toString()}>
-          {val.name.toString() !== 'data' && val.name.toString()}
+      <FormControl key={id} isInvalid={errors[val.name] ? true : false}>
+        <FormLabel htmlFor={val.name}>
+          {val.name !== 'data' && val.label}
         </FormLabel>
         {inputObj}
         <FormErrorMessage>
-          {errors[val.name.toString()] && errors[val.name]?.message?.toString()}
+          {errors[val.name] && errors[val.name]?.message?.toString()}
         </FormErrorMessage>
       </FormControl>
     );

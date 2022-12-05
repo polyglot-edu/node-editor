@@ -1,6 +1,5 @@
 import '@fontsource/inter';
 import '@fontsource/work-sans';
-import 'reactflow/dist/style.css';
 import '../components/AppMain.css';
 import '../components/Card.css';
 import '../styles/globals.css';
@@ -9,7 +8,6 @@ import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import { Analytics } from '@vercel/analytics/react';
 import type { AppProps } from 'next/app';
-import { CookiesProvider } from 'react-cookie';
 import { UserProvider } from '../context/user.context';
 import reportWebVitals from '../reportWebVitals';
 
@@ -22,14 +20,12 @@ const theme = extendTheme({
 
 export default function App({ Component, pageProps }: AppProps) {
   return (
-    <CookiesProvider>
-      <UserProvider>
-        <ChakraProvider theme={theme}>
-          <Component {...pageProps} />
-          <Analytics />
-        </ChakraProvider>
-      </UserProvider>
-    </CookiesProvider>
+    <UserProvider>
+      <ChakraProvider theme={theme}>
+        <Component {...pageProps} />
+        <Analytics />
+      </ChakraProvider>
+    </UserProvider>
   );
 }
 
