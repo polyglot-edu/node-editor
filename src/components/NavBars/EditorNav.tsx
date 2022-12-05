@@ -1,6 +1,7 @@
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
+  ArrowRightIcon,
   CloseIcon,
   CopyIcon,
   EditIcon,
@@ -12,6 +13,8 @@ import {
   Flex,
   HStack,
   Image,
+  LinkBox,
+  LinkOverlay,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -125,6 +128,11 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
   ]);
   const [saveLoading, setSaveLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenRun,
+    onOpen: onOpenRun,
+    onClose: onCloseRun,
+  } = useDisclosure();
 
   const router = useRouter();
 
@@ -215,17 +223,18 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             ]}
           />
           <DropDown
-            name="Project"
-            options={[{ name: 'Edit', icon: <EditIcon mr={2} /> }]}
-          />
-          <DropDown
-            name="Insert"
+            name="Run"
             options={[
               {
-                name: 'Save',
-                icon: <CopyIcon mr={2} />,
+                name: 'Run on vscode',
+                icon: <ArrowRightIcon mr={2} />,
+                onClick: onOpenRun,
               },
             ]}
+          />
+          <DropDown
+            name="Project"
+            options={[{ name: 'Edit', icon: <EditIcon mr={2} /> }]}
           />
           <Spacer />
           <Button
@@ -265,6 +274,25 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
               > */}
             <Button colorScheme="blue">Download</Button>
             {/* </a> */}
+          </ModalFooter>
+        </ModalContent>
+      </Modal>
+      <Modal isOpen={isOpenRun} onClose={onCloseRun}>
+        <ModalOverlay />
+        <ModalContent>
+          <ModalHeader>Run on vscode</ModalHeader>
+          <ModalCloseButton />
+          <ModalBody>
+            <Text>Download the generated notebook and open it in vscode</Text>
+          </ModalBody>
+
+          <ModalFooter>
+            <LinkBox>
+              <Button colorScheme="blue">Download</Button>
+              <LinkOverlay
+                href={`${process.env.BACK_URL}/api/flows/${flow?._id}/run`}
+              />
+            </LinkBox>
           </ModalFooter>
         </ModalContent>
       </Modal>
