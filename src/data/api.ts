@@ -81,7 +81,7 @@ export class APIV2 {
     return this.axios.get('/api/metadata/edge');
   }
   autocomplete(query?: string): Promise<AxiosResponse<AutocompleteOutput>> {
-    return this.axios.get('/api/search/autocomplete?q=' + query);
+    return this.axios.get('/api/search/autocomplete' + query);
   }
   getUserInfo(): Promise<AxiosResponse<User>> {
     return this.axios.get('/api/user/me');
@@ -101,6 +101,11 @@ export class APIV2 {
       config: {},
     });
   }
+
+  deleteFlow(flowId: string): Promise<AxiosResponse> {
+    return this.axios.delete('/api/flows/' + flowId);
+  }
+
   loadAbstractExampleFlowElementsAsync(
     currentState: string,
     goal: string
@@ -119,8 +124,7 @@ export class APIV2 {
     return this.axios.get(`/api/flows/${flowId}`);
   }
   loadFlowList(query?: string): Promise<AxiosResponse<PolyglotFlow[]>> {
-    const queryParams = query ? '?q=' + query : '';
-    return this.axios.get(`/api/flows` + queryParams);
+    return this.axios.get(`/api/flows` + (query ? query : ''));
   }
   createNewFlowAsync(): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, PolyglotFlow>(

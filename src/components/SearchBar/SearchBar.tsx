@@ -1,12 +1,11 @@
 import { SearchIcon } from '@chakra-ui/icons';
-import { Flex, IconButton, SpaceProps } from '@chakra-ui/react';
+import { Flex, IconButton, SpaceProps, SpacerProps } from '@chakra-ui/react';
 import {
   AutoComplete,
   AutoCompleteInput,
   AutoCompleteItem,
   AutoCompleteList,
 } from '@choc-ui/chakra-autocomplete';
-import { useRouter } from 'next/router';
 import { Dispatch, SetStateAction } from 'react';
 
 type SearchItems = string[];
@@ -18,6 +17,7 @@ type SearchBarProps = {
   items: SearchItems;
   px?: SpaceProps['px'];
   py?: SpaceProps['py'];
+  pb?: SpacerProps['pb'];
 };
 
 export default function SearchBar({
@@ -27,16 +27,15 @@ export default function SearchBar({
   items,
   px,
   py,
+  pb,
 }: SearchBarProps) {
-  const router = useRouter();
   return (
-    <Flex align="center" px={px} py={py}>
+    <Flex align="center" px={px} py={py} pb={pb}>
       <AutoComplete
         openOnFocus
         value={inputValue}
         onSelectOption={(e) => {
           setInputValue(e.item.value);
-          router.push(router.pathname + '?q=' + e.item.value);
         }}
       >
         <AutoCompleteInput
@@ -65,7 +64,6 @@ export default function SearchBar({
         ml="1"
         onClick={(e) => {
           e.preventDefault();
-          router.push(router.pathname + '?q=' + inputValue);
         }}
       />
     </Flex>

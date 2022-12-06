@@ -1,6 +1,8 @@
+import { DeleteIcon } from '@chakra-ui/icons';
 import {
   Avatar,
   Badge,
+  Button,
   Card,
   CardBody,
   CardFooter,
@@ -13,6 +15,7 @@ import {
   Spacer,
   Stack,
   Text,
+  Tooltip,
 } from '@chakra-ui/react';
 import cardImage from '../../public/test_card.png';
 import { PolyglotFlow } from '../../types/polyglotElements';
@@ -20,10 +23,12 @@ import { PolyglotFlow } from '../../types/polyglotElements';
 type FlowCardProps = {
   py?: SpaceProps['py'];
   px?: SpaceProps['px'];
+  canDelete?: boolean;
+  setSelected?: (flowId: string) => void;
   flow: PolyglotFlow;
 };
 
-const FlowCard = ({ flow, px, py }: FlowCardProps) => {
+const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
   return (
     <LinkBox px={px} py={py}>
       <Card
@@ -40,6 +45,24 @@ const FlowCard = ({ flow, px, py }: FlowCardProps) => {
 
         <Stack w="full">
           <CardBody>
+            {canDelete && (
+              <Button
+                zIndex={11}
+                position="absolute"
+                top={4}
+                right={5}
+                variant="unstyled"
+              >
+                <Tooltip label="Delete" placement="right">
+                  <DeleteIcon
+                    onClick={() => setSelected?.(flow._id!)}
+                    w={5}
+                    h={5}
+                    color="red"
+                  />
+                </Tooltip>
+              </Button>
+            )}
             <Heading size="md">{flow.title}</Heading>
             <Badge colorScheme="green">New</Badge>
             <Badge ml={1} colorScheme="red">
@@ -51,11 +74,15 @@ const FlowCard = ({ flow, px, py }: FlowCardProps) => {
           </CardBody>
 
           <CardFooter>
-            <Spacer />
-            <HStack pl={5} spacing="2" align="center" h="full">
-              <Text fontSize={'xs'}>{flow.author?.username}</Text>
-              <Avatar name={flow.author?.username} size="sm" />
-            </HStack>
+            {!canDelete && (
+              <>
+                <Spacer />
+                <HStack pl={5} spacing="2" align="center" h="full">
+                  <Text fontSize={'xs'}>{flow.author?.username}</Text>
+                  <Avatar name={flow.author?.username} size="sm" />
+                </HStack>
+              </>
+            )}
           </CardFooter>
         </Stack>
       </Card>
