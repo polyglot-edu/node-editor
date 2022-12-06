@@ -9,7 +9,7 @@ import {
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
-import CreateFlowModal from '../../components/models/CreateFlowModal';
+import CreateFlowModal from '../../components/Modals/CreateFlowModal';
 import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { useUser } from '../../context/user.context';

@@ -54,7 +54,10 @@ interface ApplicationState {
   checkSave: () => boolean;
 
   loadFlow: (flow: PolyglotFlow) => void;
-  updateFlowInfo: (newValue: PartialDeep<PolyglotFlowInfo>) => void;
+  updateFlowInfo: (
+    newValue: PartialDeep<PolyglotFlowInfo>,
+    skipAction?: boolean
+  ) => void;
   getFlow: () => Nullable<PolyglotFlow>;
   activeFlowInfo: Nullable<PolyglotFlowInfo>;
   nodeMap: Map<string, PolyglotNode>;
@@ -161,6 +164,9 @@ const useStore = create<
                 case 'edge':
                   state.updateEdge(action.element.id, action.value.prev, true);
                   break;
+                case 'flow':
+                  state.updateFlowInfo(action.value.prev, true);
+                  break;
               }
               break;
           }
@@ -216,6 +222,9 @@ const useStore = create<
                     true
                   );
                   break;
+                case 'flow':
+                  state.updateFlowInfo(action.value.update, true);
+                  break;
               }
               break;
           }
@@ -246,10 +255,7 @@ const useStore = create<
       },
       checkSave: () => {
         const state = get();
-        return (
-          state.currentAction !== -1 &&
-          state.currentAction !== state.lastSavedAction
-        );
+        return state.currentAction !== state.lastSavedAction;
       },
 
       loadFlow: (flow) => {
@@ -262,7 +268,24 @@ const useStore = create<
           })
         );
       },
-      updateFlowInfo: (newValue: PartialDeep<PolyglotFlowInfo>) => {
+      updateFlowInfo: (
+        newValue: PartialDeep<PolyglotFlowInfo>,
+        skipAction?: boolean
+      ) => {
+        if (!skipAction) {
+          const state = get();
+          state.addAction({
+            type: 'update',
+            element: {
+              type: 'flow',
+              id: '',
+            },
+            value: {
+              prev: state.activeFlowInfo,
+              update: newValue,
+            },
+          });
+        }
         set((state) =>
           produce(state, (draft) => {
             if (!draft.activeFlowInfo) return;
