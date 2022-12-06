@@ -54,12 +54,13 @@ const FlowIndexPage = () => {
     <>
       <Navbar user={user} />
       <Box px="10%">
-        <Heading pt="5%">Navigate Flows</Heading>
+        <Heading pt="5%">Learning Paths</Heading>
         <SearchBar
           py="5%"
           inputValue={searchValue}
           setInputValue={setSearchValue}
           items={suggestions}
+          placeholder="Search learning paths..."
         />
         {flows.length ? (
           flows.map((flow, id) => <FlowCard key={id} flow={flow} py={1} />)

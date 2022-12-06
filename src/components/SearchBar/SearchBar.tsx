@@ -14,6 +14,7 @@ type SearchItems = string[];
 type SearchBarProps = {
   inputValue: string;
   setInputValue: Dispatch<SetStateAction<string>>;
+  placeholder?: string;
   items: SearchItems;
   px?: SpaceProps['px'];
   py?: SpaceProps['py'];
@@ -22,6 +23,7 @@ type SearchBarProps = {
 export default function SearchBar({
   inputValue,
   setInputValue,
+  placeholder,
   items,
   px,
   py,
@@ -39,7 +41,7 @@ export default function SearchBar({
       >
         <AutoCompleteInput
           variant="filled"
-          placeholder="Search Flows..."
+          placeholder={placeholder || 'Search...'}
           onChange={(e) => {
             e.preventDefault();
             setInputValue(e.currentTarget.value);
