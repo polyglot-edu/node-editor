@@ -1,6 +1,8 @@
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+import { CloseIcon } from '@chakra-ui/icons';
 import {
+  Box,
   Button,
+  Flex,
   FormControl,
   FormLabel,
   Input,
@@ -11,33 +13,32 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  Popover,
+  PopoverArrow,
+  PopoverBody,
+  PopoverCloseButton,
+  PopoverContent,
+  PopoverHeader,
+  PopoverTrigger,
+  Portal,
   Tag,
   TagLabel,
   TagLeftIcon,
+  Text,
   Textarea,
+  Tooltip,
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import {
-  PolyglotFlow,
-  PolyglotFlowInfo,
-  TagOptions,
-  TagTypes,
-} from '../../types/polyglotElements';
+import { PolyglotFlow, PolyglotFlowInfo } from '../../types/polyglotElements';
+import { colors } from './CreateFlowModal';
 
 type EditFlowModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  flow: Nullable<PolyglotFlow>;
+  flow: PolyglotFlow;
   updateInfo: (flowInfo: PolyglotFlowInfo) => void;
 };
-
-const defaultTagOpts = Object.keys(TagOptions).map((index) => {
-  return {
-    value: index as TagTypes,
-    ...TagOptions[index as TagTypes],
-    selected: false,
-  };
-});
 
 const EditFlowModal = ({
   isOpen,
@@ -47,21 +48,16 @@ const EditFlowModal = ({
 }: EditFlowModalProps) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [tags, setTags] =
-    useState<{ selected: boolean; color: string; value: TagTypes }[]>();
+  const [tagName, setTagName] = useState('');
+  const [colorTag, setColorTag] = useState(colors[0]);
+  const [tags, setTags] = useState([...flow.tags]);
+  const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
 
   useEffect(() => {
     if (!flow) return;
     setTitle(flow.title);
     setDescription(flow.description);
-    setTags(
-      defaultTagOpts.map((defTag) => {
-        console.log('test');
-        defTag.selected =
-          flow.tags.findIndex((tag) => tag === defTag.value) !== -1;
-        return defTag;
-      })
-    );
+    setTags([...flow.tags]);
   }, [flow]);
 
   return (
@@ -92,31 +88,83 @@ const EditFlowModal = ({
           <FormLabel my={2} fontWeight={'bold'}>
             Click on the tags to add them:
           </FormLabel>
-
-          {tags?.map((tag, id) => (
+          <Flex mb={2}>
+            <Popover isOpen={ioPop} onClose={ocPop}>
+              <PopoverTrigger>
+                <Button
+                  colorScheme={colorTag}
+                  rounded="md"
+                  onClick={opPop}
+                  borderWidth={2}
+                  borderColor={'gray.300'}
+                />
+              </PopoverTrigger>
+              <Portal>
+                {/* https://github.com/chakra-ui/chakra-ui/issues/3043 */}
+                <Box zIndex="popover" w="full" h="full" position={'relative'}>
+                  <PopoverContent>
+                    <PopoverArrow />
+                    <PopoverHeader>
+                      <Text fontWeight={'bold'}>Select Color</Text>
+                    </PopoverHeader>
+                    <PopoverCloseButton />
+                    <PopoverBody>
+                      {colors.map((value, id) => (
+                        <Button
+                          key={id}
+                          colorScheme={value}
+                          rounded="md"
+                          mr={2}
+                          mb={2}
+                          onClick={() => {
+                            setColorTag(value);
+                            ocPop();
+                          }}
+                        />
+                      ))}
+                    </PopoverBody>
+                  </PopoverContent>
+                </Box>
+              </Portal>
+            </Popover>
+            <Tooltip
+              label="Press Enter↵ in the input box to add a tag"
+              placement="top"
+            >
+              <Input
+                placeholder="Insert tag name..."
+                w={'40%'}
+                value={tagName}
+                onKeyDown={(e) => {
+                  if (e.key === 'Enter') {
+                    setTags((prev) => {
+                      prev.push({ name: tagName, color: colorTag });
+                      return [...prev];
+                    });
+                    setTagName('');
+                  }
+                }}
+                onChange={(e) =>
+                  setTagName(e.currentTarget.value.toUpperCase())
+                }
+              />
+            </Tooltip>
+          </Flex>
+          {tags.map((tag, id) => (
             <Button
               key={id}
-              variant="unstyled"
-              onClick={() => {
-                setTags((prev) => {
-                  if (!prev) return prev;
-                  prev[id].selected = !prev[id].selected;
-                  return [...prev];
-                });
-              }}
+              variant={'unstyled'}
+              onClick={() =>
+                setTags((prev) => [
+                  ...prev.filter((value) => value.name !== tag.name),
+                ])
+              }
             >
-              <Tag
-                mr={1}
-                colorScheme={tag.color}
-                fontWeight="bold"
-                h={2}
-                variant={tag.selected ? 'outline' : 'subtle'}
-              >
-                <TagLeftIcon
-                  boxSize="12px"
-                  as={tag.selected ? CloseIcon : AddIcon}
-                />
-                <TagLabel>{tag.value}</TagLabel>
+              <Tag mr={1} colorScheme={tag.color} fontWeight="bold" h={2}>
+                <TagLeftIcon>
+                  <CloseIcon />
+                </TagLeftIcon>
+                <TagLabel>{tag.name}</TagLabel>
               </Tag>
             </Button>
           ))}
@@ -132,10 +180,7 @@ const EditFlowModal = ({
               updateInfo({
                 title: title,
                 description: description,
-                tags: tags.reduce<TagTypes[]>((filtered, opt) => {
-                  if (opt.selected) filtered.push(opt.value);
-                  return filtered;
-                }, []),
+                tags: tags,
               });
               onClose();
             }}

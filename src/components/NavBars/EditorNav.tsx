@@ -173,12 +173,14 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
       </Stack>
       <ExportJsonModal isOpen={isOpen} onClose={onClose} flow={flow} />
       <RunExecutionModal isOpen={isOpenRun} onClose={onCloseRun} flow={flow} />
-      <EditFlowModal
-        isOpen={isOpenEdit}
-        onClose={onCloseEdit}
-        flow={flow}
-        updateInfo={updateFlowInfo}
-      />
+      {flow && (
+        <EditFlowModal
+          isOpen={isOpenEdit}
+          onClose={onCloseEdit}
+          flow={flow}
+          updateInfo={updateFlowInfo}
+        />
+      )}
     </Nav>
   );
 }
