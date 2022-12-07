@@ -18,7 +18,7 @@ import {
   Tooltip,
 } from '@chakra-ui/react';
 import cardImage from '../../public/test_card.png';
-import { PolyglotFlow } from '../../types/polyglotElements';
+import { PolyglotFlow, TagOptions } from '../../types/polyglotElements';
 
 type FlowCardProps = {
   py?: SpaceProps['py'];
@@ -64,10 +64,11 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
               </Button>
             )}
             <Heading size="md">{flow.title}</Heading>
-            <Badge colorScheme="green">New</Badge>
-            <Badge ml={1} colorScheme="red">
-              FBK
-            </Badge>
+            {flow.tags.map((tag, id) => (
+              <Badge key={id} mr={1} colorScheme={TagOptions[tag]?.color}>
+                {tag}
+              </Badge>
+            ))}
             <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
               {flow.description}
             </Text>

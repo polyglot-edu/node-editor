@@ -1,3 +1,4 @@
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Button,
   FormControl,
@@ -15,20 +16,36 @@ import {
   TabPanel,
   TabPanels,
   Tabs,
+  Tag,
+  TagLabel,
+  TagLeftIcon,
   Textarea,
   useToast,
 } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
-import { useMemo, useState } from 'react';
+import { useEffect, useMemo, useState } from 'react';
 import { APIV2 } from '../../data/api';
-import { PolyglotFlow, PolyglotFlowInfo } from '../../types/polyglotElements';
+import {
+  PolyglotFlow,
+  PolyglotFlowInfo,
+  TagOptions,
+  TagTypes,
+} from '../../types/polyglotElements';
 
 type CreateFlowModalProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+
+const defaultTagOpts = Object.keys(TagOptions).map((index) => {
+  return {
+    value: index as TagTypes,
+    ...TagOptions[index as TagTypes],
+    selected: false,
+  };
+});
 
 const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
   const [currentTab, setCurrentTab] = useState(0);
@@ -36,9 +53,16 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [tags, setTags] = useState(defaultTagOpts);
+
   const toast = useToast();
   const router = useRouter();
   const API = useMemo(() => new APIV2(), []);
+
+  // reset tags on reopen
+  useEffect(() => {
+    setTags(defaultTagOpts);
+  }, [isOpen]);
 
   const createFlow = async () => {
     try {
@@ -51,6 +75,10 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
           const base_Flow: PolyglotFlowInfo = {
             title: title,
             description: description,
+            tags: tags.reduce<TagTypes[]>((filtered, opt) => {
+              if (opt.selected) filtered.push(opt.value);
+              return filtered;
+            }, []),
           };
           response = await API.createNewFlow(base_Flow);
           break;
@@ -117,7 +145,7 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
             <TabPanels>
               <TabPanel>
                 <FormControl>
-                  <FormLabel mb={2} fontWeight={'bold'}>
+                  <FormLabel my={2} fontWeight={'bold'}>
                     Title:
                   </FormLabel>
                   <Input
@@ -127,7 +155,7 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
                       setTitle(e.currentTarget.value);
                     }}
                   />
-                  <FormLabel mb={2} fontWeight={'bold'}>
+                  <FormLabel my={2} fontWeight={'bold'}>
                     Description:
                   </FormLabel>
                   <Textarea
@@ -137,6 +165,36 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
                       setDescription(e.currentTarget.value);
                     }}
                   />
+                  <FormLabel my={2} fontWeight={'bold'}>
+                    Click on the tags to add them:
+                  </FormLabel>
+
+                  {tags.map((tag, id) => (
+                    <Button
+                      key={id}
+                      variant="unstyled"
+                      onClick={() => {
+                        setTags((prev) => {
+                          prev[id].selected = !prev[id].selected;
+                          return [...prev];
+                        });
+                      }}
+                    >
+                      <Tag
+                        mr={1}
+                        colorScheme={tag.color}
+                        fontWeight="bold"
+                        h={2}
+                        variant={tag.selected ? 'outline' : 'subtle'}
+                      >
+                        <TagLeftIcon
+                          boxSize="12px"
+                          as={tag.selected ? CloseIcon : AddIcon}
+                        />
+                        <TagLabel>{tag.value}</TagLabel>
+                      </Tag>
+                    </Button>
+                  ))}
                 </FormControl>
               </TabPanel>
               <TabPanel>
