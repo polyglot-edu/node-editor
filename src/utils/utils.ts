@@ -46,6 +46,7 @@ export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
     _id: UUIDv4(),
     title: 'New Flow',
     description: '',
+    tags: [],
     nodes: [],
     edges: [],
   };

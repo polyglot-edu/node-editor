@@ -100,6 +100,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
         _id: 'dsdsads',
         username: 'Prova Utente',
       },
+      tags: [],
       title: 'Abstract subTree',
       description: 'This is an example',
       nodes: flowNodes,
