@@ -47,7 +47,6 @@ const EditFlowModal = ({
 }: EditFlowModalProps) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  console.log(defaultTagOpts);
   const [tags, setTags] =
     useState<{ selected: boolean; color: string; value: TagTypes }[]>();
 
