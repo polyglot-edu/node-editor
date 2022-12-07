@@ -143,6 +143,18 @@ export default ElementProperties;
 const nm = {
   abstractNode: [
     {
+      type: 'string',
+      name: 'title',
+      label: 'Title',
+      constraints: {},
+    },
+    {
+      type: 'textarea',
+      name: 'description',
+      label: 'Description',
+      constraints: {},
+    },
+    {
       type: 'any',
       name: 'data',
       constraints: {},
@@ -150,41 +162,24 @@ const nm = {
         {
           type: 'string',
           name: 'target',
+          label: 'Target',
           constraints: {},
         },
       ],
     },
     {
-      type: 'string',
-      name: 'title',
-      constraints: {},
-    },
-    {
-      type: 'textarea',
-      name: 'description',
-      constraints: {},
-    },
-    {
       type: 'enum',
       name: 'difficulty',
+      label: 'Difficulty',
       constraints: {},
       sub: 'number',
       options: [1, 2, 3, 4, 5],
     },
     {
-      type: 'any',
-      name: 'reactFlow',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'runtimeData',
-      constraints: {},
-    },
-    {
       type: 'enum',
       sub: 'string',
       name: 'type',
+      label: 'Type',
       options: [
         'abstractNode',
         'closeEndedQuestionNode',

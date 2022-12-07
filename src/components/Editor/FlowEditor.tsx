@@ -16,6 +16,7 @@ import ReactFlow, {
   ReactFlowProvider,
   useOnSelectionChange,
   useReactFlow,
+  useStoreApi,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import { APIV2 } from '../../data/api';
@@ -63,10 +64,17 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     clearSelection: store.clearSelection,
     setLastSavedAction: store.setLastSavedAction,
   }));
+  const { resetSelectedElements } = useStoreApi().getState();
   const { project } = useReactFlow();
 
   // SETUP context menu
   const selectedElement = getSelectedElement();
+
+  // I need this function because hooks can only be called in components
+  const compoundClearSelection = () => {
+    resetSelectedElements();
+    clearSelection();
+  };
 
   const [contextMenu, setContextMenu] = useState<ContextMenuProps>({
     show: false,
@@ -103,7 +111,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
 
   const onMoveStart: OnMoveStart = () => {
     hideContextMenu();
-    clearSelection();
+    compoundClearSelection();
   };
 
   const onClick: MouseEventHandler | undefined = (e) => {
@@ -167,7 +175,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     } else {
       onClosePanel();
       console.log('Selection empty');
-      clearSelection();
+      compoundClearSelection();
     }
   }
 
