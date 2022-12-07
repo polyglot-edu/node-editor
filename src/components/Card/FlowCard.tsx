@@ -64,11 +64,12 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
               </Button>
             )}
             <Heading size="md">{flow.title}</Heading>
-            {flow.tags.map((tag, id) => (
-              <Badge key={id} mr={1} colorScheme={tag.color}>
-                {tag.name}
-              </Badge>
-            ))}
+            {flow.tags &&
+              flow.tags.map((tag, id) => (
+                <Badge key={id} mr={1} colorScheme={tag.color}>
+                  {tag.name}
+                </Badge>
+              ))}
             <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
               {flow.description}
             </Text>
