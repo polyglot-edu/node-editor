@@ -1,10 +1,11 @@
-import { CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -32,7 +33,6 @@ import {
 import { useEffect, useState } from 'react';
 import { PolyglotFlow, PolyglotFlowInfo } from '../../types/polyglotElements';
 import { colors } from './CreateFlowModal';
-
 type EditFlowModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -57,6 +57,7 @@ const EditFlowModal = ({
     if (!flow) return;
     setTitle(flow.title);
     setDescription(flow.description);
+    setColorTag(colors[0]);
     setTags([...flow.tags]);
   }, [flow]);
 
@@ -138,26 +139,44 @@ const EditFlowModal = ({
                 onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     setTags((prev) => {
-                      prev.push({ name: tagName, color: colorTag });
+                      prev.push({
+                        name: tagName.toUpperCase(),
+                        color: colorTag,
+                      });
                       return [...prev];
                     });
                     setTagName('');
                   }
                 }}
-                onChange={(e) =>
-                  setTagName(e.currentTarget.value.toUpperCase())
-                }
+                onChange={(e) => setTagName(e.currentTarget.value)}
               />
             </Tooltip>
+            <IconButton
+              aria-label="Add Tag"
+              disabled={!tagName}
+              icon={<AddIcon />}
+              rounded="md"
+              onClick={() => {
+                setTags((prev) => {
+                  prev.push({
+                    name: tagName.toUpperCase(),
+                    color: colorTag,
+                  });
+                  return [...prev];
+                });
+                setTagName('');
+              }}
+            />
           </Flex>
           {tags.map((tag, id) => (
             <Button
               key={id}
               variant={'unstyled'}
               onClick={() =>
-                setTags((prev) => [
-                  ...prev.filter((value) => value.name !== tag.name),
-                ])
+                setTags((prev) => {
+                  prev.splice(id, 1);
+                  return [...prev];
+                })
               }
             >
               <Tag mr={1} colorScheme={tag.color} fontWeight="bold" h={2}>

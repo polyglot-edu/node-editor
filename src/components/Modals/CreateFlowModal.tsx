@@ -1,9 +1,11 @@
+import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
+  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -26,6 +28,8 @@ import {
   TabPanels,
   Tabs,
   Tag,
+  TagLabel,
+  TagLeftIcon,
   Text,
   Textarea,
   Tooltip,
@@ -74,6 +78,7 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
 
   // reset tags on reopen
   useEffect(() => {
+    setColorTag(colors[0]);
     setTags([]);
   }, [isOpen]);
 
@@ -172,7 +177,7 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
                     placeholder="Insert description..."
                     onChange={(e) => {
                       e.preventDefault();
-                      setDescription(e.currentTarget.value.toUpperCase());
+                      setDescription(e.currentTarget.value);
                     }}
                   />
                   <FormLabel my={2} fontWeight={'bold'}>
@@ -233,7 +238,10 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
                         onKeyDown={(e) => {
                           if (e.key === 'Enter') {
                             setTags((prev) => {
-                              prev.push({ name: tagName, color: colorTag });
+                              prev.push({
+                                name: tagName.toUpperCase(),
+                                color: colorTag,
+                              });
                               return [...prev];
                             });
                             setTagName('');
@@ -242,18 +250,47 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
                         onChange={(e) => setTagName(e.currentTarget.value)}
                       />
                     </Tooltip>
+                    <IconButton
+                      aria-label="Add Tag"
+                      disabled={!tagName}
+                      icon={<AddIcon />}
+                      rounded="md"
+                      onClick={() => {
+                        setTags((prev) => {
+                          prev.push({
+                            name: tagName.toUpperCase(),
+                            color: colorTag,
+                          });
+                          return [...prev];
+                        });
+                        setTagName('');
+                      }}
+                    />
                   </Flex>
 
                   {tags.map((tag, id) => (
-                    <Tag
+                    <Button
                       key={id}
-                      mr={1}
-                      colorScheme={tag.color}
-                      fontWeight="bold"
-                      h={2}
+                      variant={'unstyled'}
+                      onClick={() =>
+                        setTags((prev) => {
+                          prev.splice(id, 1);
+                          return [...prev];
+                        })
+                      }
                     >
-                      {tag.name}
-                    </Tag>
+                      <Tag
+                        mr={1}
+                        colorScheme={tag.color}
+                        fontWeight="bold"
+                        h={2}
+                      >
+                        <TagLeftIcon>
+                          <CloseIcon />
+                        </TagLeftIcon>
+                        <TagLabel>{tag.name}</TagLabel>
+                      </Tag>
+                    </Button>
                   ))}
                 </FormControl>
               </TabPanel>
