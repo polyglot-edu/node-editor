@@ -1,4 +1,4 @@
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { MarkerType } from 'reactflow';
 import { v4 as UUIDv4 } from 'uuid';
 import {
@@ -7,6 +7,18 @@ import {
   PolyglotFlow,
   polyglotNodeComponentMapping,
 } from '../types/polyglotElements';
+
+// fix zust persist issue https://github.com/pmndrs/zustand/issues/324
+// if an error like Extra attributes from the server appear use this hook
+export const useHasHydrated = () => {
+  const [hasHydrated, setHasHydrated] = useState<boolean>(false);
+
+  useEffect(() => {
+    setHasHydrated(true);
+  }, []);
+
+  return hasHydrated;
+};
 
 export const isObject = (variable: any) => {
   return (

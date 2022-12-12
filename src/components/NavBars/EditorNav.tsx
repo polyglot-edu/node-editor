@@ -19,19 +19,22 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
-import { useRouter } from 'next/router';
+import Router from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
 import brandLogo from '../../public/solo_logo.png';
 import useStore from '../../store';
+import { useHasHydrated } from '../../utils/utils';
 import Nav from '../Layout/NavBar';
 import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
+import SaveFlowModal from '../Modals/SaveFlowModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
 };
 
 export default function EditorNav({ saveFunc }: EditorNavProps) {
+  const hydrated = useHasHydrated();
   const [
     updateFlowInfo,
     checkSave,
@@ -61,8 +64,11 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     onOpen: onOpenEdit,
     onClose: onCloseEdit,
   } = useDisclosure();
-
-  const router = useRouter();
+  const {
+    isOpen: isOpenSave,
+    onOpen: onOpenSave,
+    onClose: onCloseSave,
+  } = useDisclosure();
 
   useEffect(() => {
     const isMac =
@@ -95,19 +101,19 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
           />
           <ActionButton
             label="Back"
-            disabled={!checkBackAction}
+            disabled={hydrated ? !checkBackAction : true}
             onClick={backAction}
             icon={<ArrowBackIcon w={6} h={6} color="blue.500" />}
           />
           <ActionButton
             label="Forward"
-            disabled={!checkForwardAction}
+            disabled={hydrated ? !checkForwardAction : true}
             onClick={forwardAction}
             icon={<ArrowForwardIcon w={6} h={6} color="blue.500" />}
           />
           <ActionButton
             label="Save"
-            disabled={!checkSave}
+            disabled={hydrated ? !checkSave : true}
             onClick={async () => {
               setSaveLoading(true);
               await saveFunc();
@@ -163,8 +169,12 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             size="sm"
             colorScheme="red"
             variant="solid"
-            onClick={() => {
-              router.push('/flows');
+            onClick={async () => {
+              if (checkSave) onOpenSave();
+              else {
+                localStorage.removeItem('flow');
+                await Router.push('/flows');
+              }
             }}
           >
             Leave editor
@@ -181,6 +191,11 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
           updateInfo={updateFlowInfo}
         />
       )}
+      <SaveFlowModal
+        isOpen={isOpenSave}
+        onClose={onCloseSave}
+        saveFunc={saveFunc}
+      />
     </Nav>
   );
 }

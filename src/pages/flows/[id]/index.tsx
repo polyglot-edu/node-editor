@@ -9,7 +9,6 @@ import {
   ModalOverlay,
   Spinner,
   Text,
-  useDisclosure,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
 import { useRouter } from 'next/router';
@@ -17,37 +16,34 @@ import { useEffect, useMemo, useState } from 'react';
 import FlowEditor from '../../../components/Editor/FlowEditor';
 import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
+import { PolyglotFlow } from '../../../types/polyglotElements';
 
 const FlowIndex = () => {
-  const {
-    isOpen: loading,
-    onOpen: onLoading,
-    onClose: stopLoading,
-  } = useDisclosure();
+  const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Nullable<string>>(null);
   const router = useRouter();
-  const actions = useStore((state) => state.actions);
   const flowId = router.query?.id?.toString();
 
   const API = useMemo(() => new APIV2(), []);
 
-  useEffect(() => console.log(actions), [actions]);
-
   useEffect(() => {
-    if (!flowId) return;
     (async () => {
       // if (!flowId) router.replace("/");
-      onLoading();
+      if (!flowId) return;
+      setLoading(true);
       setError(null);
+      let flow: Nullable<PolyglotFlow> = null;
+
+      // Get the flow from the server
       try {
-        const flowElements = await API.loadFlowElementsAsync(flowId ?? '');
-        if (flowElements.status === 200) {
+        const response = await API.loadFlowElementsAsync(flowId ?? '');
+        if (response.status === 200) {
           console.log('flow elements loaded 🆗');
-          useStore.getState().loadFlow(flowElements.data);
+          flow = response.data;
         } else {
           console.error('flow elements not loaded 😢');
           setError('Error loading flow elements');
-          if (flowElements.status === 404) {
+          if (response.status === 404) {
             setError('Flow not found');
           }
         }
@@ -59,9 +55,46 @@ const FlowIndex = () => {
           setError('Flow not found');
         }
       }
-      stopLoading();
+
+      // Get the flow stored in the localstorage
+      // if stored flow has no unsaved changes, load server's flow
+      const flow_serialize = localStorage.getItem('flow');
+      if (flow_serialize) {
+        const store_flow = JSON.parse(flow_serialize)?.state;
+        if (
+          store_flow.activeFlowInfo &&
+          store_flow.currentAction !== store_flow.lastSavedAction
+        ) {
+          // if the flow stored has a different uuid i stored as a rescue
+          if (store_flow.activeFlowInfo._id !== flowId) {
+            localStorage.setItem(
+              'rescue-' + store_flow.activeFlowInfo._id,
+              flow_serialize
+            );
+            useStore.persist.clearStorage();
+          } else {
+            setLoading(false);
+            return;
+          }
+        }
+      }
+
+      // handle the rescue flow
+      const rescue = localStorage.getItem('rescue-' + flowId);
+      if (rescue) {
+        localStorage.setItem('flow', rescue);
+        localStorage.removeItem('rescue-' + flowId);
+        await useStore.persist.rehydrate();
+        setLoading(false);
+        return;
+      }
+
+      // load the server's flow in case other flows are not found
+      console.log(flow);
+      if (flow) useStore.getState().loadFlow(flow);
+      setLoading(false);
     })();
-  }, [flowId, onLoading, stopLoading, API]);
+  }, [flowId, setLoading, API]);
 
   return (
     <>
