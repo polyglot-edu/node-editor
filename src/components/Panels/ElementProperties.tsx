@@ -284,7 +284,7 @@ const nm = {
           label: 'Language',
           constraints: {},
           sub: 'string',
-          options: ['csharp'],
+          options: ['csharp', 'sysml'],
         },
       ],
     },
