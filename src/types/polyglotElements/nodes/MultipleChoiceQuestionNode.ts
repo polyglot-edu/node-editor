@@ -51,7 +51,7 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
-        type: 'sysml',
+        type: 'csharp',
         content: '',
         priority: 1,
       },
