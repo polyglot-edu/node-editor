@@ -437,7 +437,7 @@ const nm = {
           constraints: {},
         },
         {
-          type: 'array',
+          type: 'multiple_choice',
           name: 'choices',
           label: 'Choices',
           constraints: {},
@@ -446,7 +446,7 @@ const nm = {
         {
           type: 'array',
           name: 'isChoiceCorrect',
-          label: 'IsChoiceCorrect',
+          label: '',
           constraints: {},
           sub: 'boolean',
         },

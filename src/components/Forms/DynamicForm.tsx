@@ -22,6 +22,7 @@ import { isObject } from '../../utils/utils';
 import ArrayField from './Fields/ArrayField';
 import FileUpload from './Fields/FileUpload';
 import MarkDownField from './Fields/MarkDownField';
+import MultipleChoiceField from './Fields/MultipleChoiceField';
 
 export type OnChangeDynamicForm = (
   element: any,
@@ -82,6 +83,7 @@ export const parseMetaField = (
         value = parseInt(value);
       }
       break;
+    case 'multiple_choice':
     case 'array':
       // FIX: handle the errors please!!!
       if (!arrayName) throw Error('ArrayName is not provided!');
@@ -233,12 +235,35 @@ const generateElement = (
         break;
       case 'array':
         // TODO: da riguardare
-
+        if (val.name === 'isChoiceCorrect') break;
         inputObj = (
           <ArrayField<string>
             name={val.name.toString()}
             refreshFactor={element._id}
             array={field}
+            constraints={val.constraints}
+          />
+        );
+        break;
+      case 'multiple_choice':
+        // TODO: da riguardare
+
+        inputObj = (
+          <MultipleChoiceField<string>
+            name={val.name.toString()}
+            refreshFactor={element._id}
+            array={field}
+            checkArray={
+              parentKey
+                ? element?.[parentKey]?.['isChoiceCorrect']
+                : element?.['isChoiceCorrect']
+            }
+            onChangeCheck={onChange(
+              element,
+              meta.filter((e) => e.name === 'isChoiceCorrect')[0],
+              onChangeProps,
+              parentKey
+            )}
             constraints={val.constraints}
           />
         );
