@@ -261,6 +261,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
             const action = useStore.getState().popAction();
             if (
               !action ||
+              !action.value.reactFlow?.position ||
               JSON.stringify(action.value.reactFlow.position) ===
                 JSON.stringify(node.position)
             ) {

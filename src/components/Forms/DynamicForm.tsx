@@ -277,7 +277,7 @@ const generateElement = (
           <Editor
             height={400}
             language={language || 'csharp'}
-            defaultValue={field}
+            value={field}
             onChange={(value) =>
               val.constraints.onChange?.({ currentTarget: { value: value } })
             }
