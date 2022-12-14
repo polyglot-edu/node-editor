@@ -8,6 +8,7 @@ export type PolyglotFlowInfo = {
     username?: string;
   };
   description: string;
+  tags: { name: string; color: string }[];
 };
 
 export type PolyglotFlow = PolyglotFlowInfo & {

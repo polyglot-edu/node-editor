@@ -9,6 +9,7 @@ export type MetadataField = {
   sub?: string;
   fields?: Metadata;
   name: string;
+  label?: string;
   options?: string[];
   constraints: RegisterOptions;
 };

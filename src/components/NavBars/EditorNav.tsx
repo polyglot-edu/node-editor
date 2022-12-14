@@ -1,6 +1,8 @@
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
+  ArrowRightIcon,
+  CloseIcon,
   CopyIcon,
   EditIcon,
   ExternalLinkIcon,
@@ -11,27 +13,219 @@ import {
   Flex,
   HStack,
   Image,
-  Modal,
-  ModalBody,
-  ModalCloseButton,
-  ModalContent,
-  ModalFooter,
-  ModalHeader,
-  ModalOverlay,
   Spacer,
-  Spinner,
   Stack,
   Text,
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
-import Editor from '@monaco-editor/react';
-import { useEffect, useState } from 'react';
+import Router from 'next/router';
+import { ReactNode, useEffect, useState } from 'react';
 import brandLogo from '../../public/solo_logo.png';
 import useStore from '../../store';
+import { useHasHydrated } from '../../utils/utils';
 import Nav from '../Layout/NavBar';
+import EditFlowModal from '../Modals/EditFlowModal';
+import ExportJsonModal from '../Modals/ExportJsonModal';
+import RunExecutionModal from '../Modals/RunExecutionModal';
+import SaveFlowModal from '../Modals/SaveFlowModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
+};
+
+export default function EditorNav({ saveFunc }: EditorNavProps) {
+  const hydrated = useHasHydrated();
+  const [
+    updateFlowInfo,
+    checkSave,
+    checkForwardAction,
+    checkBackAction,
+    flow,
+    backAction,
+    forwardAction,
+  ] = useStore((state) => [
+    state.updateFlowInfo,
+    state.checkSave(),
+    state.checkForwardAction(),
+    state.checkBackAction(),
+    state.getFlow(),
+    state.backAction,
+    state.forwardAction,
+  ]);
+  const [saveLoading, setSaveLoading] = useState(false);
+  const { isOpen, onOpen, onClose } = useDisclosure();
+  const {
+    isOpen: isOpenRun,
+    onOpen: onOpenRun,
+    onClose: onCloseRun,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenEdit,
+    onOpen: onOpenEdit,
+    onClose: onCloseEdit,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenSave,
+    onOpen: onOpenSave,
+    onClose: onCloseSave,
+  } = useDisclosure();
+
+  useEffect(() => {
+    const isMac =
+      typeof window !== 'undefined'
+        ? navigator.platform.toUpperCase().indexOf('MAC') >= 0
+        : false;
+
+    async function onKeyDown(e: KeyboardEvent) {
+      if (e.key.toLowerCase() === 's' && (isMac ? e.metaKey : e.ctrlKey)) {
+        e.preventDefault();
+        setSaveLoading(true);
+        await saveFunc();
+        setSaveLoading(false);
+      }
+    }
+
+    document.addEventListener('keydown', onKeyDown);
+    return () => document.removeEventListener('keydown', onKeyDown);
+  }, [saveFunc]);
+
+  return (
+    <Nav p={2} bg="gray.200" justify="start">
+      <Stack align="start" w="full">
+        <HStack w="full">
+          <Image
+            src={brandLogo.src}
+            width={['30px']}
+            className="mr-3"
+            alt="Polyglot Logo"
+          />
+          <ActionButton
+            label="Back"
+            disabled={hydrated ? !checkBackAction : true}
+            onClick={backAction}
+            icon={<ArrowBackIcon w={6} h={6} color="blue.500" />}
+          />
+          <ActionButton
+            label="Forward"
+            disabled={hydrated ? !checkForwardAction : true}
+            onClick={forwardAction}
+            icon={<ArrowForwardIcon w={6} h={6} color="blue.500" />}
+          />
+          <ActionButton
+            label="Save"
+            disabled={hydrated ? !checkSave : true}
+            onClick={async () => {
+              setSaveLoading(true);
+              await saveFunc();
+              setSaveLoading(false);
+            }}
+            icon={<CopyIcon w={6} h={6} color="blue.500" />}
+            isLoading={saveLoading}
+          />
+          <DropDown
+            name="File"
+            options={[
+              {
+                name: 'Save',
+                shortcut: 'Ctrl+S',
+                icon: <CopyIcon mr={2} />,
+                onClick: async () => {
+                  setSaveLoading(true);
+                  await saveFunc();
+                  setSaveLoading(false);
+                },
+              },
+              {
+                name: 'Export JSON',
+                shortcut: '',
+                icon: <ExternalLinkIcon mr={2} />,
+                onClick: onOpen,
+              },
+            ]}
+          />
+          <DropDown
+            name="Run"
+            options={[
+              {
+                name: 'Run on vscode',
+                icon: <ArrowRightIcon mr={2} />,
+                onClick: onOpenRun,
+              },
+            ]}
+          />
+          <DropDown
+            name="Project"
+            options={[
+              {
+                name: 'Edit Flow',
+                icon: <EditIcon mr={2} />,
+                onClick: onOpenEdit,
+              },
+            ]}
+          />
+          <Spacer />
+          <Button
+            leftIcon={<CloseIcon />}
+            size="sm"
+            colorScheme="red"
+            variant="solid"
+            onClick={async () => {
+              if (checkSave) onOpenSave();
+              else {
+                localStorage.removeItem('flow');
+                await Router.push('/flows');
+              }
+            }}
+          >
+            Leave editor
+          </Button>
+        </HStack>
+      </Stack>
+      <ExportJsonModal isOpen={isOpen} onClose={onClose} flow={flow} />
+      <RunExecutionModal isOpen={isOpenRun} onClose={onCloseRun} flow={flow} />
+      {flow && (
+        <EditFlowModal
+          isOpen={isOpenEdit}
+          onClose={onCloseEdit}
+          flow={flow}
+          updateInfo={updateFlowInfo}
+        />
+      )}
+      <SaveFlowModal
+        isOpen={isOpenSave}
+        onClose={onCloseSave}
+        saveFunc={saveFunc}
+      />
+    </Nav>
+  );
+}
+
+const ActionButton = ({
+  label,
+  disabled,
+  onClick,
+  icon,
+  isLoading,
+}: {
+  label: string;
+  disabled: boolean;
+  onClick: () => void;
+  icon: ReactNode;
+  isLoading?: boolean;
+}) => {
+  return (
+    <Tooltip label={label}>
+      <Button
+        isLoading={isLoading}
+        disabled={disabled}
+        padding={0}
+        background="transparent"
+        onClick={onClick}
+      >
+        {icon}
+      </Button>
+    </Tooltip>
+  );
 };
 
 const DropDown = ({
@@ -104,147 +298,3 @@ const DropDown = ({
     </Box>
   );
 };
-
-export default function EditorNav({ saveFunc }: EditorNavProps) {
-  const [checkForwardAction, checkBackAction, flow, backAction, forwardAction] =
-    useStore((state) => [
-      state.checkForwardAction(),
-      state.checkBackAction(),
-      state.getFlow(),
-      state.backAction,
-      state.forwardAction,
-    ]);
-  const [saveLoading, setSaveLoading] = useState(false);
-  const { isOpen, onOpen, onClose } = useDisclosure();
-
-  useEffect(() => {
-    const isMac =
-      typeof window !== 'undefined'
-        ? navigator.platform.toUpperCase().indexOf('MAC') >= 0
-        : false;
-
-    async function onKeyDown(e: KeyboardEvent) {
-      if (e.key.toLowerCase() === 's' && (isMac ? e.metaKey : e.ctrlKey)) {
-        e.preventDefault();
-        setSaveLoading(true);
-        await saveFunc();
-        setSaveLoading(false);
-      }
-    }
-
-    document.addEventListener('keydown', onKeyDown);
-    return () => document.removeEventListener('keydown', onKeyDown);
-  }, [saveFunc]);
-
-  return (
-    <Nav p={2} bg="gray.200" justify="start">
-      <Image
-        src={brandLogo.src}
-        width={['30px']}
-        className="mr-3"
-        alt="Polyglot Logo"
-      />
-      <Stack align="start">
-        <HStack>
-          <Tooltip label="Back">
-            <Button
-              disabled={!checkBackAction}
-              padding={0}
-              background="transparent"
-              onClick={backAction}
-            >
-              <ArrowBackIcon w={6} h={6} color="blue.500" />
-            </Button>
-          </Tooltip>
-          <Tooltip label="Forward">
-            <Button
-              disabled={!checkForwardAction}
-              padding={0}
-              background="transparent"
-              onClick={forwardAction}
-            >
-              <ArrowForwardIcon w={6} h={6} color="blue.500" />
-            </Button>
-          </Tooltip>
-          <Spinner color="blue.500" hidden={!saveLoading} />
-          <Tooltip label="Save">
-            <Button
-              hidden={saveLoading}
-              disabled={false}
-              padding={0}
-              background="transparent"
-              onClick={async () => {
-                setSaveLoading(true);
-                await saveFunc();
-                setSaveLoading(false);
-              }}
-            >
-              <CopyIcon w={6} h={6} color="blue.500" />
-            </Button>
-          </Tooltip>
-          <DropDown
-            name="File"
-            options={[
-              {
-                name: 'Save',
-                shortcut: 'Ctrl+S',
-                icon: <CopyIcon mr={2} />,
-                onClick: async () => {
-                  setSaveLoading(true);
-                  await saveFunc();
-                  setSaveLoading(false);
-                },
-              },
-              {
-                name: 'Export JSON',
-                shortcut: 'Ctrl+E', // TODO: da implementare se c'è bisogno
-                icon: <ExternalLinkIcon mr={2} />,
-                onClick: onOpen,
-              },
-            ]}
-          />
-          <DropDown
-            name="Project"
-            options={[{ name: 'Edit', icon: <EditIcon mr={2} /> }]}
-          />
-          <DropDown
-            name="Insert"
-            options={[
-              {
-                name: 'Save',
-                icon: <CopyIcon mr={2} />,
-              },
-            ]}
-          />
-        </HStack>
-        <Modal isOpen={isOpen} onClose={onClose}>
-          <ModalOverlay />
-          <ModalContent>
-            <ModalHeader>Download JSON flow:</ModalHeader>
-            <ModalCloseButton />
-            <ModalBody>
-              <Editor
-                height="500px"
-                defaultValue={JSON.stringify(flow, null, 2)}
-                language="json"
-              />
-            </ModalBody>
-
-            <ModalFooter>
-              {/* <a
-                href={URL.createObjectURL(
-                  new Blob([JSON.stringify(flow, null, 2)], {
-                    type: 'application/json',
-                  })
-                )}
-                download={flow?.title + '.json'}
-              > */}
-              <Button colorScheme="blue">Download</Button>
-              {/* </a> */}
-            </ModalFooter>
-          </ModalContent>
-        </Modal>
-      </Stack>
-    </Nav>
-  );
-}

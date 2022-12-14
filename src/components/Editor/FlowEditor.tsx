@@ -1,5 +1,5 @@
 import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
-import { useBoolean } from '@fluentui/react-hooks';
+import Router from 'next/router';
 import { MouseEventHandler, useMemo, useState } from 'react';
 import ReactFlow, {
   applyEdgeChanges,
@@ -16,14 +16,20 @@ import ReactFlow, {
   OnSelectionChangeParams,
   ReactFlowProvider,
   useOnSelectionChange,
+  useReactFlow,
+  useStoreApi,
 } from 'reactflow';
+import 'reactflow/dist/style.css';
 import { APIV2 } from '../../data/api';
 import useStore from '../../store';
 import {
   polyglotEdgeComponentMapping,
   polyglotNodeComponentMapping,
 } from '../../types/polyglotElements';
-import ContextMenu from '../ContextMenu/ContextMenu';
+import ContextMenu, {
+  ContextMenuProps,
+  ContextMenuTypes,
+} from '../ContextMenu/ContextMenu';
 import EditorNav from '../NavBars/EditorNav';
 import ElementProperties from '../Panels/ElementProperties';
 
@@ -46,6 +52,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     setSelectedElement,
     getSelectedElement,
     clearSelection,
+    setLastSavedAction,
   } = useStore((store) => ({
     getNodes: store.reactFlowNodes,
     getEdges: store.reactFlowEdges,
@@ -56,18 +63,32 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     getSelectedElement: store.getSelectedElement,
     setSelectedElement: store.setSelectedElement,
     clearSelection: store.clearSelection,
+    setLastSavedAction: store.setLastSavedAction,
   }));
+  const { resetSelectedElements } = useStoreApi().getState();
+  const { project } = useReactFlow();
 
   // SETUP context menu
   const selectedElement = getSelectedElement();
 
-  const [menuType, setMenuType] = useState('default');
+  // I need this function because hooks can only be called in components
+  const compoundClearSelection = () => {
+    resetSelectedElements();
+    clearSelection();
+  };
 
-  const [contextMenuPos, setContextMenuPos] = useState({ x: 0, y: 0 });
-  const [
-    showingContextMenu,
-    { setTrue: showContextMenu, setFalse: hideContextMenu },
-  ] = useBoolean(false);
+  const [contextMenu, setContextMenu] = useState<ContextMenuProps>({
+    show: false,
+    type: ContextMenuTypes.DEFAULT,
+    pos: { x: 0, y: 0 },
+  });
+
+  const hideContextMenu = () => {
+    setContextMenu((prev) => {
+      prev.show = false;
+      return prev;
+    });
+  };
 
   // SETUP element propeties panel
   const {
@@ -90,40 +111,44 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
   };
 
   const onMoveStart: OnMoveStart = () => {
-    hideContextMenu;
-    clearSelection();
+    hideContextMenu();
+    compoundClearSelection();
   };
 
   const onClick: MouseEventHandler | undefined = (e) => {
     e.preventDefault();
-    hideContextMenu;
+    hideContextMenu();
   };
 
   const onNodeContextMenu: NodeMouseHandler = (e, node) => {
     e.preventDefault();
-    setMenuType('node');
     setSelectedElement({
       type: 'Node',
       id: node.id,
     });
-    showContextMenu();
-    setContextMenuPos({
-      x: e.clientX - (e.clientX % 15),
-      y: e.clientY - (e.clientY % 15),
+    setContextMenu({
+      type: ContextMenuTypes.NODE,
+      show: true,
+      pos: {
+        x: e.clientX,
+        y: e.clientY,
+      },
     });
   };
 
   const onEdgeContextMenu: EdgeMouseHandler = (e, edge) => {
     e.preventDefault();
-    setMenuType('edge');
     setSelectedElement({
       type: 'Edge',
       id: edge.id,
     });
-    showContextMenu();
-    setContextMenuPos({
-      x: e.clientX - (e.clientX % 15),
-      y: e.clientY - (e.clientY % 15),
+    setContextMenu({
+      type: ContextMenuTypes.EDGE,
+      show: true,
+      pos: {
+        x: e.clientX,
+        y: e.clientY,
+      },
     });
   };
 
@@ -151,55 +176,61 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     } else {
       onClosePanel();
       console.log('Selection empty');
-      clearSelection();
+      compoundClearSelection();
     }
   }
 
   const API = useMemo(() => new APIV2(), []);
-  const saveFlow = async () => {
+  const saveFlow = async (outputToast = true, returnPath?: string) => {
     try {
       const flow = useStore.getState().getFlow();
       if (!flow) {
-        toast({
-          title: 'No flow found',
-          description: 'Try do some new changes',
-          status: 'warning',
-          duration: 3000,
-          position: 'bottom-left',
-          isClosable: true,
-        });
+        outputToast &&
+          toast({
+            title: 'No flow found',
+            description: 'Try do some new changes',
+            status: 'warning',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
         return;
       }
 
       const response = await API.saveFlowAsync(flow);
       if (response?.status === 200) {
-        toast({
-          title: 'Flow saved',
-          description: 'The save was successful',
-          status: 'success',
-          duration: 3000,
-          position: 'bottom-left',
-          isClosable: true,
-        });
+        setLastSavedAction();
+        outputToast &&
+          toast({
+            title: 'Flow saved',
+            description: 'The save was successful',
+            status: 'success',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+        if (returnPath) Router.push(returnPath);
       } else {
-        toast({
-          title: 'Flow not saved',
-          description: 'Something is off with your flow!',
-          status: 'warning',
-          duration: 3000,
-          position: 'bottom-left',
-          isClosable: true,
-        });
+        outputToast &&
+          toast({
+            title: 'Flow not saved',
+            description: 'Something is off with your flow!',
+            status: 'warning',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
       }
     } catch (err) {
-      toast({
-        title: 'Internal Error',
-        description: 'Try later',
-        status: 'error',
-        duration: 3000,
-        position: 'bottom-left',
-        isClosable: true,
-      });
+      outputToast &&
+        toast({
+          title: 'Internal Error',
+          description: 'Try later',
+          status: 'error',
+          duration: 3000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
     }
   };
 
@@ -230,6 +261,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
             const action = useStore.getState().popAction();
             if (
               !action ||
+              !action.value.reactFlow?.position ||
               JSON.stringify(action.value.reactFlow.position) ===
                 JSON.stringify(node.position)
             ) {
@@ -265,11 +297,19 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
           onMoveStart={onMoveStart}
           onPaneContextMenu={(e) => {
             e.preventDefault();
-            setMenuType('default');
-            showContextMenu();
-            setContextMenuPos({
-              x: e.clientX - (e.clientX % 15),
-              y: e.clientY - (e.clientY % 15),
+
+            const rect = e.currentTarget.getBoundingClientRect();
+            setContextMenu({
+              type: ContextMenuTypes.DEFAULT,
+              show: true,
+              pos: {
+                x: e.clientX,
+                y: e.clientY,
+              },
+              relativePos: project({
+                x: e.clientX - rect.left,
+                y: e.clientY - rect.top,
+              }),
             });
           }}
         >
@@ -277,9 +317,7 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
           <Controls />
         </ReactFlow>
         <ContextMenu
-          pos={contextMenuPos}
-          showing={showingContextMenu}
-          type={menuType}
+          {...contextMenu}
           elementId={selectedElement?._id}
           onDismiss={hideContextMenu}
         />

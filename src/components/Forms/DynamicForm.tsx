@@ -21,6 +21,8 @@ import { Metadata, MetadataField } from '../../types/metadata';
 import { isObject } from '../../utils/utils';
 import ArrayField from './Fields/ArrayField';
 import FileUpload from './Fields/FileUpload';
+import MarkDownField from './Fields/MarkDownField';
+import MultipleChoiceField from './Fields/MultipleChoiceField';
 
 export type OnChangeDynamicForm = (
   element: any,
@@ -81,6 +83,7 @@ export const parseMetaField = (
         value = parseInt(value);
       }
       break;
+    case 'multiple_choice':
     case 'array':
       // FIX: handle the errors please!!!
       if (!arrayName) throw Error('ArrayName is not provided!');
@@ -232,12 +235,35 @@ const generateElement = (
         break;
       case 'array':
         // TODO: da riguardare
-
+        if (val.name === 'isChoiceCorrect') break;
         inputObj = (
           <ArrayField<string>
             name={val.name.toString()}
             refreshFactor={element._id}
             array={field}
+            constraints={val.constraints}
+          />
+        );
+        break;
+      case 'multiple_choice':
+        // TODO: da riguardare
+
+        inputObj = (
+          <MultipleChoiceField<string>
+            name={val.name.toString()}
+            refreshFactor={element._id}
+            array={field}
+            checkArray={
+              parentKey
+                ? element?.[parentKey]?.['isChoiceCorrect']
+                : element?.['isChoiceCorrect']
+            }
+            onChangeCheck={onChange(
+              element,
+              meta.filter((e) => e.name === 'isChoiceCorrect')[0],
+              onChangeProps,
+              parentKey
+            )}
             constraints={val.constraints}
           />
         );
@@ -249,11 +275,23 @@ const generateElement = (
         const language = element?.language;
         inputObj = (
           <Editor
-            height={200}
+            height={400}
             language={language || 'csharp'}
-            defaultValue={field}
+            value={field}
             onChange={(value) =>
               val.constraints.onChange?.({ currentTarget: { value: value } })
+            }
+          />
+        );
+        break;
+      case 'markdown':
+        inputObj = (
+          <MarkDownField
+            value={field}
+            onChange={(data) =>
+              val.constraints.onChange?.({
+                currentTarget: { value: data.text },
+              })
             }
           />
         );
@@ -261,16 +299,13 @@ const generateElement = (
 
     return (
       // eslint-disable-next-line @typescript-eslint/no-non-null-assertion
-      <FormControl
-        key={id}
-        isInvalid={errors[val.name.toString()] ? true : false}
-      >
-        <FormLabel htmlFor={val.name.toString()}>
-          {val.name.toString() !== 'data' && val.name.toString()}
+      <FormControl key={id} isInvalid={errors[val.name] ? true : false}>
+        <FormLabel htmlFor={val.name}>
+          {val.name !== 'data' && val.label}
         </FormLabel>
         {inputObj}
         <FormErrorMessage>
-          {errors[val.name.toString()] && errors[val.name]?.message?.toString()}
+          {errors[val.name] && errors[val.name]?.message?.toString()}
         </FormErrorMessage>
       </FormControl>
     );
