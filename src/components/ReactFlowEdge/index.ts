@@ -1,1 +1,1 @@
-export { default as ReactFlowSmartBezierEdge } from "./ReactFlowSmartBezierEdge/ReactFlowSmartBezierEdge";
+export { default as ReactFlowSmartBezierEdge } from './ReactFlowSmartBezierEdge/ReactFlowSmartBezierEdge';
