@@ -34,9 +34,11 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
     const code = `
 async Task<(bool, string)> validate(PolyglotValidationContext context) {
     var getMultipleChoiceAnswer = () => {
-        var index = Int32.Parse(context.JourneyContext.SubmittedCode) - 1;
+        var indexes = context.JourneyContext.SubmittedCode.Replace('"'.ToString(),string.Empty).Split(',').Select(n => Int32.Parse(n) -1).ToArray();
         var answersCorrect = context.Exercise.Data.isChoiceCorrect;
-        return (index >= 0 && index < answersCorrect.Count) ? answersCorrect[index] : false;
+        var resp = true;
+        foreach (var index in indexes) { resp = resp && (index >= 0 && index < answersCorrect.Count) && answersCorrect[index]; };
+        return resp;
     };
 
     var isSubmissionCorrect = context.Exercise.NodeType switch
