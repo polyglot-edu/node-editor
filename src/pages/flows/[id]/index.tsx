@@ -1,4 +1,3 @@
-import { getSession } from '@auth0/nextjs-auth0';
 import {
   Button,
   Flex,
@@ -20,6 +19,7 @@ import FlowEditor from '../../../components/Editor/FlowEditor';
 import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
 import { PolyglotFlow } from '../../../types/polyglotElements';
+import auth0 from '../../../utils/auth0';
 
 type FlowIndexProps = {
   accessToken: string | undefined;
@@ -211,7 +211,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
 export default FlowIndex;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx.req, ctx.res);
+  const session = await auth0.getSession(ctx.req, ctx.res);
 
   if (!session) return { props: {} };
 

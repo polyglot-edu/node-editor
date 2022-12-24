@@ -1,4 +1,3 @@
-import { getSession } from '@auth0/nextjs-auth0';
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { AddIcon } from '@chakra-ui/icons';
 import {
@@ -22,6 +21,7 @@ import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
+import auth0 from '../../utils/auth0';
 
 type FlowIndexPageProps = {
   accessToken: string | undefined;
@@ -164,7 +164,7 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
 export default FlowIndexPage;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await getSession(ctx.req, ctx.res);
+  const session = await auth0.getSession(ctx.req, ctx.res);
 
   if (!session) return { props: {} };
 
