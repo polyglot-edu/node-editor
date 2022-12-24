@@ -1,6 +1,5 @@
-import { Flex, useDisclosure, useToast } from '@chakra-ui/react';
-import Router from 'next/router';
-import { MouseEventHandler, useMemo, useState } from 'react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
+import { MouseEventHandler, useState } from 'react';
 import ReactFlow, {
   applyEdgeChanges,
   applyNodeChanges,
@@ -20,7 +19,6 @@ import ReactFlow, {
   useStoreApi,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
-import { APIV2 } from '../../data/api';
 import useStore from '../../store';
 import {
   polyglotEdgeComponentMapping,
@@ -35,13 +33,13 @@ import ElementProperties from '../Panels/ElementProperties';
 
 type FlowEditorProps = {
   mode: 'read' | 'write';
+  saveFlow: () => Promise<void>;
   onSelectionChange?: (selection: OnSelectionChangeParams) => void;
 };
 
 const deleteKeyCodes = ['Backspace', 'Delete'];
 
-const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
-  const toast = useToast();
+const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
   const {
     getNodes,
     getEdges,
@@ -52,7 +50,6 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     setSelectedElement,
     getSelectedElement,
     clearSelection,
-    setLastSavedAction,
   } = useStore((store) => ({
     getNodes: store.reactFlowNodes,
     getEdges: store.reactFlowEdges,
@@ -180,60 +177,6 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
     }
   }
 
-  const API = useMemo(() => new APIV2(), []);
-  const saveFlow = async (outputToast = true, returnPath?: string) => {
-    try {
-      const flow = useStore.getState().getFlow();
-      if (!flow) {
-        outputToast &&
-          toast({
-            title: 'No flow found',
-            description: 'Try do some new changes',
-            status: 'warning',
-            duration: 3000,
-            position: 'bottom-left',
-            isClosable: true,
-          });
-        return;
-      }
-
-      const response = await API.saveFlowAsync(flow);
-      if (response?.status === 200) {
-        setLastSavedAction();
-        outputToast &&
-          toast({
-            title: 'Flow saved',
-            description: 'The save was successful',
-            status: 'success',
-            duration: 3000,
-            position: 'bottom-left',
-            isClosable: true,
-          });
-        if (returnPath) Router.push(returnPath);
-      } else {
-        outputToast &&
-          toast({
-            title: 'Flow not saved',
-            description: 'Something is off with your flow!',
-            status: 'warning',
-            duration: 3000,
-            position: 'bottom-left',
-            isClosable: true,
-          });
-      }
-    } catch (err) {
-      outputToast &&
-        toast({
-          title: 'Internal Error',
-          description: 'Try later',
-          status: 'error',
-          duration: 3000,
-          position: 'bottom-left',
-          isClosable: true,
-        });
-    }
-  };
-
   return (
     <Flex direction={'column'} h="100vh">
       <EditorNav saveFunc={saveFlow} />
@@ -330,10 +273,10 @@ const FlowEditor = ({ onSelectionChange }: FlowEditorProps) => {
   );
 };
 
-function FlowWithProvider({ mode, onSelectionChange }: FlowEditorProps) {
+function FlowWithProvider(props: FlowEditorProps) {
   return (
     <ReactFlowProvider>
-      <FlowEditor mode={mode} onSelectionChange={onSelectionChange} />
+      <FlowEditor {...props} />
     </ReactFlowProvider>
   );
 }
