@@ -1,3 +1,4 @@
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { AddIcon } from '@chakra-ui/icons';
 import {
   Box,
@@ -11,21 +12,26 @@ import {
   Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
+import { GetServerSideProps } from 'next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
 import CreateFlowModal from '../../components/Modals/CreateFlowModal';
 import DeleteFlowModal from '../../components/Modals/DeleteFlowModal';
 import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
-import { useUser } from '../../context/user.context';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
+import auth0 from '../../utils/auth0';
 
-const FlowIndexPage = () => {
+type FlowIndexPageProps = {
+  accessToken: string | undefined;
+};
+
+const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
   const [selectedFlowId, setSelectedFlowId] = useState<string | undefined>();
-  const { user, loading } = useUser();
+  const { user, isLoading, error } = useUser();
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const {
@@ -40,7 +46,7 @@ const FlowIndexPage = () => {
   } = useDisclosure();
 
   // User need to be loaded
-  const API = useMemo(() => new APIV2(), []);
+  const API = useMemo(() => new APIV2(accessToken), [accessToken]);
 
   const deleteFlow = useCallback(
     async (flowId: string) => {
@@ -68,7 +74,9 @@ const FlowIndexPage = () => {
     dfOnOpen();
   }, [dfOnOpen, selectedFlowId]);
 
-  if (!user && loading) return null;
+  if (isLoading) return null;
+
+  if (error) console.error(error);
 
   return (
     <>
@@ -136,7 +144,7 @@ const FlowIndexPage = () => {
             </TabPanel>
           </TabPanels>
         </Tabs>
-        <CreateFlowModal isOpen={cfOpen} onClose={cfOnClose} />
+        <CreateFlowModal isOpen={cfOpen} onClose={cfOnClose} API={API} />
         {selectedFlowId && (
           <DeleteFlowModal
             isOpen={dfOpen}
@@ -154,3 +162,15 @@ const FlowIndexPage = () => {
 };
 
 export default FlowIndexPage;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await auth0.getSession(ctx.req, ctx.res);
+
+  if (!session) return { props: {} };
+
+  return {
+    props: {
+      accessToken: session.accessToken,
+    },
+  };
+};

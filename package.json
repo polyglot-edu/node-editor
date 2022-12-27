@@ -13,6 +13,7 @@
     "build-storybook": "build-storybook"
   },
   "dependencies": {
+    "@auth0/nextjs-auth0": "^2.0.1",
     "@chakra-ui/icons": "^2.0.11",
     "@chakra-ui/react": "^2.4.2",
     "@choc-ui/chakra-autocomplete": "^5.1.3",
