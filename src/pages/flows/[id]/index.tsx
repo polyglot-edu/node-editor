@@ -9,22 +9,85 @@ import {
   ModalOverlay,
   Spinner,
   Text,
+  useToast,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
+import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
 import FlowEditor from '../../../components/Editor/FlowEditor';
 import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
 import { PolyglotFlow } from '../../../types/polyglotElements';
+import auth0 from '../../../utils/auth0';
 
-const FlowIndex = () => {
+type FlowIndexProps = {
+  accessToken: string | undefined;
+};
+
+const FlowIndex = ({ accessToken }: FlowIndexProps) => {
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState<Nullable<string>>(null);
   const router = useRouter();
   const flowId = router.query?.id?.toString();
 
-  const API = useMemo(() => new APIV2(), []);
+  const toast = useToast();
+
+  const API = useMemo(() => new APIV2(accessToken), [accessToken]);
+
+  const saveFlow = async (outputToast = true, returnPath?: string) => {
+    try {
+      const storeState = useStore.getState();
+      const flow = storeState.getFlow();
+      if (!flow) {
+        outputToast &&
+          toast({
+            title: 'No flow found',
+            description: 'Try do some new changes',
+            status: 'warning',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+        return;
+      }
+
+      const response = await API.saveFlowAsync(flow);
+      if (response?.status === 200) {
+        storeState.setLastSavedAction();
+        outputToast &&
+          toast({
+            title: 'Flow saved',
+            description: 'The save was successful',
+            status: 'success',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+        if (returnPath) router.push(returnPath);
+      } else {
+        outputToast &&
+          toast({
+            title: 'Flow not saved',
+            description: 'Something is off with your flow!',
+            status: 'warning',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+      }
+    } catch (err) {
+      outputToast &&
+        toast({
+          title: 'Internal Error',
+          description: 'Try later',
+          status: 'error',
+          duration: 3000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
+    }
+  };
 
   useEffect(() => {
     (async () => {
@@ -98,7 +161,7 @@ const FlowIndex = () => {
 
   return (
     <>
-      <FlowEditor mode={'write'} />
+      <FlowEditor mode={'write'} saveFlow={saveFlow} />
 
       {/* if is error */}
       <Modal
@@ -146,3 +209,15 @@ const FlowIndex = () => {
 };
 
 export default FlowIndex;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await auth0.getSession(ctx.req, ctx.res);
+
+  if (!session) return { props: {} };
+
+  return {
+    props: {
+      accessToken: session.accessToken,
+    },
+  };
+};

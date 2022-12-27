@@ -4,11 +4,11 @@ import '../components/AppMain.css';
 import '../components/Card.css';
 import '../styles/globals.css';
 
+import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import { Analytics } from '@vercel/analytics/react';
 import type { AppProps } from 'next/app';
-import { UserProvider } from '../context/user.context';
 import reportWebVitals from '../reportWebVitals';
 
 const theme = extendTheme({

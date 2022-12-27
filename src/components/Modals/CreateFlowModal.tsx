@@ -39,13 +39,14 @@ import {
 import Editor from '@monaco-editor/react';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
-import { useEffect, useMemo, useState } from 'react';
+import { useEffect, useState } from 'react';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow, PolyglotFlowInfo } from '../../types/polyglotElements';
 
 type CreateFlowModalProps = {
   isOpen: boolean;
   onClose: () => void;
+  API: APIV2;
 };
 
 export const colors = [
@@ -61,7 +62,7 @@ export const colors = [
   'green',
 ];
 
-const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
+const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [flow, setFlow] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
@@ -74,7 +75,6 @@ const CreateFlowModal = ({ isOpen, onClose }: CreateFlowModalProps) => {
 
   const toast = useToast();
   const router = useRouter();
-  const API = useMemo(() => new APIV2(), []);
 
   // reset tags on reopen
   useEffect(() => {

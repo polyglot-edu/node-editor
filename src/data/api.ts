@@ -28,15 +28,15 @@ export class APIV2 {
   redirect401URL?: string;
   error401: boolean;
 
-  constructor() {
+  constructor(access_token: string | undefined) {
     this.redirect401 = false;
     this.error401 = true;
     this.axios = axiosCreate.create({
       baseURL: process.env.BACK_URL,
       headers: {
         'Content-Type': 'application/json',
+        Authorization: access_token ? 'Bearer ' + access_token : '',
       },
-      withCredentials: true,
     });
   }
 
@@ -66,19 +66,6 @@ export class APIV2 {
       }
       throw err;
     }
-  }
-
-  edgeMetadata(type: string): Promise<AxiosResponse<Metadata>> {
-    return this.axios.get('/api/metadata/edge/' + type);
-  }
-  nodeMetadata(type: string): Promise<AxiosResponse<Metadata>> {
-    return this.axios.get('/api/metadata/node/' + type);
-  }
-  generalNodeMetadata(): Promise<AxiosResponse<GeneralMetadata>> {
-    return this.axios.get('/api/metadata/node');
-  }
-  generalEdgeMetadata(): Promise<AxiosResponse<GeneralMetadata>> {
-    return this.axios.get('/api/metadata/edge');
   }
   autocomplete(query?: string): Promise<AxiosResponse<AutocompleteOutput>> {
     return this.axios.get('/api/search/autocomplete' + query);

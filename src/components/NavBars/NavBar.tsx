@@ -1,31 +1,15 @@
+import { UserProfile } from '@auth0/nextjs-auth0/client';
 import { Button, HStack, Image } from '@chakra-ui/react';
 import Link from 'next/link';
-import { useRouter } from 'next/router';
 import brandLogo from '../../public/solo_logo.png';
 import brandWrite from '../../public/solo_scritta.png';
-import { User } from '../../types/user';
 import Nav from '../Layout/NavBar';
 
 type NavBarProps = {
-  user: User | undefined;
-  redirectLogin?: string;
-  redirectLogout?: string;
+  user: UserProfile | undefined;
 };
 
-export default function Navbar({
-  user,
-  redirectLogout,
-  redirectLogin,
-}: NavBarProps) {
-  const router = useRouter();
-  const BACK_URL = process.env.BACK_URL;
-  const LOGOUT_URL =
-    BACK_URL +
-    '/api/auth/logout?returnUrl=' +
-    (redirectLogout || router.asPath);
-  const LOGIN_URL =
-    BACK_URL + '/api/auth/google?returnUrl=' + (redirectLogin || router.asPath);
-
+export default function Navbar({ user }: NavBarProps) {
   return (
     <Nav>
       <HStack>
@@ -45,7 +29,7 @@ export default function Navbar({
       {!user ? (
         <div className="rounded-lg bg-cyan-400 pr-2 pl-2 pt-1 pb-1">
           <Link
-            href={LOGIN_URL}
+            href={'/api/auth/login'}
             className="text-white"
             style={{ textDecoration: 'none' }}
           >
@@ -54,8 +38,8 @@ export default function Navbar({
         </div>
       ) : (
         <HStack>
-          <div>{user.username}</div>
-          <Link href={LOGOUT_URL} style={{ textDecoration: 'none' }}>
+          <div>{user.name}</div>
+          <Link href={'/api/auth/logout'} style={{ textDecoration: 'none' }}>
             <Button colorScheme="red" size={['sm', 'md']}>
               Log out
             </Button>
