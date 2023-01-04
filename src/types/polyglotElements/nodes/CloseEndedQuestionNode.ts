@@ -1,4 +1,4 @@
-import { CloseEndedQuestionNodeProperties } from '../../../components/NodeProperties';
+import CloseEndedQuestionNodeProperties from '../../../components/Properties/Nodes/CloseEndedQuestionNodeProperties';
 import { ReactFlowCloseEndedQuestionNode } from '../../../components/ReactFlowNode';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {

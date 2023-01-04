@@ -1,4 +1,4 @@
-import { MultipleChoiceQuestionNodeProperties } from '../../../components/NodeProperties';
+import MultipleChoiceQuestionNodeProperties from '../../../components/Properties/Nodes/MultipleChoiceQuestionNodeProperties';
 import { ReactFlowMultipleChoiceQuestionNode } from '../../../components/ReactFlowNode';
 import { zip } from '../../../utils/utils';
 import { polyglotNodeComponentMapping } from '../elementMapping';

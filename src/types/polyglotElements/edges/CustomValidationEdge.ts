@@ -1,4 +1,4 @@
-import { CustomValidationEdgeProperties } from '../../../components/EdgeProperties';
+import CustomValidationEdgeProperties from '../../../components/Properties/Edges/CustomValidationEdgeProperties';
 import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
