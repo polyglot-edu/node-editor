@@ -1,4 +1,3 @@
-import ChakraUIRenderer from 'chakra-ui-markdown-renderer';
 import ReactMarkdown from 'react-markdown';
 import rehypeKatex from 'rehype-katex';
 import rehypeRaw from 'rehype-raw';
@@ -34,7 +33,6 @@ const MarkDownField = ({ label, name }: MarkDownFieldProps) => {
         renderHTML={(text) => (
           <ReactMarkdown
             remarkPlugins={[remarkGfm, RemarkMathPlugin]}
-            components={ChakraUIRenderer()}
             rehypePlugins={[rehypeKatex, rehypeRaw]}
           >
             {text}

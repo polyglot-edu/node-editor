@@ -51,6 +51,7 @@ CustomUnderline.align = 'left';
 CustomUnderline.pluginName = 'custom-underline';
 
 Editor.unuse(Plugins.FontUnderline);
+
 Editor.use(CustomUnderline);
 
 const MdEditor = (props: EditorProps) => <Editor {...props} />;
