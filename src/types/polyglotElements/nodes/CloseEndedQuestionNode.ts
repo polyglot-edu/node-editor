@@ -40,7 +40,7 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
         priority: 0,
       },
       {
-        type: 'csharp',
+        type: 'html',
         content: '',
         priority: 1,
       },
