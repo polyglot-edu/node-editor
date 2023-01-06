@@ -36,9 +36,9 @@ async Task<(bool, string)> validate(PolyglotValidationContext context) {
     var getMultipleChoiceAnswer = () => {
         var indexes = context.JourneyContext.SubmittedCode.Replace('"'.ToString(),string.Empty).Split(',').Select(n => Int32.Parse(n) -1).ToArray();
         var answersCorrect = context.Exercise.Data.isChoiceCorrect;
-        var resp = true;
-        foreach (var index in indexes) { resp = resp && (index >= 0 && index < answersCorrect.Count) && answersCorrect[index]; };
-        return resp;
+  
+        for(int i=0;i<answersCorrect.Count;i++) { if (answersCorrect[i] && !indexes.Contains(i)) return false; };
+        return true;
     };
 
     var isSubmissionCorrect = context.Exercise.NodeType switch

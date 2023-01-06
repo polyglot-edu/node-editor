@@ -51,7 +51,7 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
-        type: 'csharp',
+        type: 'html',
         content: '',
         priority: 1,
       },
@@ -59,9 +59,7 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
         type: 'markdown',
         content:
           data.question +
-          (data.choices.length > 0
-            ? '  \n- ' + data.choices.join('  \n- ')
-            : ''),
+          data.choices.map((value, index) => '\n' + (index + 1) + '. ' + value),
         priority: 0,
       },
     ];
