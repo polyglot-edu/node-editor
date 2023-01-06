@@ -83,9 +83,12 @@ const ElementProperties = ({
   }
 
   useEffect(() => {
-    if (!selectedElement) return;
     methods.clearErrors();
     methods.reset();
+  }, [selectedElement?._id]);
+
+  useEffect(() => {
+    if (!selectedElement) return;
     updateForm(selectedElement, methods);
   }, [selectedElement?._id, updateFactor]);
 
@@ -93,6 +96,7 @@ const ElementProperties = ({
     if (JSON.stringify(watchAll) === '{}') return;
     // deep copy
     const node = JSON.parse(JSON.stringify(watchAll));
+    console.log(watchRef.current);
     if (compareElements(node, selectedElement)) updateElement(node);
   }, [watchAll]);
 

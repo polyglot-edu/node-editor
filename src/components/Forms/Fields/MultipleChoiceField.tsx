@@ -26,13 +26,9 @@ const ArrayField = ({
 }) => {
   const [input, setInput] = useState('');
   const [checked, setChecked] = useState(false);
-  const { register } = useFormContext();
+  const { register, setValue, getValues } = useFormContext();
   const { fields, append, remove } = useFieldArray({
     name: name, // unique name for your Field Array
-  });
-
-  const { append: appendIsChoices, remove: removeIsChoices } = useFieldArray({
-    name: 'data.isChoiceCorrect', // unique name for your Field Array
   });
 
   return (
@@ -50,8 +46,10 @@ const ArrayField = ({
           <Button
             colorScheme={'red'}
             onClick={() => {
+              const c = [...getValues('data.isChoiceCorrect')];
+              c.splice(index, 1);
+              setValue(`data.isChoiceCorrect`, c);
               remove(index);
-              removeIsChoices(index);
             }}
           >
             <CloseIcon boxSize="0.75em" />
@@ -73,7 +71,8 @@ const ArrayField = ({
         <Button
           colorScheme={'green'}
           onClick={() => {
-            appendIsChoices(checked);
+            // appendIsChoices(checked ? 'true' : 'false');
+            setValue(`data.isChoiceCorrect.${fields.length}`, checked);
             append(input);
             setInput('');
             setChecked(false);
