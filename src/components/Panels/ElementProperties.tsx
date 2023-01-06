@@ -1,6 +1,6 @@
 import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
-import { useEffect, useRef } from 'react';
+import { useEffect, useRef, useState } from 'react';
 import {
   FieldValues,
   FormProvider,
@@ -39,6 +39,7 @@ const updateForm = (input: any, methods: UseFormReturn<FieldValues, any>) => {
 
 const compareElements = (first: any, second: any) => {
   if (!first || !second) return false;
+  if (!first._id) return false;
   const tmp1 = JSON.parse(JSON.stringify(first));
   const tmp2 = JSON.parse(JSON.stringify(second));
 
@@ -73,9 +74,12 @@ const ElementProperties = ({
   });
   const watchRef = useRef<{ [x: string]: any } | null>(watchAll);
 
-  const [updateElement, updateFactor] = useStore((store) => [
+  const [action, setAction] = useState(-1);
+
+  const [updateElement, currentAction, actionLenght] = useStore((store) => [
     store.updateElement,
     store.currentAction,
+    store.actions.length,
   ]);
 
   if (JSON.stringify(watchAll) !== JSON.stringify(watchRef.current)) {
@@ -83,20 +87,17 @@ const ElementProperties = ({
   }
 
   useEffect(() => {
-    methods.clearErrors();
-    methods.reset();
-  }, [selectedElement?._id]);
-
-  useEffect(() => {
     if (!selectedElement) return;
-    updateForm(selectedElement, methods);
-  }, [selectedElement?._id, updateFactor]);
+    if (action === actionLenght && currentAction <= actionLenght - 1) {
+      updateForm(selectedElement, methods);
+    }
+    setAction(actionLenght);
+  }, [currentAction, selectedElement?._id]);
 
   useEffect(() => {
     if (JSON.stringify(watchAll) === '{}') return;
     // deep copy
     const node = JSON.parse(JSON.stringify(watchAll));
-    console.log(watchRef.current);
     if (compareElements(node, selectedElement)) updateElement(node);
   }, [watchAll]);
 
