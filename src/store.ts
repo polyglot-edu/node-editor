@@ -76,6 +76,8 @@ interface ApplicationState {
   setSelectedEdge: (edgeId: string) => void;
   clearSelection: () => void;
 
+  updateElement: (element: PolyglotNode | PolyglotEdge) => void;
+
   applyNodeChanges: (changes: Node[]) => void;
   applyEdgeChanges: (changes: Edge[]) => void;
 
@@ -99,13 +101,7 @@ interface ApplicationState {
   onConnect: (connection: Connection, skipAction?: boolean) => void;
 }
 
-const useStore = create<
-  ApplicationState,
-  [
-    ['zustand/devtools', ApplicationState],
-    ['zustand/persist', ApplicationState]
-  ]
->(
+const useStore = create<ApplicationState>()(
   devtools(
     persist(
       (set, get) => ({
@@ -283,10 +279,32 @@ const useStore = create<
             })
           );
         },
-        updateFlowInfo: (
-          newValue: PartialDeep<PolyglotFlowInfo>,
-          skipAction?: boolean
-        ) => {
+        updateElement(element) {
+          const state = get();
+          if (element.type.includes('Node')) {
+            const node = state.nodeMap.get(element.reactFlow.id);
+            if (!node) {
+              console.log('Node not found');
+              return;
+            }
+
+            if (node.type !== element.type) changeNodeType(node, element.type);
+            else
+              state.updateNode(element.reactFlow.id, element as PolyglotNode);
+          }
+
+          if (element.type.includes('Edge')) {
+            const edge = state.edgeMap.get(element.reactFlow.id);
+            if (!edge) {
+              console.log('Edge not found!');
+              return;
+            }
+            if (edge.type !== element.type) changeEdgeType(edge, element.type);
+            else
+              state.updateEdge(element.reactFlow.id, element as PolyglotEdge);
+          }
+        },
+        updateFlowInfo: (newValue, skipAction) => {
           if (!skipAction) {
             const state = get();
             state.addAction({
@@ -373,13 +391,13 @@ const useStore = create<
             selectedElement: element,
           }));
         },
-        setSelectedNode: (nodeId: string) => {
+        setSelectedNode: (nodeId) => {
           set(() => ({
             selectedNode: nodeId,
             selectedEdge: null,
           }));
         },
-        setSelectedEdge: (edgeId: string) => {
+        setSelectedEdge: (edgeId) => {
           set(() => ({
             selectedNode: null,
             selectedEdge: edgeId,
@@ -393,7 +411,7 @@ const useStore = create<
           }));
         },
 
-        applyNodeChanges: (changes: Node[]) => {
+        applyNodeChanges: (changes) => {
           set((state) =>
             produce(state, (draft) => {
               changes.forEach((change) => {
@@ -404,7 +422,7 @@ const useStore = create<
             })
           );
         },
-        applyEdgeChanges: (changes: Edge[]) => {
+        applyEdgeChanges: (changes) => {
           set((state) =>
             produce(state, (draft) => {
               changes.forEach((change) => {
@@ -415,7 +433,7 @@ const useStore = create<
             })
           );
         },
-        addSubFlow: (flow: PolyglotFlow) => {
+        addSubFlow: (flow) => {
           set((state) =>
             produce(state, (draft) => {
               if (flow.nodes) {
@@ -430,7 +448,7 @@ const useStore = create<
             })
           );
         },
-        addNode: (initialValue: PolyglotNode, skipAction?: boolean) => {
+        addNode: (initialValue, skipAction) => {
           set((state) =>
             produce(state, (draft) => {
               draft.nodeMap.set(initialValue.reactFlow.id, initialValue);
@@ -445,11 +463,7 @@ const useStore = create<
             });
           }
         },
-        updateNode: (
-          id: string,
-          newValue: PartialDeep<PolyglotNode>,
-          skipAction?: boolean
-        ) => {
+        updateNode: (id, newValue, skipAction) => {
           if (!skipAction) {
             const state = get();
             const node = state.nodeMap.get(id);
@@ -490,7 +504,7 @@ const useStore = create<
             })
           );
         },
-        removeNode: (id: string, skipAction?: boolean) => {
+        removeNode: (id, skipAction) => {
           if (!skipAction) {
             const state = get();
             state.addAction({
@@ -514,7 +528,7 @@ const useStore = create<
           );
         },
 
-        addEdge: (initialValue: PolyglotEdge, skipAction?: boolean) => {
+        addEdge: (initialValue, skipAction) => {
           set((state) =>
             produce(state, (draft) => {
               draft.edgeMap.set(initialValue.reactFlow.id, initialValue);
@@ -529,11 +543,7 @@ const useStore = create<
             });
           }
         },
-        updateEdge: (
-          id: string,
-          newValue: PartialDeep<PolyglotEdge>,
-          skipAction?: boolean
-        ) => {
+        updateEdge: (id, newValue, skipAction) => {
           if (!skipAction) {
             const state = get();
             const edge = state.edgeMap.get(id);
@@ -573,7 +583,7 @@ const useStore = create<
             })
           );
         },
-        removeEdge: (id: string, skipAction?: boolean) => {
+        removeEdge: (id, skipAction) => {
           if (!skipAction) {
             const state = get();
             state.addAction({
@@ -589,7 +599,7 @@ const useStore = create<
           );
         },
 
-        onConnect: (connection: Connection, skipAction?: boolean) => {
+        onConnect: (connection, skipAction) => {
           let newEdge: any;
           set((state) =>
             produce(state, (draft) => {
@@ -659,7 +669,7 @@ export const changeNodeType = (currentValue: PolyglotNode, newType: string) => {
   }
 
   // copy only general properties
-  const newObj = Object.keys(PolyglotNode_IoTs.props).reduce((acc, prop) => {
+  let newObj = Object.keys(PolyglotNode_IoTs.props).reduce((acc, prop) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     acc[prop] = (currentValue as any)[prop];
     return acc;
@@ -674,10 +684,24 @@ export const changeNodeType = (currentValue: PolyglotNode, newType: string) => {
   newObj.type = newType;
   newObj.reactFlow.type = newType;
 
-  console.log(newObj);
+  // apply transform data function to change runtime code
+  newObj = polyglotNodeComponentMapping.applyTransformFunction(newObj);
+
   const state = useStore.getState();
-  state.removeNode(currentValue.reactFlow.id);
-  state.addNode(newObj);
+  state.removeNode(currentValue.reactFlow.id, true);
+  state.addNode(newObj, true);
+
+  state.addAction({
+    type: 'update',
+    element: {
+      type: 'node',
+      id: currentValue.reactFlow.id,
+    },
+    value: {
+      prev: currentValue,
+      update: newObj,
+    },
+  });
 };
 
 export const changeEdgeType = (currentValue: PolyglotEdge, newType: string) => {
@@ -693,7 +717,7 @@ export const changeEdgeType = (currentValue: PolyglotEdge, newType: string) => {
     (acc, t) => ({ ...acc, ...t.props }),
     {} as object
   );
-  const newObj = Object.keys(propsArray).reduce((acc, prop) => {
+  let newObj = Object.keys(propsArray).reduce((acc, prop) => {
     // eslint-disable-next-line @typescript-eslint/no-explicit-any
     acc[prop] = (currentValue as any)[prop];
     return acc;
@@ -708,10 +732,24 @@ export const changeEdgeType = (currentValue: PolyglotEdge, newType: string) => {
   newObj.type = newType;
   newObj.reactFlow.type = newType;
 
-  console.log(newObj);
+  // apply transform data function to change runtime code
+  newObj = polyglotEdgeComponentMapping.applyTransformFunction(newObj);
+
   const state = useStore.getState();
-  state.removeEdge(currentValue.reactFlow.id);
-  state.addEdge(newObj);
+  state.removeEdge(currentValue.reactFlow.id, true);
+  state.addEdge(newObj, true);
+
+  state.addAction({
+    type: 'update',
+    element: {
+      type: 'edge',
+      id: currentValue.reactFlow.id,
+    },
+    value: {
+      prev: currentValue,
+      update: newObj,
+    },
+  });
 };
 
 export default useStore;

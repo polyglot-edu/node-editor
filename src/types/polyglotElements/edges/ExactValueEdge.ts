@@ -1,4 +1,4 @@
-import { ExactValueEdgeProperties } from '../../../components/EdgeProperties';
+import ExactValueEdgeProperties from '../../../components/Properties/Edges/ExactValueEdgeProperties';
 import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';

@@ -1,4 +1,4 @@
-import { EdgePropertiesProps } from '../../../components/EdgeProperties/EdgeProperties';
+import EdgeProperties from '../../../components/Properties/Edges/EdgeProperties';
 import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
@@ -14,7 +14,7 @@ polyglotEdgeComponentMapping.registerMapping<UnconditionalEdge>({
   elementType: 'unconditionalEdge',
   name: 'Unconditional',
   // eslint-disable-next-line @typescript-eslint/no-unused-vars
-  propertiesComponent: (props: EdgePropertiesProps) => <></>,
+  propertiesComponent: EdgeProperties,
   elementComponent: ReactFlowSmartBezierEdge,
   defaultData: {
     ...defaultPolyglotEdgeData,

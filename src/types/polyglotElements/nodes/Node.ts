@@ -5,7 +5,7 @@ import { Node } from 'reactflow';
 //     handleProps: HandleProps;
 // }
 
-export const NodeData_IoTs = t.type({});
+export const NodeData_IoTs = t.type({} as { [x: string]: any });
 export type NodeData = t.TypeOf<typeof NodeData_IoTs>;
 export const defaultPolyglotNodeData: NodeData = {};
 

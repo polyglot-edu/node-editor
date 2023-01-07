@@ -1,4 +1,4 @@
-import { CloseEndedQuestionNodeProperties } from '../../../components/NodeProperties';
+import CloseEndedQuestionNodeProperties from '../../../components/Properties/Nodes/CloseEndedQuestionNodeProperties';
 import { ReactFlowCloseEndedQuestionNode } from '../../../components/ReactFlowNode';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
@@ -40,7 +40,7 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
         priority: 0,
       },
       {
-        type: 'csharp',
+        type: 'html',
         content: '',
         priority: 1,
       },
