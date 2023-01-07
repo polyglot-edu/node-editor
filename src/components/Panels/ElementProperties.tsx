@@ -1,57 +1,120 @@
 import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
-import { useEffect, useState } from 'react';
-import useStore, { changeEdgeType, changeNodeType } from '../../store';
-import { GeneralMetadata, Metadata } from '../../types/metadata';
-import { PolyglotEdge, PolyglotNode } from '../../types/polyglotElements';
-import DynamicForm, {
-  OnChangeDynamicForm,
-  parseMetaField,
-} from '../Forms/DynamicForm';
+import { useEffect, useRef, useState } from 'react';
+import {
+  FieldValues,
+  FormProvider,
+  useForm,
+  UseFormReturn,
+  useWatch,
+} from 'react-hook-form';
+import useStore from '../../store';
+import {
+  PolyglotEdge,
+  polyglotEdgeComponentMapping,
+  PolyglotNode,
+  polyglotNodeComponentMapping,
+} from '../../types/polyglotElements';
+import { useHasHydrated } from '../../utils/utils';
 import Panel from '../Layout/Panel';
 
 export type ElementPropertiesProps = {
   selectedElement: PolyglotNode | PolyglotEdge | undefined;
-  meta?: Metadata;
-  autoFetchMeta?: boolean;
   children?: React.ReactNode;
-  hidden?: boolean;
   isOpen?: boolean;
-  onClose?: () => void;
-  onOpen?: () => void;
+};
+
+const updateForm = (input: any, methods: UseFormReturn<FieldValues, any>) => {
+  Object.keys(input).forEach((index) => {
+    // TODO extend this controll to general json obj
+    if (index === 'data') {
+      Object.keys(input[index]).forEach((v) => {
+        methods.setValue('data.' + v, input[index][v]);
+        return;
+      });
+    }
+    methods.setValue(index, input[index]);
+  });
+};
+
+const compareElements = (first: any, second: any) => {
+  if (!first || !second) return false;
+  if (!first._id) return false;
+  const tmp1 = JSON.parse(JSON.stringify(first));
+  const tmp2 = JSON.parse(JSON.stringify(second));
+
+  delete tmp1.reactFlow;
+  delete tmp2.reactFlow;
+
+  delete tmp1.code;
+  delete tmp2.code;
+
+  delete tmp1.runtimeData;
+  delete tmp2.runtimeData;
+
+  return JSON.stringify(tmp1) !== JSON.stringify(tmp2);
 };
 
 const ElementProperties = ({
   selectedElement,
   isOpen,
   children,
-  autoFetchMeta = true,
-  meta,
 }: ElementPropertiesProps) => {
-  const { selectedElement: seMeta, updateNode, updateEdge } = useStore();
-
   const {
     isOpen: editorOpen,
     onOpen: onEditorOpen,
     onClose: onEditorClose,
   } = useDisclosure();
 
-  const [nodeMeta, setNodeMeta] = useState<GeneralMetadata>();
-  const [edgeMeta, setEdgeMeta] = useState<GeneralMetadata>();
+  const hydrated = useHasHydrated();
+
+  const methods = useForm({ mode: 'all' });
+  const watchAll = useWatch({
+    control: methods.control,
+  });
+  const watchRef = useRef<{ [x: string]: any } | null>(watchAll);
+
+  const [action, setAction] = useState(-1);
+
+  const [updateElement, currentAction, actionLenght] = useStore((store) => [
+    store.updateElement,
+    store.currentAction,
+    store.actions.length,
+  ]);
+
+  if (JSON.stringify(watchAll) !== JSON.stringify(watchRef.current)) {
+    watchRef.current = watchAll;
+  }
 
   useEffect(() => {
-    if (autoFetchMeta) {
-      // API.generalNodeMetadata().then((res) => {
-      //   setNodeMeta(res.data);
-      // });
-      setNodeMeta(nm as GeneralMetadata);
+    if (!selectedElement) return;
+    methods.clearErrors();
+    // methods.reset();
+    updateForm(selectedElement, methods);
+  }, [selectedElement?._id]);
 
-      // API.generalEdgeMetadata().then((res) => {
-      //   setEdgeMeta(res.data);
-      // });
-      setEdgeMeta(em as GeneralMetadata);
+  useEffect(() => {
+    if (!selectedElement) return;
+    if (action === actionLenght && currentAction <= actionLenght - 1) {
+      updateForm(selectedElement, methods);
     }
-  }, [autoFetchMeta]);
+    setAction(actionLenght);
+  }, [currentAction, selectedElement?._id]);
+
+  useEffect(() => {
+    if (JSON.stringify(watchAll) === '{}') return;
+    // deep copy
+    const node = JSON.parse(JSON.stringify(watchAll));
+    if (compareElements(node, selectedElement)) updateElement(node);
+  }, [watchAll]);
+
+  const ElementProperty = selectedElement?.type.includes('Node')
+    ? polyglotNodeComponentMapping.getElementPropertiesComponent(
+        selectedElement?.type
+      )
+    : polyglotEdgeComponentMapping.getElementPropertiesComponent(
+        selectedElement?.type
+      );
 
   return (
     <Panel isOpen={isOpen}>
@@ -75,536 +138,14 @@ const ElementProperties = ({
         <Button mb="2" onClick={onEditorOpen}>
           Edit Code
         </Button>
-        {selectedElement && nodeMeta && edgeMeta && (
-          <DynamicForm
-            metadata={
-              meta ||
-              (seMeta?.type === 'Node'
-                ? nodeMeta[selectedElement.type]
-                : edgeMeta[selectedElement.type])
-            }
-            onChange={onChangeElement}
-            onChangeProps={{
-              updateElement: seMeta?.type === 'Node' ? updateNode : updateEdge,
-              changeType:
-                seMeta?.type === 'Node' ? changeNodeType : changeEdgeType,
-            }}
-            element={selectedElement}
-          />
-        )}
+        <FormProvider {...methods}>
+          {hydrated && <ElementProperty />}
+        </FormProvider>
+
         {children}
       </Box>
     </Panel>
   );
 };
 
-const onChangeElement: OnChangeDynamicForm =
-  (element, metaField, props, parentKey) => (e) => {
-    if (!element) return;
-
-    const { id: elementID } = element.reactFlow;
-
-    const value = parseMetaField(
-      metaField,
-      element,
-      e.currentTarget?.value,
-      e.currentTarget?.name,
-      parentKey
-    );
-
-    if (!value) {
-      if (metaField.name === 'type')
-        return props?.changeType(element, e?.currentTarget?.value ?? '');
-    }
-
-    let update: any = {};
-    if (metaField.name === 'type') {
-      update = {
-        reactFlow: {
-          type: value,
-        },
-      };
-    }
-    if (parentKey) {
-      update[parentKey] = {};
-      update[parentKey][metaField.name] = value;
-    } else {
-      update[metaField.name] = value;
-    }
-
-    props?.updateElement(elementID, update);
-  };
-
 export default ElementProperties;
-
-const nm = {
-  abstractNode: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'textarea',
-      name: 'description',
-      label: 'Description',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'string',
-          name: 'target',
-          label: 'Target',
-          constraints: {},
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      name: 'difficulty',
-      label: 'Difficulty',
-      constraints: {},
-      sub: 'number',
-      options: [1, 2, 3, 4, 5],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'abstractNode',
-        'closeEndedQuestionNode',
-        'codingQuestionNode',
-        'lessonNode',
-        'lessonTextNode',
-        'multipleChoiceQuestionNode',
-      ],
-      constraints: {},
-    },
-  ],
-  closeEndedQuestionNode: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'textarea',
-      name: 'description',
-      label: 'Description',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'markdown',
-          name: 'question',
-          label: 'Question',
-          constraints: {},
-        },
-        {
-          type: 'array',
-          name: 'correctAnswers',
-          label: 'Correct Answers',
-          constraints: {},
-          sub: 'string',
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      name: 'difficulty',
-      label: 'Difficulty',
-      constraints: {},
-      sub: 'number',
-      options: [1, 2, 3, 4, 5],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'abstractNode',
-        'closeEndedQuestionNode',
-        'codingQuestionNode',
-        'lessonNode',
-        'lessonTextNode',
-        'multipleChoiceQuestionNode',
-      ],
-      constraints: {},
-    },
-  ],
-  codingQuestionNode: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'textarea',
-      name: 'description',
-      label: 'Description',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'markdown',
-          name: 'question',
-          label: 'Question',
-          constraints: {},
-        },
-        {
-          type: 'code',
-          name: 'codeTemplate',
-          label: 'Template code',
-          constraints: {},
-        },
-        {
-          type: 'enum',
-          name: 'language',
-          label: 'Language',
-          constraints: {},
-          sub: 'string',
-          options: ['csharp', 'sysml'],
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      name: 'difficulty',
-      label: 'Difficulty',
-      constraints: {},
-      sub: 'number',
-      options: [1, 2, 3, 4, 5],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'abstractNode',
-        'closeEndedQuestionNode',
-        'codingQuestionNode',
-        'lessonNode',
-        'lessonTextNode',
-        'multipleChoiceQuestionNode',
-      ],
-      constraints: {},
-    },
-  ],
-  lessonNode: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'textarea',
-      name: 'description',
-      label: 'Description',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'file',
-          name: 'file',
-          label: 'File',
-          constraints: {},
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      name: 'difficulty',
-      label: 'Difficulty',
-      constraints: {},
-      sub: 'number',
-      options: [1, 2, 3, 4, 5],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'abstractNode',
-        'closeEndedQuestionNode',
-        'codingQuestionNode',
-        'lessonNode',
-        'lessonTextNode',
-        'multipleChoiceQuestionNode',
-      ],
-      constraints: {},
-    },
-  ],
-  lessonTextNode: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'textarea',
-      name: 'description',
-      label: 'Description',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'markdown',
-          name: 'text',
-          label: 'Text',
-          constraints: {},
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      name: 'difficulty',
-      label: 'Difficulty',
-      constraints: {},
-      sub: 'number',
-      options: [1, 2, 3, 4, 5],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'abstractNode',
-        'closeEndedQuestionNode',
-        'codingQuestionNode',
-        'lessonNode',
-        'lessonTextNode',
-        'multipleChoiceQuestionNode',
-      ],
-      constraints: {},
-    },
-  ],
-  multipleChoiceQuestionNode: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'textarea',
-      name: 'description',
-      label: 'Description',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'markdown',
-          name: 'question',
-          label: 'Question',
-          constraints: {},
-        },
-        {
-          type: 'multiple_choice',
-          name: 'choices',
-          label: 'Choices',
-          constraints: {},
-          sub: 'string',
-        },
-        {
-          type: 'array',
-          name: 'isChoiceCorrect',
-          label: '',
-          constraints: {},
-          sub: 'boolean',
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      name: 'difficulty',
-      label: 'Difficulty',
-      constraints: {},
-      sub: 'number',
-      options: [1, 2, 3, 4, 5],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'abstractNode',
-        'closeEndedQuestionNode',
-        'codingQuestionNode',
-        'lessonNode',
-        'lessonTextNode',
-        'multipleChoiceQuestionNode',
-      ],
-      constraints: {},
-    },
-  ],
-};
-
-const em = {
-  customValidationEdge: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'code',
-          name: 'code',
-          label: 'Code',
-          constraints: {},
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'customValidationEdge',
-        'exactValueEdge',
-        'passFailEdge',
-        'unconditionalEdge',
-      ],
-      constraints: {},
-    },
-  ],
-  exactValueEdge: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'string',
-          name: 'value',
-          label: 'Value',
-          constraints: {},
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'customValidationEdge',
-        'exactValueEdge',
-        'passFailEdge',
-        'unconditionalEdge',
-      ],
-      constraints: {},
-    },
-  ],
-  passFailEdge: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [
-        {
-          type: 'enum',
-          name: 'conditionKind',
-          label: 'Condition Kind',
-          constraints: {},
-          sub: 'string',
-          options: ['pass', 'fail'],
-        },
-      ],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'customValidationEdge',
-        'exactValueEdge',
-        'passFailEdge',
-        'unconditionalEdge',
-      ],
-      constraints: {},
-    },
-  ],
-  unconditionalEdge: [
-    {
-      type: 'string',
-      name: 'title',
-      label: 'Title',
-      constraints: {},
-    },
-    {
-      type: 'any',
-      name: 'data',
-      constraints: {},
-      fields: [],
-    },
-    {
-      type: 'enum',
-      sub: 'string',
-      name: 'type',
-      label: 'Type',
-      options: [
-        'customValidationEdge',
-        'exactValueEdge',
-        'passFailEdge',
-        'unconditionalEdge',
-      ],
-      constraints: {},
-    },
-  ],
-};

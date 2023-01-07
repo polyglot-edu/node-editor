@@ -1,4 +1,4 @@
-import { LessonTextNodeProperties } from '../../../components/NodeProperties';
+import LessonTextNodeProperties from '../../../components/Properties/Nodes/LessonTextNodeProperties';
 import { ReactFlowLessonNode } from '../../../components/ReactFlowNode';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {

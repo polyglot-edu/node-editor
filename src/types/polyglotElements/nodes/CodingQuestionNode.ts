@@ -1,4 +1,4 @@
-import { CodingQuestionNodeProperties } from '../../../components/NodeProperties';
+import CodingQuestionNodeProperties from '../../../components/Properties/Nodes/CodingQuestionNodeProperties';
 import { ReactFlowCodingQuestionNode } from '../../../components/ReactFlowNode';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {

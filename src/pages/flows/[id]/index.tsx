@@ -161,7 +161,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
 
   return (
     <>
-      <FlowEditor mode={'write'} saveFlow={saveFlow} />
+      {!loading && <FlowEditor mode={'write'} saveFlow={saveFlow} />}
 
       {/* if is error */}
       <Modal

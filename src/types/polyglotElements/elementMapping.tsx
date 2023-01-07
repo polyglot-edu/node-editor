@@ -1,6 +1,6 @@
 import { PolyglotEdge, PolyglotNode } from '.';
-import { EdgePropertiesProps } from '../../components/EdgeProperties/EdgeProperties';
-import { NodePropertiesProps } from '../../components/NodeProperties/NodeProperties';
+import { EdgePropertiesProps } from '../../components/Properties/Edges/EdgeProperties';
+import { NodePropertiesProps } from '../../components/Properties/Nodes/NodeProperties';
 import { ReactFlowEdgeProps } from '../../components/ReactFlowEdge/ReactFlowEdge';
 import { ReactFlowNodeProps } from '../../components/ReactFlowNode/ReactFlowNode';
 
