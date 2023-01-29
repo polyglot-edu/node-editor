@@ -34,11 +34,20 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
     const code = `
 async Task<(bool, string)> validate(PolyglotValidationContext context) {
     var getMultipleChoiceAnswer = () => {
-        var indexes = context.JourneyContext.SubmittedCode.Replace('"'.ToString(),string.Empty).Split(',').Select(n => Int32.Parse(n) -1).ToArray();
-        var answersCorrect = context.Exercise.Data.isChoiceCorrect;
-  
-        for(int i=0;i<answersCorrect.Count;i++) { if (answersCorrect[i] && !indexes.Contains(i)) return false; };
-        return true;
+        var indexes = context.JourneyContext.SubmittedCode.Replace("\"", "")
+                                                            .Split(',')
+                                                            .Select(n => {
+                                                                var parsed = Int32.TryParse(n, out var x);
+                                                                if (!parsed) throw new Exception($"""Answer contains non-integer value "{n.Trim()}" in multiple choice question""");
+                                                                    return x - 1;
+                                                            })
+                                                            .Order().ToList();
+        var answersCorrect = context.Exercise.Data.isChoiceCorrect.Select((c, i) => (c, i))
+                                                                    .Where(c => c.c)
+                                                                    .Select(c => c.i)
+                                                                    .Order().ToList();
+
+        return Enumerable.SequenceEqual(indexes, answersCorrect);
     };
 
     var isSubmissionCorrect = context.Exercise.NodeType switch
