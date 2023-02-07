@@ -34,11 +34,12 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
     const code = `
 async Task<(bool, string)> validate(PolyglotValidationContext context) {
     var getMultipleChoiceAnswer = () => {
-        var indexes = context.JourneyContext.SubmittedCode.Replace('"'.ToString(),string.Empty).Split(',').Select(n => Int32.Parse(n) -1).ToArray();
-        var answersCorrect = context.Exercise.Data.isChoiceCorrect;
-  
-        for(int i=0;i<answersCorrect.Count;i++) { if (answersCorrect[i] && !indexes.Contains(i)) return false; };
-        return true;
+        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;
+        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))
+                                                                                .Where(c => bool.Parse(c.c.ToString()))
+                                                                                .Select(c => (c.i + 1).ToString())
+                                                                                .ToHashSet();
+        return submitted.SetEquals(answersCorrect);
     };
 
     var isSubmissionCorrect = context.Exercise.NodeType switch
@@ -54,7 +55,8 @@ async Task<(bool, string)> validate(PolyglotValidationContext context) {
         _ => throw new Exception("Unknown condition kind")
     };
     return (conditionKind == isSubmissionCorrect, "Pass/Fail edge");
-}`;
+}    
+`;
 
     return {
       ...edge,

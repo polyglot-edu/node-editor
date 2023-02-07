@@ -7,7 +7,7 @@ import {
   ChallengeSetup,
   defaultPolyglotNodeData,
   NodeData,
-  PolyglotNode,
+  PolyglotNode
 } from './Node';
 
 export type MultipleChoiceQuestionNodeData = NodeData & {
@@ -48,10 +48,16 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
       ),
     };
 
-    const challengeSetup: ChallengeSetup[] = [];
+    const challengeSetup: ChallengeSetup[] = [
+      `
+using Polyglot.Interactive;
+var kernel = Kernel.Root.FindKernelByName("multiplechoice") as MultipleChoiceKernel;
+kernel.Options = new HashSet<string> { ${data.choices.map((_, i) => `"${i+1}"`).join(", ")} };
+`,
+    ];
     const challengeContent: ChallengeContent[] = [
       {
-        type: 'html',
+        type: 'multiplechoice',
         content: '',
         priority: 1,
       },
