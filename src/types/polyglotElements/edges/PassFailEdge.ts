@@ -34,20 +34,12 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
     const code = `
 async Task<(bool, string)> validate(PolyglotValidationContext context) {
     var getMultipleChoiceAnswer = () => {
-        var indexes = context.JourneyContext.SubmittedCode.Replace('"'.ToString(), String.Empty)
-                                                          .Split(',')
-                                                          .Select(n => {
-                                                              var parsed = Int32.TryParse(n, out var x);
-                                                              if (!parsed) throw new Exception($"""Answer contains non-integer value "{n.Trim()}" in multiple choice question""");
-                                                                  return x - 1;
-                                                          })
-                                                          .Order().ToList();
-        var answersCorrect = ((bool[])context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))
-                                                                            .Where(c => c.c)
-                                                                            .Select(c => c.i)
-                                                                            .Order().ToList();
-
-        return Enumerable.SequenceEqual(indexes, answersCorrect);
+        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;
+        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))
+                                                                                .Where(c => bool.Parse(c.c.ToString()))
+                                                                                .Select(c => (c.i + 1).ToString())
+                                                                                .ToHashSet();
+        return submitted.SetEquals(answersCorrect);
     };
 
     var isSubmissionCorrect = context.Exercise.NodeType switch
