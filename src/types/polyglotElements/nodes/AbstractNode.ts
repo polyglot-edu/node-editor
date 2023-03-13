@@ -1,7 +1,7 @@
-// import { AbstractNodeProperties } from '../../../components/NodeProperties';
-// import { ReactFlowAbstractNode } from '../../../components/ReactFlowNode';
-// import { polyglotNodeComponentMapping } from '../elementMapping';
-import { NodeData, PolyglotNode } from './Node';
+import AbstractNodeProperties from '../../../components/Properties/Nodes/AbstractNodeProperties';
+import { ReactFlowAbstractNode } from '../../../components/ReactFlowNode';
+import { polyglotNodeComponentMapping } from '../elementMapping';
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type AbstractNodeData = NodeData & {
   target: string;
@@ -12,13 +12,13 @@ export type AbstractNode = PolyglotNode & {
   data: AbstractNodeData;
 };
 
-// polyglotNodeComponentMapping.registerMapping<AbstractNode>({
-//   elementType: 'abstractNode',
-//   name: 'Abstract Node',
-//   propertiesComponent: AbstractNodeProperties,
-//   elementComponent: ReactFlowAbstractNode,
-//   defaultData: {
-//     ...defaultPolyglotNodeData,
-//     target: '',
-//   },
-// });
+polyglotNodeComponentMapping.registerMapping<AbstractNode>({
+  elementType: 'abstractNode',
+  name: 'Abstract Node',
+  propertiesComponent: AbstractNodeProperties,
+  elementComponent: ReactFlowAbstractNode,
+  defaultData: {
+    ...defaultPolyglotNodeData,
+    target: '',
+  },
+});
