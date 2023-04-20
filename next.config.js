@@ -16,13 +16,4 @@ module.exports = {
     CURRENT_HOST: CURRENT_HOST,
     BACK_URL: BACK_URL,
   },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/flows',
-        permanent: true,
-      },
-    ];
-  },
 };
