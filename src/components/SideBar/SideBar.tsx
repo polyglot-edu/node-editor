@@ -70,13 +70,16 @@ const SidebarContent = ({
   return (
     <Box
       bg={'white'}
-      borderRight="1px"
-      borderRightColor={'gray.200'}
-      w={{ base: 'flex', md: 'auto' }}
+      borderRight="0.5px"
+      borderRightColor={'secondary'}
+      borderRightStyle={'solid'}
+      //justifyContent="center"
+      //w={{ base: 'flex', md: 'auto' }}
+      width="200px"
+      height="full"
       pos="fixed"
       zIndex="sticky"
       left="0"
-      h="full"
       {...rest}
     >
       {LinkItems.map((link) => (

@@ -5,14 +5,14 @@ import '../components/Card.css';
 import '../styles/globals.css';
 
 import { UserProvider } from '@auth0/nextjs-auth0/client';
-import { ChakraProvider, extendTheme } from '@chakra-ui/react';
+import { ChakraProvider } from '@chakra-ui/react';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
-import { withProse } from '@nikolovlazar/chakra-ui-prose';
 import { Analytics } from '@vercel/analytics/react';
 import type { AppProps } from 'next/app';
 import reportWebVitals from '../reportWebVitals';
+import theme from '../styles/theme';
 
-const theme = extendTheme(
+/*const theme = extendTheme(
   {
     fonts: {
       heading: `Work Sans, system-ui, sans-serif`,
@@ -20,7 +20,7 @@ const theme = extendTheme(
     },
   },
   withProse()
-);
+);*/
 
 export default function App({ Component, pageProps }: AppProps) {
   return (

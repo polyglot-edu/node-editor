@@ -1,6 +1,6 @@
 /* NavItems for the SideBar */
 
-import { Flex, FlexProps, Icon, Link } from '@chakra-ui/react';
+import { Flex, FlexProps, Icon, Link, Text } from '@chakra-ui/react';
 
 import { ReactText } from 'react';
 import { IconType } from 'react-icons';
@@ -25,31 +25,53 @@ const NavItem = ({
     <Link
       href={link}
       style={{ textDecoration: 'none' }}
-      _focus={{ boxShadow: 'none' }}
+      //_focus={{ boxShadow: 'none' }}
     >
       <Flex
+        height="45px"
+        width="196px"
+        ml="1px"
+        pl="20px"
         align="center"
-        p="4"
-        mx="4"
+        //p="4"
         role="group"
         cursor="pointer"
-        {...rest}
         onClick={() => {
           setIsSelected(!isSelected);
         }}
-        bg={isSelected ? 'yellow.100' : ''}
+        borderLeft="5px"
+        borderLeftColor={isSelected ? 'accent.900' : 'white'}
+        borderLeftStyle={'solid'}
+        _hover={{
+          bg: 'white',
+          color: 'accent.900',
+        }}
+        bg={isSelected ? 'accent.200' : ''}
+        color={'primary'}
+        {...rest}
       >
         {icon && (
           <Icon
-            mr="4"
+            width="20px"
+            height="20px"
+            mr="3"
             fontSize="16"
-            _groupHover={{
-              color: 'black',
+            _hover={{
+              color: 'primary',
             }}
             as={icon}
           />
         )}
-        {children}
+        <Text
+          fontFamily={'text'}
+          fontSize="18px"
+          fontWeight="500"
+          lineHeight="25px"
+          letterSpacing="0em"
+          textAlign="left"
+        >
+          {children}
+        </Text>
       </Flex>
     </Link>
   );

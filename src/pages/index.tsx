@@ -18,8 +18,9 @@ import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Navbar from '../components/NavBars/NavBarEncore';
-import SearchBar from '../components/SearchBar/SearchBar';
+import SearchBar from '../components/SearchBar/SearchBarEncore';
 import SideBar from '../components/SideBar/SideBar';
+import themeEncore from '../styles/theme';
 
 const Home = () => {
   const [searchValue, setSearchValue] = useState('');
@@ -34,14 +35,14 @@ const Home = () => {
     <>
       <Navbar />
       <SideBar pagePath={router.pathname} />
-      <Box ml="60" my="70px">
-        <VStack spacing="24px" px="170px">
+      <Box ml="60" mt="50px">
+        <VStack spacing="24px" mx="170px">
           <Flex
             w="100%"
             justifyContent="center"
             //justify="space-between"
           >
-            <Heading>Discover</Heading>
+            <Heading fontFamily={themeEncore.fonts.title}>Discover</Heading>
           </Flex>
 
           <Box w="100%">
@@ -192,8 +193,10 @@ const Home = () => {
               </Box>
             )}
 
-            <Flex justifyContent="center" py="10">
+            <Flex justifyContent="center" mt={isClicked ? '70px' : '5px'}>
               <Button
+                variant="link"
+                //textDecoration="underline"
                 rightIcon={!isClicked ? <ChevronDownIcon /> : <ChevronUpIcon />}
                 onClick={(e: any) => {
                   e.preventDefault();

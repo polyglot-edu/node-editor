@@ -18,7 +18,7 @@ const Home = () => {
           justifyContent="left"
           //justify="space-between"
         >
-          <Heading>Your Resources</Heading>
+          <Heading fontFamily="title">Your resources</Heading>
         </Flex>
 
         <Box my="40px">
