@@ -1,4 +1,9 @@
-import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import axiosCreate, {
+  AxiosError,
+  AxiosHeaders,
+  AxiosInstance,
+  AxiosResponse,
+} from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
@@ -80,12 +85,14 @@ export class APIV2 {
     flowId: string
   ): Promise<AxiosResponse<PolyglotFlow>> {
     const flow = exampleFlows.get(flowId);
-    return Promise.resolve({
+    return Promise.resolve<AxiosResponse<PolyglotFlow>>({
       data: flow!,
       status: flow ? 200 : 404,
       statusText: flow ? 'OK' : 'Not Found',
       headers: {},
-      config: {},
+      config: {
+        headers: new AxiosHeaders(),
+      },
     });
   }
 
@@ -98,12 +105,14 @@ export class APIV2 {
     goal: string
   ): Promise<AxiosResponse<PolyglotFlow>> {
     const flow = abstractFlows.get(`${currentState}, ${goal}`); // TODO: fix this, it's a hack but we need deep equality for the map keys
-    return Promise.resolve({
+    return Promise.resolve<AxiosResponse<PolyglotFlow>>({
       data: flow!,
       status: flow ? 200 : 404,
       statusText: flow ? 'OK' : 'Not Found',
       headers: {},
-      config: {},
+      config: {
+        headers: new AxiosHeaders(),
+      },
     });
   }
 
@@ -164,12 +173,14 @@ export const API = {
     flowId: string
   ): Promise<AxiosResponse<PolyglotFlow>> => {
     const flow = exampleFlows.get(flowId);
-    return Promise.resolve({
+    return Promise.resolve<AxiosResponse<PolyglotFlow>>({
       data: flow!,
       status: flow ? 200 : 404,
       statusText: flow ? 'OK' : 'Not Found',
       headers: {},
-      config: {},
+      config: {
+        headers: new AxiosHeaders(),
+      },
     });
   },
   loadAbstractExampleFlowElementsAsync: (
@@ -177,12 +188,14 @@ export const API = {
     goal: string
   ): Promise<AxiosResponse<PolyglotFlow>> => {
     const flow = abstractFlows.get(`${currentState}, ${goal}`); // TODO: fix this, it's a hack but we need deep equality for the map keys
-    return Promise.resolve({
+    return Promise.resolve<AxiosResponse<PolyglotFlow>>({
       data: flow!,
       status: flow ? 200 : 404,
       statusText: flow ? 'OK' : 'Not Found',
       headers: {},
-      config: {},
+      config: {
+        headers: new AxiosHeaders(),
+      },
     });
   },
 
