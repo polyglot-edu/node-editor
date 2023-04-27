@@ -26,22 +26,22 @@ export default function ResourceCard() {
           <Box>
             <Grid templateColumns="repeat(4, 1fr)" gap={2}>
               <GridItem w="100%">
-                <Text font-size="smaller" align="center" py="1">
+                <Text fontSize="smaller" align="center" py="1">
                   Last Update
                 </Text>
               </GridItem>
               <GridItem w="100%">
-                <Text font-size="smaller" align="center" py="1">
+                <Text fontSize="smaller" align="center" py="1">
                   Used
                 </Text>
               </GridItem>
               <GridItem w="100%">
-                <Text font-size="smaller" align="center" py="1">
+                <Text fontSize="smaller" align="center" py="1">
                   Liked
                 </Text>
               </GridItem>
               <GridItem w="100%">
-                <Text font-size="smaller" align="center" py="1">
+                <Text fontSize="smaller" align="center" py="1">
                   Quality
                 </Text>
               </GridItem>
