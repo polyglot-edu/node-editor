@@ -14,6 +14,7 @@ import {
   VStack,
 } from '@chakra-ui/react';
 
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
@@ -30,10 +31,11 @@ const Home = () => {
   const [buttonName, setButtonName] = useState('Advanced Search');
   const [isClicked, setIsClicked] = useState(false); // used for the button advanced search
   const router = useRouter(); // router è un hook di next.js che fornisce l'oggetto della pagina corrente
+  const { user } = useUser();
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
       <SideBar pagePath={router.pathname} />
       <Box ml="60" mt="50px">
         <VStack spacing="24px" mx="170px">

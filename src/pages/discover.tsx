@@ -18,6 +18,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
+import { useUser } from '@auth0/nextjs-auth0/client';
 import { ChevronDownIcon } from '@chakra-ui/icons';
 import { useState } from 'react';
 import Navbar from '../components/NavBars/NavBarEncore';
@@ -45,10 +46,11 @@ const Home = () => {
     }; */
 
   //const optionsText = selectedOptions.join(', ');
+  const { user } = useUser();
 
   return (
     <>
-      <Navbar />
+      <Navbar user={user} />
       <SideBar pagePath={'/'} />
       <div
       /*style={{

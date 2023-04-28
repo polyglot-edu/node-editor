@@ -1,8 +1,8 @@
+import { Box, Heading } from '@chakra-ui/react';
+
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { AddIcon } from '@chakra-ui/icons';
 import {
-  Box,
-  Heading,
   IconButton,
   Tab,
   TabList,
@@ -13,12 +13,14 @@ import {
   useDisclosure,
 } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
+import router from 'next/router';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
 import CreateFlowModal from '../../components/Modals/CreateFlowModal';
 import DeleteFlowModal from '../../components/Modals/DeleteFlowModal';
-import Navbar from '../../components/NavBars/NavBar';
+import Navbar from '../../components/NavBars/NavBarEncore';
 import SearchBar from '../../components/SearchBar/SearchBar';
+import SideBar from '../../components/SideBar/SideBar';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
 import auth0 from '../../utils/auth0';
@@ -27,7 +29,7 @@ type FlowIndexPageProps = {
   accessToken: string | undefined;
 };
 
-const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
+const Home = ({ accessToken }: FlowIndexPageProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
   const [selectedFlowId, setSelectedFlowId] = useState<string | undefined>();
@@ -81,7 +83,8 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
   return (
     <>
       <Navbar user={user} />
-      <Box px="10%">
+      <SideBar pagePath={router.pathname} />
+      <Box ml="60" my="70px" pl="40px">
         <Heading py="5%">Learning Paths</Heading>
         <SearchBar
           inputValue={searchValue}
@@ -161,7 +164,7 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
   );
 };
 
-export default FlowIndexPage;
+export default Home;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
   const session = await auth0.getSession(ctx.req, ctx.res);
