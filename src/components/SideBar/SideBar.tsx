@@ -1,6 +1,6 @@
 import { Box, BoxProps, useDisclosure } from '@chakra-ui/react';
 import { ReactNode, useEffect } from 'react';
-import { FaVoteYea } from 'react-icons/fa';
+import { BsBookmarkCheck } from 'react-icons/bs';
 import { IoTelescope } from 'react-icons/io5';
 import { RiDashboardFill, RiNodeTree } from 'react-icons/ri';
 
@@ -16,7 +16,7 @@ interface LinkItemProps {
 const LinkItems: Array<LinkItemProps> = [
   { name: 'Dashboard', icon: RiDashboardFill, link: '/dashboard' },
   { name: 'Discover', icon: IoTelescope, link: '/' },
-  { name: 'Your resources', icon: FaVoteYea, link: '/resources' },
+  { name: 'Your resources', icon: BsBookmarkCheck, link: '/resources' },
   { name: 'Plan', icon: RiNodeTree, link: '/flows' },
 ];
 

@@ -25,6 +25,13 @@ const axios = axiosCreate.create({
   withCredentials: true,
 });
 
+const axiosNoCookie = axiosCreate.create({
+  baseURL: process.env.BACK_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 type AutocompleteOutput = string[];
 
 export class APIV2 {
@@ -145,6 +152,58 @@ export class APIV2 {
   }
   createNewFlowJson(flow: PolyglotFlow): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows/json`, flow);
+  }
+  /*getSkills(page: number): Promise<AxiosResponse> {
+    //return axios.get('http://localhost:3000/api/encore/skills');
+    return axiosNoCookie.get(`https://encore-db.grial.eu/api/skills/?page={page}`);
+  }*/
+  async getSkills(page = 1, allSkills: any[] = []): Promise<any[]> {
+    try {
+      const respSkills = await axiosNoCookie.get(
+        `https://encore-db.grial.eu/api/skills/?page=${page}`
+      );
+
+      const skills = respSkills.data?.data || [];
+      const updatedSkills = [...allSkills, ...skills]; // to create a new array combining two other array
+
+      if (skills.length === 10) {
+        return this.getSkills(page + 1, updatedSkills);
+      }
+
+      return updatedSkills;
+    } catch (error) {
+      throw error;
+    }
+  }
+
+  /*getOERs(): Promise<AxiosResponse> {
+    //return axios.get('http://localhost:3000/api/encore/oers');
+    return axiosNoCookie.get('https://encore-db.grial.eu/api/oers/?page=1');
+  }*/
+
+  async getOERs(page = 1, allOers: any[] = [], stop = 10): Promise<any[]> {
+    try {
+      const respOers = await axiosNoCookie.get(
+        `https://encore-db.grial.eu/api/oers/?page=${page}`
+      );
+
+      const oers = respOers.data?.data || [];
+      const updatedOers = [...allOers, ...oers]; // to create a new array combining two other array
+
+      /*if (oers.length === 10) {
+        console.log(page);
+        return this.getOERs(page + 1, updatedOers);
+      }*/
+
+      if (stop > 0) {
+        console.log(page);
+        return this.getOERs(page + 1, updatedOers, stop - 1);
+      }
+
+      return updatedOers;
+    } catch (error) {
+      throw error;
+    }
   }
 }
 

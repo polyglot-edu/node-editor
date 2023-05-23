@@ -1,15 +1,7 @@
 import {
   Box,
-  Button,
-  Checkbox,
   Flex,
-  Grid,
-  GridItem,
   Heading,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
   Tab,
   TabList,
   TabPanel,
@@ -19,47 +11,67 @@ import {
 } from '@chakra-ui/react';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { ChevronDownIcon } from '@chakra-ui/icons';
+import { GetServerSideProps } from 'next';
+import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Navbar from '../components/NavBars/NavBarEncore';
 import SearchBar from '../components/SearchBar/SearchBarEncore';
 import SideBar from '../components/SideBar/SideBar';
+import { APIV2 } from '../data/api';
+import auth0 from '../utils/auth0';
 
-const Home = () => {
-  //const router = useRouter();     // router è un hook di next.js che fornisce l'oggetto della pagina corrente
-  const [searchValue, setSearchValue] = useState('');
-  //const [suggestions, setSuggestions] = useState<string[]>([]);
-  const suggestions: string[] = [];
-  const [selectedOptions, setSelectedOptions] = useState<string[]>([]);
+type DiscoverPageProps = {
+  accessToken: string | undefined;
+};
 
-  const options1: string[] = ['All', 'Green', 'Digital', 'Entrepreneurship'];
-  /*const options2: string[] = ["All", "cnacin"];
-    const options3: string[] = ["All", "cnacin"];
-    const options4: string[] = ["All", "cnacin"];
-
-    const handleSelectedOption = (option: any) => {
-        if(selectedOptions.includes(option)) {
-            setSelectedOptions(selectedOptions.filter((o) => o != option));
-        } else {
-            setSelectedOptions([...selectedOptions, option]);
-        }
-    }; */
+const Home = (props: DiscoverPageProps) => {
+  const router = useRouter(); // router è un hook di next.js che fornisce l'oggetto della pagina corrente
+  const [searchValue, setSearchValue] = useState<string[]>([]);
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  //const suggestions: string[] = [];
 
   //const optionsText = selectedOptions.join(', ');
   const { user } = useUser();
+  const [data, setData] = useState<any[]>([]);
+  //let data_list: string[] = [];
+
+  console.log(router.query);
+
+  const searchCallback = async () => {
+    const api = new APIV2(props.accessToken);
+
+    const resp = await api.getSkills();
+    const skills = resp.data?.data || [];
+    const labels = skills.map((skill: any) => skill.label); // extract only "label" fields from every object
+    setData(skills);
+    setSuggestions(labels);
+    /*data_list = Object.values(data);
+    for (let i = 0; i < data_list.length; i++) {
+      console.log(data_list[i]);
+    }*/
+  };
+
+  console.log(data);
+  console.log(suggestions);
+  /*useEffect(() => {
+    console.log('ciao');
+    const api = new APIV2(props.accessToken);
+
+    // nella useEffect le funzioni async fanno fatte così, è sbagliato mettere async subito la prima
+    (async () => {
+      const resp = await api.getSkills();
+      console.log(resp.data?.data);
+    })();
+
+  }, []);*/
 
   return (
     <>
       <Navbar user={user} />
       <SideBar pagePath={'/'} />
-      <div
-      /*style={{
-          backgroundColor: 'background',
-          height: 'full',
-          width: 'full',
-        }}*/
-      >
-        <Box ml="60" py="30px" pl="30px" pr="70px">
+      {JSON.stringify(data)}
+      <Flex ml="200px" h="100vh">
+        <Box flex="1" py="30px" px="30px" h="100%">
           <Flex
             w="100%"
             justifyContent="left"
@@ -70,239 +82,65 @@ const Home = () => {
             </Heading>
           </Flex>
           <Box w="100%">
-            <Text py="1">Keywords</Text>
+            <Text variant="label" my="6px">
+              Keywords
+            </Text>
 
             <SearchBar
               inputValue={searchValue}
               setInputValue={setSearchValue}
               items={suggestions}
               placeholder="Search resources..."
+              onSearchCallback={searchCallback}
             />
           </Box>
+        </Box>
 
-          <div>
-            <Box
-              w="100%"
-              pt="10px"
-              //display="none"
-            >
-              <Grid templateColumns="repeat(4, 1fr)" gap={4}>
-                <GridItem w="100%" h="10">
-                  <Text variant="label" my="6px">
-                    Domain
-                  </Text>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      variant="dropdown"
-                      rightIcon={<ChevronDownIcon />}
-                      w="100%"
-                    >
-                      <Text align="left">
-                        {selectedOptions.includes('All') &&
-                        options1.length === selectedOptions.length
-                          ? 'All'
-                          : selectedOptions.length > 0
-                          ? selectedOptions.join(', ')
-                          : 'Select Options'}
-                      </Text>
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem>
-                        <Checkbox
-                          isChecked={selectedOptions.includes(
-                            options1[0]
-                          )} /* Per gli elementi del menù dovrei fare un array */
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedOptions(options1);
-                            } else {
-                              setSelectedOptions([]);
-                            }
-                          }}
-                        >
-                          All
-                        </Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox
-                          isChecked={selectedOptions.includes(options1[1])}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedOptions((prev) => [
-                                ...prev,
-                                options1[1],
-                              ]);
-                            } else {
-                              setSelectedOptions((prev) =>
-                                prev.filter((option) => option != options1[1])
-                              );
-                            }
-                          }}
-                        >
-                          Green
-                        </Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox
-                          isChecked={selectedOptions.includes(options1[2])}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedOptions((prev) => [
-                                ...prev,
-                                options1[2],
-                              ]);
-                            } else {
-                              setSelectedOptions((prev) =>
-                                prev.filter((option) => option != options1[2])
-                              );
-                            }
-                          }}
-                        >
-                          Digital
-                        </Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox
-                          isChecked={selectedOptions.includes(options1[3])}
-                          onChange={(e) => {
-                            if (e.target.checked) {
-                              setSelectedOptions((prev) => [
-                                ...prev,
-                                options1[3],
-                              ]);
-                            } else {
-                              setSelectedOptions((prev) =>
-                                prev.filter((option) => option != options1[3])
-                              );
-                            }
-                          }}
-                        >
-                          Entrepreneurship
-                        </Checkbox>
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </GridItem>
-                <GridItem w="100%" h="10" alignItems="center">
-                  <Text align="left" py="1">
-                    Subject
-                  </Text>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronDownIcon />}
-                      w="100%"
-                    >
-                      <Text align="left">Subject</Text>
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem>
-                        <Checkbox defaultChecked>All</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Chemistry</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>History</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Mathematic</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Psychology</Checkbox>
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </GridItem>
-                <GridItem w="100%" h="10">
-                  <Text align="left" py="1">
-                    Type of resources
-                  </Text>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronDownIcon />}
-                      w="100%"
-                    >
-                      <Text align="left">Type of resources</Text>
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem>
-                        <Checkbox defaultChecked>All</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Articles</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Books</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Lab</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Videos</Checkbox>
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </GridItem>
-                <GridItem w="100%" h="10">
-                  <Text align="left" py="1">
-                    Audience
-                  </Text>
-                  <Menu>
-                    <MenuButton
-                      as={Button}
-                      rightIcon={<ChevronDownIcon />}
-                      w="100%"
-                    >
-                      <Text align="left">Audience</Text>
-                    </MenuButton>
-                    <MenuList>
-                      <MenuItem>
-                        <Checkbox defaultChecked>All</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>
-                          1st of Bachelor&apos;s
-                        </Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>
-                          2nd of Bachelor&apos;s
-                        </Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Adult Education</Checkbox>
-                      </MenuItem>
-                      <MenuItem>
-                        <Checkbox defaultChecked>Professional</Checkbox>
-                      </MenuItem>
-                    </MenuList>
-                  </Menu>
-                </GridItem>
-              </Grid>
-            </Box>
-          </div>
-
-          <Tabs pt="5%">
+        <Box
+          flex="1" // "flex='1'" fill the rest of the page
+          py="30px"
+          px="30px"
+          h="100%"
+          backgroundColor="background"
+          borderLeft="0.5px"
+          borderLeftColor={'secondary'}
+          borderLeftStyle={'solid'}
+        >
+          <Tabs>
             <TabList>
-              <Tab>Bubble chart</Tab>
+              <Tab>Domains</Tab>
               <Tab>Map of concepts</Tab>
+              <Tab>Types of Resources</Tab>
             </TabList>
             <TabPanels>
               <TabPanel pt="3%">
-                <Text align="center">Bubble Chart</Text>
+                <Text align="center">Domains</Text>
               </TabPanel>
               <TabPanel pt="3%">
                 <Text align="center">Map of concepts</Text>
               </TabPanel>
+              <TabPanel pt="3%">
+                <Text align="center">Types of Resources</Text>
+              </TabPanel>
             </TabPanels>
           </Tabs>
         </Box>
-      </div>
+      </Flex>
     </>
   );
 };
 
 export default Home;
+
+// need to mantain the cookies of the page and pass authorization token
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await auth0.getSession(ctx.req, ctx.res);
+
+  if (!session) return { props: {} };
+
+  return {
+    props: {
+      accessToken: session.accessToken,
+    },
+  };
+};

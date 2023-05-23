@@ -1,43 +1,171 @@
 import {
   Box,
   Button,
-  Checkbox,
   Flex,
-  Grid,
-  GridItem,
   Heading,
-  Menu,
-  MenuButton,
-  MenuItem,
-  MenuList,
+  HStack,
   Text,
+  Tooltip,
   VStack,
 } from '@chakra-ui/react';
+
+import Image from 'next/image';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
-import { useState } from 'react';
+import { useEffect, useState } from 'react';
+import { VennDiagram } from 'reaviz';
+import AdvancedSearch from '../components/AdvancedSearch/AdvancedSearch';
 import Navbar from '../components/NavBars/NavBarEncore';
 import SearchBar from '../components/SearchBar/SearchBarEncore';
 import SideBar from '../components/SideBar/SideBar';
+import { APIV2 } from '../data/api';
+import icon_infocircle from '../public/icons/icon_infocircle.svg';
 import themeEncore from '../styles/theme';
+//import VennDiagramUpset from '../components/VennDiagram/VennDiagramUpsetJS';
+//import dynamic from 'next/dynamic';
 
-const Home = () => {
-  const [searchValue, setSearchValue] = useState('');
-  //const [suggestions, setSuggestions] = useState<string[]>([]);
-  const suggestions: string[] = [];
+//const ChartComponent = dynamic(() => import('../components/VennDiagram/VennDiagramAmCharts'), { ssr: false });
+
+type DiscoverPageProps = {
+  accessToken: string | undefined;
+};
+
+const Home = (props: DiscoverPageProps) => {
+  const [searchValue, setSearchValue] = useState<string[]>([]);
+  //let searchValue: string[] = [];
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+  //const suggestions: string[] = [];
+  const [dataSkills, setDataSkills] = useState<any[]>([]);
+  const [dataOers, setDataOers] = useState<any[]>([]);
+  const [domain, setDomain] = useState<string[]>([]); // to save each type of domain of the resources
+  const [subject, setSubject] = useState<string[]>([]);
+  //const [typeResources, setTypeResources] = useState<string[]>([]);
+  //const [audience, setAudience] = useState<string[]>([]);
   const [showBox, setShowBox] = useState(false); // used to show the options for the advanced search
   const [buttonName, setButtonName] = useState('Advanced Search');
   const [isClicked, setIsClicked] = useState(false); // used for the button advanced search
+
   const router = useRouter(); // router è un hook di next.js che fornisce l'oggetto della pagina corrente
   const { user } = useUser();
+  /*const d: Types.Data[] = [
+    { id: 1, name: 'Digital', size: 500, fillColor: 'ligthnlue' },
+    { id: 2, name: 'Entrepreneurship', size: 500, fillColor: 'ligthyellow' },
+    { id: 3, name: 'Green', size: 500, fillColor: 'ligthgreen' },
+  ];*/
+
+  const d = [
+    { key: ['Digital'], data: 12 },
+    { key: ['Entrepreneurship'], data: 12 },
+    { key: ['Green'], data: 12 },
+    { key: ['Digital', 'Entrepreneurship'], data: 2 },
+    { key: ['Entrepreneurship', 'Green'], data: 2 },
+    { key: ['Digital', 'Green'], data: 2 },
+    { key: ['Digital', 'Entrepreneurship', 'Green'], data: 1 },
+  ];
+
+  //const [data, setData] = React.useState<Types.Data[]>(d.slice(1, 10));
+
+  //let data_list: string[] = [];
+
+  console.log(router.query);
+
+  const searchCallback = async () => {
+    const api = new APIV2(props.accessToken);
+
+    const oers = await api.getOERs();
+    //const oers = resp.data?.data || [];
+    console.log(oers);
+    //const labels = skills.map((skill: any) => skill.label); // extract only "label" fields from every object
+    //console.log(labels);
+    setDataOers(oers);
+    console.log(dataOers);
+
+    const oersSkills = oers.map((oer: any) => oer.skills);
+    console.log(oersSkills);
+    //const oersSkillsLabel = oersSkills.map((skill: any) => skill.label);
+    //console.log(oersSkillsLabel);
+
+    // -------------- LABEL --------------
+    const oersSkillsLabel = oersSkills.flatMap((skills: any, index: number) => [
+      // use of [] to store more labels for the same id_oer in the same array
+      skills.length > 0
+        ? skills.map((skill: any) => ({
+            id_oer: oers[index].id,
+            skillLabel: skill.label,
+          }))
+        : {
+            id_oer: oers[index].id,
+            skillLabel: '',
+          },
+    ]);
+
+    console.log(oersSkillsLabel);
+
+    // -------------- DOMAIN --------------
+
+    // taking all domain arrays
+    const oersSkillsDomain = oersSkills.flatMap((skills: any) =>
+      skills.map((skill: any) =>
+        skill.domain?.map((domain: any) => domain.name)
+      )
+    );
+
+    console.log(oersSkillsDomain);
+
+    // taking possible skill domain without duplicate
+
+    const domainSkill = Array.from(new Set(oersSkillsDomain.flat())).filter(
+      (skillDomain: any) => skillDomain !== undefined
+    );
+    console.log(domainSkill);
+    setDomain(domainSkill);
+
+    // -------------- SUBJECT --------------
+
+    const oersSubject = oers.flatMap((oer: any) => [
+      oer.subject?.map((subject: any) => subject.name),
+    ]);
+    console.log(oersSubject);
+    // taking all possible type of subjects without duplicate
+
+    const oersSubjects = Array.from(new Set(oersSubject.flat())).filter(
+      (subject: any) => subject !== undefined
+    );
+    console.log(oersSubjects);
+    setSubject(oersSubjects);
+  };
+
+  useEffect(() => {
+    console.log('ciao');
+    const api = new APIV2(props.accessToken);
+
+    // nella useEffect le funzioni async fanno fatte così, è sbagliato mettere async subito la prima
+    (async () => {
+      try {
+        const skills = await api.getSkills();
+        //const skills = respSkills.data?.data || [];
+        const labels = skills.map((skill: any) => skill.label); // extract only "label" fields from every object
+        setDataSkills(skills);
+        console.log(dataSkills);
+        setSuggestions(labels);
+        console.log(suggestions);
+      } catch (error) {
+        console.error(error);
+      }
+      /*const respOers = await api.getOERs();
+      const oers = respOers.data?.data || [];
+      console.log(oers);
+      setDataOers(oers);*/
+    })();
+  }, []);
 
   return (
     <>
       <Navbar user={user} />
       <SideBar pagePath={router.pathname} />
-      <Box ml="60" mt="50px">
+      <Box ml="200px" mt="50px">
         <VStack spacing="24px" mx="170px">
           <Flex
             w="100%"
@@ -48,12 +176,33 @@ const Home = () => {
           </Flex>
 
           <Box w="100%">
-            <Text py="1">Keywords</Text>
+            <HStack>
+              <Text variant="label" my="6px">
+                Keywords
+              </Text>
+              <Tooltip
+                hasArrow
+                placement="top"
+                label="Keywords. Search resources in Green, Digital and Entrepreneurial skills from ENCORE OERs database."
+                aria-label="Search resources in Green, Digital and Entrepreneurial skills from ENCORE OERs database."
+                ml="1px"
+                bg="white"
+                color="primary"
+                p={2}
+              >
+                <span>
+                  {' '}
+                  {/*use span element to fix problem of communication between Tooltip element and svg image*/}
+                  <Image src={icon_infocircle} alt="infocircle" />
+                </span>
+              </Tooltip>
+            </HStack>
 
             <SearchBar
               inputValue={searchValue}
               setInputValue={setSearchValue}
               items={suggestions}
+              onSearchCallback={searchCallback}
               placeholder="Search resources..."
             />
           </Box>
@@ -62,136 +211,11 @@ const Home = () => {
             {showBox && (
               <Box
                 w="100%"
-                px="5"
+                px="5px"
+                //flex="1"
                 //display="none"
               >
-                <Grid templateColumns="repeat(4, 1fr)" gap={4}>
-                  <GridItem w="100%" h="10">
-                    <Text align="left" py="1">
-                      Domain
-                    </Text>
-                    <Menu>
-                      <MenuButton
-                        as={Button}
-                        rightIcon={<ChevronDownIcon />}
-                        w="100%"
-                      >
-                        Domain
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem>
-                          <Checkbox defaultChecked>All</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Green</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Digital</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Entrepreneurship</Checkbox>
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </GridItem>
-                  <GridItem w="100%" h="10" alignItems="center">
-                    <Text align="left" py="1">
-                      Subject
-                    </Text>
-                    <Menu>
-                      <MenuButton
-                        as={Button}
-                        rightIcon={<ChevronDownIcon />}
-                        w="100%"
-                      >
-                        Subject
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem>
-                          <Checkbox defaultChecked>All</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Chemistry</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>History</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Mathematic</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Psychology</Checkbox>
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </GridItem>
-                  <GridItem w="100%" h="10">
-                    <Text align="left" py="1">
-                      Type of resources
-                    </Text>
-                    <Menu>
-                      <MenuButton
-                        as={Button}
-                        rightIcon={<ChevronDownIcon />}
-                        w="100%"
-                      >
-                        Type of resources
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem>
-                          <Checkbox defaultChecked>All</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Articles</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Books</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Lab</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Videos</Checkbox>
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </GridItem>
-                  <GridItem w="100%" h="10">
-                    <Text align="left" py="1">
-                      Audience
-                    </Text>
-                    <Menu>
-                      <MenuButton
-                        as={Button}
-                        rightIcon={<ChevronDownIcon />}
-                        w="100%"
-                      >
-                        Audience
-                      </MenuButton>
-                      <MenuList>
-                        <MenuItem>
-                          <Checkbox defaultChecked>All</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>
-                            1st of Bachelor&apos;s
-                          </Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>
-                            2nd of Bachelor&apos;s
-                          </Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Adult Education</Checkbox>
-                        </MenuItem>
-                        <MenuItem>
-                          <Checkbox defaultChecked>Professional</Checkbox>
-                        </MenuItem>
-                      </MenuList>
-                    </Menu>
-                  </GridItem>
-                </Grid>
+                <AdvancedSearch domain={domain} subject={subject} />
               </Box>
             )}
 
@@ -217,6 +241,16 @@ const Home = () => {
               </Button>
             </Flex>
           </div>
+          {/*<BubbleChart
+            bubblesData={data}
+            width={1000}
+            height={1000}
+            textFillColor="darkgrey"
+            minValue={1}
+            maxValue={150}
+            backgroundColor="white"
+          />*/}
+          <VennDiagram data={d} />
         </VStack>
       </Box>
     </>

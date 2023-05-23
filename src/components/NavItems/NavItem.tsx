@@ -42,10 +42,10 @@ const NavItem = ({
         borderLeft="5px"
         borderLeftColor={isSelected ? 'accent.900' : 'white'}
         borderLeftStyle={'solid'}
-        _hover={{
+        /*_hover={{
           bg: 'white',
           color: 'accent.900',
-        }}
+        }}*/
         bg={isSelected ? 'accent.200' : ''}
         color={'primary'}
         {...rest}

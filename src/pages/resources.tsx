@@ -14,7 +14,7 @@ const Home = () => {
     <>
       <Navbar user={user} />
       <SideBar pagePath={router.pathname} />
-      <Box ml="60" my="70px" pl="40px">
+      <Box ml="200px" my="70px" pl="40px">
         <Flex
           w="100%"
           justifyContent="left"
