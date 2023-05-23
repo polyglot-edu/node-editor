@@ -13,7 +13,7 @@ import { useState } from 'react';
 import DropDownMenuItem from '../DropDownMenuItem/DropDownMenuItem';
 
 type DropDownMenuProps = {
-  options: string[];
+  options: string[] | undefined;
 };
 
 export default function DropDownMenu({ options }: DropDownMenuProps) {
@@ -41,7 +41,7 @@ export default function DropDownMenu({ options }: DropDownMenuProps) {
           >
             <Text align="left" overflow="hidden" whiteSpace="nowrap">
               {selectedOptions.includes('All') &&
-              options.length === selectedOptions.length
+              options?.length === selectedOptions.length
                 ? 'All'
                 : selectedOptions.length > 0
                 ? selectedOptions.join(', ')
@@ -49,13 +49,13 @@ export default function DropDownMenu({ options }: DropDownMenuProps) {
             </Text>
           </MenuButton>
           <MenuList
-            maxH="20rem"
+            maxH="15rem"
             maxW="100px"
             overflowY="auto"
             whiteSpace="pre-wrap"
             overflowWrap={'normal'}
           >
-            {options.map((option) => (
+            {options?.map((option) => (
               <MenuItem key={option}>
                 <DropDownMenuItem
                   item={option}
