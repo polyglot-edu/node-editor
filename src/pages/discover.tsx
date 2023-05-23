@@ -11,33 +11,32 @@ import {
 } from '@chakra-ui/react';
 
 import { useUser } from '@auth0/nextjs-auth0/client';
-import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useState } from 'react';
 import Navbar from '../components/NavBars/NavBarEncore';
 import SearchBar from '../components/SearchBar/SearchBarEncore';
 import SideBar from '../components/SideBar/SideBar';
-import { APIV2 } from '../data/api';
-import auth0 from '../utils/auth0';
 
-type DiscoverPageProps = {
+/*type DiscoverPageProps = {
   accessToken: string | undefined;
-};
+};*/
 
-const Home = (props: DiscoverPageProps) => {
+const Home = () => {
   const router = useRouter(); // router è un hook di next.js che fornisce l'oggetto della pagina corrente
   const [searchValue, setSearchValue] = useState<string[]>([]);
-  const [suggestions, setSuggestions] = useState<string[]>([]);
-  //const suggestions: string[] = [];
+  //const [suggestions, setSuggestions] = useState<string[]>([]);
+  const suggestions: string[] = [];
 
   //const optionsText = selectedOptions.join(', ');
   const { user } = useUser();
-  const [data, setData] = useState<any[]>([]);
+  //const [data, setData] = useState<any[]>([]) || undefined;
+  const data: any[] = [];
   //let data_list: string[] = [];
 
   console.log(router.query);
 
-  const searchCallback = async () => {
+  {
+    /*const searchCallback = async () => {
     const api = new APIV2(props.accessToken);
 
     const resp = await api.getSkills();
@@ -45,14 +44,11 @@ const Home = (props: DiscoverPageProps) => {
     const labels = skills.map((skill: any) => skill.label); // extract only "label" fields from every object
     setData(skills);
     setSuggestions(labels);
-    /*data_list = Object.values(data);
-    for (let i = 0; i < data_list.length; i++) {
-      console.log(data_list[i]);
-    }*/
-  };
+   };*/
+  }
 
-  console.log(data);
-  console.log(suggestions);
+  //console.log(data);
+  //console.log(suggestions);
   /*useEffect(() => {
     console.log('ciao');
     const api = new APIV2(props.accessToken);
@@ -91,7 +87,6 @@ const Home = (props: DiscoverPageProps) => {
               setInputValue={setSearchValue}
               items={suggestions}
               placeholder="Search resources..."
-              onSearchCallback={searchCallback}
             />
           </Box>
         </Box>
@@ -131,16 +126,3 @@ const Home = (props: DiscoverPageProps) => {
 };
 
 export default Home;
-
-// need to mantain the cookies of the page and pass authorization token
-export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await auth0.getSession(ctx.req, ctx.res);
-
-  if (!session) return { props: {} };
-
-  return {
-    props: {
-      accessToken: session.accessToken,
-    },
-  };
-};

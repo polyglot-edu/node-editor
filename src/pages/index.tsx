@@ -15,7 +15,7 @@ import { useUser } from '@auth0/nextjs-auth0/client';
 import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
-import { VennDiagram } from 'reaviz';
+//import { VennDiagram } from 'reaviz';
 import AdvancedSearch from '../components/AdvancedSearch/AdvancedSearch';
 import Navbar from '../components/NavBars/NavBarEncore';
 import SearchBar from '../components/SearchBar/SearchBarEncore';
@@ -55,7 +55,8 @@ const Home = (props: DiscoverPageProps) => {
     { id: 3, name: 'Green', size: 500, fillColor: 'ligthgreen' },
   ];*/
 
-  const d = [
+  // data for reaviz venn diagram
+  /*const d = [
     { key: ['Digital'], data: 12 },
     { key: ['Entrepreneurship'], data: 12 },
     { key: ['Green'], data: 12 },
@@ -63,7 +64,7 @@ const Home = (props: DiscoverPageProps) => {
     { key: ['Entrepreneurship', 'Green'], data: 2 },
     { key: ['Digital', 'Green'], data: 2 },
     { key: ['Digital', 'Entrepreneurship', 'Green'], data: 1 },
-  ];
+  ];*/
 
   //const [data, setData] = React.useState<Types.Data[]>(d.slice(1, 10));
 
@@ -250,7 +251,7 @@ const Home = (props: DiscoverPageProps) => {
             maxValue={150}
             backgroundColor="white"
           />*/}
-          <VennDiagram data={d} />
+          {/*<VennDiagram data={d} />*/}
         </VStack>
       </Box>
     </>

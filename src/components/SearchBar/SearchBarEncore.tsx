@@ -51,7 +51,7 @@ export default function SearchBar({
             placeholder={placeholder || 'Search...'}
             onChange={(e) => {
               e.preventDefault();
-              setInputValue(e.currentTarget.value);
+              //setInputValue(e.currentTarget.value);
             }}
           >
             {({ tags }) =>
