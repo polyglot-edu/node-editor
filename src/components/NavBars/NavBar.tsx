@@ -29,7 +29,7 @@ export default function Navbar({ user }: NavBarProps) {
       {!user ? (
         <div className="rounded-lg bg-cyan-400 pr-2 pl-2 pt-1 pb-1">
           <Link
-            href={'/api/auth/login'}
+            href={process.env.TEST_MODE === "true" ? {} : '/api/auth/login'}
             className="text-white"
             style={{ textDecoration: 'none' }}
           >
@@ -39,7 +39,7 @@ export default function Navbar({ user }: NavBarProps) {
       ) : (
         <HStack>
           <div>{user.name}</div>
-          <Link href={'/api/auth/logout'} style={{ textDecoration: 'none' }}>
+          <Link href={process.env.TEST_MODE === "true" ? {} : '/api/auth/logout'} style={{ textDecoration: 'none' }}>
             <Button colorScheme="red" size={['sm', 'md']}>
               Log out
             </Button>
