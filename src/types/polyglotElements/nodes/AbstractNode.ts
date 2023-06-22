@@ -5,6 +5,7 @@ import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type AbstractNodeData = NodeData & {
   target: string;
+  conceptmap?: object;
 };
 
 export type AbstractNode = PolyglotNode & {

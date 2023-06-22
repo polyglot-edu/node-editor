@@ -7,6 +7,7 @@ import {
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
 } from '../types/polyglotElements';
+import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
 import { createNewDefaultPolyglotFlow } from '../utils/utils';
 import abstractFlows from './abstractExample';
@@ -136,6 +137,15 @@ export class APIV2 {
   }
   createNewFlowJson(flow: PolyglotFlow): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows/json`, flow);
+  }
+  getConceptGraph(
+    topic: string,
+    depth: number
+  ): Promise<AxiosResponse<ConceptMap>> {
+    return this.axios.post('/api/openai/genGraph', {
+      topic: topic,
+      depth: depth,
+    });
   }
 }
 
