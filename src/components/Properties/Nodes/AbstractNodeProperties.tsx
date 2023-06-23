@@ -12,6 +12,10 @@ const AbstractNodeProperties = () => {
 
   useEffect(() => {
     register('data.conceptmap');
+    register('data.execution.concepts');
+    register('data.execution.numOfRes');
+    register('data.execution.bloom_lv');
+    register('data.execution.resType');
   }, [register]);
 
   return (

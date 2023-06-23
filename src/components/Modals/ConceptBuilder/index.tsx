@@ -11,6 +11,7 @@ import {
 } from '@chakra-ui/react';
 import { useState } from 'react';
 import ConceptGraph from './ConceptGraph';
+import ExecutionSetup from './ExecutionSetup';
 import TopicForm from './TopicForm';
 
 type ConceptBuilderModalProps = {
@@ -42,7 +43,7 @@ const ConceptBuilderModal = ({ isOpen, onClose }: ConceptBuilderModalProps) => {
             ? 'Concept Map generation setup (1 of 2)'
             : phase === 2
             ? 'View the concept graph (2 of 2)'
-            : 'Invalid phase'}
+            : 'Concept Execution setup (3 of 3)'}
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody>
@@ -56,7 +57,9 @@ const ConceptBuilderModal = ({ isOpen, onClose }: ConceptBuilderModalProps) => {
             />
           ) : phase == 2 ? (
             <ConceptGraph concept={concept} graphDepth={graphDepth} />
-          ) : null}
+          ) : (
+            <ExecutionSetup />
+          )}
         </ModalBody>
 
         <ModalFooter>
@@ -72,7 +75,7 @@ const ConceptBuilderModal = ({ isOpen, onClose }: ConceptBuilderModalProps) => {
           >
             Back
           </Button>
-          {phase == 2 ? (
+          {phase == 3 ? (
             <Button
               type="submit"
               loadingText="Creating"
