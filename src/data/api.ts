@@ -77,16 +77,16 @@ export class APIV2 {
   logout(): Promise<AxiosResponse> {
     return this.axios.post('/api/auth/logout');
   }
-  loadExampleFlowElementsAsync(
-    flowId: string
-  ): Promise<AxiosResponse<PolyglotFlow>> {
+  loadExampleFlowElementsAsync(flowId: string): any {
     const flow = exampleFlows.get(flowId);
     return Promise.resolve({
       data: flow!,
       status: flow ? 200 : 404,
       statusText: flow ? 'OK' : 'Not Found',
       headers: {},
-      config: {},
+      config: {
+        headers: {},
+      },
     });
   }
 
@@ -97,7 +97,7 @@ export class APIV2 {
   loadAbstractExampleFlowElementsAsync(
     currentState: string,
     goal: string
-  ): Promise<AxiosResponse<PolyglotFlow>> {
+  ): any {
     const flow = abstractFlows.get(`${currentState}, ${goal}`); // TODO: fix this, it's a hack but we need deep equality for the map keys
     return Promise.resolve({
       data: flow!,
@@ -170,9 +170,7 @@ export const API = {
   getUserInfo: (): Promise<AxiosResponse<User>> => {
     return axios.get('/api/user/me');
   },
-  loadExampleFlowElementsAsync: (
-    flowId: string
-  ): Promise<AxiosResponse<PolyglotFlow>> => {
+  loadExampleFlowElementsAsync: (flowId: string): any => {
     const flow = exampleFlows.get(flowId);
     return Promise.resolve({
       data: flow!,
@@ -185,7 +183,7 @@ export const API = {
   loadAbstractExampleFlowElementsAsync: (
     currentState: string,
     goal: string
-  ): Promise<AxiosResponse<PolyglotFlow>> => {
+  ): any => {
     const flow = abstractFlows.get(`${currentState}, ${goal}`); // TODO: fix this, it's a hack but we need deep equality for the map keys
     return Promise.resolve({
       data: flow!,
