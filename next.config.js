@@ -15,6 +15,7 @@ module.exports = {
   env: {
     CURRENT_HOST: CURRENT_HOST,
     BACK_URL: BACK_URL,
+    TEST_MODE: process.env.TEST_MODE
   },
   async redirects() {
     return [

@@ -57,7 +57,7 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
   );
 
   useEffect(() => {
-    if (user) {
+    if (user || process.env.TEST_MODE === "true") {
       let queryparams = '';
       if (currentTab === 0) queryparams = '?me=true&';
       else if (searchValue) queryparams = '?';
@@ -115,7 +115,7 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
               )}
               <Tooltip label="Create Flow">
                 <IconButton
-                  hidden={!user}
+                  hidden={!(user || process.env.TEST_MODE === "true")}
                   aria-label="Create Flow"
                   position={'fixed'}
                   right={10}
