@@ -68,6 +68,17 @@ const ExecutionSetup = ({}: ExecutionSetupProps) => {
           <NumberDecrementStepper />
         </NumberInputStepper>
       </NumberInput>
+      <FormLabel>Select the algorithm to be used:</FormLabel>
+      <Select
+        placeholder="Select option"
+        onChange={(e) =>
+          setValue('data.execution.abstractAlgo', e.target.value)
+        }
+      >
+        <option value={'Manual abstract algorithm'}>
+          Manual Astract Algorithm
+        </option>
+      </Select>
       <FormLabel>What type of resources you want to generate?</FormLabel>
       <Select
         placeholder="Select option"
