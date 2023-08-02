@@ -1,6 +1,6 @@
-import { CircularProgress, Flex, Text } from '@chakra-ui/react';
+import { Button, CircularProgress, Flex, Text } from '@chakra-ui/react';
 import ELK from 'elkjs';
-import { useEffect, useMemo, useState } from 'react';
+import { useCallback, useEffect, useMemo, useState } from 'react';
 import {
   applyEdgeChanges,
   applyNodeChanges,
@@ -15,6 +15,7 @@ import {
 import { v4 } from 'uuid';
 import ReactFlowConceptNode from '../../ReactFlowNode/ReactFlowConceptNode/ReactFlowConceptNode';
 
+import { RepeatIcon } from '@chakra-ui/icons';
 import { useFormContext } from 'react-hook-form';
 import { APIV2 } from '../../../data/api';
 import ReactFlowFloatingEdge from '../../ReactFlowEdge/ReactFlowFloatingEdge/ReactFlowFloatingEdge';
@@ -32,74 +33,84 @@ const ConceptGraph = ({ concept, graphDepth }: ConceptGraphProps) => {
   const [loading, setLoading] = useState(true);
   const { setValue } = useFormContext();
 
+  const generateGraph = useCallback(async () => {
+    setLoading(true);
+
+    const api = new APIV2(undefined);
+
+    const resp = await api.getConceptGraph(concept, graphDepth);
+
+    const conceptMap = resp.data;
+
+    setValue('data.conceptmap', conceptMap);
+
+    const elk = new ELK();
+
+    const graph = {
+      id: 'root',
+      layoutOptions: {
+        'elk.algorithm': 'radial',
+      },
+      children: conceptMap.nodes.map((n) => ({
+        id: n._id,
+        width: 200,
+        height: 200,
+        labels: [{ text: n.name }],
+      })),
+      edges: conceptMap.edges.map((e) => ({
+        id: v4(),
+        sources: [e.from],
+        targets: [e.to],
+      })),
+    };
+
+    const elkGraph = await elk.layout(graph);
+    if (elkGraph.edges) {
+      setEdges(
+        elkGraph.edges.map((edge) => {
+          return {
+            id: edge.id,
+            type: 'floating',
+            source: edge.sources[0],
+            target: edge.targets[0],
+          };
+        })
+      );
+    }
+    if (elkGraph.children) {
+      setNodes([
+        ...elkGraph.children.map((node) => {
+          return {
+            ...node,
+            type: 'conceptNode',
+            position: {
+              x: node.x ?? 0,
+              y: node.y ?? 0,
+            },
+            data: {
+              label: node.labels?.[0].text ?? '',
+            },
+          };
+        }),
+      ]);
+    }
+    setLoading(false);
+  }, [concept, graphDepth, setValue]);
+
   useEffect(() => {
     (async () => {
-      setLoading(true);
-
-      const api = new APIV2(undefined);
-
-      const resp = await api.getConceptGraph(concept, graphDepth);
-
-      const conceptMap = resp.data;
-
-      setValue('data.conceptmap', conceptMap);
-
-      const elk = new ELK();
-
-      const graph = {
-        id: 'root',
-        layoutOptions: {
-          'elk.algorithm': 'radial',
-        },
-        children: conceptMap.nodes.map((n) => ({
-          id: n._id,
-          width: 200,
-          height: 200,
-          labels: [{ text: n.name }],
-        })),
-        edges: conceptMap.edges.map((e) => ({
-          id: v4(),
-          sources: [e.from],
-          targets: [e.to],
-        })),
-      };
-
-      const elkGraph = await elk.layout(graph);
-      if (elkGraph.edges) {
-        setEdges(
-          elkGraph.edges.map((edge) => {
-            return {
-              id: edge.id,
-              type: 'floating',
-              source: edge.sources[0],
-              target: edge.targets[0],
-            };
-          })
-        );
-      }
-      if (elkGraph.children) {
-        setNodes([
-          ...elkGraph.children.map((node) => {
-            return {
-              ...node,
-              type: 'conceptNode',
-              position: {
-                x: node.x ?? 0,
-                y: node.y ?? 0,
-              },
-              data: {
-                label: node.labels?.[0].text ?? '',
-              },
-            };
-          }),
-        ]);
-      }
-      setLoading(false);
+      await generateGraph();
     })();
-  }, [concept, graphDepth, setValue]);
+  }, [generateGraph]);
 
   return (
     <ReactFlowProvider>
+      <Button onClick={generateGraph}>
+        <Flex gap={2}>
+          <Text>Regenerate Graph</Text>
+          <RepeatIcon />
+        </Flex>
+      </Button>
       <Flex
         h={'70vh'}
         overflow="hidden"
