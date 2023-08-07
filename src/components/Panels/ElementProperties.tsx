@@ -105,6 +105,7 @@ const ElementProperties = ({
     if (JSON.stringify(watchAll) === '{}') return;
     // deep copy
     const node = JSON.parse(JSON.stringify(watchAll));
+    console.log(node);
     if (compareElements(node, selectedElement)) updateElement(node);
   }, [watchAll]);
 
