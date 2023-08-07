@@ -10,6 +10,7 @@ import {
   Progress,
 } from '@chakra-ui/react';
 import { useState } from 'react';
+import useStore from '../../../store';
 import ConceptGraph from './ConceptGraph';
 import ExecutionSetup from './ExecutionSetup';
 import TopicForm from './TopicForm';
@@ -30,8 +31,14 @@ setup vincoli di esecuzione come numero di esercizi per concetto e tipologia, et
 creazione dataset in 3 step concept graph builder, resource builder e esecuzione setup
 */
 const ConceptBuilderModal = ({ isOpen, onClose }: ConceptBuilderModalProps) => {
+  const [getSelectedElement] = useStore((store) => [store.getSelectedElement]);
+
+  const selectedElement = getSelectedElement();
+
   const [phase, setPhase] = useState(1);
-  const [concept, setConcept] = useState('');
+  const [concept, setConcept] = useState(
+    selectedElement?.data?.conceptmap?.nodes[0]?.name
+  );
   const [graphDepth, setGraphDepth] = useState(1);
 
   return (

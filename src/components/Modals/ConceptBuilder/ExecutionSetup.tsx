@@ -44,7 +44,8 @@ const ExecutionSetup = ({}: ExecutionSetupProps) => {
   useEffect(() => {
     const concepts: ConceptNode[] = [];
     checkedItems.forEach((value, id) => {
-      if (id != 0 && value === true) concepts.push(conceptmap.nodes[id]);
+      if ((id != 0 || conceptmap.nodes.length === 1) && value === true)
+        concepts.push(conceptmap.nodes[id]);
     });
 
     setValue('data.execution.concepts', concepts);

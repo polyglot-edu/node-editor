@@ -26,10 +26,11 @@ const TopicForm = (props: TopicFormProps) => {
         value={props.graphDepth}
         onChange={(e) => {
           const value = +e.currentTarget.value;
-          if (!value) return;
+          if (value === undefined) return;
           props.setGraphDepth(value);
         }}
       >
+        <option value={0}>0</option>
         <option value={1}>1</option>
         {/* <option value={2}>2</option> */}
       </Select>
