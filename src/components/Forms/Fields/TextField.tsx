@@ -12,6 +12,9 @@ export type TextFieldProps = {
   name: string;
   constraints?: RegisterOptions;
   isTextArea?: boolean;
+  isReadOnly?: boolean;
+  isDisabled?: boolean;
+  placeholder?: string;
 };
 
 const TextField = ({
@@ -19,6 +22,9 @@ const TextField = ({
   name,
   constraints,
   isTextArea,
+  isReadOnly,
+  isDisabled,
+  placeholder,
 }: TextFieldProps) => {
   const { register, getFieldState } = useFormContext();
   const { error } = getFieldState(name);
@@ -28,7 +34,12 @@ const TextField = ({
   return (
     <FormControl isInvalid={error !== undefined}>
       <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Conponent {...register(name, constraints)} />
+      <Conponent
+        {...register(name, constraints)}
+        isReadOnly={isReadOnly}
+        isDisabled={isDisabled}
+        placeholder={placeholder}
+      />
       <FormErrorMessage>{error && error.message}</FormErrorMessage>
     </FormControl>
   );

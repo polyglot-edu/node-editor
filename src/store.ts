@@ -499,8 +499,22 @@ const useStore = create<ApplicationState>()(
                 console.log('error merging');
                 return;
               }
+              // TODO: find a better way to handle edge creation
+              // apply runtime data transformation on edge in case of new edge creation
+              const transformed =
+                polyglotNodeComponentMapping.applyTransformFunction(mergeVal);
+              // apply transform function to every node's edge
+              const nodeEdges = Array.from(state.edgeMap.values()).filter(
+                (value) => value.reactFlow.source === transformed.reactFlow.id
+              );
+              nodeEdges.forEach((edge) => {
+                const transEdge =
+                  polyglotEdgeComponentMapping.applyTransformFunction(edge);
+                draft.edgeMap.set(transEdge._id, transEdge);
+              });
+
               // TODO: FIXME: make sure that newValue as PolyglotNode is correct!!!
-              draft.nodeMap.set(id, mergeVal);
+              draft.nodeMap.set(id, transformed);
             })
           );
         },
@@ -579,7 +593,11 @@ const useStore = create<ApplicationState>()(
                 console.log('error merging');
                 return;
               }
-              draft.edgeMap.set(id, mergeVal);
+              // TODO: find a better way to handle edge creation
+              // apply runtime data transformation on edge in case of new edge creation
+              const transformed =
+                polyglotEdgeComponentMapping.applyTransformFunction(mergeVal);
+              draft.edgeMap.set(id, transformed);
             })
           );
         },
@@ -688,20 +706,21 @@ export const changeNodeType = (currentValue: PolyglotNode, newType: string) => {
   newObj = polyglotNodeComponentMapping.applyTransformFunction(newObj);
 
   const state = useStore.getState();
-  state.removeNode(currentValue.reactFlow.id, true);
-  state.addNode(newObj, true);
+  // state.removeNode(currentValue.reactFlow.id, true);
+  // state.addNode(newObj, true);
+  state.updateNode(newObj._id, newObj);
 
-  state.addAction({
-    type: 'update',
-    element: {
-      type: 'node',
-      id: currentValue.reactFlow.id,
-    },
-    value: {
-      prev: currentValue,
-      update: newObj,
-    },
-  });
+  // state.addAction({
+  //   type: 'update',
+  //   element: {
+  //     type: 'node',
+  //     id: currentValue.reactFlow.id,
+  //   },
+  //   value: {
+  //     prev: currentValue,
+  //     update: newObj,
+  //   },
+  // });
 };
 
 export const changeEdgeType = (currentValue: PolyglotEdge, newType: string) => {
