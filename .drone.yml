@@ -31,7 +31,9 @@ steps:
       dockerfile: ./Dockerfile
       tags: ['${DRONE_BRANCH}']
       build_args:
-        <<: *env
+        - DEPLOY_URL: polyglot-edu.com
+        - BACK_URL: https://polyglot-api.polyglot-edu.com
+        - TEST_MODE: true
       <<: *docker_creds
     when:
       <<: *condition
