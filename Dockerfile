@@ -2,7 +2,9 @@ ARG IMAGE=node:lts
 FROM $IMAGE
 
 ARG TEST_MODE=false
+ARG DEPLOY_URL=http://localhost:3000
 ARG BACK_URL=http://localhost:5000
+
 ARG WORKDIR=web-client
 
 WORKDIR $WORKDIR
