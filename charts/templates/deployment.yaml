@@ -49,7 +49,7 @@ spec:
             - name: BACK_URL
               value: {{ .Values.env.backUrl }}
             - name: TEST_MODE
-              value: {{ .Values.env.testMode }}
+              value: "{{ .Values.env.testMode }}"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
