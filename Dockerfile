@@ -1,4 +1,4 @@
-ARG IMAGE=node:lts
+ARG IMAGE=node:18-alpine
 FROM $IMAGE
 
 ARG TEST_MODE=false
@@ -17,7 +17,8 @@ RUN npm install
 
 COPY . .
 
-RUN export TEST_MODE=${TEST_MODE} && \
+RUN export DEPLOY_URL=${DEPLOY_URL} && \
+    export TEST_MODE=${TEST_MODE} && \
     export BACK_URL=${BACK_URL} && \
     npm run build
 
