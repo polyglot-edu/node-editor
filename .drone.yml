@@ -30,12 +30,10 @@ steps:
       registry: docker.polyglot-edu.com
       dockerfile: ./Dockerfile
       tags: ['${DRONE_BRANCH}']
-      build_args: 
-      [
-        DEPLOY_URL=polyglot-edu.com,
-        BACK_URL=https://polyglot-api.polyglot-edu.com,
-        TEST_MODE=true,
-      ]
+      build_args:
+        - 'DEPLOY_URL=polyglot-edu.com'
+        - 'BACK_URL=https://polyglot-api.polyglot-edu.com'
+        - 'TEST_MODE=true'
       <<: *docker_creds
     when:
       <<: *condition
