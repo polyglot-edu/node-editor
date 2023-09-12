@@ -32,8 +32,8 @@ steps:
       tags: ['${DRONE_BRANCH}']
       build_args: 
       [
-        DEPLOY_URL=polyglot-edu.com
-        BACK_URL=https://polyglot-api.polyglot-edu.com
+        DEPLOY_URL=polyglot-edu.com,
+        BACK_URL=https://polyglot-api.polyglot-edu.com,
         TEST_MODE=true,
       ]
       <<: *docker_creds
