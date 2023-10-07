@@ -22,6 +22,7 @@ export type CloseEndedQuestionNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
   elementType: 'closeEndedQuestionNode',
   name: 'Close Ended Question',
+  icon: '../../../public/close_question_icon.png',
   propertiesComponent: CloseEndedQuestionNodeProperties,
   elementComponent: ReactFlowCloseEndedQuestionNode,
   defaultData: {
