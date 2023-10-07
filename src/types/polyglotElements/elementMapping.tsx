@@ -20,6 +20,7 @@ type ElementToReactFlowComponentMapping<T> = {
   [elementType: string]: ReactFlowComponent<T>;
 };
 type ElementToNameMapping = { [elementType: string]: string };
+type ElementToIconMapping = { [elementType: string]: string };
 type ElementToDefaultDataMapping<T> = { [elementType: string]: T };
 type ElementToTransformDataMapping<T> = {
   [elementType: string]: (data: T) => T;
@@ -29,6 +30,7 @@ type TypeWithData = { data: unknown; type: string };
 type MappingType<T, U, K extends TypeWithData, V extends TypeWithData> = {
   elementType: string;
   name: string;
+  icon: string;
   propertiesComponent: PropertiesComponent<T>;
   elementComponent: ReactFlowComponent<U>;
   defaultData: K['data'] & V['data'];
@@ -39,6 +41,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
   private _propertiesMapping: ElementToPropertyComponentMapping<T> = {};
   private _elementMapping: ElementToReactFlowComponentMapping<U> = {};
   private _nameMapping: ElementToNameMapping = {};
+  private _iconMapping: ElementToIconMapping = {};
   private _defaultDataMapping: ElementToDefaultDataMapping<K['data']> = {};
   private _transformMapping: ElementToTransformDataMapping<K> = {};
 
@@ -47,6 +50,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
   public registerMapping<V extends TypeWithData>({
     elementType,
     name,
+    icon,
     propertiesComponent,
     elementComponent,
     defaultData,
@@ -60,6 +64,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     this._propertiesMapping[elementType] = propertiesComponent;
     this._elementMapping[elementType] = elementComponent;
     this._nameMapping[elementType] = name;
+    this._iconMapping[elementType] = icon;
     this._defaultDataMapping[elementType] = defaultData;
     this._transformMapping[elementType] = transformData;
   }
@@ -74,6 +79,10 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
 
   get nameMapping(): Readonly<ElementToNameMapping> {
     return this._nameMapping;
+  }
+
+  get iconMapping(): Readonly<ElementToNameMapping>{
+    return this._iconMapping;
   }
 
   get defaultDataMapping(): Readonly<ElementToDefaultDataMapping<K['data']>> {
@@ -105,8 +114,7 @@ const polyglotNodeComponentMapping = new PolyglotComponentMapping<
   ReactFlowNodeProps,
   PolyglotNode
 >();
-export { polyglotNodeComponentMapping };
-export { polyglotEdgeComponentMapping };
+export { polyglotEdgeComponentMapping, polyglotNodeComponentMapping };
 
 const polyglotEdgeComponentMapping = new PolyglotComponentMapping<
   EdgePropertiesProps,

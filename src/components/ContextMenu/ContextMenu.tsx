@@ -34,12 +34,12 @@ const ContextMenu = ({
   onDismiss,
 }: ContextMenuProps) => {
   const linkRef = useRef(null);
-
   const menuItems: IContextualMenuItem[] = Object.keys(
     polyglotNodeComponentMapping.nameMapping
   ).map((index, id) => {
     return {
-      key: id.toString(),
+      key: id.toString(),      
+      //iconProps: Img(polyglotNodeComponentMapping.iconMapping[index]), //to add the icon
       text: 'New ' + polyglotNodeComponentMapping.nameMapping[index],
       iconProps: { iconName: 'Add' },
       onClick: () => {
@@ -81,12 +81,11 @@ const ContextMenu = ({
       <span
         className="absolute z-50"
         ref={linkRef}
-        style={{ top: pos.y, left: pos.x }}
+        style={{top: pos.y, left: pos.x}}
       />
-
       <ContextualMenu
         className="pt-2"
-        hidden={!show}
+        hidden={!show}        
         items={
           type === ContextMenuTypes.NODE
             ? menuNodeActions
