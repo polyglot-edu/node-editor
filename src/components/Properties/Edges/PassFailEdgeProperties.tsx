@@ -10,12 +10,13 @@ const PassFailEdgeProperties = () => {
         name="data.conditionKind"
         options={
           <>
-            <option value="pass">Pass</option>
+            <option value="pass" onSelect={() => {}}>Pass</option>
             <option value="fail">Fail</option>
           </>
         }
       />
     </>
+    //idea for color change -> adding a code that on click of "option" change the color of the edge (style={{stroke:'blue'}})
   );
 };
 

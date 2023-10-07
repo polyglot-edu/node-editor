@@ -1,8 +1,6 @@
-import { Flex, useDisclosure } from '@chakra-ui/react';
-import { MouseEventHandler, useState } from 'react';
+import { Button, Flex, Tooltip, useDisclosure } from '@chakra-ui/react';
+import { MouseEventHandler, ReactNode, useState } from 'react';
 import ReactFlow, {
-  applyEdgeChanges,
-  applyNodeChanges,
   Background,
   BackgroundVariant,
   Controls,
@@ -14,6 +12,8 @@ import ReactFlow, {
   OnNodesDelete,
   OnSelectionChangeParams,
   ReactFlowProvider,
+  applyEdgeChanges,
+  applyNodeChanges,
   useOnSelectionChange,
   useReactFlow,
   useStoreApi,
@@ -79,7 +79,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
     type: ContextMenuTypes.DEFAULT,
     pos: { x: 0, y: 0 },
   });
-
+///////////////////////////////////////////////////////////////////////////////////per far vedere il menù guarda qui
   const hideContextMenu = () => {
     setContextMenu((prev) => {
       prev.show = false;
@@ -94,6 +94,34 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
     onClose: onClosePanel,
   } = useDisclosure();
 
+  //setup button open menu
+  const ActionButton = ({
+    label,
+    disabled,
+    onClick,
+    icon,
+    isLoading,
+  }: {
+    label: string;
+    disabled: boolean;
+    onClick: () => void;
+    icon: ReactNode;
+    isLoading?: boolean;
+  }) => {
+    return (
+      <Tooltip label={label}>
+        <Button
+          isLoading={isLoading}
+          disabled={disabled}
+          padding={0}
+          background="transparent"
+          onClick={onClick}
+        >
+          {icon}
+        </Button>
+      </Tooltip>
+    );
+  };
   // SETUP react flow
   const onNodesChange: OnNodesChange = (changes) => {
     setNodes(applyNodeChanges(changes, getNodes()));
@@ -180,7 +208,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
   return (
     <Flex direction={'column'} h="100vh">
       <EditorNav saveFunc={saveFlow} />
-      <Flex h={'full'} overflow="hidden">
+      <Flex h={'full'} overflow="hidden">        
         <ReactFlow
           // nodes setup
           nodes={getNodes()}
@@ -259,6 +287,13 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
           <Background variant={BackgroundVariant.Dots} />
           <Controls />
         </ReactFlow>
+        <Button name='newNode' colorScheme='blue' width={'10px'} height={'30px'} position={'absolute'} right={'20px'} bottom={'20px'} float={'left'}
+        onClick={(e) => {
+          //apri menù
+          e.preventDefault();
+          hideContextMenu();
+        }}>
+        +</Button>
         <ContextMenu
           {...contextMenu}
           elementId={selectedElement?._id}
