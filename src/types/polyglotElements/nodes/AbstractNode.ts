@@ -16,6 +16,7 @@ export type AbstractNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<AbstractNode>({
   elementType: 'abstractNode',
   name: 'Abstract Node',
+icon: '../../../public/abstract_icon.png',
   propertiesComponent: AbstractNodeProperties,
   elementComponent: ReactFlowAbstractNode,
   defaultData: {

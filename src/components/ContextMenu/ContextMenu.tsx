@@ -38,10 +38,18 @@ const ContextMenu = ({
     polyglotNodeComponentMapping.nameMapping
   ).map((index, id) => {
     return {
-      key: id.toString(),      
+      key: id.toString(),  
+        
       //iconProps: Img(polyglotNodeComponentMapping.iconMapping[index]), //to add the icon
       text: 'New ' + polyglotNodeComponentMapping.nameMapping[index],
       iconProps: { iconName: 'Add' },
+      onRenderContent(props, defaultRenders) {
+          return (
+            <div>
+              <img src={polyglotNodeComponentMapping.iconMapping[index]} />
+            </div>
+          )        
+      },  
       onClick: () => {
         const nodeToAdd = createNewDefaultPolyglotNode(
           relativePos || pos,
