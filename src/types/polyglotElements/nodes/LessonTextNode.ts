@@ -21,7 +21,7 @@ export type LessonTextNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<LessonTextNode>({
   elementType: 'lessonTextNode',
   name: 'Lesson (Text)',
-icon: '../../../public/book_icon.png',
+icon: 'book_icon.png',
   propertiesComponent: LessonTextNodeProperties,
   elementComponent: ReactFlowLessonNode,
   defaultData: {

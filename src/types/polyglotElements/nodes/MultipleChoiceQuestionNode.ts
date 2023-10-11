@@ -24,7 +24,7 @@ export type MultipleChoiceQuestionNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
   elementType: 'multipleChoiceQuestionNode',
   name: 'Multiple Choice Question',
-  icon: '../../../public/mult_choice_icon.png',
+  icon: 'mult_choice_icon.png',
   propertiesComponent: MultipleChoiceQuestionNodeProperties,
   elementComponent: ReactFlowMultipleChoiceQuestionNode,
   defaultData: {
