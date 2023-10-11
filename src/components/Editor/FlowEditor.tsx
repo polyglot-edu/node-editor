@@ -1,5 +1,5 @@
 import { Button, Flex, Tooltip, useDisclosure } from '@chakra-ui/react';
-import { MouseEventHandler, ReactNode, useState } from 'react';
+import { MouseEventHandler, ReactNode, useCallback, useState } from 'react';
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -16,7 +16,7 @@ import ReactFlow, {
   applyNodeChanges,
   useOnSelectionChange,
   useReactFlow,
-  useStoreApi,
+  useStoreApi
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import useStore from '../../store';
@@ -28,6 +28,9 @@ import ContextMenu, {
   ContextMenuProps,
   ContextMenuTypes,
 } from '../ContextMenu/ContextMenu';
+
+import { createNewDefaultPolyglotNode } from '../../utils/utils';
+import LateralMenu from '../LateralMenu/LateralMenu';
 import EditorNav from '../NavBars/EditorNav';
 import ElementProperties from '../Panels/ElementProperties';
 
@@ -79,7 +82,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
     type: ContextMenuTypes.DEFAULT,
     pos: { x: 0, y: 0 },
   });
-///////////////////////////////////////////////////////////////////////////////////per far vedere il menù guarda qui
+
   const hideContextMenu = () => {
     setContextMenu((prev) => {
       prev.show = false;
@@ -122,6 +125,36 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
       </Tooltip>
     );
   };
+
+  //setup DragEvent
+  const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string; } | null; }) => {
+    event.preventDefault();
+    if(event.dataTransfer==null) return;
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop = useCallback(
+    (event: { preventDefault: () => void; dataTransfer: { getData: (arg0: string) => any; } | null; clientX: any; clientY: any; }) => {
+      event.preventDefault();
+      if(event.dataTransfer==null) return;
+      const type = event.dataTransfer.getData('application/reactflow');
+
+      // check if the dropped element is valid
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+      
+      const position = {
+        x: event.clientX,
+        y: event.clientY,
+      };
+      const nodeToAdd = createNewDefaultPolyglotNode(
+        position,
+        type
+      );
+      useStore.getState().addNode(nodeToAdd);
+    },[]);
+
   // SETUP react flow
   const onNodesChange: OnNodesChange = (changes) => {
     setNodes(applyNodeChanges(changes, getNodes()));
@@ -176,7 +209,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
       },
     });
   };
-
+  
   // Need to use the hook with the reactflow's update 11
   useOnSelectionChange({
     onChange: onSelectionChange || default_onSelectionChange,
@@ -255,6 +288,9 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
           onEdgesDelete={(edges) => edges.forEach((e) => removeEdge(e.id))}
           onEdgeContextMenu={onEdgeContextMenu}
           onEdgeDoubleClick={onOpenPanel}
+          //drag setup          
+          onDrop={onDrop}
+          onDragOver={onDragOver}
           // general setup node and edges
           deleteKeyCode={deleteKeyCodes}
           // selection setup
@@ -287,18 +323,12 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
           <Background variant={BackgroundVariant.Dots} />
           <Controls />
         </ReactFlow>
-        <Button name='newNode' colorScheme='blue' width={'10px'} height={'30px'} position={'absolute'} right={'20px'} bottom={'20px'} float={'left'}
-        onClick={(e) => {
-          //apri menù
-          e.preventDefault();
-          hideContextMenu();
-        }}>
-        +</Button>
         <ContextMenu
           {...contextMenu}
           elementId={selectedElement?._id}
           onDismiss={hideContextMenu}
         />
+        <LateralMenu/>
         <ElementProperties
           selectedElement={selectedElement}
           isOpen={isOpenPanel}

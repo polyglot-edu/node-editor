@@ -23,7 +23,7 @@ export type CodingQuestionNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<CodingQuestionNode>({
   elementType: 'codingQuestionNode',
   name: 'Coding Question',
-icon: '../../../public/coding_icon.png',
+icon: 'coding_icon.png',
   propertiesComponent: CodingQuestionNodeProperties,
   elementComponent: ReactFlowCodingQuestionNode,
   defaultData: {
