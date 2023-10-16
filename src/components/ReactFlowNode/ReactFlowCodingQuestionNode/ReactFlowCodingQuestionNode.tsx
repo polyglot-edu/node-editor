@@ -19,22 +19,12 @@ const ReactFlowCodingQuestionNode = ({
   const theme = useTheme();
 
   return (
-    <Card
-      className="Card-react-flow"
-      style={{
-        borderColor: theme.palette.greenLight,
-        background: `${theme.palette.greenLight}08`,
-borderRadius: '5px',
-        borderStyle:'stone',
-        borderWidth:'3px',    
-        height:'48px',
-      }}
-    >
+    <Card className="Card-react-flow">
 <img src={coding_icon.src} width="25" height="25" style={{float: 'left'}} /> 
     
       {label}
-      <Handle type="source" position={Position.Right} style={{background:'teal', height:'25px', width:'5px', borderRadius:'2px'}} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} style={{background:'teal', height:'25px', width:'5px', borderRadius:'2px'}} />
+      <Handle type="source" position={Position.Right} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
+      <Handle type="target" position={Position.Left} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
     </Card>
   );
 };

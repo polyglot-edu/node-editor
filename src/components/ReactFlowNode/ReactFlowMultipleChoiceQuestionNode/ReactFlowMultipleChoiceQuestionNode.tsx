@@ -19,22 +19,12 @@ const ReactFlowMultipleChoiceQuestionNode = ({
   const theme = useTheme();
 
   return (
-    <Card
-      className="Card-react-flow"
-      style={{
-        borderColor: theme.palette.blueLight,
-        background: `${theme.palette.blueLight}08`,
-        borderRadius: '5px',
-        borderStyle:'stone',
-        borderWidth:'3px',  
-        height:'48px'  
-      }}
-    >
+    <Card className="Card-react-flow">
     <img src={mult_choice_icon.src} width="20" height="20" style={{float: 'left', marginTop:"2px",  marginRight:"5px"}} /> 
     
       {label}
-      <Handle type="source" position={Position.Right} style={{background:'teal', height:'25px', width:'5px', borderRadius:'2px'}} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} style={{background:'teal', height:'25px', width:'5px', borderRadius:'2px'}} />
+      <Handle type="source" position={Position.Right} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
+      <Handle type="target" position={Position.Left} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
     </Card>
   );
 };

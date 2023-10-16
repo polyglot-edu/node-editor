@@ -17,21 +17,12 @@ const ReactFlowAbstractNode = ({ id }: ReactFlowAbstractNodeProps) => {
 
   return (
     <Card
-      className="Card-react-flow"
-      style={{
-        borderColor: theme.palette.yellowDark,
-        background: `${theme.palette.orangeLight}08`,
-borderRadius: '5px',
-        borderStyle:'stone',
-        borderWidth:'3px',    
-        height:'48px'
-      }}
-    >
+      className="Card-react-flow"    >
 <img src={abstract_icon.src} width="25" height="25" style={{ float: 'left', marginTop: "-2px"}} /> 
     
       {label}
-      <Handle type="source" position={Position.Right} style={{background:'teal', height:'25px', width:'5px', borderRadius:'2px'}} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} style={{background:'teal', height:'25px', width:'5px', borderRadius:'2px'}} />
+      <Handle type="source" position={Position.Right} style={{background:'#2097F6', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
+      <Handle type="target" position={Position.Left} style={{background:'#2097F6', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
     </Card>
   );
 };
