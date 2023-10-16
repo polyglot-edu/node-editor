@@ -39,8 +39,9 @@ export default ()=>{
   const li_apply_assessment:NodeItem[] = nodes.filter(function (node){ if(node.group=="apply_assessment") return true; return false;});
 
   return (
-    <><Box width={"300px"} border={"1px"} borderColor={'lightgray'} title='drag the new node'>
+    <><Box width={"300px"} border={"1px"} borderColor={'gray'} title='drag the new node'>
       <div className='label'>ADD NEW ACTIVITY</div>
+      <p style={{overflow:"auto", height:"400px"}}>
       <span className='label'>
       <img src={learning_icon.src} style={{float:"left"}} width="20"/>
         LEARNING ACTIVITY</span>
@@ -119,6 +120,7 @@ export default ()=>{
         </AccordionItem>
       </Accordion>
         <br/>
+        <hr/>
       <span className='label'>
       <img src={assessment_icon.src} style={{float:"left"}} width="20"/>
         ASSESSMENT ACTIVITY </span>
@@ -196,6 +198,7 @@ export default ()=>{
           </>)}
         </AccordionItem>
       </Accordion>
+      </p>
       </Box>
     </>
   );
