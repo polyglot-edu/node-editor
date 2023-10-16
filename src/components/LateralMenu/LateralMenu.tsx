@@ -1,5 +1,7 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
+import assessment_icon from '../../public/assessment_icon.png';
+import learning_icon from '../../public/learning_icon.png';
 import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
 
 interface NodeItem{
@@ -40,8 +42,8 @@ export default ()=>{
     <><Box width={"300px"} border={"1px"} borderColor={'lightgray'} title='drag the new node'>
       <div className='label'>ADD NEW ACTIVITY</div>
       <span className='label'>
+      <img src={learning_icon.src} style={{float:"left"}} width="20"/>
         LEARNING ACTIVITY</span>
-    
       <Accordion>
         <AccordionItem >
           {({ isExpanded }) => (
@@ -118,7 +120,8 @@ export default ()=>{
       </Accordion>
         <br/>
       <span className='label'>
-      ASSESSMENT ACTIVITY </span>
+      <img src={assessment_icon.src} style={{float:"left"}} width="20"/>
+        ASSESSMENT ACTIVITY </span>
       <Accordion>
         <AccordionItem>
           {({ isExpanded }) => (

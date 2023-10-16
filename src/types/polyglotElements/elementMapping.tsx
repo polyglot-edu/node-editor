@@ -21,6 +21,7 @@ type ElementToReactFlowComponentMapping<T> = {
 };
 type ElementToNameMapping = { [elementType: string]: string };
 type ElementToIconMapping = { [elementType: string]: string };
+type ElementToGroupMapping = { [elementType: string]: string };
 type ElementToDefaultDataMapping<T> = { [elementType: string]: T };
 type ElementToTransformDataMapping<T> = {
   [elementType: string]: (data: T) => T;
@@ -31,6 +32,7 @@ type MappingType<T, U, K extends TypeWithData, V extends TypeWithData> = {
   elementType: string;
   name: string;
   icon: string;
+  group: string;
   propertiesComponent: PropertiesComponent<T>;
   elementComponent: ReactFlowComponent<U>;
   defaultData: K['data'] & V['data'];
@@ -42,6 +44,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
   private _elementMapping: ElementToReactFlowComponentMapping<U> = {};
   private _nameMapping: ElementToNameMapping = {};
   private _iconMapping: ElementToIconMapping = {};
+  private _groupMapping: ElementToGroupMapping = {};
   private _defaultDataMapping: ElementToDefaultDataMapping<K['data']> = {};
   private _transformMapping: ElementToTransformDataMapping<K> = {};
 
@@ -51,6 +54,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     elementType,
     name,
     icon,
+    group,
     propertiesComponent,
     elementComponent,
     defaultData,
@@ -65,6 +69,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     this._elementMapping[elementType] = elementComponent;
     this._nameMapping[elementType] = name;
     this._iconMapping[elementType] = icon;
+    this._groupMapping[elementType] = group;
     this._defaultDataMapping[elementType] = defaultData;
     this._transformMapping[elementType] = transformData;
   }
@@ -81,8 +86,12 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     return this._nameMapping;
   }
 
-  get iconMapping(): Readonly<ElementToNameMapping>{
+  get iconMapping(): Readonly<ElementToIconMapping>{
     return this._iconMapping;
+  }
+
+  get groupMapping(): Readonly<ElementToGroupMapping>{
+    return this._groupMapping;
   }
 
   get defaultDataMapping(): Readonly<ElementToDefaultDataMapping<K['data']>> {
