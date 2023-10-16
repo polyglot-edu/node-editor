@@ -143,13 +143,12 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
       if (typeof type === 'undefined' || !type) {
         return;
       }
-      
-      const position = {
+      const pos = {
         x: event.clientX,
         y: event.clientY,
       };
       const nodeToAdd = createNewDefaultPolyglotNode(
-        position,
+        pos,
         type
       );
       useStore.getState().addNode(nodeToAdd);
