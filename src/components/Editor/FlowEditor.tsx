@@ -1,5 +1,5 @@
-import { Button, Flex, Tooltip, useDisclosure } from '@chakra-ui/react';
-import { DragEventHandler, MouseEventHandler, ReactNode, useCallback, useState } from 'react';
+import { Flex, useDisclosure } from '@chakra-ui/react';
+import { DragEventHandler, MouseEventHandler, useCallback, useState } from 'react';
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -97,42 +97,13 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
     onClose: onClosePanel,
   } = useDisclosure();
 
-  //setup button open menu
-  const ActionButton = ({
-    label,
-    disabled,
-    onClick,
-    icon,
-    isLoading,
-  }: {
-    label: string;
-    disabled: boolean;
-    onClick: () => void;
-    icon: ReactNode;
-    isLoading?: boolean;
-  }) => {
-    return (
-      <Tooltip label={label}>
-        <Button
-          isLoading={isLoading}
-          disabled={disabled}
-          padding={0}
-          background="transparent"
-          onClick={onClick}
-        >
-          {icon}
-        </Button>
-      </Tooltip>
-    );
-  };
-
   //setup DragEvent
   const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string; } | null; }) => {
     event.preventDefault();
     if(event.dataTransfer==null) return;
     event.dataTransfer.dropEffect = 'move';
   }, []);
-//idea: aggiungere un mouse event handler per la posizione  
+
   const onDrop:DragEventHandler =
     (event) => {
       event.preventDefault();
