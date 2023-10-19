@@ -1,5 +1,5 @@
 import { Button, Flex, Tooltip, useDisclosure } from '@chakra-ui/react';
-import { MouseEventHandler, ReactNode, useCallback, useState } from 'react';
+import { DragEventHandler, MouseEventHandler, ReactNode, useCallback, useState } from 'react';
 import ReactFlow, {
   Background,
   BackgroundVariant,
@@ -132,27 +132,30 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
     if(event.dataTransfer==null) return;
     event.dataTransfer.dropEffect = 'move';
   }, []);
-
-  const onDrop = useCallback(
-    (event: { preventDefault: () => void; dataTransfer: { getData: (arg0: string) => any; } | null; clientX: any; clientY: any; }) => {
+//idea: aggiungere un mouse event handler per la posizione  
+  const onDrop:DragEventHandler =
+    (event) => {
       event.preventDefault();
       if(event.dataTransfer==null) return;
       const type = event.dataTransfer.getData('application/reactflow');
-
       // check if the dropped element is valid
       if (typeof type === 'undefined' || !type) {
         return;
       }
-      const pos = {
-        x: event.clientX,
-        y: event.clientY,
-      };
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const pos=project({
+        x: event.clientX-rect.left,
+        y: event.clientY-rect.top
+      });
+      console.log(pos);
       const nodeToAdd = createNewDefaultPolyglotNode(
         pos,
         type
       );
+      console.log(nodeToAdd);
       useStore.getState().addNode(nodeToAdd);
-    },[]);
+    };
 
   // SETUP react flow
   const onNodesChange: OnNodesChange = (changes) => {
