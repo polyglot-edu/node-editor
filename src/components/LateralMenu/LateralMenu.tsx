@@ -1,9 +1,9 @@
 import { ChevronDownIcon, ChevronRightIcon } from '@chakra-ui/icons';
 import { Accordion, AccordionButton, AccordionItem, AccordionPanel, Box } from '@chakra-ui/react';
+import { DragEvent } from 'react';
 import assessment_icon from '../../public/assessment_icon.png';
 import learning_icon from '../../public/learning_icon.png';
 import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
-
 /*nota ottimizzare il codice:
   1)unire in un unico passaggio la distribuzione dei tipi di nodi
       v       v        v       v       v       v       v
@@ -16,9 +16,49 @@ interface NodeItem{
   index:string;
   group:string;
 }
+const configLearning=[{
+    label:"REMEMBER",
+    bgColor:"#D2EAFD",
+    group:"remember_learning",
+  },
+  {
+    label:"UNDERSTAND",
+    bgColor:"#A6D5FB",
+    group:"understand_learning",
+  },
+  {
+    label:"APPLY",
+    bgColor:"#79C1FA",
+    group:"apply_learning",
+  },
+  {
+    label:"CREATE",
+    bgColor:"#4DACF8",
+    group:"create_learning",
+  }];
+const configAssessment=[{
+    label:"REMEMBER",
+    bgColor:"#FFCEC7",
+    group:"remember_assessment",
+  },
+  {
+    label:"UNDERSTAND",
+    bgColor:"#FFADA1",
+    group:"understand_assessment",
+  },
+  {
+    label:"APPLY",
+    bgColor:"#FF8C7B",
+    group:"apply_assessment",
+  },
+  {
+    label:"CREATE",
+    bgColor:"#FF7B69",
+    group:"create_assessment",
+  }];
 
 export default ()=>{
-  const onDragStart = (event:DragEvent, nodeType:string) => {
+  const onDragStart = (event:DragEvent<HTMLDivElement>, nodeType:string) => {
     if(event.dataTransfer==null){return;}
     event.dataTransfer.setData('application/reactflow', nodeType);
     event.dataTransfer.effectAllowed = 'move';
@@ -32,9 +72,8 @@ export default ()=>{
       group: polyglotNodeComponentMapping.groupMapping[index],
     };
   });
-
-  const li_remember_learning:NodeItem[] = nodes.filter(function (node){ if(node.group=="remember_learning") return true; return false;});
-  const li_understand_learning:NodeItem[] = nodes.filter(function (node){ if(node.group=="understand_learning") return true; return false;});
+  const li_remember_learning:NodeItem[] = nodes.filter((node)=>node.group==="remember_learning");
+  const li_understand_learning:NodeItem[] = nodes.filter((node)=>node.group==="understand_learning");
   const li_apply_learning:NodeItem[] = nodes.filter(function (node){ if(node.group=="apply_learning") return true; return false;});
   const li_create_learning:NodeItem[] = nodes.filter(function (node){ if(node.group=="create_learning") return true; return false;});
   
@@ -49,158 +88,56 @@ export default ()=>{
       <p style={{overflow:"auto", height:"400px"}}>
       <span className='label'>
       <img src={learning_icon.src} style={{float:"left"}} width="20"/>
-        LEARNING ACTIVITY</span>
-      <Accordion>
-        <AccordionItem >
+      LEARNING ACTIVITY</span>
+      <Accordion defaultIndex={0}>
+      {configLearning.map((type)=>{
+        return <AccordionItem>
           {({ isExpanded }) => (
-          <>
-          <AccordionButton className="nodeButton" backgroundColor={'#D2EAFD'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )} <span className='text-[12px]'>REMEMBER</span></AccordionButton>        
-          <AccordionPanel>
-            {li_remember_learning.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
+        <>          
+        <AccordionButton className="nodeButton" backgroundColor={type.bgColor}>{isExpanded ? (
+            <ChevronDownIcon/>
+          ) : (
+            <ChevronRightIcon/>
+          )} <span className='text-[12px]'>{type.label}</span></AccordionButton>        
+        <AccordionPanel>
+          {nodes.filter((node)=>node.group===type.group).map(nodes=>
+            <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
+            <img src={nodes.icon} style={{float:"left"}} width="20"/>
+            {nodes.text}
+            </div>
+          )}
+        </AccordionPanel>
+        </>)}
         </AccordionItem>
-        <AccordionItem>
-          {({ isExpanded }) => (
-          <>          
-          <AccordionButton className="nodeButton" backgroundColor={'#A6D5FB'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )}  <span className='text-[12px]'>UNDERSTAND</span></AccordionButton>        
-          <AccordionPanel>
-            {li_understand_learning.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
-        </AccordionItem>
-        <AccordionItem>
-        {({ isExpanded }) => (
-        <>
-          <AccordionButton className="nodeButton" backgroundColor={'#79C1FA'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )}  <span className='text-[12px]'>APPLY</span></AccordionButton>        
-          <AccordionPanel>
-            {li_apply_learning.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
-        </AccordionItem>
-        <AccordionItem>
-        {({ isExpanded }) => (
-        <>        
-          <AccordionButton className="nodeButton" backgroundColor={'#4DACF8'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )}  <span className='text-[12px]'>CREATE</span></AccordionButton>        
-          <AccordionPanel>
-            {li_create_learning.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
-        </AccordionItem>
+      })
+      }
       </Accordion>
         <hr/>
       <span className='label'>
       <img src={assessment_icon.src} style={{float:"left"}} width="20"/>
         ASSESSMENT ACTIVITY </span>
       <Accordion>
-        <AccordionItem>
+        {configAssessment.map((type)=>{
+        return <AccordionItem>
           {({ isExpanded }) => (
-          <>          
-          <AccordionButton className="nodeButton" backgroundColor={'#FFCEC7'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )} <span className='text-[12px]'>REMEMBER</span></AccordionButton>        
-          <AccordionPanel>
-            {li_remember_assessment.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
+        <>          
+        <AccordionButton className="nodeButton" backgroundColor={type.bgColor}>{isExpanded ? (
+            <ChevronDownIcon/>
+          ) : (
+            <ChevronRightIcon/>
+          )} <span className='text-[12px]'>{type.label}</span></AccordionButton>        
+        <AccordionPanel>
+          {nodes.filter((node)=>node.group===type.group).map(nodes=>
+            <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
+            <img src={nodes.icon} style={{float:"left"}} width="20"/>
+            {nodes.text}
+            </div>
+          )}
+        </AccordionPanel>
+        </>)}
         </AccordionItem>
-        <AccordionItem >
-        {({ isExpanded }) => (
-        <>        
-          <AccordionButton className="nodeButton" backgroundColor={'#FFADA1'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )}  <span className='text-[12px]'>UNDERSTAND</span></AccordionButton>        
-          <AccordionPanel>
-            {li_understand_assessment.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
-        </AccordionItem>
-        <AccordionItem>
-        {({ isExpanded }) => (
-        <>        
-          <AccordionButton className="nodeButton" backgroundColor={'#FF8C7B'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )} <span className='text-[12px]'>APPLY</span></AccordionButton>        
-          <AccordionPanel>
-            {li_apply_assessment.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
-        </AccordionItem>
-        <AccordionItem>
-        {({ isExpanded }) => (
-        <>        
-          <AccordionButton className="nodeButton" backgroundColor={'#FF7B69'}>{isExpanded ? (
-              <ChevronDownIcon/>
-            ) : (
-              <ChevronRightIcon/>
-            )}  <span className='text-[12px]'>CREATE</span></AccordionButton>        
-          <AccordionPanel>
-            {li_create_assessment.map(nodes=>
-              <div key={nodes.key} className='nodeItem' onDragStart={(event) => onDragStart(event, nodes.index)} draggable>
-              <img src={nodes.icon} style={{float:"left"}} width="20"/>
-              {nodes.text}
-              </div>
-            )}
-          </AccordionPanel>
-          </>)}
-        </AccordionItem>
+      })
+      }
       </Accordion>
       </p>
       </Box>
