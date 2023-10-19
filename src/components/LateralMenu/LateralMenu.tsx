@@ -4,11 +4,7 @@ import { DragEvent } from 'react';
 import assessment_icon from '../../public/assessment_icon.png';
 import learning_icon from '../../public/learning_icon.png';
 import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
-/*nota ottimizzare il codice:
-  1)unire in un unico passaggio la distribuzione dei tipi di nodi
-      v       v        v       v       v       v       v
-  2)creare un ciclo che inserisce gli oggetti nel giusto sottogruppo automaticamente (no 8 ripetizioni)
-*/
+
 interface NodeItem{
   key: string;
   text: string;
@@ -72,15 +68,6 @@ export default ()=>{
       group: polyglotNodeComponentMapping.groupMapping[index],
     };
   });
-  const li_remember_learning:NodeItem[] = nodes.filter((node)=>node.group==="remember_learning");
-  const li_understand_learning:NodeItem[] = nodes.filter((node)=>node.group==="understand_learning");
-  const li_apply_learning:NodeItem[] = nodes.filter(function (node){ if(node.group=="apply_learning") return true; return false;});
-  const li_create_learning:NodeItem[] = nodes.filter(function (node){ if(node.group=="create_learning") return true; return false;});
-  
-  const li_remember_assessment:NodeItem[] = nodes.filter(function (node){ if(node.group=="remember_assessment") return true; return false;});
-  const li_understand_assessment:NodeItem[] = nodes.filter(function (node){ if(node.group=="understand_assessment") return true; return false;});
-  const li_create_assessment:NodeItem[] = nodes.filter(function (node){ if(node.group=="create_assessment") return true; return false;});
-  const li_apply_assessment:NodeItem[] = nodes.filter(function (node){ if(node.group=="apply_assessment") return true; return false;});
 
   return (
     <><Box width={"280px"} height={"420px"} border={"1px"} borderColor={'gray'} title='drag the new node'>
