@@ -1,5 +1,6 @@
 import MultipleChoiceQuestionNodeProperties from '../../../components/Properties/Nodes/MultipleChoiceQuestionNodeProperties';
 import { ReactFlowMultipleChoiceQuestionNode } from '../../../components/ReactFlowNode';
+import icon from '../../../public/mult_choice_icon.png';
 import { zip } from '../../../utils/utils';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
@@ -24,6 +25,8 @@ export type MultipleChoiceQuestionNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
   elementType: 'multipleChoiceQuestionNode',
   name: 'Multiple Choice Question',
+  icon: icon.src,
+  group: 'remember_assessment',
   propertiesComponent: MultipleChoiceQuestionNodeProperties,
   elementComponent: ReactFlowMultipleChoiceQuestionNode,
   defaultData: {

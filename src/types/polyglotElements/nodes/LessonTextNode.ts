@@ -1,5 +1,6 @@
 import LessonTextNodeProperties from '../../../components/Properties/Nodes/LessonTextNodeProperties';
 import { ReactFlowLessonNode } from '../../../components/ReactFlowNode';
+import icon from '../../../public/lesson_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,
@@ -21,6 +22,8 @@ export type LessonTextNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<LessonTextNode>({
   elementType: 'lessonTextNode',
   name: 'Lesson (Text)',
+  icon: icon.src,
+  group: 'remember_learning',
   propertiesComponent: LessonTextNodeProperties,
   elementComponent: ReactFlowLessonNode,
   defaultData: {

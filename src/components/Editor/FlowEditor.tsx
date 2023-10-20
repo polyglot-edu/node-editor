@@ -1,8 +1,6 @@
 import { Flex, useDisclosure } from '@chakra-ui/react';
-import { MouseEventHandler, useState } from 'react';
+import { DragEventHandler, MouseEventHandler, useCallback, useState } from 'react';
 import ReactFlow, {
-  applyEdgeChanges,
-  applyNodeChanges,
   Background,
   BackgroundVariant,
   Controls,
@@ -14,9 +12,11 @@ import ReactFlow, {
   OnNodesDelete,
   OnSelectionChangeParams,
   ReactFlowProvider,
+  applyEdgeChanges,
+  applyNodeChanges,
   useOnSelectionChange,
   useReactFlow,
-  useStoreApi,
+  useStoreApi
 } from 'reactflow';
 import 'reactflow/dist/style.css';
 import useStore from '../../store';
@@ -28,6 +28,9 @@ import ContextMenu, {
   ContextMenuProps,
   ContextMenuTypes,
 } from '../ContextMenu/ContextMenu';
+
+import { createNewDefaultPolyglotNode } from '../../utils/utils';
+import LateralMenu from '../LateralMenu/LateralMenu';
 import EditorNav from '../NavBars/EditorNav';
 import ElementProperties from '../Panels/ElementProperties';
 
@@ -94,6 +97,37 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
     onClose: onClosePanel,
   } = useDisclosure();
 
+  //setup DragEvent
+  const onDragOver = useCallback((event: { preventDefault: () => void; dataTransfer: { dropEffect: string; } | null; }) => {
+    event.preventDefault();
+    if(event.dataTransfer==null) return;
+    event.dataTransfer.dropEffect = 'move';
+  }, []);
+
+  const onDrop:DragEventHandler =
+    (event) => {
+      event.preventDefault();
+      if(event.dataTransfer==null) return;
+      const type = event.dataTransfer.getData('application/reactflow');
+      // check if the dropped element is valid
+      if (typeof type === 'undefined' || !type) {
+        return;
+      }
+
+      const rect = event.currentTarget.getBoundingClientRect();
+      const pos=project({
+        x: event.clientX-rect.left,
+        y: event.clientY-rect.top
+      });
+      console.log(pos);
+      const nodeToAdd = createNewDefaultPolyglotNode(
+        pos,
+        type
+      );
+      console.log(nodeToAdd);
+      useStore.getState().addNode(nodeToAdd);
+    };
+
   // SETUP react flow
   const onNodesChange: OnNodesChange = (changes) => {
     setNodes(applyNodeChanges(changes, getNodes()));
@@ -148,7 +182,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
       },
     });
   };
-
+  
   // Need to use the hook with the reactflow's update 11
   useOnSelectionChange({
     onChange: onSelectionChange || default_onSelectionChange,
@@ -180,7 +214,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
   return (
     <Flex direction={'column'} h="100vh">
       <EditorNav saveFunc={saveFlow} />
-      <Flex h={'full'} overflow="hidden">
+      <Flex h={'full'} overflow="hidden">        
         <ReactFlow
           // nodes setup
           nodes={getNodes()}
@@ -227,6 +261,9 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
           onEdgesDelete={(edges) => edges.forEach((e) => removeEdge(e.id))}
           onEdgeContextMenu={onEdgeContextMenu}
           onEdgeDoubleClick={onOpenPanel}
+          //drag setup          
+          onDrop={onDrop}
+          onDragOver={onDragOver}
           // general setup node and edges
           deleteKeyCode={deleteKeyCodes}
           // selection setup
@@ -264,6 +301,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
           elementId={selectedElement?._id}
           onDismiss={hideContextMenu}
         />
+        <LateralMenu/>
         <ElementProperties
           selectedElement={selectedElement}
           isOpen={isOpenPanel}

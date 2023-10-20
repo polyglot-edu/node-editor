@@ -1,5 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
+import coding_icon from '../../../public/coding_icon.png';
 import useStore from '../../../store';
 import { CodingQuestionNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -18,16 +19,12 @@ const ReactFlowCodingQuestionNode = ({
   const theme = useTheme();
 
   return (
-    <Card
-      className="Card-react-flow"
-      style={{
-        borderColor: theme.palette.greenLight,
-        background: `${theme.palette.greenLight}08`,
-      }}
-    >
+    <Card className="Card-react-flow">
+<img src={coding_icon.src} width="25" height="25" style={{float: 'left'}} /> 
+    
       {label}
-      <Handle type="source" position={Position.Right} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} />
+      <Handle type="source" position={Position.Right} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
+      <Handle type="target" position={Position.Left} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
     </Card>
   );
 };
