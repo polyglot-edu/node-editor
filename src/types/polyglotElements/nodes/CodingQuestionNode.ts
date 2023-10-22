@@ -1,5 +1,6 @@
 import CodingQuestionNodeProperties from '../../../components/Properties/Nodes/CodingQuestionNodeProperties';
 import { ReactFlowCodingQuestionNode } from '../../../components/ReactFlowNode';
+import icon from '../../../public/coding_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,
@@ -23,7 +24,8 @@ export type CodingQuestionNode = PolyglotNode & {
 polyglotNodeComponentMapping.registerMapping<CodingQuestionNode>({
   elementType: 'codingQuestionNode',
   name: 'Coding Question',
-icon: 'coding_icon.png',
+  icon: icon.src,
+  group: 'create_assessment',
   propertiesComponent: CodingQuestionNodeProperties,
   elementComponent: ReactFlowCodingQuestionNode,
   defaultData: {
