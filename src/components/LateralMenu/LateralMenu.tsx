@@ -100,6 +100,7 @@ const LateralMenu = () => {
               alt={'Activity Icon'}
               src={learning_icon.src}
               style={{ float: 'left' }}
+              height="20"
               width="20"
             />
             LEARNING ACTIVITY
@@ -132,6 +133,7 @@ const LateralMenu = () => {
                               alt={'Node icon'}
                               src={nodes.icon}
                               style={{ float: 'left' }}
+                              height="20"
                               width="20"
                             />
                             {nodes.text}
@@ -149,6 +151,7 @@ const LateralMenu = () => {
               alt={'Activity icon'}
               src={assessment_icon.src}
               style={{ float: 'left' }}
+              height="20"
               width="20"
             />
             ASSESSMENT ACTIVITY{' '}
@@ -181,6 +184,7 @@ const LateralMenu = () => {
                               alt={'Node icon'}
                               src={nodes.icon}
                               style={{ float: 'left' }}
+                              height="20"
                               width="20"
                             />
                             {nodes.text}
