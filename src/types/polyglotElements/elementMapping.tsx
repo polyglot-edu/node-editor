@@ -20,8 +20,8 @@ type ElementToReactFlowComponentMapping<T> = {
   [elementType: string]: ReactFlowComponent<T>;
 };
 type ElementToNameMapping = { [elementType: string]: string };
-type ElementToIconMapping = { [elementType: string]: string };
-type ElementToGroupMapping = { [elementType: string]: string };
+type ElementToIconMapping = { [elementType: string]: string | undefined };
+type ElementToGroupMapping = { [elementType: string]: string | undefined };
 type ElementToDefaultDataMapping<T> = { [elementType: string]: T };
 type ElementToTransformDataMapping<T> = {
   [elementType: string]: (data: T) => T;
@@ -31,8 +31,8 @@ type TypeWithData = { data: unknown; type: string };
 type MappingType<T, U, K extends TypeWithData, V extends TypeWithData> = {
   elementType: string;
   name: string;
-  icon: string;
-  group: string;
+  icon?: string;
+  group?: string;
   propertiesComponent: PropertiesComponent<T>;
   elementComponent: ReactFlowComponent<U>;
   defaultData: K['data'] & V['data'];
@@ -86,11 +86,11 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     return this._nameMapping;
   }
 
-  get iconMapping(): Readonly<ElementToIconMapping>{
+  get iconMapping(): Readonly<ElementToIconMapping> {
     return this._iconMapping;
   }
 
-  get groupMapping(): Readonly<ElementToGroupMapping>{
+  get groupMapping(): Readonly<ElementToGroupMapping> {
     return this._groupMapping;
   }
 

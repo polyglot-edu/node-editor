@@ -10,7 +10,14 @@ const PassFailEdgeProperties = () => {
         name="data.conditionKind"
         options={
           <>
-            <option value="pass" onSelect={() => {}}>Pass</option>
+            <option
+              value="pass"
+              onSelect={() => {
+                console.log('onSelect pass');
+              }}
+            >
+              Pass
+            </option>
             <option value="fail">Fail</option>
           </>
         }
