@@ -4,21 +4,21 @@ import { polyglotEdgeComponentMapping } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 
-const config=[
+const config= [
   {
-    edgeTypes:["unconditionalEdge"],
-    nodeTypes:[
+    edgeTypes: ["unconditionalEdge"],
+    nodeTypes: [
       "lessonTextNode",
       "abstractNode"
     ]
   },
   {
-    edgeTypes:[
+    edgeTypes: [
       "customValidationEdge",
       "exactValueEdge",
       "passFailEdge",    
     ],
-    nodeTypes:[
+    nodeTypes: [
       "multipleChoiceQuestionNode",
       "codingQuestionNode",
       "closeEndedQuestionNode"
@@ -31,12 +31,11 @@ const EdgeProperties = () => {
 
   const { getValues } = useFormContext();
   const source = getValues('reactFlow.source');
-  const reactFlowIstance=useReactFlow();
-  const sourceType=reactFlowIstance.getNode(source)?.type;
+  const sourceType = useReactFlow().getNode(source)?.type;
   let edgesTypes:string[];
   if(config[0].nodeTypes.includes(sourceType||""))
-   edgesTypes=config[0].edgeTypes;
-  else edgesTypes=config[1].edgeTypes;
+   edgesTypes = config[0].edgeTypes;
+  else edgesTypes = config[1].edgeTypes;
 
   return (
     <>
