@@ -1,10 +1,43 @@
+import { useFormContext } from 'react-hook-form';
+import { useReactFlow } from 'reactflow';
 import { polyglotEdgeComponentMapping } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 
-export type EdgePropertiesProps = {};
+const config=[
+  {
+    edgeTypes:["unconditionalEdge"],
+    nodeTypes:[
+      "lessonTextNode",
+      "abstractNode"
+    ]
+  },
+  {
+    edgeTypes:[
+      "customValidationEdge",
+      "exactValueEdge",
+      "passFailEdge",    
+    ],
+    nodeTypes:[
+      "multipleChoiceQuestionNode",
+      "codingQuestionNode",
+      "closeEndedQuestionNode"
+    ]
+  }
+]
 
+export type EdgePropertiesProps = {};
 const EdgeProperties = () => {
+
+  const { getValues } = useFormContext();
+  const source = getValues('reactFlow.source');
+  const reactFlowIstance=useReactFlow();
+  const sourceType=reactFlowIstance.getNode(source)?.type;
+  let edgesTypes:string[];
+  if(config[0].nodeTypes.includes(sourceType||""))
+   edgesTypes=config[0].edgeTypes;
+  else edgesTypes=config[1].edgeTypes;
+
   return (
     <>
       <TextField
@@ -19,16 +52,19 @@ const EdgeProperties = () => {
         name="type"
         options={
           <>
-            {Object.keys(polyglotEdgeComponentMapping.nameMapping).map(
-              (value, index) => (
+            {Object.keys(polyglotEdgeComponentMapping.nameMapping)
+              .filter((value)=>{
+                if(edgesTypes.includes(value)) 
+                  return true})
+              .map((value, index) => (
                 <option key={index} value={value}>
                   {value}
                 </option>
               )
-            )}
+              )}
           </>
         }
-      />
+        />
     </>
   );
 };
