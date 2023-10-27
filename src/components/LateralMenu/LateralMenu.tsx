@@ -4,7 +4,7 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-  Box,
+  Box
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { DragEvent } from 'react';
@@ -122,8 +122,11 @@ const LateralMenu = () => {
                         .filter((node) => node.group === type.group)
                         .map((nodes) => (
                           <div
+                            id={nodes.key}
                             key={nodes.key}
                             className="nodeItem"
+                            onMouseOver={()=>document.getElementById(nodes.key)?.setAttribute("style","background-color:"+type.bgColor)}
+                            onMouseOut={()=>document.getElementById(nodes.key)?.removeAttribute("style")}
                             onDragStart={(event) =>
                               onDragStart(event, nodes.index)
                             }
@@ -173,8 +176,11 @@ const LateralMenu = () => {
                         .filter((node) => node.group === type.group)
                         .map((nodes) => (
                           <div
+                            id={nodes.key}
                             key={nodes.key}
                             className="nodeItem"
+                            onMouseOver={()=>document.getElementById(nodes.key)?.setAttribute("style","background-color:"+type.bgColor)}
+                            onMouseOut={()=>document.getElementById(nodes.key)?.removeAttribute("style")}
                             onDragStart={(event) =>
                               onDragStart(event, nodes.index)
                             }
