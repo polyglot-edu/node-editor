@@ -9,7 +9,6 @@ const config= [
     edgeTypes: ["unconditionalEdge"],
     nodeTypes: [
       "lessonTextNode",
-      "abstractNode"
     ]
   },
   {
@@ -21,7 +20,8 @@ const config= [
     nodeTypes: [
       "multipleChoiceQuestionNode",
       "codingQuestionNode",
-      "closeEndedQuestionNode"
+      "closeEndedQuestionNode",
+      "abstractNode"
     ]
   }
 ]
@@ -30,19 +30,15 @@ export type EdgePropertiesProps = {};
 const EdgeProperties = () => {
 
   const { getValues } = useFormContext();
-  const source = getValues('reactFlow.source');
+  const source:string = getValues('reactFlow.source');
+  
   const {getSelectedNode, setSelectedNode} = useStore((store) => ({
     getSelectedNode: store.getSelectedNode,
     setSelectedNode: store.setSelectedNode,
   }));
-  setSelectedNode(source);
+  if(getSelectedNode()?._id!==source)
+    setSelectedNode(source);
   const sourceType = getSelectedNode()!.type;
-
-  /*const { getValues } = useFormContext();
-  const source = getValues('reactFlow.source');
-  const reactFlowIstance=useReactFlow();
-  const sourceType=reactFlowIstance.getNode(source)!.type;
-  */
   const edgesTypes=config.find((item)=>{
   if(item.nodeTypes.includes(sourceType||""))
     return true}
