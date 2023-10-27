@@ -19,8 +19,8 @@ const ReactFlowLessonNode = ({ id }: ReactFlowLessonNodeProps) => {
     <Card className="Card-react-flow">
       <img src={lesson_icon.src} width="20" height="20" style={{float: 'left', marginTop:"2px", marginRight:"5px"}} /> 
       {label}
-      <Handle type="source" position={Position.Right} onConnect={onConnect} style={{background:'#2097F6', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}}/>
-      <Handle type="target" position={Position.Left} style={{background:'#2097F6', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
+      <Handle type="source" position={Position.Right} onConnect={onConnect} style={{background:'#FFCC49', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}}/>
+      <Handle type="target" position={Position.Left} style={{background:'#FFCC49', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
     </Card>
   );
 };

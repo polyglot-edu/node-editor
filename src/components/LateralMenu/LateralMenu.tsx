@@ -22,44 +22,44 @@ interface NodeItem {
 const configLearning = [
   {
     label: 'REMEMBER',
-    bgColor: '#D2EAFD',
+    bgColor: '#FFF0C8',
     group: 'remember_learning',
   },
   {
     label: 'UNDERSTAND',
-    bgColor: '#A6D5FB',
+    bgColor: '#FFEBB6',
     group: 'understand_learning',
   },
   {
     label: 'APPLY',
-    bgColor: '#79C1FA',
+    bgColor: '#FFE092',
     group: 'apply_learning',
   },
   {
     label: 'CREATE',
-    bgColor: '#4DACF8',
+    bgColor: '#FFCC49',
     group: 'create_learning',
   },
 ];
 const configAssessment = [
   {
     label: 'REMEMBER',
-    bgColor: '#FFCEC7',
+    bgColor: '#D3CDDB',
     group: 'remember_assessment',
   },
   {
     label: 'UNDERSTAND',
-    bgColor: '#FFADA1',
+    bgColor: '#BEB4C9',
     group: 'understand_assessment',
   },
   {
     label: 'APPLY',
-    bgColor: '#FF8C7B',
+    bgColor: '#9282A5',
     group: 'apply_assessment',
   },
   {
     label: 'CREATE',
-    bgColor: '#FF7B69',
+    bgColor: '#7C6892',
     group: 'create_assessment',
   },
 ];
