@@ -1,5 +1,5 @@
 import { useFormContext } from 'react-hook-form';
-import { useReactFlow } from 'reactflow';
+import useStore from '../../../store';
 import { polyglotEdgeComponentMapping } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
@@ -31,11 +31,22 @@ const EdgeProperties = () => {
 
   const { getValues } = useFormContext();
   const source = getValues('reactFlow.source');
-  const sourceType = useReactFlow().getNode(source)?.type;
-  let edgesTypes:string[];
-  if(config[0].nodeTypes.includes(sourceType||""))
-   edgesTypes = config[0].edgeTypes;
-  else edgesTypes = config[1].edgeTypes;
+  const {getSelectedNode, setSelectedNode} = useStore((store) => ({
+    getSelectedNode: store.getSelectedNode,
+    setSelectedNode: store.setSelectedNode,
+  }));
+  setSelectedNode(source);
+  const sourceType = getSelectedNode()!.type;
+
+  /*const { getValues } = useFormContext();
+  const source = getValues('reactFlow.source');
+  const reactFlowIstance=useReactFlow();
+  const sourceType=reactFlowIstance.getNode(source)!.type;
+  */
+  const edgesTypes=config.find((item)=>{
+  if(item.nodeTypes.includes(sourceType||""))
+    return true}
+  )!.edgeTypes;
 
   return (
     <>
