@@ -23,8 +23,8 @@ const ReactFlowCodingQuestionNode = ({
 <img src={coding_icon.src} width="25" height="25" style={{float: 'left'}} /> 
     
       {label}
-      <Handle type="source" position={Position.Right} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} style={{background:'#FF5A43', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
+      <Handle type="source" position={Position.Right} style={{background:'#3B1D5C', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
+      <Handle type="target" position={Position.Left} style={{background:'#3B1D5C', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
     </Card>
   );
 };

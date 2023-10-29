@@ -13,9 +13,9 @@
 }
 
 .Card-react-flow {
-  border: 1px solid rgb(69, 69, 69);
+  border: 1px solid #81868C;
   margin: 0;
-  border-radius: 3px;
+  border-radius: 10px;
   margin-left: 1px;
   margin-right: 1px;
 }
