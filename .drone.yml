@@ -37,7 +37,7 @@ steps:
       <<: *docker_creds
     when:
       <<: *condition
-  - name: Deploy # deploy to kubernetes using a Helm chart
+  - name: Deploy Production # deploy to kubernetes using a Helm chart
     image: pelotech/drone-helm3
     environment:
       CFORIGIN:
@@ -81,7 +81,7 @@ steps:
         include:
           - dev #remove it later
           - main
-  - name: Deploy # deploy to kubernetes using a Helm chart
+  - name: Deploy Development # deploy to kubernetes using a Helm chart
     image: pelotech/drone-helm3
     environment:
       CFORIGIN:
