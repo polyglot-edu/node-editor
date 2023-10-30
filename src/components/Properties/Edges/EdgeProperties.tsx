@@ -4,45 +4,34 @@ import { polyglotEdgeComponentMapping } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 
-const config= [
+const config = [
   {
-    edgeTypes: ["unconditionalEdge"],
-    nodeTypes: [
-      "lessonTextNode",
-    ]
+    edgeTypes: ['unconditionalEdge'],
+    nodeTypes: ['lessonTextNode'],
   },
   {
-    edgeTypes: [
-      "customValidationEdge",
-      "exactValueEdge",
-      "passFailEdge",    
-    ],
+    edgeTypes: ['customValidationEdge', 'exactValueEdge', 'passFailEdge'],
     nodeTypes: [
-      "multipleChoiceQuestionNode",
-      "codingQuestionNode",
-      "closeEndedQuestionNode",
-      "abstractNode"
-    ]
-  }
-]
+      'multipleChoiceQuestionNode',
+      'codingQuestionNode',
+      'closeEndedQuestionNode',
+      'abstractNode',
+    ],
+  },
+];
 
 export type EdgePropertiesProps = {};
 const EdgeProperties = () => {
-
   const { getValues } = useFormContext();
-  const source:string = getValues('reactFlow.source');
-  
-  const {getSelectedNode, setSelectedNode} = useStore((store) => ({
-    getSelectedNode: store.getSelectedNode,
-    setSelectedNode: store.setSelectedNode,
-  }));
-  if(getSelectedNode()?._id!==source)
-    setSelectedNode(source);
-  const sourceType = getSelectedNode()!.type;
-  const edgesTypes=config.find((item)=>{
-  if(item.nodeTypes.includes(sourceType||""))
-    return true}
-  )!.edgeTypes;
+  const source: string = getValues('reactFlow.source');
+
+  const { nodeMap } = useStore();
+
+  const node = nodeMap.get(source);
+
+  const edgesTypes =
+    config.find((item) => item.nodeTypes.includes(node?.type ?? ''))
+      ?.edgeTypes ?? [];
 
   return (
     <>
@@ -59,18 +48,15 @@ const EdgeProperties = () => {
         options={
           <>
             {Object.keys(polyglotEdgeComponentMapping.nameMapping)
-              .filter((value)=>{
-                if(edgesTypes.includes(value)) 
-                  return true})
+              .filter((value) => edgesTypes.includes(value))
               .map((value, index) => (
                 <option key={index} value={value}>
                   {value}
                 </option>
-              )
-              )}
+              ))}
           </>
         }
-        />
+      />
     </>
   );
 };
