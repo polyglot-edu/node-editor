@@ -1,6 +1,6 @@
 import * as t from 'io-ts';
 import PassFailEdgeProperties from '../../../components/Properties/Edges/PassFailEdgeProperties';
-import { ReactFlowSmartBezierEdge } from '../../../components/ReactFlowEdge';
+import { ReactFlowSmartBezierEdgePassFail } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
@@ -25,7 +25,7 @@ polyglotEdgeComponentMapping.registerMapping<PassFailEdge>({
   elementType: 'passFailEdge',
   name: 'Pass/Fail',
   propertiesComponent: PassFailEdgeProperties,
-  elementComponent: ReactFlowSmartBezierEdge,
+  elementComponent: ReactFlowSmartBezierEdgePassFail,
   defaultData: {
     ...defaultPolyglotEdgeData,
     conditionKind: 'pass',
