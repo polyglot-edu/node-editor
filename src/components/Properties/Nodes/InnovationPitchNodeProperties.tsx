@@ -1,13 +1,16 @@
+import { TextField, Toggle } from '@fluentui/react';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
-import MultipleChoiceField from '../../Forms/Fields/MultipleChoiceField';
 import NodeProperties from './NodeProperties';
 
 const InnovationPitchNodeProperties = () => {
   return (
     <>
+      <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
       <NodeProperties />
-      <MarkDownField label="Question" name="data.question" />
-      <MultipleChoiceField label="Choices" name="data.choices" />
+      <MarkDownField label="Instructions" name="data.guidelines" />
+      <MarkDownField label="Text" name="data.text" />
+      <TextField label="URL" name="data.link" />
+      <Toggle label="Learners upload?" />
     </>
   );
 };

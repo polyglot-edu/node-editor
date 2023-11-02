@@ -6,9 +6,9 @@ import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type TrueFalseNodeData = NodeData & {
-  question: string;
-  choices: string[];
-  isChoiceCorrect: boolean[];
+  instructions: string;
+  questions: string[];
+  isQuestionCorrect: boolean[];
 };
 
 export type TrueFalseNode = PolyglotNode & {
@@ -25,24 +25,24 @@ polyglotNodeComponentMapping.registerMapping<TrueFalseNode>({
   elementComponent: ReactFlowTrueFalseNode,
   defaultData: {
     ...defaultPolyglotNodeData,
-    choices: [],
-    isChoiceCorrect: [],
-    question: '',
+    questions: [],
+    isQuestionCorrect: [],
+    instructions: '',
   },
   transformData: (node) => {
     const oldData = node.data as TrueFalseNodeData;
 
     const data = {
       ...oldData,
-      correctAnswers: zip(oldData?.choices, oldData?.isChoiceCorrect).reduce(
-        (acc, { first, second }) => {
-          if (second) {
-            acc.push(first);
-          }
-          return acc;
-        },
-        [] as string[]
-      ),
+      correctAnswers: zip(
+        oldData?.questions,
+        oldData?.isQuestionCorrect
+      ).reduce((acc, { first, second }) => {
+        if (second) {
+          acc.push(first);
+        }
+        return acc;
+      }, [] as string[]),
     };
     /*
     const challengeSetup: ChallengeSetup[] = [

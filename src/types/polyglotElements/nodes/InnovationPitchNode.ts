@@ -1,14 +1,14 @@
 import InnovationPitchNodeProperties from '../../../components/Properties/Nodes/InnovationPitchNodeProperties';
 import { ReactFlowInnovationPitchNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/abstract_icon.png';
-import { zip } from '../../../utils/utils';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type InnovationPitchNodeData = NodeData & {
-  question: string;
-  choices: string[];
-  isChoiceCorrect: boolean[];
+  guidelines: string;
+  text: string;
+  link: string;
+  uploadLearner: boolean;
 };
 
 export type InnovationPitchNode = PolyglotNode & {
@@ -25,24 +25,16 @@ polyglotNodeComponentMapping.registerMapping<InnovationPitchNode>({
   elementComponent: ReactFlowInnovationPitchNode,
   defaultData: {
     ...defaultPolyglotNodeData,
-    choices: [],
-    isChoiceCorrect: [],
-    question: '',
+    guidelines: '',
+    text: '',
+    link: '',
+    uploadLearner: false,
   },
   transformData: (node) => {
     const oldData = node.data as InnovationPitchNodeData;
 
     const data = {
       ...oldData,
-      correctAnswers: zip(oldData?.choices, oldData?.isChoiceCorrect).reduce(
-        (acc, { first, second }) => {
-          if (second) {
-            acc.push(first);
-          }
-          return acc;
-        },
-        [] as string[]
-      ),
     };
     /*
     const challengeSetup: ChallengeSetup[] = [

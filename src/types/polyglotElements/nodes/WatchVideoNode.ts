@@ -11,7 +11,7 @@ import {
 } from './Node';
 
 export type WatchVideoNodeData = NodeData & {
-  text: string;
+  link: string;
 };
 
 export type WatchVideoNode = PolyglotNode & {
@@ -27,7 +27,7 @@ polyglotNodeComponentMapping.registerMapping<WatchVideoNode>({
   propertiesComponent: WatchVideoNodeProperties,
   elementComponent: ReactFlowWatchVideoNode,
   defaultData: {
-    text: '',
+    link: '',
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {

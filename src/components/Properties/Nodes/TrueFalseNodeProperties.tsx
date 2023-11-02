@@ -5,9 +5,10 @@ import NodeProperties from './NodeProperties';
 const TrueFalseNodeProperties = () => {
   return (
     <>
+      <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
       <NodeProperties />
-      <MarkDownField label="Question" name="data.question" />
-      <MultipleChoiceField label="Choices" name="data.choices" />
+      <MarkDownField label="Instructions" name="data.instructions" />
+      <MultipleChoiceField label="Questions" name="data.questions" />
     </>
   );
 };

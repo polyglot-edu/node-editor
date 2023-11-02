@@ -4,8 +4,9 @@ import NodeProperties from './NodeProperties';
 const CreateKeywordsListNodeProperties = () => {
   return (
     <>
+      <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
       <NodeProperties />
-      <MarkDownField label="Text" name="data.text" />
+      <MarkDownField label="Instructions" name="data.instructions" />
     </>
   );
 };

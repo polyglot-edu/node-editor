@@ -1,14 +1,14 @@
 import CasesEvaluationNodeProperties from '../../../components/Properties/Nodes/CasesEvaluationNodeProperties';
 import { ReactFlowCasesEvaluationNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/abstract_icon.png';
-import { zip } from '../../../utils/utils';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type CasesEvaluationNodeData = NodeData & {
-  question: string;
-  choices: string[];
-  isChoiceCorrect: boolean[];
+  guidelines: string;
+  text: string;
+  link: string;
+  uploadLearner: boolean;
 };
 
 export type CasesEvaluationNode = PolyglotNode & {
@@ -25,24 +25,16 @@ polyglotNodeComponentMapping.registerMapping<CasesEvaluationNode>({
   elementComponent: ReactFlowCasesEvaluationNode,
   defaultData: {
     ...defaultPolyglotNodeData,
-    choices: [],
-    isChoiceCorrect: [],
-    question: '',
+    guidelines: '',
+    text: '',
+    link: '',
+    uploadLearner: false,
   },
   transformData: (node) => {
     const oldData = node.data as CasesEvaluationNodeData;
 
     const data = {
       ...oldData,
-      correctAnswers: zip(oldData?.choices, oldData?.isChoiceCorrect).reduce(
-        (acc, { first, second }) => {
-          if (second) {
-            acc.push(first);
-          }
-          return acc;
-        },
-        [] as string[]
-      ),
     };
     /*
     const challengeSetup: ChallengeSetup[] = [

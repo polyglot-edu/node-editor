@@ -15,4 +15,5 @@ export * from './Node';
 export * from './ProblemSolvingNode';
 export * from './ReadMaterialNode';
 export * from './SummaryNode';
+export * from './TrueFalseNode';
 export * from './WatchVideoNode';

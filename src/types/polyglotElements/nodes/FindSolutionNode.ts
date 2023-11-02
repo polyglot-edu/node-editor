@@ -12,6 +12,8 @@ import {
 
 export type FindSolutionNodeData = NodeData & {
   text: string;
+  link: string;
+  uploadLearner: boolean;
 };
 
 export type FindSolutionNode = PolyglotNode & {
@@ -28,6 +30,8 @@ polyglotNodeComponentMapping.registerMapping<FindSolutionNode>({
   elementComponent: ReactFlowFindSolutionNode,
   defaultData: {
     text: '',
+    link: '',
+    uploadLearner: false,
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {

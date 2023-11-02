@@ -12,6 +12,8 @@ import {
 
 export type MindMapNodeData = NodeData & {
   text: string;
+  link: string;
+  uploadLearner: boolean;
 };
 
 export type MindMapNode = PolyglotNode & {
@@ -28,6 +30,8 @@ polyglotNodeComponentMapping.registerMapping<MindMapNode>({
   elementComponent: ReactFlowMindMapNode,
   defaultData: {
     text: '',
+    link: '',
+    uploadLearner: false,
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {

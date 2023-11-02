@@ -11,7 +11,8 @@ import {
 } from './Node';
 
 export type MemoriseKeywordsListNodeData = NodeData & {
-  text: string;
+  instructions: string;
+  keywords: string[];
 };
 
 export type MemoriseKeywordsListNode = PolyglotNode & {
@@ -27,7 +28,8 @@ polyglotNodeComponentMapping.registerMapping<MemoriseKeywordsListNode>({
   propertiesComponent: MemoriseKeywordsListNodeProperties,
   elementComponent: ReactFlowMemoriseKeywordsListNode,
   defaultData: {
-    text: '',
+    instructions: '',
+    keywords: [],
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {

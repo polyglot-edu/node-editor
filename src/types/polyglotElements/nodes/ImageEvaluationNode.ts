@@ -6,9 +6,10 @@ import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type ImageEvaluationNodeData = NodeData & {
+  link: string;
   question: string;
-  choices: string[];
-  isChoiceCorrect: boolean[];
+  answers: string[];
+  isAnswerCorrect: boolean[];
 };
 
 export type ImageEvaluationNode = PolyglotNode & {
@@ -25,8 +26,9 @@ polyglotNodeComponentMapping.registerMapping<ImageEvaluationNode>({
   elementComponent: ReactFlowImageEvaluationNode,
   defaultData: {
     ...defaultPolyglotNodeData,
-    choices: [],
-    isChoiceCorrect: [],
+    link: '',
+    answers: [],
+    isAnswerCorrect: [],
     question: '',
   },
   transformData: (node) => {
@@ -34,7 +36,7 @@ polyglotNodeComponentMapping.registerMapping<ImageEvaluationNode>({
 
     const data = {
       ...oldData,
-      correctAnswers: zip(oldData?.choices, oldData?.isChoiceCorrect).reduce(
+      correctAnswers: zip(oldData?.answers, oldData?.isAnswerCorrect).reduce(
         (acc, { first, second }) => {
           if (second) {
             acc.push(first);

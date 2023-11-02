@@ -12,6 +12,8 @@ import {
 
 export type SummaryNodeData = NodeData & {
   text: string;
+  link: string;
+  uploadLearner: boolean;
 };
 
 export type SummaryNode = PolyglotNode & {
@@ -28,6 +30,8 @@ polyglotNodeComponentMapping.registerMapping<SummaryNode>({
   elementComponent: ReactFlowSummaryNode,
   defaultData: {
     text: '',
+    link: '',
+    uploadLearner: false,
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {

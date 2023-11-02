@@ -4,7 +4,7 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-  Box
+  Box,
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { DragEvent } from 'react';
@@ -88,13 +88,13 @@ const LateralMenu = () => {
     <>
       <Box
         width={'280px'}
-        height={'420px'}
+        //height={'420px'}
         border={'1px'}
         borderColor={'gray'}
         title="drag the new node"
       >
         <div className="label">ADD NEW ACTIVITY</div>
-        <p style={{ overflow: 'auto', height: '400px' }}>
+        <p style={{ overflow: 'auto', height: '600px' }}>
           <span className="label">
             <Image
               alt={'Activity Icon'}
@@ -125,8 +125,19 @@ const LateralMenu = () => {
                             id={nodes.key}
                             key={nodes.key}
                             className="nodeItem"
-                            onMouseOver={()=>document.getElementById(nodes.key)?.setAttribute("style","background-color:"+type.bgColor)}
-                            onMouseOut={()=>document.getElementById(nodes.key)?.removeAttribute("style")}
+                            onMouseOver={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.setAttribute(
+                                  'style',
+                                  'background-color:' + type.bgColor
+                                )
+                            }
+                            onMouseOut={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.removeAttribute('style')
+                            }
                             onDragStart={(event) =>
                               onDragStart(event, nodes.index)
                             }
@@ -179,8 +190,19 @@ const LateralMenu = () => {
                             id={nodes.key}
                             key={nodes.key}
                             className="nodeItem"
-                            onMouseOver={()=>document.getElementById(nodes.key)?.setAttribute("style","background-color:"+type.bgColor)}
-                            onMouseOut={()=>document.getElementById(nodes.key)?.removeAttribute("style")}
+                            onMouseOver={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.setAttribute(
+                                  'style',
+                                  'background-color:' + type.bgColor
+                                )
+                            }
+                            onMouseOut={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.removeAttribute('style')
+                            }
                             onDragStart={(event) =>
                               onDragStart(event, nodes.index)
                             }
@@ -209,4 +231,3 @@ const LateralMenu = () => {
 };
 
 export default LateralMenu;
-

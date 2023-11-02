@@ -12,6 +12,7 @@ import {
 
 export type ReadMaterialNodeData = NodeData & {
   text: string;
+  link: string;
 };
 
 export type ReadMaterialNode = PolyglotNode & {
@@ -28,6 +29,7 @@ polyglotNodeComponentMapping.registerMapping<ReadMaterialNode>({
   elementComponent: ReactFlowReadMaterialNode,
   defaultData: {
     text: '',
+    link: '',
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
