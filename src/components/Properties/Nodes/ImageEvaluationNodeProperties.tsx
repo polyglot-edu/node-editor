@@ -1,6 +1,6 @@
-import { TextField } from '@fluentui/react';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import MultipleChoiceField from '../../Forms/Fields/MultipleChoiceField';
+import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
 const ImageEvaluationNodeProperties = () => {

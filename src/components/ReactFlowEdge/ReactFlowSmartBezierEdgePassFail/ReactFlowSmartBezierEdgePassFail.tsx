@@ -1,4 +1,4 @@
-import { BaseEdge, getBezierPath } from 'reactflow';
+import { BaseEdge, EdgeMarker, getBezierPath, MarkerType } from 'reactflow';
 import useStore from '../../../store';
 import { ReactFlowEdgeProps } from '../ReactFlowEdge';
 
@@ -10,6 +10,12 @@ const ReactFlowSmartBezierEdgePassFail = (
 ) => {
   const label = useStore((state) => state.edgeMap.get(props.id)?.title);
 
+  const passFailMarker: EdgeMarker = {
+    type: MarkerType.ArrowClosed,
+    width: 20,
+    height: 20,
+    color: '#FF0072',
+  };
   const {
     sourceX,
     sourceY,

@@ -1,5 +1,6 @@
-import { TextField, Toggle } from '@fluentui/react';
+import { Toggle } from '@fluentui/react';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
+import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
 const MindMapNodeProperties = () => {

@@ -1,4 +1,4 @@
-import { TextField } from '@fluentui/react';
+import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
 const WatchVideoNodeProperties = () => {
