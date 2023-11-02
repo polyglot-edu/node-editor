@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import FindSolution_icon from '../../../public/abstract_icon.png';
+import FindSolution_icon from '../../../public/findSolution_icon.png';
 import useStore from '../../../store';
 import { FindSolutionNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

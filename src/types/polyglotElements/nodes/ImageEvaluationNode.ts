@@ -1,6 +1,6 @@
 import ImageEvaluationNodeProperties from '../../../components/Properties/Nodes/ImageEvaluationNodeProperties';
 import { ReactFlowImageEvaluationNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/evaluationActivity_icon.png';
 import { zip } from '../../../utils/utils';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';

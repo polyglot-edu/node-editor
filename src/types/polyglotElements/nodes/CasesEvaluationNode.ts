@@ -1,6 +1,6 @@
 import CasesEvaluationNodeProperties from '../../../components/Properties/Nodes/CasesEvaluationNodeProperties';
 import { ReactFlowCasesEvaluationNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/summary_CasesEvaluation_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 

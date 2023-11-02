@@ -1,6 +1,6 @@
 import CloseEndedQuestionNodeProperties from '../../../components/Properties/Nodes/CloseEndedQuestionNodeProperties';
 import { ReactFlowCloseEndedQuestionNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/close_question_icon.png';
+import icon from '../../../public/closeQuestion_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,
@@ -24,7 +24,7 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
   elementType: 'closeEndedQuestionNode',
   name: 'Close Ended Question',
   icon: icon.src,
-  group: 'remember_assessment', 
+  group: 'remember_assessment',
   propertiesComponent: CloseEndedQuestionNodeProperties,
   elementComponent: ReactFlowCloseEndedQuestionNode,
   defaultData: {

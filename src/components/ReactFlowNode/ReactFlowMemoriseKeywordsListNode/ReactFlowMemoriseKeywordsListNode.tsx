@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import MemoriseKeywordsList_icon from '../../../public/abstract_icon.png';
+import MemoriseKeywordsList_icon from '../../../public/memoriseKeywordsList_icon.png';
 import useStore from '../../../store';
 import { MemoriseKeywordsListNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

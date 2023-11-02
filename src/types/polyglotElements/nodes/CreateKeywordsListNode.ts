@@ -1,6 +1,6 @@
 import CreateKeywordsListNodeProperties from '../../../components/Properties/Nodes/CreateKeywordsListNodeProperties';
 import { ReactFlowCreateKeywordsListNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/listActivity_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,

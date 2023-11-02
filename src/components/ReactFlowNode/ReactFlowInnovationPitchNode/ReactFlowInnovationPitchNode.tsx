@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import InnovationPitch_icon from '../../../public/abstract_icon.png';
+import InnovationPitch_icon from '../../../public/innovationPitch_icon.png';
 import useStore from '../../../store';
 import { InnovationPitchNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

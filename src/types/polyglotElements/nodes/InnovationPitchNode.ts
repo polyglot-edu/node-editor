@@ -1,6 +1,6 @@
 import InnovationPitchNodeProperties from '../../../components/Properties/Nodes/InnovationPitchNodeProperties';
 import { ReactFlowInnovationPitchNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/innovationPitch_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 

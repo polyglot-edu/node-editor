@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import mult_choice_icon from '../../../public/mult_choice_icon.png';
+import mult_choice_icon from '../../../public/trueFalse_icon.png';
 import useStore from '../../../store';
 import { MultipleChoiceQuestionNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -20,10 +20,36 @@ const ReactFlowMultipleChoiceQuestionNode = ({
 
   return (
     <Card className="Card-react-flow">
-    <img src={mult_choice_icon.src} width="20" height="20" style={{float: 'left', marginTop:"2px",  marginRight:"5px"}} />    
+      <img
+        src={mult_choice_icon.src}
+        width="20"
+        height="20"
+        style={{ float: 'left', marginTop: '2px', marginRight: '5px' }}
+      />
       {label}
-      <Handle type="source" position={Position.Right} style={{background:'#3B1D5C', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} style={{background:'#3B1D5C', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          background: '#3B1D5C',
+          height: '25px',
+          width: '5px',
+          borderRadius: '0px',
+          border: '0px',
+        }}
+        onConnect={onConnect}
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          background: '#3B1D5C',
+          height: '25px',
+          width: '5px',
+          borderRadius: '0px',
+          border: '0px',
+        }}
+      />
     </Card>
   );
 };

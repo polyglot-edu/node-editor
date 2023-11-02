@@ -1,6 +1,6 @@
 import ReadMaterialNodeProperties from '../../../components/Properties/Nodes/ReadMaterialNodeProperties';
 import { ReactFlowReadMaterialNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/readMaterial_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,

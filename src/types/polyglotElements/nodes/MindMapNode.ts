@@ -1,6 +1,6 @@
 import MindMapNodeProperties from '../../../components/Properties/Nodes/MindMapNodeProperties';
 import { ReactFlowMindMapNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/mindMap_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,

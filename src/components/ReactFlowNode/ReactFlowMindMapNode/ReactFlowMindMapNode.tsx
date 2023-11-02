@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import MindMap_icon from '../../../public/abstract_icon.png';
+import MindMap_icon from '../../../public/mindMap_icon.png';
 import useStore from '../../../store';
 import { MindMapNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

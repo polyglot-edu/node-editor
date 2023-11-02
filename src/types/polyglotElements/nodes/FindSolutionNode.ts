@@ -1,6 +1,6 @@
 import FindSolutionNodeProperties from '../../../components/Properties/Nodes/FindSolutionNodeProperties';
 import { ReactFlowFindSolutionNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/findSolution_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,

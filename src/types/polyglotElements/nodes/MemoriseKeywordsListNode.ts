@@ -1,6 +1,6 @@
 import MemoriseKeywordsListNodeProperties from '../../../components/Properties/Nodes/MemoriseKeywordsListNodeProperties';
 import { ReactFlowMemoriseKeywordsListNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/memoriseKeywordsList_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,

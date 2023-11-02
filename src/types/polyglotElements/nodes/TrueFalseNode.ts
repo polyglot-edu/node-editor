@@ -1,6 +1,6 @@
 import TrueFalseNodeProperties from '../../../components/Properties/Nodes/TrueFalseNodeProperties';
 import { ReactFlowTrueFalseNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/mult_choice_icon.png';
+import icon from '../../../public/trueFalse_icon.png';
 import { zip } from '../../../utils/utils';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';

@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import ReadMaterial_icon from '../../../public/abstract_icon.png';
+import ReadMaterial_icon from '../../../public/readMaterial_icon.png';
 import useStore from '../../../store';
 import { ReadMaterialNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

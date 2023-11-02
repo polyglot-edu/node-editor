@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import Summary_icon from '../../../public/abstract_icon.png';
+import Summary_icon from '../../../public/summary_CasesEvaluation_icon.png';
 import useStore from '../../../store';
 import { SummaryNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

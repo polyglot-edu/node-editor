@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import ImageEvaluation_icon from '../../../public/abstract_icon.png';
+import ImageEvaluation_icon from '../../../public/evaluationActivity_icon.png';
 import useStore from '../../../store';
 import { ImageEvaluationNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

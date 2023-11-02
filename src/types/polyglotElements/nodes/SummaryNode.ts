@@ -1,6 +1,6 @@
 import SummaryNodeProperties from '../../../components/Properties/Nodes/SummaryNodeProperties';
 import { ReactFlowSummaryNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/summary_CasesEvaluation_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,

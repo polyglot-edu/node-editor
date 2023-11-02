@@ -1,6 +1,6 @@
 import WatchVideoNodeProperties from '../../../components/Properties/Nodes/WatchVideoNodeProperties';
 import { ReactFlowWatchVideoNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/watchVideo_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import {
   ChallengeContent,
