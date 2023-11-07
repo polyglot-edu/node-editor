@@ -90,7 +90,9 @@ export const createNewDefaultPolyglotEdge = (
 ): PolyglotEdge => {
   const id = UUIDv4();
   const type =
-    sourceType == 'lessonTextNode' ? 'unconditionalEdge' : 'passFailEdge'; //to change into group type (learning)
+    (sourceType || '') == 'lessonTextNode'
+      ? 'unconditionalEdge'
+      : 'passFailEdge'; //to change into group type (learning)
   console.log(type);
   return {
     _id: id,

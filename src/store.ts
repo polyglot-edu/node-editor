@@ -621,13 +621,17 @@ const useStore = create<ApplicationState>()(
           let newEdge: any;
           set((state) =>
             produce(state, (draft) => {
-              if (!connection.source || !connection.target) {
+              if (
+                !connection.source ||
+                !connection.target ||
+                !draft.nodeMap.get(connection.source)?.type
+              ) {
                 console.log('Source or target undefined!');
                 return;
               }
               newEdge = createNewDefaultPolyglotEdge(
                 connection.source,
-                draft.nodeMap.get(connection.source).type, //to change into group type (learning/assessment)
+                draft.nodeMap.get(connection.source).type, //to be changed into group type (learning/assessment)
                 connection.target
               );
               draft.edgeMap.set(newEdge.reactFlow.id, newEdge);
