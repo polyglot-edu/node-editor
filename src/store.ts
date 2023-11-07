@@ -272,7 +272,7 @@ const useStore = create<ApplicationState>()(
               draft.actions = [];
               draft.currentAction = -1;
               draft.lastSavedAction = -1;
-              draft.activeFlowInfo = flow;
+              draft.activeFlowInfo = flow as PolyglotFlowInfo;
               if (flow.nodes) draft.nodeMap = createElementMapping(flow.nodes);
               if (flow.edges) draft.edgeMap = createElementMapping(flow.edges);
               draft.clearSelection();
@@ -332,7 +332,7 @@ const useStore = create<ApplicationState>()(
         getFlow: () => {
           const state = get();
           if (!state.activeFlowInfo) {
-            return null;
+            return state.activeFlowInfo;
           }
 
           return {
@@ -341,7 +341,7 @@ const useStore = create<ApplicationState>()(
             edges: Array.from(state.edgeMap.values()),
           };
         },
-        activeFlowInfo: null,
+        activeFlowInfo: null as Nullable<PolyglotFlowInfo>,
 
         nodeMap: new Map<string, PolyglotNode>(),
         edgeMap: new Map<string, PolyglotEdge>(),
@@ -354,9 +354,9 @@ const useStore = create<ApplicationState>()(
             Object.assign({}, edge.reactFlow)
           ),
 
-        selectedElement: null,
-        selectedNode: null,
-        selectedEdge: null,
+        selectedElement: null as Nullable<SelectedElement>,
+        selectedNode: null as Nullable<string>,
+        selectedEdge: null as Nullable<string>,
         getSelectedElement: () => {
           const state = get();
           const selectedElement = state.selectedElement;
@@ -377,7 +377,7 @@ const useStore = create<ApplicationState>()(
           if (state.selectedNode !== null) {
             return state.nodeMap.get(state.selectedNode) || null;
           }
-          return null;
+          return null as Nullable<PolyglotNode>;
         },
         getSelectedEdge: () => {
           const state = get();
@@ -399,15 +399,15 @@ const useStore = create<ApplicationState>()(
         },
         setSelectedEdge: (edgeId) => {
           set(() => ({
-            selectedNode: null,
+            selectedNode: null as Nullable<string>,
             selectedEdge: edgeId,
           }));
         },
         clearSelection: () => {
           set(() => ({
-            selectedElement: null,
-            selectedNode: null,
-            selectedEdge: null,
+            selectedElement: null as Nullable<SelectedElement>,
+            selectedNode: null as Nullable<string>,
+            selectedEdge: null as Nullable<string>,
           }));
         },
 
@@ -625,8 +625,11 @@ const useStore = create<ApplicationState>()(
                 console.log('Source or target undefined!');
                 return;
               }
+              const sourceNode = draft.nodeMap.get(connection.source)!;
+
               newEdge = createNewDefaultPolyglotEdge(
                 connection.source,
+                sourceNode.type, //to be changed into group type (learning/assessment)
                 connection.target
               );
               draft.edgeMap.set(newEdge.reactFlow.id, newEdge);
