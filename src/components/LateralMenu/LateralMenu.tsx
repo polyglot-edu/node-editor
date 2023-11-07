@@ -4,7 +4,7 @@ import {
   AccordionButton,
   AccordionItem,
   AccordionPanel,
-  Box
+  Box,
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { DragEvent } from 'react';
@@ -64,6 +64,12 @@ const configAssessment = [
   },
 ];
 
+const listImplementedNodes = [
+  'lessonTextNode',
+  'multipleChoiceQuestionNode',
+  'closeEndedQuestionNode',
+];
+
 const LateralMenu = () => {
   const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
     if (event.dataTransfer == null) {
@@ -88,13 +94,13 @@ const LateralMenu = () => {
     <>
       <Box
         width={'280px'}
-        height={'420px'}
+        //height={'420px'}
         border={'1px'}
         borderColor={'gray'}
         title="drag the new node"
       >
         <div className="label">ADD NEW ACTIVITY</div>
-        <p style={{ overflow: 'auto', height: '400px' }}>
+        <p style={{ overflow: 'auto', height: '600px' }}>
           <span className="label">
             <Image
               alt={'Activity Icon'}
@@ -125,12 +131,41 @@ const LateralMenu = () => {
                             id={nodes.key}
                             key={nodes.key}
                             className="nodeItem"
-                            onMouseOver={()=>document.getElementById(nodes.key)?.setAttribute("style","background-color:"+type.bgColor)}
-                            onMouseOut={()=>document.getElementById(nodes.key)?.removeAttribute("style")}
-                            onDragStart={(event) =>
-                              onDragStart(event, nodes.index)
+                            onMouseOver={() =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color:' + type.bgColor
+                                    )
+                                : document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color: grey'
+                                    )
                             }
-                            draggable
+                            onMouseOut={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.removeAttribute('style')
+                            }
+                            onDragStart={(event) =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? onDragStart(event, nodes.index)
+                                : null
+                            }
+                            draggable={
+                              listImplementedNodes.includes(nodes.index)
+                                ? true
+                                : false
+                            }
+                            title={
+                              listImplementedNodes.includes(nodes.index)
+                                ? 'Drag the new Node type'
+                                : 'Node type not implemented yet'
+                            }
                           >
                             <Image
                               alt={'Node icon'}
@@ -179,12 +214,41 @@ const LateralMenu = () => {
                             id={nodes.key}
                             key={nodes.key}
                             className="nodeItem"
-                            onMouseOver={()=>document.getElementById(nodes.key)?.setAttribute("style","background-color:"+type.bgColor)}
-                            onMouseOut={()=>document.getElementById(nodes.key)?.removeAttribute("style")}
-                            onDragStart={(event) =>
-                              onDragStart(event, nodes.index)
+                            onMouseOver={() =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color:' + type.bgColor
+                                    )
+                                : document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color: grey'
+                                    )
                             }
-                            draggable
+                            onMouseOut={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.removeAttribute('style')
+                            }
+                            onDragStart={(event) =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? onDragStart(event, nodes.index)
+                                : null
+                            }
+                            draggable={
+                              listImplementedNodes.includes(nodes.index)
+                                ? true
+                                : false
+                            }
+                            title={
+                              listImplementedNodes.includes(nodes.index)
+                                ? 'Drag the new Node type'
+                                : 'Node type not implemented yet'
+                            }
                           >
                             <Image
                               alt={'Node icon'}
@@ -209,4 +273,3 @@ const LateralMenu = () => {
 };
 
 export default LateralMenu;
-

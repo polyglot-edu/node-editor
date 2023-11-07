@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import close_question_icon from '../../../public/close_question_icon.png';
+import close_question_icon from '../../../public/closeQuestion_icon.png';
 import useStore from '../../../store';
 import { CloseEndedQuestionNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -20,11 +20,37 @@ const ReactFlowCloseEndedQuestionNode = ({
 
   return (
     <Card className="Card-react-flow">
-<img src={close_question_icon.src} width="20" height="20" style={{float: 'left',   marginRight:"5px"}} /> 
-    
+      <img
+        src={close_question_icon.src}
+        width="20"
+        height="20"
+        style={{ float: 'left', marginRight: '5px' }}
+      />
+
       {label}
-      <Handle type="source" position={Position.Right} style={{background:'#3B1D5C', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} style={{background:'#3B1D5C', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          background: '#3B1D5C',
+          height: '25px',
+          width: '5px',
+          borderRadius: '0px',
+          border: '0px',
+        }}
+        onConnect={onConnect}
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          background: '#3B1D5C',
+          height: '25px',
+          width: '5px',
+          borderRadius: '0px',
+          border: '0px',
+        }}
+      />
     </Card>
   );
 };

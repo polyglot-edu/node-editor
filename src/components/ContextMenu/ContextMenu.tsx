@@ -1,8 +1,6 @@
 import { ContextualMenu, IContextualMenuItem } from '@fluentui/react';
 import { useRef } from 'react';
 import useStore from '../../store';
-import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
-import { createNewDefaultPolyglotNode } from '../../utils/utils';
 
 export enum ContextMenuTypes {
   DEFAULT,
@@ -34,13 +32,16 @@ const ContextMenu = ({
   onDismiss,
 }: ContextMenuProps) => {
   const linkRef = useRef(null);
+
+  //menu items: left if needed in future
+  /*
   const menuItems: IContextualMenuItem[] = Object.keys(
     polyglotNodeComponentMapping.nameMapping
   ).map((index, id) => {
     return {
       key: id.toString(),
       text: 'New ' + polyglotNodeComponentMapping.nameMapping[index],
-      iconProps: { iconName: 'Add' }, 
+      iconProps: { iconName: 'Add' },
       onClick: () => {
         const nodeToAdd = createNewDefaultPolyglotNode(
           relativePos || pos,
@@ -50,6 +51,7 @@ const ContextMenu = ({
       },
     };
   });
+  */
 
   const menuNodeActions: IContextualMenuItem[] = [
     {
@@ -75,22 +77,23 @@ const ContextMenu = ({
     },
   ];
 
+  if (type === ContextMenuTypes.DEFAULT) {
+    console.log('Target undefined!');
+    return;
+  }
+
   return (
     <>
       <span
         className="absolute z-50"
         ref={linkRef}
-        style={{top: pos.y, left: pos.x}}
+        style={{ top: pos.y, left: pos.x }}
       />
       <ContextualMenu
         className="pt-2"
-        hidden={!show}        
+        hidden={!show}
         items={
-          type === ContextMenuTypes.NODE
-            ? menuNodeActions
-            : type === ContextMenuTypes.EDGE
-            ? menuEdgeActions
-            : menuItems
+          type === ContextMenuTypes.NODE ? menuNodeActions : menuEdgeActions
         }
         styles={{ root: { top: pos.y, left: pos.x } }}
         target={linkRef}

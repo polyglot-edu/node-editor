@@ -7,7 +7,15 @@ import TextField from '../../Forms/Fields/TextField';
 const config = [
   {
     edgeTypes: ['unconditionalEdge'],
-    nodeTypes: ['lessonTextNode'],
+    nodeTypes: [
+      'lessonTextNode',
+      'WatchVideoNode',
+      'ReadMaterialNode',
+      'MindMapNode',
+      'SummaryNode',
+      'ProblemSolvingNode',
+      'FindSolutionNode',
+    ],
   },
   {
     edgeTypes: ['customValidationEdge', 'exactValueEdge', 'passFailEdge'],
@@ -16,6 +24,10 @@ const config = [
       'codingQuestionNode',
       'closeEndedQuestionNode',
       'abstractNode',
+      'TrueFalseNode',
+      'ImageEvaluationNode',
+      'CasesEvaluationNode',
+      'InnovationPitchNode',
     ],
   },
 ];
