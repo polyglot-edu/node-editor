@@ -126,74 +126,57 @@ const LateralMenu = () => {
                     <AccordionPanel>
                       {nodes
                         .filter((node) => node.group === type.group)
-                        .map((nodes) => {
-                          if (listImplementedNodes.includes(nodes.index)) {
-                            return (
-                              <div
-                                id={nodes.key}
-                                key={nodes.key}
-                                className="nodeItem"
-                                onMouseOver={() =>
-                                  document
+                        .map((nodes) => (
+                          <div
+                            id={nodes.key}
+                            key={nodes.key}
+                            className="nodeItem"
+                            onMouseOver={() =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? document
                                     .getElementById(nodes.key)
                                     ?.setAttribute(
                                       'style',
                                       'background-color:' + type.bgColor
                                     )
-                                }
-                                onMouseOut={() =>
-                                  document
-                                    .getElementById(nodes.key)
-                                    ?.removeAttribute('style')
-                                }
-                                onDragStart={(event) =>
-                                  onDragStart(event, nodes.index)
-                                }
-                                draggable
-                              >
-                                <Image
-                                  alt={'Node icon'}
-                                  src={nodes.icon}
-                                  style={{ float: 'left' }}
-                                  height="20"
-                                  width="20"
-                                />
-                                {nodes.text}
-                              </div>
-                            );
-                          } else {
-                            return (
-                              <div
-                                id={nodes.key}
-                                key={nodes.key}
-                                title="Not implemented yet!"
-                                className="nodeItem"
-                                onMouseOver={() =>
-                                  document
+                                : document
                                     .getElementById(nodes.key)
                                     ?.setAttribute(
                                       'style',
                                       'background-color: grey'
                                     )
-                                }
-                                onMouseOut={() =>
-                                  document
-                                    .getElementById(nodes.key)
-                                    ?.removeAttribute('style')
-                                }
-                              >
-                                <Image
-                                  alt={'Node icon'}
-                                  src={nodes.icon}
-                                  style={{ float: 'left' }}
-                                  height="20"
-                                  width="20"
-                                />
-                                {nodes.text}
-                              </div>
-                            );
-                          }
-                        })}
+                            }
+                            onMouseOut={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.removeAttribute('style')
+                            }
+                            onDragStart={(event) =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? onDragStart(event, nodes.index)
+                                : null
+                            }
+                            draggable={
+                              listImplementedNodes.includes(nodes.index)
+                                ? true
+                                : false
+                            }
+                            title={
+                              listImplementedNodes.includes(nodes.index)
+                                ? 'Drag the new Node type'
+                                : 'Node type not implemented yet'
+                            }
+                          >
+                            <Image
+                              alt={'Node icon'}
+                              src={nodes.icon}
+                              style={{ float: 'left' }}
+                              height="20"
+                              width="20"
+                            />
+                            {nodes.text}
+                          </div>
+                        ))}
                     </AccordionPanel>
                   </>
                 )}
@@ -226,74 +209,57 @@ const LateralMenu = () => {
                     <AccordionPanel>
                       {nodes
                         .filter((node) => node.group === type.group)
-                        .map((nodes) => {
-                          if (listImplementedNodes.includes(nodes.index)) {
-                            return (
-                              <div
-                                id={nodes.key}
-                                key={nodes.key}
-                                className="nodeItem"
-                                onMouseOver={() =>
-                                  document
+                        .map((nodes) => (
+                          <div
+                            id={nodes.key}
+                            key={nodes.key}
+                            className="nodeItem"
+                            onMouseOver={() =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? document
                                     .getElementById(nodes.key)
                                     ?.setAttribute(
                                       'style',
                                       'background-color:' + type.bgColor
                                     )
-                                }
-                                onMouseOut={() =>
-                                  document
-                                    .getElementById(nodes.key)
-                                    ?.removeAttribute('style')
-                                }
-                                onDragStart={(event) =>
-                                  onDragStart(event, nodes.index)
-                                }
-                                draggable
-                              >
-                                <Image
-                                  alt={'Node icon'}
-                                  src={nodes.icon}
-                                  style={{ float: 'left' }}
-                                  height="20"
-                                  width="20"
-                                />
-                                {nodes.text}
-                              </div>
-                            );
-                          } else {
-                            return (
-                              <div
-                                id={nodes.key}
-                                key={nodes.key}
-                                title="Not implemented yet!"
-                                className="nodeItem"
-                                onMouseOver={() =>
-                                  document
+                                : document
                                     .getElementById(nodes.key)
                                     ?.setAttribute(
                                       'style',
                                       'background-color: grey'
                                     )
-                                }
-                                onMouseOut={() =>
-                                  document
-                                    .getElementById(nodes.key)
-                                    ?.removeAttribute('style')
-                                }
-                              >
-                                <Image
-                                  alt={'Node icon'}
-                                  src={nodes.icon}
-                                  style={{ float: 'left' }}
-                                  height="20"
-                                  width="20"
-                                />
-                                {nodes.text}
-                              </div>
-                            );
-                          }
-                        })}
+                            }
+                            onMouseOut={() =>
+                              document
+                                .getElementById(nodes.key)
+                                ?.removeAttribute('style')
+                            }
+                            onDragStart={(event) =>
+                              listImplementedNodes.includes(nodes.index)
+                                ? onDragStart(event, nodes.index)
+                                : null
+                            }
+                            draggable={
+                              listImplementedNodes.includes(nodes.index)
+                                ? true
+                                : false
+                            }
+                            title={
+                              listImplementedNodes.includes(nodes.index)
+                                ? 'Drag the new Node type'
+                                : 'Node type not implemented yet'
+                            }
+                          >
+                            <Image
+                              alt={'Node icon'}
+                              src={nodes.icon}
+                              style={{ float: 'left' }}
+                              height="20"
+                              width="20"
+                            />
+                            {nodes.text}
+                          </div>
+                        ))}
                     </AccordionPanel>
                   </>
                 )}
