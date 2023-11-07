@@ -22,7 +22,7 @@ export type MemoriseKeywordsListNode = PolyglotNode & {
 
 polyglotNodeComponentMapping.registerMapping<MemoriseKeywordsListNode>({
   elementType: 'MemoriseKeywordsListNode',
-  name: 'Lesson (Memorise keywords list)',
+  name: 'Memorise keywords list',
   icon: icon.src,
   group: 'remember_learning',
   propertiesComponent: MemoriseKeywordsListNodeProperties,

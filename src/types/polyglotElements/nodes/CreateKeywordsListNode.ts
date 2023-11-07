@@ -21,7 +21,7 @@ export type CreateKeywordsListNode = PolyglotNode & {
 
 polyglotNodeComponentMapping.registerMapping<CreateKeywordsListNode>({
   elementType: 'CreateKeywordsListNode',
-  name: 'Lesson (Create keywords list)',
+  name: 'Create keywords list',
   icon: icon.src,
   group: 'remember_learning',
   propertiesComponent: CreateKeywordsListNodeProperties,
