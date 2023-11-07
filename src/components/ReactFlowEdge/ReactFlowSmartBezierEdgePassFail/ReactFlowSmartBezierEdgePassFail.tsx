@@ -31,7 +31,6 @@ const ReactFlowSmartBezierEdgePassFail = (
   const edge = edgeMap.get(id);
 
   const condition = edge?.data?.conditionKind;
-  console.log(condition);
 
   const [edgePath, labelX, labelY] = getBezierPath({
     sourceX,
