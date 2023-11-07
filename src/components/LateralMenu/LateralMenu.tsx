@@ -64,6 +64,12 @@ const configAssessment = [
   },
 ];
 
+const listImplementedNodes = [
+  'lessonTextNode',
+  'multipleChoiceQuestionNode',
+  'closeEndedQuestionNode',
+];
+
 const LateralMenu = () => {
   const onDragStart = (event: DragEvent<HTMLDivElement>, nodeType: string) => {
     if (event.dataTransfer == null) {
@@ -120,39 +126,74 @@ const LateralMenu = () => {
                     <AccordionPanel>
                       {nodes
                         .filter((node) => node.group === type.group)
-                        .map((nodes) => (
-                          <div
-                            id={nodes.key}
-                            key={nodes.key}
-                            className="nodeItem"
-                            onMouseOver={() =>
-                              document
-                                .getElementById(nodes.key)
-                                ?.setAttribute(
-                                  'style',
-                                  'background-color:' + type.bgColor
-                                )
-                            }
-                            onMouseOut={() =>
-                              document
-                                .getElementById(nodes.key)
-                                ?.removeAttribute('style')
-                            }
-                            onDragStart={(event) =>
-                              onDragStart(event, nodes.index)
-                            }
-                            draggable
-                          >
-                            <Image
-                              alt={'Node icon'}
-                              src={nodes.icon}
-                              style={{ float: 'left' }}
-                              height="20"
-                              width="20"
-                            />
-                            {nodes.text}
-                          </div>
-                        ))}
+                        .map((nodes) => {
+                          if (listImplementedNodes.includes(nodes.index)) {
+                            return (
+                              <div
+                                id={nodes.key}
+                                key={nodes.key}
+                                className="nodeItem"
+                                onMouseOver={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color:' + type.bgColor
+                                    )
+                                }
+                                onMouseOut={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.removeAttribute('style')
+                                }
+                                onDragStart={(event) =>
+                                  onDragStart(event, nodes.index)
+                                }
+                                draggable
+                              >
+                                <Image
+                                  alt={'Node icon'}
+                                  src={nodes.icon}
+                                  style={{ float: 'left' }}
+                                  height="20"
+                                  width="20"
+                                />
+                                {nodes.text}
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div
+                                id={nodes.key}
+                                key={nodes.key}
+                                title="Not implemented yet!"
+                                className="nodeItem"
+                                onMouseOver={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color: grey'
+                                    )
+                                }
+                                onMouseOut={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.removeAttribute('style')
+                                }
+                              >
+                                <Image
+                                  alt={'Node icon'}
+                                  src={nodes.icon}
+                                  style={{ float: 'left' }}
+                                  height="20"
+                                  width="20"
+                                />
+                                {nodes.text}
+                              </div>
+                            );
+                          }
+                        })}
                     </AccordionPanel>
                   </>
                 )}
@@ -185,39 +226,74 @@ const LateralMenu = () => {
                     <AccordionPanel>
                       {nodes
                         .filter((node) => node.group === type.group)
-                        .map((nodes) => (
-                          <div
-                            id={nodes.key}
-                            key={nodes.key}
-                            className="nodeItem"
-                            onMouseOver={() =>
-                              document
-                                .getElementById(nodes.key)
-                                ?.setAttribute(
-                                  'style',
-                                  'background-color:' + type.bgColor
-                                )
-                            }
-                            onMouseOut={() =>
-                              document
-                                .getElementById(nodes.key)
-                                ?.removeAttribute('style')
-                            }
-                            onDragStart={(event) =>
-                              onDragStart(event, nodes.index)
-                            }
-                            draggable
-                          >
-                            <Image
-                              alt={'Node icon'}
-                              src={nodes.icon}
-                              style={{ float: 'left' }}
-                              height="20"
-                              width="20"
-                            />
-                            {nodes.text}
-                          </div>
-                        ))}
+                        .map((nodes) => {
+                          if (listImplementedNodes.includes(nodes.index)) {
+                            return (
+                              <div
+                                id={nodes.key}
+                                key={nodes.key}
+                                className="nodeItem"
+                                onMouseOver={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color:' + type.bgColor
+                                    )
+                                }
+                                onMouseOut={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.removeAttribute('style')
+                                }
+                                onDragStart={(event) =>
+                                  onDragStart(event, nodes.index)
+                                }
+                                draggable
+                              >
+                                <Image
+                                  alt={'Node icon'}
+                                  src={nodes.icon}
+                                  style={{ float: 'left' }}
+                                  height="20"
+                                  width="20"
+                                />
+                                {nodes.text}
+                              </div>
+                            );
+                          } else {
+                            return (
+                              <div
+                                id={nodes.key}
+                                key={nodes.key}
+                                title="Not implemented yet!"
+                                className="nodeItem"
+                                onMouseOver={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.setAttribute(
+                                      'style',
+                                      'background-color: grey'
+                                    )
+                                }
+                                onMouseOut={() =>
+                                  document
+                                    .getElementById(nodes.key)
+                                    ?.removeAttribute('style')
+                                }
+                              >
+                                <Image
+                                  alt={'Node icon'}
+                                  src={nodes.icon}
+                                  style={{ float: 'left' }}
+                                  height="20"
+                                  width="20"
+                                />
+                                {nodes.text}
+                              </div>
+                            );
+                          }
+                        })}
                     </AccordionPanel>
                   </>
                 )}
