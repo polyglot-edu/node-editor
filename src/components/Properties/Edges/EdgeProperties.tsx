@@ -50,7 +50,7 @@ const EdgeProperties = () => {
             {Object.keys(polyglotEdgeComponentMapping.nameMapping)
               .filter((value) => edgesTypes.includes(value))
               .map((value, index) => (
-                <option key={index} value={value}>
+                <option key={index} value={value} selected>
                   {value}
                 </option>
               ))}
