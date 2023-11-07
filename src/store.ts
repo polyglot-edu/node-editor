@@ -627,6 +627,7 @@ const useStore = create<ApplicationState>()(
               }
               newEdge = createNewDefaultPolyglotEdge(
                 connection.source,
+                draft.nodeMap.get(connection.source).type, //to change into group type (learning/assessment)
                 connection.target
               );
               draft.edgeMap.set(newEdge.reactFlow.id, newEdge);

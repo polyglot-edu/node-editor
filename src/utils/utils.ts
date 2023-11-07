@@ -2,7 +2,6 @@ import { useEffect, useState } from 'react';
 import { MarkerType } from 'reactflow';
 import { v4 as UUIDv4 } from 'uuid';
 import {
-  PassFailEdge,
   PolyglotEdge,
   PolyglotFlow,
   polyglotNodeComponentMapping,
@@ -86,23 +85,27 @@ export const createNewDefaultPolyglotNode: (
 
 export const createNewDefaultPolyglotEdge = (
   sourceId: string,
+  sourceType: string,
   targetId: string
 ): PolyglotEdge => {
   const id = UUIDv4();
-  const newEdge: PassFailEdge = {
+  const type =
+    sourceType == 'lessonTextNode' ? 'unconditionalEdge' : 'passFailEdge'; //to change into group type (learning)
+  console.log(type);
+  return {
     _id: id,
     reactFlow: {
       id: id,
       source: sourceId,
       target: targetId,
-      type: 'passFailEdge',
+      type: type,
       markerEnd: {
         type: MarkerType.Arrow,
         width: 25,
         height: 25,
       },
     },
-    type: 'passFailEdge',
+    type: type,
     title: '',
     code: `
     async Task<(bool, string)> validate(PolyglotValidationContext context) {
@@ -112,6 +115,4 @@ export const createNewDefaultPolyglotEdge = (
       conditionKind: 'pass',
     },
   };
-
-  return newEdge;
 };
