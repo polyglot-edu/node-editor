@@ -79,7 +79,7 @@ const ContextMenu = ({
 
   if (type === ContextMenuTypes.DEFAULT) {
     console.log('Target undefined!');
-    return;
+    return <span></span>;
   }
 
   return (

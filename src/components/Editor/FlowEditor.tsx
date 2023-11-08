@@ -29,7 +29,10 @@ import {
   polyglotEdgeComponentMapping,
   polyglotNodeComponentMapping,
 } from '../../types/polyglotElements';
-import { ContextMenuProps, ContextMenuTypes } from '../ContextMenu/ContextMenu';
+import ContextMenu, {
+  ContextMenuProps,
+  ContextMenuTypes,
+} from '../ContextMenu/ContextMenu';
 
 import { createNewDefaultPolyglotNode } from '../../utils/utils';
 import LateralMenu from '../LateralMenu/LateralMenu';
@@ -300,6 +303,11 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
           <Background variant={BackgroundVariant.Dots} />
           <Controls />
         </ReactFlow>
+        <ContextMenu
+          {...contextMenu}
+          elementId={selectedElement?._id}
+          onDismiss={hideContextMenu}
+        />
         <LateralMenu />
         <ElementProperties
           selectedElement={selectedElement}
