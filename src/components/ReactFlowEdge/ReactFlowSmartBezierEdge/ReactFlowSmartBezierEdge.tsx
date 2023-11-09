@@ -36,7 +36,7 @@ const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
     return <BezierEdge {...props} />;
   }
 
-  const { svgPathString } = getSmartEdgeResponse;
+  const { edgeCenterX, edgeCenterY, svgPathString } = getSmartEdgeResponse;
 
   return (
     <>
@@ -44,7 +44,6 @@ const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
         className="react-flow__edge-path"
         d={svgPathString}
         markerEnd={markerEnd}
-        markerStart={markerStart}
       />
       <EdgeLabelRenderer>
         <div
@@ -53,9 +52,7 @@ const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
             background: 'transparent',
             padding: 10,
             fontSize: 12,
-            transform: `translate(${(sourceX + targetX) / 2 - 10}px,${
-              ((sourceY + targetY) * 48) / 100
-            }px)`,
+            transform: `translate(${edgeCenterX - 20}px,${edgeCenterY - 20}px)`,
           }}
         >
           {label}

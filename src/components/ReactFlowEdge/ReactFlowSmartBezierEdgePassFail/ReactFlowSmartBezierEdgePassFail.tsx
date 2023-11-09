@@ -32,9 +32,14 @@ const ReactFlowSmartBezierEdgePassFail = (
     sourceY,
     targetX,
     targetY,
-    markerStart,
     markerEnd,
   } = props;
+
+  const { edgeMap } = useStore();
+
+  const edge = edgeMap.get(id);
+
+  const condition = edge?.data?.conditionKind;
 
   const nodes = useNodes();
 
@@ -48,19 +53,13 @@ const ReactFlowSmartBezierEdgePassFail = (
     nodes,
   });
 
-  const { edgeMap } = useStore();
-
-  const edge = edgeMap.get(id);
-
-  const condition = edge?.data?.conditionKind;
-
   // If the value returned is null, it means "getSmartEdge" was unable to find
   // a valid path, and you should do something else instead
   if (getSmartEdgeResponse === null) {
     return <BezierEdge {...props} />;
   }
 
-  const { svgPathString } = getSmartEdgeResponse;
+  const { edgeCenterX, edgeCenterY, svgPathString } = getSmartEdgeResponse;
 
   return (
     <>
@@ -68,7 +67,6 @@ const ReactFlowSmartBezierEdgePassFail = (
         className="react-flow__edge-path"
         d={svgPathString}
         markerEnd={markerEnd}
-        markerStart={markerStart}
         style={{ stroke: condition == 'fail' ? 'red' : 'green' }}
       />
       <EdgeLabelRenderer>
@@ -78,9 +76,7 @@ const ReactFlowSmartBezierEdgePassFail = (
             background: 'transparent',
             padding: 10,
             fontSize: 12,
-            transform: `translate(${(sourceX + targetX) / 2 - 10}px,${
-              ((sourceY + targetY) * 48) / 100
-            }px)`,
+            transform: `translate(${edgeCenterX - 20}px,${edgeCenterY - 20}px)`,
           }}
         >
           {label}
@@ -90,5 +86,4 @@ const ReactFlowSmartBezierEdgePassFail = (
     </>
   );
 };
-
 export default ReactFlowSmartBezierEdgePassFail;
