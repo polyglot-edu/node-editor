@@ -1,4 +1,11 @@
-import { BaseEdge, EdgeMarker, getBezierPath, MarkerType } from 'reactflow';
+import { getSmartEdge } from '@tisoap/react-flow-smart-edge';
+import {
+  BezierEdge,
+  EdgeLabelRenderer,
+  EdgeMarker,
+  MarkerType,
+  useNodes,
+} from 'reactflow';
 import useStore from '../../../store';
 import { ReactFlowEdgeProps } from '../ReactFlowEdge';
 
@@ -16,15 +23,30 @@ const ReactFlowSmartBezierEdgePassFail = (
     height: 20,
     color: '#FF0072',
   };
+
   const {
+    id,
+    sourcePosition,
+    targetPosition,
     sourceX,
     sourceY,
     targetX,
     targetY,
+    markerStart,
+    markerEnd,
+  } = props;
+
+  const nodes = useNodes();
+
+  const getSmartEdgeResponse = getSmartEdge({
     sourcePosition,
     targetPosition,
-    id,
-  } = props;
+    sourceX,
+    sourceY,
+    targetX,
+    targetY,
+    nodes,
+  });
 
   const { edgeMap } = useStore();
 
@@ -32,25 +54,38 @@ const ReactFlowSmartBezierEdgePassFail = (
 
   const condition = edge?.data?.conditionKind;
 
-  const [edgePath, labelX, labelY] = getBezierPath({
-    sourceX,
-    sourceY,
-    sourcePosition,
-    targetX,
-    targetY,
-    targetPosition,
-  });
+  // If the value returned is null, it means "getSmartEdge" was unable to find
+  // a valid path, and you should do something else instead
+  if (getSmartEdgeResponse === null) {
+    return <BezierEdge {...props} />;
+  }
+
+  const { svgPathString } = getSmartEdgeResponse;
 
   return (
     <>
-      <BaseEdge
-        path={edgePath}
-        {...props}
-        label={label}
-        labelX={labelX}
-        labelY={labelY}
+      <path
+        className="react-flow__edge-path"
+        d={svgPathString}
+        markerEnd={markerEnd}
+        markerStart={markerStart}
         style={{ stroke: condition == 'fail' ? 'red' : 'green' }}
       />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            background: 'transparent',
+            padding: 10,
+            fontSize: 12,
+            transform: `translate(${(sourceX + targetX) / 2 - 10}px,${
+              ((sourceY + targetY) * 48) / 100
+            }px)`,
+          }}
+        >
+          {label}
+        </div>
+      </EdgeLabelRenderer>
       ;
     </>
   );
