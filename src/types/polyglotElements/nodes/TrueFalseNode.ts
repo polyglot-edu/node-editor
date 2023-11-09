@@ -9,6 +9,8 @@ export type TrueFalseNodeData = NodeData & {
   instructions: string;
   questions: string[];
   isQuestionCorrect: boolean[];
+  negativePoints: number;
+  positvePoints: number;
 };
 
 export type TrueFalseNode = PolyglotNode & {
@@ -27,6 +29,8 @@ polyglotNodeComponentMapping.registerMapping<TrueFalseNode>({
     ...defaultPolyglotNodeData,
     questions: [],
     isQuestionCorrect: [],
+    negativePoints: 0,
+    positvePoints: 1,
     instructions: '',
   },
   transformData: (node) => {

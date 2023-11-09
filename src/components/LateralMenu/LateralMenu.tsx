@@ -68,6 +68,7 @@ const listImplementedNodes = [
   'lessonTextNode',
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
+  'TrueFalseNode',
 ];
 
 const LateralMenu = () => {
