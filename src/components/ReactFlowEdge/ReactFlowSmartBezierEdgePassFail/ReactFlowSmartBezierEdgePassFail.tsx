@@ -1,11 +1,5 @@
 import { getSmartEdge } from '@tisoap/react-flow-smart-edge';
-import {
-  BezierEdge,
-  EdgeLabelRenderer,
-  EdgeMarker,
-  MarkerType,
-  useNodes,
-} from 'reactflow';
+import { BezierEdge, EdgeLabelRenderer, useNodes } from 'reactflow';
 import useStore from '../../../store';
 import { ReactFlowEdgeProps } from '../ReactFlowEdge';
 
@@ -17,13 +11,6 @@ const ReactFlowSmartBezierEdgePassFail = (
 ) => {
   const label = useStore((state) => state.edgeMap.get(props.id)?.title);
 
-  const passFailMarker: EdgeMarker = {
-    type: MarkerType.ArrowClosed,
-    width: 20,
-    height: 20,
-    color: '#FF0072',
-  };
-
   const {
     id,
     sourcePosition,
@@ -33,6 +20,8 @@ const ReactFlowSmartBezierEdgePassFail = (
     targetX,
     targetY,
     markerEnd,
+    source,
+    target,
   } = props;
 
   const { edgeMap } = useStore();
@@ -60,6 +49,20 @@ const ReactFlowSmartBezierEdgePassFail = (
   }
 
   const { edgeCenterX, edgeCenterY, svgPathString } = getSmartEdgeResponse;
+
+  /* prova per modificare markerEnd
+  const passFailEdge = {
+    id: id,
+    source: source,
+    target: target,    
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      color: '#FF0072',
+    },
+    label: label,
+    style:{ stroke: condition == 'fail' ? 'red' : 'green' }
+  };
+  */
 
   return (
     <>
