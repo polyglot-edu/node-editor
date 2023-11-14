@@ -6,6 +6,12 @@ const ReadMaterialNodeProperties = () => {
   return (
     <>
       <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
+      <div>
+        <b>Activity description</b>
+        <br />
+        Insert a document URL, input text directly, or or add an existing OER
+      </div>
+      <br />
       <NodeProperties />
       <div>Material:</div>
       <MarkDownField label="Text" name="data.text" />
