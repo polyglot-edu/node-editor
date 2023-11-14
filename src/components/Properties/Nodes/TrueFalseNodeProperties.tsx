@@ -1,5 +1,5 @@
-import MultipleChoiceField from '../../Forms/Fields/MultipleChoiceField';
 import TextField from '../../Forms/Fields/TextField';
+import TrueFalseField from '../../Forms/Fields/TrueFalseField';
 import NodeProperties from './NodeProperties';
 
 const TrueFalseNodeProperties = () => {
@@ -27,7 +27,7 @@ const TrueFalseNodeProperties = () => {
         name="data.positivePoints"
         width="200px"
       />
-      <MultipleChoiceField
+      <TrueFalseField
         label="Questions"
         name="data.questions"
         option="Question"
