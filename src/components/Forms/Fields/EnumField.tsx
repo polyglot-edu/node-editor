@@ -1,4 +1,5 @@
 import {
+  Box,
   FormControl,
   FormErrorMessage,
   FormLabel,
@@ -18,11 +19,27 @@ const EnumField = ({ label, name, options, constraints }: EnumFieldProps) => {
   const { error } = getFieldState(name);
 
   return (
-    <FormControl isInvalid={error !== undefined}>
-      <FormLabel htmlFor={name}>{label}</FormLabel>
-      <Select {...register(name, constraints)}>{options}</Select>
-      <FormErrorMessage>{error && error.message}</FormErrorMessage>
-    </FormControl>
+    <Box p={2}>
+      <FormControl isInvalid={error !== undefined}>
+        <Select {...register(name, constraints)} borderColor={'grey'}>
+          {options}
+        </Select>
+        <FormLabel
+          htmlFor={name}
+          style={{
+            font: '15px',
+            top: '-13px',
+            left: '15px',
+            zIndex: '2px',
+            position: 'absolute',
+            backgroundColor: 'white',
+          }}
+        >
+          {label}
+        </FormLabel>
+        <FormErrorMessage>{error && error.message}</FormErrorMessage>
+      </FormControl>
+    </Box>
   );
 };
 

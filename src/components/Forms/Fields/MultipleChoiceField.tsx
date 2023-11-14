@@ -16,10 +16,12 @@ import {
 } from 'react-hook-form';
 
 const ArrayField = ({
+  option,
   label,
   name,
   constraints,
 }: {
+  option?: string;
   label: string;
   name: string;
   constraints?: RegisterOptions;
@@ -35,14 +37,17 @@ const ArrayField = ({
     <FormControl>
       <FormLabel htmlFor={name}>{label}</FormLabel>
       {fields.map((field, index) => (
-        <Flex key={field.id}>
+        <Flex key={field.id} paddingBottom={'13px'}>
           <Controller
             name={`data.isChoiceCorrect.${index}`}
             render={({ field }) => (
               <Checkbox size="lg" mr={2} {...field} isChecked={field.value} />
             )}
           />
-          <Input {...register(`${name}.${index}`, constraints)} />
+          <Input
+            {...register(`${name}.${index}`, constraints)}
+            borderColor={'grey'}
+          />
           <Button
             colorScheme={'red'}
             onClick={() => {
@@ -54,6 +59,16 @@ const ArrayField = ({
           >
             <CloseIcon boxSize="0.75em" />
           </Button>
+          <FormLabel
+            htmlFor={name}
+            style={{
+              transform: 'translate(40px, -13px)',
+              position: 'absolute',
+              backgroundColor: 'white',
+            }}
+          >
+            {option} {index + 1}
+          </FormLabel>
         </Flex>
       ))}
       <Flex>
@@ -67,6 +82,7 @@ const ArrayField = ({
           value={input}
           onChange={(e) => setInput(e.target.value)}
           placeholder="Insert new choice.."
+          borderColor={'grey'}
         />
         <Button
           colorScheme={'green'}
