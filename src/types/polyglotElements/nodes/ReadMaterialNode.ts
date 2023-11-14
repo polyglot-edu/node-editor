@@ -29,7 +29,7 @@ polyglotNodeComponentMapping.registerMapping<ReadMaterialNode>({
   elementComponent: ReactFlowReadMaterialNode,
   defaultData: {
     text: '',
-    link: '',
+    link: ' ',
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
@@ -40,6 +40,10 @@ polyglotNodeComponentMapping.registerMapping<ReadMaterialNode>({
       {
         type: 'markdown',
         content: ReadMaterialNode.data?.text,
+      },
+      {
+        type: 'markdown',
+        content: 'Run this link: ' + ReadMaterialNode.data?.link,
       },
     ];
 
