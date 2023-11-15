@@ -96,7 +96,6 @@ const LateralMenu = () => {
     <>
       <Box
         width={'300px'}
-        //height={'420px'}
         title="drag the new node"
         backgroundColor={'gray.200'}
       >
