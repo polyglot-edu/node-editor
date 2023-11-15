@@ -1,5 +1,6 @@
 import { AddIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import {
+  Box,
   Button,
   Checkbox,
   Flex,
@@ -32,13 +33,6 @@ const ArrayField = ({
   const { fields, append, remove } = useFieldArray({
     name: name, // unique name for your Field Array
   });
-  function CustomIcon(props) {
-    const { isChecked, ...rest } = props;
-
-    const d = isChecked ? <CheckIcon /> : <CloseIcon backgroundColor={'red'} />;
-
-    return d;
-  }
 
   return (
     <FormControl>
@@ -53,7 +47,22 @@ const ArrayField = ({
                 mr={2}
                 {...field}
                 isChecked={field.value}
-                icon={<CustomIcon />}
+                icon={
+                  field.value ? (
+                    <CheckIcon />
+                  ) : (
+                    <>
+                      <Box width="20px" height="20px" backgroundColor={'red'}>
+                        <CloseIcon
+                          width="10px"
+                          height="10px"
+                          marginBottom={'8px'}
+                          marginLeft={'3px'}
+                        />
+                      </Box>
+                    </>
+                  )
+                }
                 borderColor={'red'}
                 colorScheme={'green'}
               />
