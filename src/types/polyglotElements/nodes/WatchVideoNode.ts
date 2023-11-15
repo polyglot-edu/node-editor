@@ -21,7 +21,7 @@ export type WatchVideoNode = PolyglotNode & {
 
 polyglotNodeComponentMapping.registerMapping<WatchVideoNode>({
   elementType: 'WatchVideoNode',
-  name: 'Lesson (Watch Video)',
+  name: 'Watch Video',
   icon: icon.src,
   group: 'remember_learning',
   propertiesComponent: WatchVideoNodeProperties,
