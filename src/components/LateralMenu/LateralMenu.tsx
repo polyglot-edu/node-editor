@@ -95,11 +95,10 @@ const LateralMenu = () => {
   return (
     <>
       <Box
-        width={'280px'}
+        width={'300px'}
         //height={'420px'}
-        border={'1px'}
-        borderColor={'gray'}
         title="drag the new node"
+        backgroundColor={'gray.200'}
       >
         <div className="label">ADD NEW ACTIVITY</div>
         <p style={{ overflow: 'auto', height: '600px' }}>
@@ -129,55 +128,57 @@ const LateralMenu = () => {
                       {nodes
                         .filter((node) => node.group === type.group)
                         .map((nodes) => (
-                          <div
-                            id={nodes.key}
-                            key={nodes.key}
-                            className="nodeItem"
-                            onMouseOver={() =>
-                              listImplementedNodes.includes(nodes.index)
-                                ? document
-                                    .getElementById(nodes.key)
-                                    ?.setAttribute(
-                                      'style',
-                                      'background-color:' + type.bgColor
-                                    )
-                                : document
-                                    .getElementById(nodes.key)
-                                    ?.setAttribute(
-                                      'style',
-                                      'background-color: grey'
-                                    )
-                            }
-                            onMouseOut={() =>
-                              document
-                                .getElementById(nodes.key)
-                                ?.removeAttribute('style')
-                            }
-                            onDragStart={(event) =>
-                              listImplementedNodes.includes(nodes.index)
-                                ? onDragStart(event, nodes.index)
-                                : null
-                            }
-                            draggable={
-                              listImplementedNodes.includes(nodes.index)
-                                ? true
-                                : false
-                            }
-                            title={
-                              listImplementedNodes.includes(nodes.index)
-                                ? 'Drag the new Node type'
-                                : 'Node type not implemented yet'
-                            }
-                          >
-                            <Image
-                              alt={'Node icon'}
-                              src={nodes.icon}
-                              style={{ float: 'left' }}
-                              height="20"
-                              width="20"
-                            />
-                            {nodes.text}
-                          </div>
+                          <>
+                            <div
+                              id={nodes.key}
+                              key={nodes.key}
+                              className="nodeItem"
+                              onMouseOver={() =>
+                                listImplementedNodes.includes(nodes.index)
+                                  ? document
+                                      .getElementById(nodes.key)
+                                      ?.setAttribute(
+                                        'style',
+                                        'background-color:' + type.bgColor
+                                      )
+                                  : document
+                                      .getElementById(nodes.key)
+                                      ?.setAttribute(
+                                        'style',
+                                        'background-color: grey'
+                                      )
+                              }
+                              onMouseOut={() =>
+                                document
+                                  .getElementById(nodes.key)
+                                  ?.removeAttribute('style')
+                              }
+                              onDragStart={(event) =>
+                                listImplementedNodes.includes(nodes.index)
+                                  ? onDragStart(event, nodes.index)
+                                  : null
+                              }
+                              draggable={
+                                listImplementedNodes.includes(nodes.index)
+                                  ? true
+                                  : false
+                              }
+                              title={
+                                listImplementedNodes.includes(nodes.index)
+                                  ? 'Drag the new Node type'
+                                  : 'Node type not implemented yet'
+                              }
+                            >
+                              <Image
+                                alt={'Node icon'}
+                                src={nodes.icon}
+                                style={{ float: 'left' }}
+                                height="20"
+                                width="20"
+                              />
+                              {nodes.text}
+                            </div>
+                          </>
                         ))}
                     </AccordionPanel>
                   </>
