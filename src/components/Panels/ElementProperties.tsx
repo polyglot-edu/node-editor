@@ -135,15 +135,15 @@ const ElementProperties = ({
           value={JSON.stringify(selectedElement, null, 4) ?? ''}
         />
       </Box>
-      <Box hidden={editorOpen}>
-        <Button mb="2" onClick={onEditorOpen}>
-          Edit Code
-        </Button>
+      <Box hidden={editorOpen} width={'500px'}>
         <FormProvider {...methods}>
           {hydrated && <ElementProperty />}
         </FormProvider>
 
         {children}
+        <Button top="10px" mb="2" onClick={onEditorOpen}>
+          Edit Code
+        </Button>
       </Box>
     </Panel>
   );

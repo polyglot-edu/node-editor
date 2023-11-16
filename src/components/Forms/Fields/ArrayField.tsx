@@ -11,9 +11,11 @@ const ArrayField = ({
   label,
   name,
   constraints,
+  option,
 }: {
   label: string;
   name: string;
+  option?: string;
   constraints?: RegisterOptions;
 }) => {
   const [input, setInput] = useState('');
@@ -26,8 +28,11 @@ const ArrayField = ({
     <FormControl>
       <FormLabel htmlFor={name}>{label}</FormLabel>
       {fields.map((field, index) => (
-        <Flex key={field.id}>
-          <Input {...register(`${name}.${index}`, constraints)} />
+        <Flex key={field.id} paddingBottom={'13px'}>
+          <Input
+            {...register(`${name}.${index}`, constraints)}
+            borderColor={'grey'}
+          />
           <Button
             colorScheme={'red'}
             onClick={() => {
@@ -36,10 +41,24 @@ const ArrayField = ({
           >
             <CloseIcon boxSize="0.75em" />
           </Button>
+          <FormLabel
+            htmlFor={name}
+            style={{
+              transform: 'translate(15px, -13px)',
+              position: 'absolute',
+              backgroundColor: 'white',
+            }}
+          >
+            {option} {index + 1}
+          </FormLabel>
         </Flex>
       ))}
       <Flex>
-        <Input value={input} onChange={(e) => setInput(e.target.value)} />
+        <Input
+          value={input}
+          onChange={(e) => setInput(e.target.value)}
+          borderColor={'grey'}
+        />
         <Button
           colorScheme={'green'}
           onClick={() => {

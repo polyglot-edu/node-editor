@@ -1,4 +1,3 @@
-import { polyglotNodeComponentMapping } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 
@@ -26,21 +25,6 @@ const NodeProperties = () => {
             <option value={3}>3</option>
             <option value={4}>4</option>
             <option value={5}>5</option>
-          </>
-        }
-      />
-      <EnumField
-        label="Type"
-        name="type"
-        options={
-          <>
-            {Object.keys(polyglotNodeComponentMapping.nameMapping).map(
-              (value, index) => (
-                <option key={index} value={value}>
-                  {value}
-                </option>
-              )
-            )}
           </>
         }
       />
