@@ -1,4 +1,5 @@
-import { BaseEdge, EdgeMarker, getBezierPath, MarkerType } from 'reactflow';
+import { getSmartEdge } from '@tisoap/react-flow-smart-edge';
+import { BezierEdge, EdgeLabelRenderer, useNodes } from 'reactflow';
 import useStore from '../../../store';
 import { ReactFlowEdgeProps } from '../ReactFlowEdge';
 
@@ -10,20 +11,17 @@ const ReactFlowSmartBezierEdgePassFail = (
 ) => {
   const label = useStore((state) => state.edgeMap.get(props.id)?.title);
 
-  const passFailMarker: EdgeMarker = {
-    type: MarkerType.ArrowClosed,
-    width: 20,
-    height: 20,
-    color: '#FF0072',
-  };
   const {
+    id,
+    sourcePosition,
+    targetPosition,
     sourceX,
     sourceY,
     targetX,
     targetY,
-    sourcePosition,
-    targetPosition,
-    id,
+    markerEnd,
+    source,
+    target,
   } = props;
 
   const { edgeMap } = useStore();
@@ -32,28 +30,63 @@ const ReactFlowSmartBezierEdgePassFail = (
 
   const condition = edge?.data?.conditionKind;
 
-  const [edgePath, labelX, labelY] = getBezierPath({
+  const nodes = useNodes();
+
+  const getSmartEdgeResponse = getSmartEdge({
+    sourcePosition,
+    targetPosition,
     sourceX,
     sourceY,
-    sourcePosition,
     targetX,
     targetY,
-    targetPosition,
+    nodes,
   });
+
+  // If the value returned is null, it means "getSmartEdge" was unable to find
+  // a valid path, and you should do something else instead
+  if (getSmartEdgeResponse === null) {
+    return <BezierEdge {...props} />;
+  }
+
+  const { edgeCenterX, edgeCenterY, svgPathString } = getSmartEdgeResponse;
+
+  /* prova per modificare markerEnd
+  const passFailEdge = {
+    id: id,
+    source: source,
+    target: target,    
+    markerEnd: {
+      type: MarkerType.ArrowClosed,
+      color: '#FF0072',
+    },
+    label: label,
+    style:{ stroke: condition == 'fail' ? 'red' : 'green' }
+  };
+  */
 
   return (
     <>
-      <BaseEdge
-        path={edgePath}
-        {...props}
-        label={label}
-        labelX={labelX}
-        labelY={labelY}
+      <path
+        className="react-flow__edge-path"
+        d={svgPathString}
+        markerEnd={markerEnd}
         style={{ stroke: condition == 'fail' ? 'red' : 'green' }}
       />
+      <EdgeLabelRenderer>
+        <div
+          style={{
+            position: 'absolute',
+            background: 'transparent',
+            padding: 10,
+            fontSize: 12,
+            transform: `translate(${edgeCenterX - 20}px,${edgeCenterY - 20}px)`,
+          }}
+        >
+          {label}
+        </div>
+      </EdgeLabelRenderer>
       ;
     </>
   );
 };
-
 export default ReactFlowSmartBezierEdgePassFail;

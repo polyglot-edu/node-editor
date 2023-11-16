@@ -308,7 +308,7 @@ const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
           elementId={selectedElement?._id}
           onDismiss={hideContextMenu}
         />
-        <LateralMenu />
+        <LateralMenu isOpen={!isOpenPanel} />
         <ElementProperties
           selectedElement={selectedElement}
           isOpen={isOpenPanel}

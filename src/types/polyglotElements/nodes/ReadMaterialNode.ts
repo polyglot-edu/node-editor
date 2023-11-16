@@ -22,7 +22,7 @@ export type ReadMaterialNode = PolyglotNode & {
 
 polyglotNodeComponentMapping.registerMapping<ReadMaterialNode>({
   elementType: 'ReadMaterialNode',
-  name: 'Lesson (Read material)',
+  name: 'Read material',
   icon: icon.src,
   group: 'remember_learning',
   propertiesComponent: ReadMaterialNodeProperties,

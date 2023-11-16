@@ -23,7 +23,6 @@ const PassFailEdgeProperties = () => {
         }
       />
     </>
-    //idea for color change -> adding a code that on click of "option" change the color of the edge (style={{stroke:'blue'}})
   );
 };
 
