@@ -69,7 +69,6 @@ const listImplementedNodes = [
   'lessonTextNode',
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
-  'TrueFalseNode',
   'ReadMaterialNode',
 ];
 export type LateralMenuProps = {
