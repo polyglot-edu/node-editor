@@ -1,4 +1,3 @@
-import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
 import abstract_icon from '../../../public/abstract_icon.png';
 import useStore from '../../../store';
@@ -13,16 +12,40 @@ const ReactFlowAbstractNode = ({ id }: ReactFlowAbstractNodeProps) => {
     state.onConnect,
     state.nodeMap.get(id)?.title,
   ]);
-  const theme = useTheme();
 
   return (
-    <Card
-      className="Card-react-flow"    >
-<img src={abstract_icon.src} width="25" height="25" style={{ float: 'left', marginTop: "-2px"}} /> 
-    
+    <Card className="Card-react-flow">
+      <img
+        src={abstract_icon.src}
+        width="25"
+        height="25"
+        style={{ float: 'left', marginTop: '-2px' }}
+      />
+
       {label}
-      <Handle type="source" position={Position.Right} style={{background:'#FFCC49', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} onConnect={onConnect} />
-      <Handle type="target" position={Position.Left} style={{background:'#FFCC49', height:'25px', width:'5px', borderRadius:'0px', border:'0px'}} />
+      <Handle
+        type="source"
+        position={Position.Right}
+        style={{
+          background: '#FFCC49',
+          height: '25px',
+          width: '5px',
+          borderRadius: '0px',
+          border: '0px',
+        }}
+        onConnect={onConnect}
+      />
+      <Handle
+        type="target"
+        position={Position.Left}
+        style={{
+          background: '#FFCC49',
+          height: '25px',
+          width: '5px',
+          borderRadius: '0px',
+          border: '0px',
+        }}
+      />
     </Card>
   );
 };
