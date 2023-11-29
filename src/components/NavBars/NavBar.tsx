@@ -52,4 +52,3 @@ export default function Navbar({ user }: NavBarProps) {
     </Nav>
   );
 }
-

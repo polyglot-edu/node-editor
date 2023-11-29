@@ -14,4 +14,3 @@ const auth0Config =
       };
 
 export default initAuth0(auth0Config);
-

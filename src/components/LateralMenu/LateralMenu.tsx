@@ -5,12 +5,9 @@ import {
   AccordionItem,
   AccordionPanel,
   Box,
-  Divider,
 } from '@chakra-ui/react';
 import Image from 'next/image';
 import { DragEvent } from 'react';
-import assessment_icon from '../../public/assessment_icon.png';
-import learning_icon from '../../public/learning_icon.png';
 import { polyglotNodeComponentMapping } from '../../types/polyglotElements';
 
 interface NodeItem {
@@ -20,6 +17,7 @@ interface NodeItem {
   index: string;
   group: string;
 }
+
 const configLearning = [
   {
     label: 'REMEMBER',
@@ -69,6 +67,7 @@ const listImplementedNodes = [
   'lessonTextNode',
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
+  'TrueFalseNode',
   'ReadMaterialNode',
 ];
 export type LateralMenuProps = {
@@ -100,31 +99,37 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
       <Box
         width={'300px'}
         title="drag the new node"
-        backgroundColor={'gray.200'}
+        marginBottom={'0px'}
+        backgroundColor={'rgba(217, 217, 217, 0.6)'}
       >
-        <div className="label">ADD NEW ACTIVITY</div>
+        <div className="label">NEW ACTIVITY</div>
         <p style={{ overflow: 'auto', height: '600px' }}>
-          <span className="label">
-            <Image
-              alt={'Activity Icon'}
-              src={learning_icon.src}
-              style={{ float: 'left', marginRight: '5px', marginLeft: '5px' }}
-              height="20"
-              width="20"
-            />
+          <div
+            className="nodeSubmenu"
+            style={{
+              backgroundColor: 'rgba(255, 204, 73, 1)',
+            }}
+          >
             LEARNING ACTIVITY
-          </span>
-          <Accordion defaultIndex={0} style={{ marginBottom: '10px' }}>
+          </div>
+          <Accordion defaultIndex={0} variant={{}}>
             {configLearning.map((type, id) => (
               <AccordionItem key={id}>
                 {({ isExpanded }) => (
                   <>
                     <AccordionButton
-                      className="nodeSubmenu"
                       backgroundColor={type.bgColor}
+                      padding={'10px'}
+                      fontFamily={'Inter'}
+                      fontSize={'14px'}
+                      height={'30px'}
                     >
-                      {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}{' '}
-                      <span>{type.label}</span>
+                      {isExpanded ? (
+                        <ChevronDownIcon fontSize={'20px'} />
+                      ) : (
+                        <ChevronRightIcon fontSize={'20px'} />
+                      )}{' '}
+                      <div>{type.label}</div>
                     </AccordionButton>
                     <AccordionPanel>
                       {nodes
@@ -188,28 +193,34 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
               </AccordionItem>
             ))}
           </Accordion>
-          <Divider orientation="horizontal" />
-          <span className="label">
-            <Image
-              alt={'Activity icon'}
-              src={assessment_icon.src}
-              style={{ float: 'left', marginRight: '5px', marginLeft: '5px' }}
-              height="20"
-              width="20"
-            />
+          <div
+            className="nodeSubmenu"
+            style={{
+              marginTop: '30px',
+              backgroundColor: 'rgba(124, 104, 146, 0.5)',
+            }}
+          >
+            {' '}
             ASSESSMENT ACTIVITY{' '}
-          </span>
+          </div>
           <Accordion>
             {configAssessment.map((type, id) => (
-              <AccordionItem key={id}>
+              <AccordionItem key={id} sx={{ borderWidth: '0px' }}>
                 {({ isExpanded }) => (
                   <>
                     <AccordionButton
-                      className="nodeSubmenu"
+                      padding={'10px'}
+                      fontFamily={'Inter'}
+                      fontSize={'14px'}
+                      height={'30px'}
                       backgroundColor={type.bgColor}
                     >
-                      {isExpanded ? <ChevronDownIcon /> : <ChevronRightIcon />}{' '}
-                      <span>{type.label}</span>
+                      {isExpanded ? (
+                        <ChevronDownIcon fontSize={'20px'} />
+                      ) : (
+                        <ChevronRightIcon fontSize={'20px'} />
+                      )}{' '}
+                      <div>{type.label}</div>
                     </AccordionButton>
                     <AccordionPanel>
                       {nodes
