@@ -33,13 +33,13 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
     correctAnswers: [''],
   },
   transformData: (node) => {
-    const lessonTextNode = node as CloseEndedQuestionNode;
+    const oldData = node as CloseEndedQuestionNode;
 
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: lessonTextNode.data?.question,
+        content: oldData.data?.question,
         priority: 0,
       },
       {

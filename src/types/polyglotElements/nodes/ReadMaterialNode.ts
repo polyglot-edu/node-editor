@@ -33,17 +33,17 @@ polyglotNodeComponentMapping.registerMapping<ReadMaterialNode>({
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
-    const ReadMaterialNode = node as ReadMaterialNode;
+    const oldData = node as ReadMaterialNode;
 
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: ReadMaterialNode.data?.text,
+        content: oldData.data?.text,
       },
       {
         type: 'markdown',
-        content: 'Run this link: ' + ReadMaterialNode.data?.link,
+        content: 'Run this link: ' + oldData.data?.link,
       },
     ];
 

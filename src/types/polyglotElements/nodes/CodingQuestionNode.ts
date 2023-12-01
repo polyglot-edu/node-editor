@@ -40,18 +40,18 @@ int main() {
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
-    const lessonTextNode = node as CodingQuestionNode;
+    const oldData = node as CodingQuestionNode;
 
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: lessonTextNode.data?.question,
+        content: oldData.data?.question,
         priority: 0,
       },
       {
-        type: lessonTextNode.data?.language,
-        content: lessonTextNode.data?.codeTemplate,
+        type: oldData.data?.language,
+        content: oldData.data?.codeTemplate,
         priority: 1,
       },
     ];
