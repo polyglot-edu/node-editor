@@ -34,6 +34,10 @@ jobs:
         load: true
         tags: ${{ steps.meta.outputs.tags }}
         labels: ${{ steps.meta.outputs.labels }}
+        build-args: |
+          'DEPLOY_URL=staging.polyglot-edu.com'
+          'BACK_URL=https://polyglot-api.polyglot-edu.com'
+          'TEST_MODE=true'
         cache-from: type=gha
         cache-to: type=gha,mode=max
     - name: Push to ghcr.io with retries
