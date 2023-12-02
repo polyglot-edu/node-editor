@@ -62,7 +62,7 @@ jobs:
             authClientSecret: ${{ secrets.AUTH0_CLIENT_SECRET }}
             authAudience: ${{ secrets.AUTH0_AUDIENCE }}
             authScope: ${{ secrets.AUTH0_SCOPE }}
-            backUrl: https://api.polyglot-edu.com
+            backUrl: https://polyglot-api.polyglot-edu.com
             testMode: true
       env:
         KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
