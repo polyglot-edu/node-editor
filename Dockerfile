@@ -1,9 +1,9 @@
 ARG IMAGE=node:21-alpine
 FROM $IMAGE
 
-ARG TEST_MODE=true
-ARG DEPLOY_URL=http://localhost:3000
-ARG BACK_URL=http://localhost:5000
+ARG TEST_MODE
+ARG DEPLOY_URL
+ARG BACK_URL
 
 ARG WORKDIR=web-client
 
