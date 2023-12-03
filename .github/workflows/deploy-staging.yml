@@ -27,7 +27,7 @@ jobs:
       with:
         images: ghcr.io/${{ github.repository }}
     - name: Build and push to ghcr.io
-      uses: docker/build-push-action@v4
+      uses: docker/build-push-action@v5
       with:
         context: .
         push: false
@@ -38,6 +38,7 @@ jobs:
           'DEPLOY_URL=staging.polyglot-edu.com'
           'BACK_URL=https://polyglot-api.polyglot-edu.com'
           'TEST_MODE=true'
+        no-cache: true
         # cache-from: type=gha
         # cache-to: type=gha,mode=max
     - name: Push to ghcr.io with retries
