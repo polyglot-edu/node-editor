@@ -28,6 +28,18 @@ const NodeProperties = () => {
           </>
         }
       />
+      <EnumField
+        label="Platform"
+        name="platform"
+        options={
+          <>
+            <option value={'VSCode'} defaultChecked>
+              VSCode
+            </option>
+            <option value={'WebApp'}>WebApp</option>
+          </>
+        }
+      />
     </>
   );
 };
