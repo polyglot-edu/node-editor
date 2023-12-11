@@ -2,13 +2,7 @@ import ReadMaterialNodeProperties from '../../../components/Properties/Nodes/Rea
 import { ReactFlowReadMaterialNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/readMaterial_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
-import {
-  ChallengeContent,
-  ChallengeSetup,
-  defaultPolyglotNodeData,
-  NodeData,
-  PolyglotNode,
-} from './Node';
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type ReadMaterialNodeData = NodeData & {
   text: string;
@@ -31,28 +25,5 @@ polyglotNodeComponentMapping.registerMapping<ReadMaterialNode>({
     text: '',
     link: ' ',
     ...defaultPolyglotNodeData,
-  },
-  transformData: (node) => {
-    const oldData = node as ReadMaterialNode;
-
-    const challengeSetup: ChallengeSetup[] = [];
-    const challengeContent: ChallengeContent[] = [
-      {
-        type: 'markdown',
-        content: oldData.data?.text,
-      },
-      {
-        type: 'markdown',
-        content: 'Run this link: ' + oldData.data?.link,
-      },
-    ];
-
-    return {
-      ...node,
-      runtimeData: {
-        challengeSetup,
-        challengeContent,
-      },
-    };
   },
 });
