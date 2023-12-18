@@ -105,7 +105,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
       >
         <div className="label">NEW ACTIVITY</div>
 
-        <Box height={{ base: '200px', xl: '600px' }} overflowY="scroll">
+        <Box height="100%" overflowY="scroll">
           <div
             className="nodeSubmenu"
             style={{
@@ -121,10 +121,10 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                   <>
                     <AccordionButton
                       backgroundColor={type.bgColor}
-                      padding={{ base: '5px', xl: '10px' }}
+                      padding={{ base: '5px', md: '8px', xl: '10px' }}
                       fontFamily={'Inter'}
-                      fontSize={{ base: '10px', xl: '14px' }}
-                      height={{ base: '15px', xl: '30px' }}
+                      fontSize={{ base: '10px', md: '12px', xl: '14px' }}
+                      height={{ base: '15px', md: '22px', xl: '30px' }}
                     >
                       {isExpanded ? (
                         <ChevronDownIcon fontSize={'20px'} />
@@ -138,10 +138,15 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                         .filter((node) => node.group === type.group)
                         .map((nodes) => (
                           <>
-                            <div
+                            <Box
                               id={nodes.key}
                               key={nodes.key}
                               className="nodeItem"
+                              fontSize={{
+                                base: '10px',
+                                md: '12px',
+                                xl: '14px',
+                              }}
                               onMouseOver={() =>
                                 listImplementedNodes.includes(nodes.index)
                                   ? document
@@ -186,7 +191,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                                 width="20"
                               />
                               {nodes.text}
-                            </div>
+                            </Box>
                           </>
                         ))}
                     </AccordionPanel>
@@ -198,12 +203,11 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
           <div
             className="nodeSubmenu"
             style={{
-              marginTop: '30px',
+              marginTop: '20px',
               backgroundColor: 'rgba(124, 104, 146, 0.5)',
             }}
           >
-            {' '}
-            ASSESSMENT ACTIVITY{' '}
+            ASSESSMENT ACTIVITY
           </div>
           <Accordion>
             {configAssessment.map((type, id) => (
@@ -211,27 +215,32 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                 {({ isExpanded }) => (
                   <>
                     <AccordionButton
-                      padding={{ base: '5px', xl: '10px' }}
-                      fontFamily={'Inter'}
-                      fontSize={{ base: '10px', xl: '14px' }}
-                      height={{ base: '15px', xl: '30px' }}
                       backgroundColor={type.bgColor}
+                      padding={{ base: '5px', md: '8px', xl: '10px' }}
+                      fontFamily={'Inter'}
+                      fontSize={{ base: '10px', md: '12px', xl: '14px' }}
+                      height={{ base: '15px', md: '22px', xl: '30px' }}
                     >
                       {isExpanded ? (
-                        <ChevronDownIcon fontSize={'20px'} />
+                        <ChevronDownIcon
+                          fontSize={{ base: '15px', md: '18px', xl: '20px' }}
+                        />
                       ) : (
-                        <ChevronRightIcon fontSize={'20px'} />
+                        <ChevronRightIcon
+                          fontSize={{ base: '15px', md: '18px', xl: '20px' }}
+                        />
                       )}{' '}
-                      <div>{type.label}</div>
+                      {type.label}
                     </AccordionButton>
                     <AccordionPanel>
                       {nodes
                         .filter((node) => node.group === type.group)
                         .map((nodes) => (
-                          <div
+                          <Box
                             id={nodes.key}
                             key={nodes.key}
                             className="nodeItem"
+                            fontSize={{ base: '10px', md: '12px', xl: '14px' }}
                             onMouseOver={() =>
                               listImplementedNodes.includes(nodes.index)
                                 ? document
@@ -276,7 +285,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                               width="20"
                             />
                             {nodes.text}
-                          </div>
+                          </Box>
                         ))}
                     </AccordionPanel>
                   </>
