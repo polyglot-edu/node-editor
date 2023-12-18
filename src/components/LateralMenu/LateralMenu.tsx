@@ -69,6 +69,7 @@ const listImplementedNodes = [
   'closeEndedQuestionNode',
   'TrueFalseNode',
   'ReadMaterialNode',
+  'abstractNode',
 ];
 export type LateralMenuProps = {
   isOpen: boolean;
@@ -97,13 +98,14 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
   return (
     <>
       <Box
-        width={'300px'}
+        w={'300px'}
         title="drag the new node"
         marginBottom={'0px'}
         backgroundColor={'rgba(217, 217, 217, 0.6)'}
       >
         <div className="label">NEW ACTIVITY</div>
-        <p style={{ overflow: 'auto', height: '600px' }}>
+
+        <Box height={{ base: '200px', xl: '600px' }} overflowY="scroll">
           <div
             className="nodeSubmenu"
             style={{
@@ -119,10 +121,10 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                   <>
                     <AccordionButton
                       backgroundColor={type.bgColor}
-                      padding={'10px'}
+                      padding={{ base: '5px', xl: '10px' }}
                       fontFamily={'Inter'}
-                      fontSize={'14px'}
-                      height={'30px'}
+                      fontSize={{ base: '10px', xl: '14px' }}
+                      height={{ base: '15px', xl: '30px' }}
                     >
                       {isExpanded ? (
                         <ChevronDownIcon fontSize={'20px'} />
@@ -209,10 +211,10 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                 {({ isExpanded }) => (
                   <>
                     <AccordionButton
-                      padding={'10px'}
+                      padding={{ base: '5px', xl: '10px' }}
                       fontFamily={'Inter'}
-                      fontSize={'14px'}
-                      height={'30px'}
+                      fontSize={{ base: '10px', xl: '14px' }}
+                      height={{ base: '15px', xl: '30px' }}
                       backgroundColor={type.bgColor}
                     >
                       {isExpanded ? (
@@ -282,7 +284,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
               </AccordionItem>
             ))}
           </Accordion>
-        </p>
+        </Box>
       </Box>
     </>
   );
