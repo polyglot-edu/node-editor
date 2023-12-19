@@ -105,7 +105,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
       >
         <div className="label">NEW ACTIVITY</div>
 
-        <Box height="100%" overflowY="scroll">
+        <Box height="100%" overflowY="scroll" paddingBottom={'15%'}>
           <div
             className="nodeSubmenu"
             style={{
@@ -127,12 +127,17 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                       height={{ base: '15px', md: '22px', xl: '30px' }}
                     >
                       {isExpanded ? (
-                        <ChevronDownIcon fontSize={'20px'} />
+                        <ChevronDownIcon
+                          fontSize={{ base: '15px', md: '18px', xl: '20px' }}
+                        />
                       ) : (
-                        <ChevronRightIcon fontSize={'20px'} />
+                        <ChevronRightIcon
+                          fontSize={{ base: '15px', md: '18px', xl: '20px' }}
+                        />
                       )}{' '}
-                      <div>{type.label}</div>
+                      {type.label}
                     </AccordionButton>
+
                     <AccordionPanel>
                       {nodes
                         .filter((node) => node.group === type.group)
