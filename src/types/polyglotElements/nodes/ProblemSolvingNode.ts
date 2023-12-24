@@ -35,13 +35,13 @@ polyglotNodeComponentMapping.registerMapping<ProblemSolvingNode>({
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
-    const ProblemSolvingNode = node as ProblemSolvingNode;
+    const oldData = node as ProblemSolvingNode;
 
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: ProblemSolvingNode.data?.text,
+        content: oldData.data?.text,
       },
     ];
 

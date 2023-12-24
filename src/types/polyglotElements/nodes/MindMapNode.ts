@@ -35,13 +35,13 @@ polyglotNodeComponentMapping.registerMapping<MindMapNode>({
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
-    const MindMapNode = node as MindMapNode;
+    const oldData = node as MindMapNode;
 
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: MindMapNode.data?.text,
+        content: oldData.data?.text,
       },
     ];
 
