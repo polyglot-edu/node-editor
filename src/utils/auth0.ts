@@ -10,7 +10,8 @@ const auth0Config =
         clientSecret: 'testClientSecret',
       }
     : {
-        baseURL: process.env.AUTH0_BASE_URL || process.env.CURRENT_HOST,
+        baseURL: process.env.AUTH0_BASE_URL || process.env.DEPLOY_URL,
       };
 
 export default initAuth0(auth0Config);
+
