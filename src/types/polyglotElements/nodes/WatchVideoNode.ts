@@ -31,13 +31,13 @@ polyglotNodeComponentMapping.registerMapping<WatchVideoNode>({
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
-    const WatchVideoNode = node as WatchVideoNode;
+    const oldData = node as WatchVideoNode;
 
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: WatchVideoNode.data?.text,
+        content: oldData.data?.text,
       },
     ];
 

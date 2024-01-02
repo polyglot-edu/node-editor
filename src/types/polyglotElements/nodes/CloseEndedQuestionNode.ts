@@ -2,13 +2,7 @@ import CloseEndedQuestionNodeProperties from '../../../components/Properties/Nod
 import { ReactFlowCloseEndedQuestionNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/closeQuestion_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
-import {
-  ChallengeContent,
-  ChallengeSetup,
-  defaultPolyglotNodeData,
-  NodeData,
-  PolyglotNode,
-} from './Node';
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type CloseEndedQuestionNodeData = NodeData & {
   question: string;
@@ -31,30 +25,5 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
     ...defaultPolyglotNodeData,
     question: '',
     correctAnswers: [''],
-  },
-  transformData: (node) => {
-    const lessonTextNode = node as CloseEndedQuestionNode;
-
-    const challengeSetup: ChallengeSetup[] = [];
-    const challengeContent: ChallengeContent[] = [
-      {
-        type: 'markdown',
-        content: lessonTextNode.data?.question,
-        priority: 0,
-      },
-      {
-        type: 'html',
-        content: '',
-        priority: 1,
-      },
-    ];
-
-    return {
-      ...node,
-      runtimeData: {
-        challengeSetup,
-        challengeContent,
-      },
-    };
   },
 });

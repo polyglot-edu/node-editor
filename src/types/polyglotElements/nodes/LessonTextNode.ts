@@ -2,13 +2,7 @@ import LessonTextNodeProperties from '../../../components/Properties/Nodes/Lesso
 import { ReactFlowLessonNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/lesson_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
-import {
-  ChallengeContent,
-  ChallengeSetup,
-  defaultPolyglotNodeData,
-  NodeData,
-  PolyglotNode,
-} from './Node';
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type LessonTextNodeData = NodeData & {
   text: string;
@@ -29,24 +23,5 @@ polyglotNodeComponentMapping.registerMapping<LessonTextNode>({
   defaultData: {
     text: '',
     ...defaultPolyglotNodeData,
-  },
-  transformData: (node) => {
-    const lessonTextNode = node as LessonTextNode;
-
-    const challengeSetup: ChallengeSetup[] = [];
-    const challengeContent: ChallengeContent[] = [
-      {
-        type: 'markdown',
-        content: lessonTextNode.data?.text,
-      },
-    ];
-
-    return {
-      ...node,
-      runtimeData: {
-        challengeSetup,
-        challengeContent,
-      },
-    };
   },
 });

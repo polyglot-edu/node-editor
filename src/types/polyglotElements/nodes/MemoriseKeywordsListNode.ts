@@ -33,13 +33,13 @@ polyglotNodeComponentMapping.registerMapping<MemoriseKeywordsListNode>({
     ...defaultPolyglotNodeData,
   },
   transformData: (node) => {
-    const MemoriseKeywordsListNode = node as MemoriseKeywordsListNode;
+    const oldData = node as MemoriseKeywordsListNode;
 
     const challengeSetup: ChallengeSetup[] = [];
     const challengeContent: ChallengeContent[] = [
       {
         type: 'markdown',
-        content: MemoriseKeywordsListNode.data?.text,
+        content: oldData.data?.text,
       },
     ];
 
