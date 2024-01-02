@@ -37,7 +37,7 @@ jobs:
           build-args: |
             'DEPLOY_URL=staging.polyglot-edu.com'
             'BACK_URL=https://polyglot-api.polyglot-edu.com'
-            'TEST_MODE=true'
+            'TEST_MODE=false'
           no-cache: true
           # cache-from: type=gha
           # cache-to: type=gha,mode=max
