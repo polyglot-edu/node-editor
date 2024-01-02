@@ -20,15 +20,15 @@ module.exports = {
     DEPLOY_URL: DEPLOY_URL,
     BACK_URL: BACK_URL,
     TEST_MODE: process.env.TEST_MODE,
-  },
-  async redirects() {
-    return [
-      {
-        source: '/',
-        destination: '/flows',
-        permanent: true,
-      },
-    ];
-  },
+  }, //,
+  // async redirects() {
+  //   return [
+  //     {
+  //       source: '/',
+  //       destination: '/flows',
+  //       permanent: true,
+  //     },
+  //   ];
+  // },
 };
 
