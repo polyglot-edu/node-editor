@@ -1,9 +1,15 @@
-ARG IMAGE=node:21-alpine
-FROM $IMAGE
+FROM node:21-alpine
 
 ARG TEST_MODE=false
 ARG DEPLOY_URL=https://staging.polyglot-edu.com
 ARG BACK_URL=https://polyglot-api-staging.polyglot-edu.com
+ARG AUTH0_SECRET
+ARG AUTH0_AUDIENCE
+ARG AUTH0_SCOPE
+ARG AUTH0_CLIENT_ID
+ARG AUTH0_CLIENT_SECRET
+ARG AUTH0_ISSUER_BASE_URL
+
 
 ARG WORKDIR=web-client
 
