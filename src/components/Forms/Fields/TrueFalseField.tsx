@@ -40,7 +40,7 @@ const ArrayField = ({
       {fields.map((field, index) => (
         <Flex key={field.id} paddingBottom={'13px'}>
           <Controller
-            name={`data.isChoiceCorrect.${index}`}
+            name={`data.isQuestionCorrect.${index}`}
             render={({ field }) => (
               <Checkbox
                 size="lg"
@@ -112,7 +112,7 @@ const ArrayField = ({
           colorScheme={'green'}
           onClick={() => {
             // appendIsChoices(checked ? 'true' : 'false');
-            setValue(`data.isChoiceCorrect.${fields.length}`, checked);
+            setValue(`data.isQuestionCorrect.${fields.length}`, checked);
             append(input);
             setInput('');
             setChecked(false);
