@@ -5,7 +5,6 @@ import NodeProperties from './NodeProperties';
 const TrueFalseNodeProperties = () => {
   return (
     <>
-      <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
       <div>
         <b>Activity description</b>
         <br />
