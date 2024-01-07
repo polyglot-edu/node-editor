@@ -53,7 +53,11 @@ const exampleFlows = new Map<string, PolyglotFlow>();
       title: 'Close Ended Question',
       description: 'Some description',
       difficulty: 1,
-      data: { question: 'domandona', correctAnswers: ['rispostona'] },
+      data: {
+        question: 'domandona',
+        correctAnswers: ['rispostona'],
+        aiQuestion: false,
+      },
       reactFlow: {
         id: UUIDv4(),
         type: 'closeEndedQuestionNode',
