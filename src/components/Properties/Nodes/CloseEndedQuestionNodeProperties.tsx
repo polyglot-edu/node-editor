@@ -1,10 +1,14 @@
-import { Checkbox, Flex } from '@chakra-ui/react';
+import { Button, Flex } from '@chakra-ui/react';
+import { useFormContext } from 'react-hook-form';
 import ArrayField from '../../Forms/Fields/ArrayField';
 import EnumField from '../../Forms/Fields/EnumField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import NodeProperties from './NodeProperties';
 
 const CloseEndedQuestionNodeProperties = () => {
+  const { getValues, setValue, unregister } = useFormContext();
+  // todo: unregister the parameters not used ->
+  //    if aiQuestion==true unregister(data.correctAnswers[]) else unregister(data.language,...)
   return (
     <>
       <div>
@@ -15,32 +19,39 @@ const CloseEndedQuestionNodeProperties = () => {
       </div>
       <br />
       <NodeProperties />
-      <Checkbox
+      <Button
         marginBottom={'5px'}
-        id="checkbox"
-        name="data.aiQuestion"
-        onChange={() => {
-          if (
-            document.getElementById('aiQuestion')?.getAttribute('hidden') ===
-            'true'
-          ) {
-            document
-              .getElementById('manualQuestion')
-              ?.setAttribute('hidden', 'true');
-            document.getElementById('aiQuestion')?.removeAttribute('hidden');
-          } else {
-            document
-              .getElementById('aiQuestion')
-              ?.setAttribute('hidden', 'true');
-            document
-              .getElementById('manualQuestion')
-              ?.removeAttribute('hidden');
-          }
+        id="buttonAI"
+        hidden={!getValues('data.aiQuestion')}
+        onClick={() => {
+          setValue('data.aiQuestion', true);
+          document
+            .getElementById('manualQuestion')
+            ?.setAttribute('hidden', 'true');
+          document.getElementById('buttonAI')?.setAttribute('hidden', 'true');
+          document.getElementById('aiQuestion')?.removeAttribute('hidden');
+          document.getElementById('buttonManually')?.removeAttribute('hidden');
         }}
       >
-        Select to generate the question with AI
-      </Checkbox>
-      <div id="manualQuestion">
+        Form to generate the question with AI
+      </Button>
+      <Button
+        marginBottom={'5px'}
+        id="buttonManually"
+        hidden={getValues('data.aiQuestion')}
+        onClick={() => {
+          setValue('data.aiQuestion', false);
+          document.getElementById('aiQuestion')?.setAttribute('hidden', 'true');
+          document
+            .getElementById('buttonManually')
+            ?.setAttribute('hidden', 'true');
+          document.getElementById('manualQuestion')?.removeAttribute('hidden');
+          document.getElementById('buttonAI')?.removeAttribute('hidden');
+        }}
+      >
+        Form to create the question manually
+      </Button>
+      <div id="manualQuestion" hidden={!getValues('data.aiQuestion')}>
         <MarkDownField label="Question" name="data.question" />
         <ArrayField
           label="Correct Answers"
@@ -48,11 +59,11 @@ const CloseEndedQuestionNodeProperties = () => {
           option="Answer"
         />
       </div>
-      <div id="aiQuestion" hidden>
+      <div id="aiQuestion" hidden={getValues('data.aiQuestion')}>
         <Flex>
           <EnumField
             label="Language"
-            name="language"
+            name="data.language"
             width="50%"
             constraints={{ valueAsNumber: true }}
             options={
@@ -67,7 +78,7 @@ const CloseEndedQuestionNodeProperties = () => {
           />
           <EnumField
             label="Question category"
-            name="questionCategory"
+            name="data.questionCategory"
             width="50%"
             constraints={{ valueAsNumber: true }}
             options={
@@ -82,7 +93,7 @@ const CloseEndedQuestionNodeProperties = () => {
         </Flex>
         <EnumField
           label="Question type"
-          name="questionType"
+          name="data.questionType"
           constraints={{ valueAsNumber: true }}
           options={
             <>
