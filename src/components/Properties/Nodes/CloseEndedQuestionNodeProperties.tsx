@@ -65,14 +65,14 @@ const CloseEndedQuestionNodeProperties = () => {
             label="Language"
             name="data.language"
             width="50%"
-            constraints={{ valueAsNumber: true }}
+            constraints={{ valueAsNumber: false }}
             options={
               <>
-                <option value={1}>English</option>
-                <option value={2}>Italian</option>
-                <option value={3}>French</option>
-                <option value={4}>German</option>
-                <option value={5}>Spanish</option>
+                <option value={'English'}>English</option>
+                <option value={'Italian'}>Italian</option>
+                <option value={'French'}>French</option>
+                <option value={'German'}>German</option>
+                <option value={'Spanish'}>Spanish</option>
               </>
             }
           />
@@ -80,13 +80,19 @@ const CloseEndedQuestionNodeProperties = () => {
             label="Question category"
             name="data.questionCategory"
             width="50%"
-            constraints={{ valueAsNumber: true }}
+            constraints={{ valueAsNumber: false }}
             options={
               <>
-                <option value={1}>Factual Knowledge</option>
-                <option value={2}>Understanding of Concepts</option>
-                <option value={3}>Application of Skills </option>
-                <option value={4}>Analysys And Evaluation</option>
+                <option value={'Factual Knowledge'}>Factual Knowledge</option>
+                <option value={'Understanding of Concepts'}>
+                  Understanding of Concepts
+                </option>
+                <option value={'Application of Skills'}>
+                  Application of Skills{' '}
+                </option>
+                <option value={'Analysys And Evaluation'}>
+                  Analysys And Evaluation
+                </option>
               </>
             }
           />
