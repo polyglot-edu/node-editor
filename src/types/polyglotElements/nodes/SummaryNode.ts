@@ -2,13 +2,7 @@ import SummaryNodeProperties from '../../../components/Properties/Nodes/SummaryN
 import { ReactFlowSummaryNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/summary_CasesEvaluation_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
-import {
-  ChallengeContent,
-  ChallengeSetup,
-  defaultPolyglotNodeData,
-  NodeData,
-  PolyglotNode,
-} from './Node';
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type SummaryNodeData = NodeData & {
   text: string;
@@ -33,24 +27,5 @@ polyglotNodeComponentMapping.registerMapping<SummaryNode>({
     link: '',
     uploadLearner: false,
     ...defaultPolyglotNodeData,
-  },
-  transformData: (node) => {
-    const oldData = node as SummaryNode;
-
-    const challengeSetup: ChallengeSetup[] = [];
-    const challengeContent: ChallengeContent[] = [
-      {
-        type: 'markdown',
-        content: oldData.data?.text,
-      },
-    ];
-
-    return {
-      ...node,
-      runtimeData: {
-        challengeSetup,
-        challengeContent,
-      },
-    };
   },
 });

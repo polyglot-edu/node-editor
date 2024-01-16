@@ -2,13 +2,7 @@ import WatchVideoNodeProperties from '../../../components/Properties/Nodes/Watch
 import { ReactFlowWatchVideoNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/watchVideo_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
-import {
-  ChallengeContent,
-  ChallengeSetup,
-  defaultPolyglotNodeData,
-  NodeData,
-  PolyglotNode,
-} from './Node';
+import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type WatchVideoNodeData = NodeData & {
   link: string;
@@ -29,24 +23,5 @@ polyglotNodeComponentMapping.registerMapping<WatchVideoNode>({
   defaultData: {
     link: '',
     ...defaultPolyglotNodeData,
-  },
-  transformData: (node) => {
-    const oldData = node as WatchVideoNode;
-
-    const challengeSetup: ChallengeSetup[] = [];
-    const challengeContent: ChallengeContent[] = [
-      {
-        type: 'markdown',
-        content: oldData.data?.text,
-      },
-    ];
-
-    return {
-      ...node,
-      runtimeData: {
-        challengeSetup,
-        challengeContent,
-      },
-    };
   },
 });
