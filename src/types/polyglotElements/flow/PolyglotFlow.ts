@@ -15,3 +15,12 @@ export type PolyglotFlow = PolyglotFlowInfo & {
   nodes: PolyglotNode[];
   edges: PolyglotEdge[];
 };
+
+export type PolyglotExecutionNext = {
+  language: string;
+  text: string;
+  type: number;
+  level: number;
+  category: number;
+  temperature: number;
+};

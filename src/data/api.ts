@@ -3,6 +3,7 @@ import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   polyglotEdgeComponentMapping,
+  PolyglotExecutionNext,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
@@ -19,6 +20,17 @@ const axios = axiosCreate.create({
     'Content-Type': 'application/json',
   },
   withCredentials: true,
+});
+
+const openQuestionGeneration = axiosCreate.create({
+  baseURL: 'https://skapi.polyglot-edu.com',
+  headers: {
+    'Access-Control-Allow-Origin': '*',
+    'Access-Control-Allow-Headers': 'Content-Type',
+    'Access-Control-Allow-Methods': 'POST',
+    'Content-Type': 'application/json',
+  },
+  withCredentials: false,
 });
 
 type AutocompleteOutput = string[];
@@ -223,5 +235,13 @@ export const API = {
   },
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
+  },
+  generateNewAIQuestion: (
+    body: PolyglotExecutionNext
+  ): Promise<AxiosResponse> => {
+    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+      `/QuestionExercise/generateexercise`,
+      body
+    );
   },
 };

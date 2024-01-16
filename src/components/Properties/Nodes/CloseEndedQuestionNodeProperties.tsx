@@ -1,5 +1,7 @@
-import { Button, Flex } from '@chakra-ui/react';
+import { Button, Flex, useToast } from '@chakra-ui/react';
+import { AxiosResponse } from 'axios';
 import { useFormContext } from 'react-hook-form';
+import { API } from '../../../data/api';
 import ArrayField from '../../Forms/Fields/ArrayField';
 import EnumField from '../../Forms/Fields/EnumField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
@@ -7,6 +9,7 @@ import NodeProperties from './NodeProperties';
 
 const CloseEndedQuestionNodeProperties = () => {
   const { getValues, setValue, unregister } = useFormContext();
+  const toast = useToast();
   // todo: unregister the parameters not used ->
   //    if aiQuestion==true unregister(data.correctAnswers[]) else unregister(data.language,...)
   return (
@@ -83,16 +86,10 @@ const CloseEndedQuestionNodeProperties = () => {
             constraints={{ valueAsNumber: false }}
             options={
               <>
-                <option value={'Factual Knowledge'}>Factual Knowledge</option>
-                <option value={'Understanding of Concepts'}>
-                  Understanding of Concepts
-                </option>
-                <option value={'Application of Skills'}>
-                  Application of Skills{' '}
-                </option>
-                <option value={'Analysys And Evaluation'}>
-                  Analysys And Evaluation
-                </option>
+                <option value={0}>Factual Knowledge</option>
+                <option value={1}>Understanding of Concepts</option>
+                <option value={2}>Application of Skills</option>
+                <option value={3}>Analysys And Evaluation</option>
               </>
             }
           />
@@ -111,6 +108,51 @@ const CloseEndedQuestionNodeProperties = () => {
         />
         <MarkDownField
           label="Material for the AI Question generation"
+          name="data.text"
+        />
+        <Button
+          marginBottom={'5px'}
+          marginTop={'5px'}
+          onClick={async () => {
+            try {
+              const response: AxiosResponse = await API.generateNewAIQuestion({
+                language: 'English',
+                text: 'https://www.britannica.com/place/ancient-Egypt',
+                type: 0,
+                level: 2,
+                category: 1,
+                temperature: 0,
+              });
+              console.log(response);
+              const questionGenerated = 'generateNewAIQuestion';
+              setValue('data.question', response.data.errors);
+            } catch (error) {
+              if ((error as Error).name === 'SyntaxError') {
+                toast({
+                  title: 'Invalid syntax',
+                  description: (error as Error).toString(),
+                  status: 'error',
+                  duration: 3000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
+                return;
+              }
+              toast({
+                title: 'Internal Error',
+                description: 'Try later' + (error as Error),
+                status: 'error',
+                duration: 3000,
+                position: 'bottom-left',
+                isClosable: true,
+              });
+            }
+          }}
+        >
+          Generate question
+        </Button>
+        <MarkDownField
+          label="Question generated for the AI Question generation (editable)"
           name="data.question"
         />
       </div>
