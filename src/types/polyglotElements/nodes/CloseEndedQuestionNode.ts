@@ -9,6 +9,7 @@ export type CloseEndedQuestionNodeData = NodeData & {
   correctAnswers: string[];
   aiQuestion: boolean;
   language?: string;
+  questionGenerated?: string;
   questionCategory?: string;
   questionType?: string;
 };

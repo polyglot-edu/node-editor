@@ -26,11 +26,9 @@ const openQuestionGeneration = axiosCreate.create({
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
     'Access-Control-Allow-Origin': '*',
-    'Access-Control-Allow-Headers': 'Content-Type',
-    'Access-Control-Allow-Methods': 'POST',
     'Content-Type': 'application/json',
+    ApiKey: 'Kdzwa9xxu_jW]LjkPaxX1;H;kUuU;0',
   },
-  withCredentials: false,
 });
 
 type AutocompleteOutput = string[];

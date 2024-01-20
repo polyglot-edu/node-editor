@@ -5,6 +5,7 @@ import { API } from '../../../data/api';
 import ArrayField from '../../Forms/Fields/ArrayField';
 import EnumField from '../../Forms/Fields/EnumField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
+import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
 const CloseEndedQuestionNodeProperties = () => {
@@ -106,7 +107,7 @@ const CloseEndedQuestionNodeProperties = () => {
             </>
           }
         />
-        <MarkDownField
+        <TextField
           label="Material for the AI Question generation"
           name="data.text"
         />
@@ -115,17 +116,26 @@ const CloseEndedQuestionNodeProperties = () => {
           marginTop={'5px'}
           onClick={async () => {
             try {
+              const text = getValues('data.text');
+              const language = getValues('data.language');
+              const type = getValues('data.questionType');
+              const level = getValues('data.level');
+              const category = getValues('data.questionCategory');
+              if (!text) {
+                setValue('data.questionGenerated', 'No text given');
+                //
+                return;
+              }
+              //if(language!='English') return;
               const response: AxiosResponse = await API.generateNewAIQuestion({
-                language: 'English',
-                text: 'https://www.britannica.com/place/ancient-Egypt',
-                type: 0,
-                level: 2,
-                category: 1,
+                language: language,
+                text: text,
+                type: type,
+                level: level,
+                category: category,
                 temperature: 0,
               });
-              console.log(response);
-              const questionGenerated = 'generateNewAIQuestion';
-              setValue('data.question', response.data.errors);
+              setValue('data.questionGenerated', response.data);
             } catch (error) {
               if ((error as Error).name === 'SyntaxError') {
                 toast({
@@ -153,7 +163,7 @@ const CloseEndedQuestionNodeProperties = () => {
         </Button>
         <MarkDownField
           label="Question generated for the AI Question generation (editable)"
-          name="data.question"
+          name="data.questionGenerated"
         />
       </div>
     </>
