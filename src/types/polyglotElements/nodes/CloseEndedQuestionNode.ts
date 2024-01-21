@@ -10,8 +10,9 @@ export type CloseEndedQuestionNodeData = NodeData & {
   aiQuestion: boolean;
   language?: string;
   questionGenerated?: string;
-  questionCategory?: string;
-  questionType?: string;
+  possibleAnswer?: string;
+  questionCategory?: number;
+  questionType?: number;
 };
 
 export type CloseEndedQuestionNode = PolyglotNode & {
@@ -31,5 +32,10 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
     question: '',
     correctAnswers: [''],
     aiQuestion: false,
+    language: 'English',
+    questionGenerated: '',
+    possibleAnswer: '',
+    questionCategory: 0,
+    questionType: 0,
   },
 });

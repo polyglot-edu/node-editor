@@ -1,7 +1,7 @@
 import { Button, Flex, useToast } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
 import { useFormContext } from 'react-hook-form';
-import { API } from '../../../data/api';
+import { aiAPIResponse, API } from '../../../data/api';
 import ArrayField from '../../Forms/Fields/ArrayField';
 import EnumField from '../../Forms/Fields/EnumField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
@@ -26,7 +26,7 @@ const CloseEndedQuestionNodeProperties = () => {
       <Button
         marginBottom={'5px'}
         id="buttonAI"
-        hidden={!getValues('data.aiQuestion')}
+        hidden={getValues('data.aiQuestion')}
         onClick={() => {
           setValue('data.aiQuestion', true);
           document
@@ -42,7 +42,7 @@ const CloseEndedQuestionNodeProperties = () => {
       <Button
         marginBottom={'5px'}
         id="buttonManually"
-        hidden={getValues('data.aiQuestion')}
+        hidden={!getValues('data.aiQuestion')}
         onClick={() => {
           setValue('data.aiQuestion', false);
           document.getElementById('aiQuestion')?.setAttribute('hidden', 'true');
@@ -55,7 +55,7 @@ const CloseEndedQuestionNodeProperties = () => {
       >
         Form to create the question manually
       </Button>
-      <div id="manualQuestion" hidden={!getValues('data.aiQuestion')}>
+      <div id="manualQuestion" hidden={getValues('data.aiQuestion')}>
         <MarkDownField label="Question" name="data.question" />
         <ArrayField
           label="Correct Answers"
@@ -63,7 +63,7 @@ const CloseEndedQuestionNodeProperties = () => {
           option="Answer"
         />
       </div>
-      <div id="aiQuestion" hidden={getValues('data.aiQuestion')}>
+      <div id="aiQuestion" hidden={!getValues('data.aiQuestion')}>
         <Flex>
           <EnumField
             label="Language"
@@ -72,7 +72,9 @@ const CloseEndedQuestionNodeProperties = () => {
             constraints={{ valueAsNumber: false }}
             options={
               <>
-                <option value={'English'}>English</option>
+                <option value={'English'} defaultChecked>
+                  English
+                </option>
                 <option value={'Italian'}>Italian</option>
                 <option value={'French'}>French</option>
                 <option value={'German'}>German</option>
@@ -84,10 +86,12 @@ const CloseEndedQuestionNodeProperties = () => {
             label="Question category"
             name="data.questionCategory"
             width="50%"
-            constraints={{ valueAsNumber: false }}
+            constraints={{ valueAsNumber: true }}
             options={
               <>
-                <option value={0}>Factual Knowledge</option>
+                <option value={0} defaultChecked>
+                  Factual Knowledge
+                </option>
                 <option value={1}>Understanding of Concepts</option>
                 <option value={2}>Application of Skills</option>
                 <option value={3}>Analysys And Evaluation</option>
@@ -101,9 +105,11 @@ const CloseEndedQuestionNodeProperties = () => {
           constraints={{ valueAsNumber: true }}
           options={
             <>
-              <option value={1}>Open</option>
-              <option value={2}>Short Answer</option>
-              <option value={3}>TrueFalse</option>
+              <option value={0} defaultChecked>
+                Open
+              </option>
+              <option value={1}>Short Answer</option>
+              <option value={2}>TrueFalse</option>
             </>
           }
         />
@@ -135,7 +141,10 @@ const CloseEndedQuestionNodeProperties = () => {
                 category: category,
                 temperature: 0,
               });
+              const generate: aiAPIResponse = response.data;
               setValue('data.questionGenerated', response.data);
+              setValue('data.questionGenerated', generate.Question);
+              setValue('data.possibleAnswer', response.data.CorrectAnswer);
             } catch (error) {
               if ((error as Error).name === 'SyntaxError') {
                 toast({

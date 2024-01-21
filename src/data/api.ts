@@ -14,6 +14,12 @@ import { createNewDefaultPolyglotFlow } from '../utils/utils';
 import abstractFlows from './abstractExample';
 import exampleFlows from './exampleData';
 
+export type aiAPIResponse = {
+  Date: string;
+  Question: string;
+  CorrectAnswer: string;
+};
+
 const axios = axiosCreate.create({
   baseURL: process.env.BACK_URL,
   headers: {
@@ -25,7 +31,6 @@ const axios = axiosCreate.create({
 const openQuestionGeneration = axiosCreate.create({
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
-    'Access-Control-Allow-Origin': '*',
     'Content-Type': 'application/json',
     ApiKey: 'Kdzwa9xxu_jW]LjkPaxX1;H;kUuU;0',
   },
