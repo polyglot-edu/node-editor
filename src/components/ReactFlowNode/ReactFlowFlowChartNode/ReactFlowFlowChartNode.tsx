@@ -6,12 +6,9 @@ import { FlowChartNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
-type ReactFlowFlowChartNodeProps = ReactFlowNodeProps &
-FlowChartNode;
+type ReactFlowFlowChartNodeProps = ReactFlowNodeProps & FlowChartNode;
 
-const ReactFlowFlowChartNode = ({
-  id,
-}: ReactFlowFlowChartNodeProps) => {
+const ReactFlowFlowChartNode = ({ id }: ReactFlowFlowChartNodeProps) => {
   const [onConnect, label] = useStore((state) => [
     state.onConnect,
     state.nodeMap.get(id)?.title,

@@ -7,7 +7,7 @@ import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
 type ReactFlowCollaborativeModelingNodeProps = ReactFlowNodeProps &
-CollaborativeModelingNode;
+  CollaborativeModelingNode;
 
 const ReactFlowCollaborativeModelingNode = ({
   id,

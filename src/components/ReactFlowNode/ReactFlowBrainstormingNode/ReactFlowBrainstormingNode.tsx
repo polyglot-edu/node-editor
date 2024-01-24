@@ -6,8 +6,7 @@ import { BrainstormingNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
-type ReactFlowBrainstormingNodeProps = ReactFlowNodeProps &
-BrainstormingNode;
+type ReactFlowBrainstormingNodeProps = ReactFlowNodeProps & BrainstormingNode;
 
 const ReactFlowBrainstormingNode = ({
   id,

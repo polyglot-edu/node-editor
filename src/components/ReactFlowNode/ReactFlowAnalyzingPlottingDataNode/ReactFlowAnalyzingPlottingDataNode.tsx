@@ -7,7 +7,7 @@ import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
 type ReactFlowAnalyzingPlottingDataNodeProps = ReactFlowNodeProps &
-AnalyzingPlottingDataNode;
+  AnalyzingPlottingDataNode;
 
 const ReactFlowAnalyzingPlottingDataNode = ({
   id,
