@@ -1,6 +1,12 @@
 export { default as ReactFlowAbstractNode } from './ReactFlowAbstractNode/ReactFlowAbstractNode';
 export { default as ReactFlowCasesEvaluationNode } from './ReactFlowCasesEvaluationNode/ReactFlowCasesEvaluationNode';
 export { default as ReactFlowCloseEndedQuestionNode } from './ReactFlowCloseEndedQuestionNode/ReactFlowCloseEndedQuestionNode';
+export { default as ReactFlowAnalyzingPlottingDataNode } from './ReactFlowAnalyzingPlottingDataNode/ReactFlowAnalyzingPlottingDataNode';
+export { default as ReactFlowFlowChartNode } from './ReactFlowFlowChartNode/ReactFlowFlowChartNode';
+export { default as ReactFlowCollaborativeModelingNode } from './ReactFlowCollaborativeModelingNode/ReactFlowCollaborativeModelingNode';
+export { default as ReactFlowCalculationNode } from './ReactFlowCalculationNode/ReactFlowCalculationNode';
+export { default as ReactFlowBrainstormingNode } from './ReactFlowBrainstormingNode/ReactFlowBrainstormingNode';
+export { default as ReactFlowSimulationNode } from './ReactFlowSimulationNode/ReactFlowSimulationNode';
 export { default as ReactFlowCodingQuestionNode } from './ReactFlowCodingQuestionNode/ReactFlowCodingQuestionNode';
 export { default as ReactFlowCreateKeywordsListNode } from './ReactFlowCreateKeywordsListNode/ReactFlowCreateKeywordsListNode';
 export { default as ReactFlowFindSolutionNode } from './ReactFlowFindSolutionNode/ReactFlowFindSolutionNode';
