@@ -1,7 +1,7 @@
 import { Button, Flex, useToast } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
 import { useFormContext } from 'react-hook-form';
-import { aiAPIResponse, API } from '../../../data/api';
+import { API } from '../../../data/api';
 import ArrayField from '../../Forms/Fields/ArrayField';
 import EnumField from '../../Forms/Fields/EnumField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
@@ -132,7 +132,11 @@ const CloseEndedQuestionNodeProperties = () => {
                 //
                 return;
               }
-              //if(language!='English') return;
+              //block for testing purpose
+              const description = getValues('description');
+              console.log(description);
+              if (description != 'enable') return;
+
               const response: AxiosResponse = await API.generateNewAIQuestion({
                 language: language,
                 text: text,
@@ -141,10 +145,12 @@ const CloseEndedQuestionNodeProperties = () => {
                 category: category,
                 temperature: 0,
               });
-              const generate: aiAPIResponse = response.data;
-              setValue('data.questionGenerated', response.data);
-              setValue('data.questionGenerated', generate.Question);
-              setValue('data.possibleAnswer', response.data.CorrectAnswer);
+              const pos1 = response.data.search('Question: ');
+              const pos2 = response.data.search('CorrectAnswer: ');
+              const question = response.data.substring(pos1 + 10, pos2 - 3);
+              const correctAnswers = response.data.substring(pos2 + 15);
+              setValue('data.questionGenerated', question);
+              setValue('data.possibleAnswer', correctAnswers);
             } catch (error) {
               if ((error as Error).name === 'SyntaxError') {
                 toast({

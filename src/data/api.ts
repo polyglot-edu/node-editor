@@ -29,10 +29,11 @@ const axios = axiosCreate.create({
 });
 
 const openQuestionGeneration = axiosCreate.create({
+  //baseURL: process.env.AIGENERATION_URL,
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
-    ApiKey: 'Kdzwa9xxu_jW]LjkPaxX1;H;kUuU;0',
+    ApiKey: process.env.APIKEY,
   },
 });
 
