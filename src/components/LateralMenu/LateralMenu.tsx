@@ -64,7 +64,6 @@ const configAssessment = [
 ];
 
 const listImplementedNodes = [
-  'lessonTextNode',
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
   'TrueFalseNode',
@@ -72,6 +71,7 @@ const listImplementedNodes = [
   'abstractNode',
   'WatchVideoNode',
   'SummaryNode',
+  'codingQuestionNode',
 ];
 export type LateralMenuProps = {
   isOpen: boolean;
