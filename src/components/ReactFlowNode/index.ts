@@ -4,6 +4,7 @@ export { default as ReactFlowBrainstormingNode } from './ReactFlowBrainstormingN
 export { default as ReactFlowCalculationNode } from './ReactFlowCalculationNode/ReactFlowCalculationNode';
 export { default as ReactFlowCasesEvaluationNode } from './ReactFlowCasesEvaluationNode/ReactFlowCasesEvaluationNode';
 export { default as ReactFlowCloseEndedQuestionNode } from './ReactFlowCloseEndedQuestionNode/ReactFlowCloseEndedQuestionNode';
+export { default as ReactFlowOpenQuestionNode } from './ReactFlowOpenQuestionNode/ReactFlowOpenQuestionNode';
 export { default as ReactFlowCodingQuestionNode } from './ReactFlowCodingQuestionNode/ReactFlowCodingQuestionNode';
 export { default as ReactFlowCollaborativeModelingNode } from './ReactFlowCollaborativeModelingNode/ReactFlowCollaborativeModelingNode';
 export { default as ReactFlowCreateKeywordsListNode } from './ReactFlowCreateKeywordsListNode/ReactFlowCreateKeywordsListNode';

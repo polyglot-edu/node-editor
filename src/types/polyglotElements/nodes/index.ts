@@ -4,6 +4,7 @@ export * from './BrainstormingNode';
 export * from './CalculationNode';
 export * from './CasesEvaluationNode';
 export * from './CloseEndedQuestionNode';
+export * from './OpenQuestionNode';
 export * from './CodingQuestionNode';
 export * from './CollaborativeModelingNode';
 export * from './CreateKeywordsListNode';
