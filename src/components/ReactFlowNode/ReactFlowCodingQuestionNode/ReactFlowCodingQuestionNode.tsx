@@ -20,12 +20,7 @@ const ReactFlowCodingQuestionNode = ({
 
   return (
     <Card className="Card-react-flow">
-      <img
-        src={icon.src}
-        width="25"
-        height="25"
-        style={{ float: 'left' }}
-      />
+      <img src={icon.src} width="25" height="25" style={{ float: 'left' }} />
 
       {label}
       <Handle

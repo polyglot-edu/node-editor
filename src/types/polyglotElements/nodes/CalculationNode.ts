@@ -1,6 +1,6 @@
 import CalculationNodeProperties from '../../../components/Properties/Nodes/CalculationNodeProperties';
 import { ReactFlowCalculationNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/Calculation_icon.png';
+import icon from '../../../public/calculation_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
@@ -18,7 +18,7 @@ polyglotNodeComponentMapping.registerMapping<CalculationNode>({
   elementType: 'CalculationNode',
   name: 'Calculation',
   icon: icon.src,
-  group: 'remember_assessment',
+  group: 'apply_assessment',
   propertiesComponent: CalculationNodeProperties,
   elementComponent: ReactFlowCalculationNode,
   defaultData: {

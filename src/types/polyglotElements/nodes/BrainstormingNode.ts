@@ -1,6 +1,6 @@
-import BrainstormingBrainstormingNodeProperties from '../../../components/Properties/Nodes/BrainstormingNodeProperties';
+import BrainstormingNodeProperties from '../../../components/Properties/Nodes/BrainstormingNodeProperties';
 import { ReactFlowBrainstormingNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/Brainstorming_icon.png';
+import icon from '../../../public/brainstorm_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
@@ -18,7 +18,7 @@ polyglotNodeComponentMapping.registerMapping<BrainstormingNode>({
   elementType: 'BrainstormingNode',
   name: 'Brainstorming',
   icon: icon.src,
-  group: 'remember_assessment',
+  group: 'create_assessment',
   propertiesComponent: BrainstormingNodeProperties,
   elementComponent: ReactFlowBrainstormingNode,
   defaultData: {

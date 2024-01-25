@@ -1,6 +1,6 @@
 import SimulationNodeProperties from '../../../components/Properties/Nodes/SimulationNodeProperties';
 import { ReactFlowSimulationNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/closeQuestion_icon.png';
+import icon from '../../../public/simulation_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
@@ -18,7 +18,7 @@ polyglotNodeComponentMapping.registerMapping<SimulationNode>({
   elementType: 'SimulationNode',
   name: 'Simulation',
   icon: icon.src,
-  group: 'remember_assessment',
+  group: 'create_assessment',
   propertiesComponent: SimulationNodeProperties,
   elementComponent: ReactFlowSimulationNode,
   defaultData: {

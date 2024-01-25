@@ -1,6 +1,6 @@
 import CollaborativeModelingNodeProperties from '../../../components/Properties/Nodes/CollaborativeModelingNodeProperties';
 import { ReactFlowCollaborativeModelingNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/closeQuestion_icon.png';
+import icon from '../../../public/collaborative_icon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
@@ -18,7 +18,7 @@ polyglotNodeComponentMapping.registerMapping<CollaborativeModelingNode>({
   elementType: 'CollaborativeModelingNode',
   name: 'Collaborative Modeling',
   icon: icon.src,
-  group: 'remember_assessment',
+  group: 'understand_assessment',
   propertiesComponent: CollaborativeModelingNodeProperties,
   elementComponent: ReactFlowCollaborativeModelingNode,
   defaultData: {

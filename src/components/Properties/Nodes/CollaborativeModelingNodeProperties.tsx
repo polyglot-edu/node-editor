@@ -2,7 +2,7 @@ import ArrayField from '../../Forms/Fields/ArrayField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import NodeProperties from './NodeProperties';
 
-const CollaborativeModellingNodeProperties = () => {
+const CollaborativeModelingNodeProperties = () => {
   return (
     <>
       <div>
@@ -23,4 +23,4 @@ const CollaborativeModellingNodeProperties = () => {
   );
 };
 
-export default CollaborativeModellingNodeProperties;
+export default CollaborativeModelingNodeProperties;
