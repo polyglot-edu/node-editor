@@ -64,12 +64,13 @@ const configAssessment = [
 ];
 
 const listImplementedNodes = [
-  'lessonTextNode',
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
   'TrueFalseNode',
   'ReadMaterialNode',
   'abstractNode',
+  'WatchVideoNode',
+  'SummaryNode',
   'codingQuestionNode',
 ];
 export type LateralMenuProps = {

@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import CreateKeywordsList_icon from '../../../public/listActivity_icon.png';
+import icon from '../../../public/listActivity_icon.png';
 import useStore from '../../../store';
 import { CreateKeywordsListNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -21,7 +21,7 @@ const ReactFlowCreateKeywordsListNode = ({
   return (
     <Card className="Card-react-flow">
       <img
-        src={CreateKeywordsList_icon.src}
+        src={icon.src}
         width="20"
         height="20"
         style={{ float: 'left', marginTop: '2px', marginRight: '5px' }}
