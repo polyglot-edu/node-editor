@@ -1,14 +1,16 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import icon from '../../../public/findSolution_icon.png';
+import icon from '../../../public/brainstorm_icon.png';
 import useStore from '../../../store';
-import { FindSolutionNode } from '../../../types/polyglotElements';
+import { BrainstormingNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
-type ReactFlowFindSolutionNodeProps = ReactFlowNodeProps & FindSolutionNode;
+type ReactFlowBrainstormingNodeProps = ReactFlowNodeProps & BrainstormingNode;
 
-const ReactFlowFindSolutionNode = ({ id }: ReactFlowFindSolutionNodeProps) => {
+const ReactFlowBrainstormingNode = ({
+  id,
+}: ReactFlowBrainstormingNodeProps) => {
   const [onConnect, label] = useStore((state) => [
     state.onConnect,
     state.nodeMap.get(id)?.title,
@@ -21,26 +23,27 @@ const ReactFlowFindSolutionNode = ({ id }: ReactFlowFindSolutionNodeProps) => {
         src={icon.src}
         width="20"
         height="20"
-        style={{ float: 'left', marginTop: '2px', marginRight: '5px' }}
+        style={{ float: 'left', marginRight: '5px' }}
       />
+
       {label}
       <Handle
         type="source"
         position={Position.Right}
-        onConnect={onConnect}
         style={{
-          background: '#FFCC49',
+          background: '#3B1D5C',
           height: '25px',
           width: '5px',
           borderRadius: '0px',
           border: '0px',
         }}
+        onConnect={onConnect}
       />
       <Handle
         type="target"
         position={Position.Left}
         style={{
-          background: '#FFCC49',
+          background: '#3B1D5C',
           height: '25px',
           width: '5px',
           borderRadius: '0px',
@@ -51,4 +54,4 @@ const ReactFlowFindSolutionNode = ({ id }: ReactFlowFindSolutionNodeProps) => {
   );
 };
 
-export default ReactFlowFindSolutionNode;
+export default ReactFlowBrainstormingNode;

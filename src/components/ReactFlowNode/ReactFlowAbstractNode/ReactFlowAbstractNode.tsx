@@ -1,5 +1,5 @@
 import { Handle, Position } from 'reactflow';
-import abstract_icon from '../../../public/abstract_icon.png';
+import icon from '../../../public/abstract_icon.png';
 import useStore from '../../../store';
 import { AbstractNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -16,7 +16,7 @@ const ReactFlowAbstractNode = ({ id }: ReactFlowAbstractNodeProps) => {
   return (
     <Card className="Card-react-flow">
       <img
-        src={abstract_icon.src}
+        src={icon.src}
         width="25"
         height="25"
         style={{ float: 'left', marginTop: '-2px' }}

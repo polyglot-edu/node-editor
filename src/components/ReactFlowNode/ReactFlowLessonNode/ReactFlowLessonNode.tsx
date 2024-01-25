@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import lesson_icon from '../../../public/lesson_icon.png';
+import icon from '../../../public/lesson_icon.png';
 import useStore from '../../../store';
 import { LessonNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -18,7 +18,7 @@ const ReactFlowLessonNode = ({ id }: ReactFlowLessonNodeProps) => {
   return (
     <Card className="Card-react-flow">
       <img
-        src={lesson_icon.src}
+        src={icon.src}
         width="20"
         height="20"
         style={{ float: 'left', marginTop: '2px', marginRight: '5px' }}
