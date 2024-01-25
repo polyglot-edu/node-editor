@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import close_question_icon from '../../../public/closeQuestion_icon.png';
+import close_question_icon from '../../../public/flowChart_icon.png';
 import useStore from '../../../store';
 import { FlowChartNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

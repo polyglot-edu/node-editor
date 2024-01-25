@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import ProblemSolving_icon from '../../../public/searchActivity_icon.png';
+import icon from '../../../public/searchActivity_icon.png';
 import useStore from '../../../store';
 import { ProblemSolvingNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -20,7 +20,7 @@ const ReactFlowProblemSolvingNode = ({
   return (
     <Card className="Card-react-flow">
       <img
-        src={ProblemSolving_icon.src}
+        src={icon.src}
         width="20"
         height="20"
         style={{ float: 'left', marginTop: '2px', marginRight: '5px' }}

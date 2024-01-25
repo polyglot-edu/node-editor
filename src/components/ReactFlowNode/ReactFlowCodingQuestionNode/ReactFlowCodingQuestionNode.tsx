@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import coding_icon from '../../../public/coding_icon.png';
+import icon from '../../../public/coding_icon.png';
 import useStore from '../../../store';
 import { CodingQuestionNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -21,7 +21,7 @@ const ReactFlowCodingQuestionNode = ({
   return (
     <Card className="Card-react-flow">
       <img
-        src={coding_icon.src}
+        src={icon.src}
         width="25"
         height="25"
         style={{ float: 'left' }}

@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import close_question_icon from '../../../public/closeQuestion_icon.png';
+import icon from '../../../public/collaborative_icon.png';
 import useStore from '../../../store';
 import { CollaborativeModelingNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
@@ -21,7 +21,7 @@ const ReactFlowCollaborativeModelingNode = ({
   return (
     <Card className="Card-react-flow">
       <img
-        src={close_question_icon.src}
+        src={icon.src}
         width="20"
         height="20"
         style={{ float: 'left', marginRight: '5px' }}
