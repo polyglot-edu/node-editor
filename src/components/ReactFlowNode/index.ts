@@ -4,7 +4,6 @@ export { default as ReactFlowBrainstormingNode } from './ReactFlowBrainstormingN
 export { default as ReactFlowCalculationNode } from './ReactFlowCalculationNode/ReactFlowCalculationNode';
 export { default as ReactFlowCasesEvaluationNode } from './ReactFlowCasesEvaluationNode/ReactFlowCasesEvaluationNode';
 export { default as ReactFlowCloseEndedQuestionNode } from './ReactFlowCloseEndedQuestionNode/ReactFlowCloseEndedQuestionNode';
-export { default as ReactFlowOpenQuestionNode } from './ReactFlowOpenQuestionNode/ReactFlowOpenQuestionNode';
 export { default as ReactFlowCodingQuestionNode } from './ReactFlowCodingQuestionNode/ReactFlowCodingQuestionNode';
 export { default as ReactFlowCollaborativeModelingNode } from './ReactFlowCollaborativeModelingNode/ReactFlowCollaborativeModelingNode';
 export { default as ReactFlowCreateKeywordsListNode } from './ReactFlowCreateKeywordsListNode/ReactFlowCreateKeywordsListNode';
@@ -16,6 +15,7 @@ export { default as ReactFlowLessonNode } from './ReactFlowLessonNode/ReactFlowL
 export { default as ReactFlowMemoriseKeywordsListNode } from './ReactFlowMemoriseKeywordsListNode/ReactFlowMemoriseKeywordsListNode';
 export { default as ReactFlowMindMapNode } from './ReactFlowMindMapNode/ReactFlowMindMapNode';
 export { default as ReactFlowMultipleChoiceQuestionNode } from './ReactFlowMultipleChoiceQuestionNode/ReactFlowMultipleChoiceQuestionNode';
+export { default as ReactFlowOpenQuestionNode } from './ReactFlowOpenQuestionNode/ReactFlowOpenQuestionNode';
 export { default as ReactFlowProblemSolvingNode } from './ReactFlowProblemSolvingNode/ReactFlowProblemSolvingNode';
 export { default as ReactFlowReadMaterialNode } from './ReactFlowReadMaterialNode/ReactFlowReadMaterialNode';
 export { default as ReactFlowSimulationNode } from './ReactFlowSimulationNode/ReactFlowSimulationNode';

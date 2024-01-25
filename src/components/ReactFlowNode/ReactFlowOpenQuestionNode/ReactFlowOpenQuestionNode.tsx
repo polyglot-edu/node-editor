@@ -6,12 +6,9 @@ import { OpenQuestionNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
-type ReactFlowOpenQuestionNodeProps = ReactFlowNodeProps &
-OpenQuestionNode;
+type ReactFlowOpenQuestionNodeProps = ReactFlowNodeProps & OpenQuestionNode;
 
-const ReactFlowOpenQuestionNode = ({
-  id,
-}: ReactFlowOpenQuestionNodeProps) => {
+const ReactFlowOpenQuestionNode = ({ id }: ReactFlowOpenQuestionNodeProps) => {
   const [onConnect, label] = useStore((state) => [
     state.onConnect,
     state.nodeMap.get(id)?.title,
