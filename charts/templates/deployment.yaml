@@ -49,9 +49,9 @@ spec:
             - name: TEST_MODE
               value: "{{ .Values.env.testMode }}"
             - name: APIKEY
-            value: "{{ .Values.env.apiKey }}"
+              value: "{{ .Values.env.apiKey }}"
             - name: AIGENERATION_URL
-            value: "{{ .Values.env.aiGenerationUrl }}"
+              value: "{{ .Values.env.aiGenerationUrl }}"
           ports:
             - name: http
               containerPort: {{ .Values.service.port }}
