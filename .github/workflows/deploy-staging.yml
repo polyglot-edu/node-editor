@@ -44,6 +44,8 @@ jobs:
             "AUTH0_CLIENT_SECRET=${{ secrets.AUTH0_CLIENT_SECRET }}"
             "AUTH0_AUDIENCE=${{ secrets.AUTH0_AUDIENCE }}"
             "AUTH0_SCOPE=${{ secrets.AUTH0_SCOPE }}"
+            "APIKEY=${{ secrets.APIKEY }}"
+            "AIGENERATION_URL=https://skapi.polyglot-edu.com"
           no-cache: true
           # cache-from: type=gha
           # cache-to: type=gha,mode=max
@@ -73,6 +75,8 @@ jobs:
               authClientSecret: ${{ secrets.AUTH0_CLIENT_SECRET }}
               authAudience: ${{ secrets.AUTH0_AUDIENCE }}
               authScope: ${{ secrets.AUTH0_SCOPE }}
+              apiKey: ${{ secrets.APIKEY }}
+              aiGenerationUrl: https://skapi.polyglot-edu.com
               backUrl: https://polyglot-api-staging.polyglot-edu.com
               testMode: false
         env:

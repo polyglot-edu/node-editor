@@ -10,16 +10,24 @@ import { RegisterOptions, useFormContext } from 'react-hook-form';
 export type EnumFieldProps = {
   label: string;
   name: string;
+  width?: string;
+  align?: string;
   options: JSX.Element;
   constraints?: RegisterOptions;
 };
 
-const EnumField = ({ label, name, options, constraints }: EnumFieldProps) => {
+const EnumField = ({
+  label,
+  name,
+  options,
+  constraints,
+  width,
+}: EnumFieldProps) => {
   const { register, getFieldState } = useFormContext();
   const { error } = getFieldState(name);
 
   return (
-    <Box p={2}>
+    <Box p={2} width={width}>
       <FormControl isInvalid={error !== undefined}>
         <Select {...register(name, constraints)} borderColor={'grey'}>
           {options}

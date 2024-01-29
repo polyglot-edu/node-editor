@@ -3,6 +3,7 @@ import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   polyglotEdgeComponentMapping,
+  PolyglotExecutionNext,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
@@ -13,12 +14,27 @@ import { createNewDefaultPolyglotFlow } from '../utils/utils';
 import abstractFlows from './abstractExample';
 import exampleFlows from './exampleData';
 
+export type aiAPIResponse = {
+  Date: string;
+  Question: string;
+  CorrectAnswer: string;
+};
+
 const axios = axiosCreate.create({
   baseURL: process.env.BACK_URL,
   headers: {
     'Content-Type': 'application/json',
   },
   withCredentials: true,
+});
+
+const openQuestionGeneration = axiosCreate.create({
+  //baseURL: process.env.AIGENERATION_URL,
+  baseURL: 'https://skapi.polyglot-edu.com',
+  headers: {
+    'Content-Type': 'application/json',
+    ApiKey: process.env.APIKEY,
+  },
 });
 
 type AutocompleteOutput = string[];
@@ -223,5 +239,13 @@ export const API = {
   },
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
+  },
+  generateNewAIQuestion: (
+    body: PolyglotExecutionNext
+  ): Promise<AxiosResponse> => {
+    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+      `/QuestionExercise/generateexercise`,
+      body
+    );
   },
 };
