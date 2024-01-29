@@ -129,7 +129,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             onClick={async () => {
               //idea: popup to show "are u sure u want..."
               //run save-> then run check if correct info
-              
+
               return;
             }}
             icon={<ArrowUpIcon w={6} h={6} color="blue.500" />}
