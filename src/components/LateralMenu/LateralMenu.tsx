@@ -72,6 +72,7 @@ const listImplementedNodes = [
   'WatchVideoNode',
   'SummaryNode',
   'codingQuestionNode',
+  'OpenQuestionNode',
 ];
 export type LateralMenuProps = {
   isOpen: boolean;
