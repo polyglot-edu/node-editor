@@ -30,12 +30,14 @@ import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
+import {useFormContext,} from 'react-hook-form';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
 };
 
 export default function EditorNav({ saveFunc }: EditorNavProps) {
   const hydrated = useHasHydrated();
+  const { getValues, setValue, unregister } = useFormContext();
   const [
     updateFlowInfo,
     checkSave,
@@ -54,6 +56,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     state.forwardAction,
   ]);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [publishLoading, setPublishLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenRun,
@@ -89,6 +92,12 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [saveFunc]);
+
+  function publishFunc(){
+    const data = getValues('data');
+    console.log(data);
+    return ;
+  }
 
   return (
     <Nav p={2} bg="gray.200" justify="start">
@@ -130,10 +139,13 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
               //idea: popup to show "are u sure u want..."
               //run save-> then run check if correct info
 
+              setPublishLoading(true);
+              await publishFunc();
+              setPublishLoading(false);
               return;
             }}
             icon={<ArrowUpIcon w={6} h={6} color="blue.500" />}
-            isLoading={saveLoading}
+            isLoading={publishLoading}
           />
           <DropDown
             name="File"

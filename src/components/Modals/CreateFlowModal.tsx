@@ -68,6 +68,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [publish, setPublish] = useState('');
   const [tagName, setTagName] = useState('');
   const [colorTag, setColorTag] = useState(colors[0]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
@@ -94,6 +95,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             title: title,
             description: description,
             tags: tags,
+            publish: publish
           };
           response = await API.createNewFlow(base_Flow);
           break;
