@@ -140,6 +140,14 @@ export class APIV2 {
     flow.nodes = flow.nodes?.map((e) =>
       polyglotNodeComponentMapping.applyTransformFunction(e)
     );
+    // flow.edges = flow.edges.filter((edge) => {
+    //   const source = edge.reactFlow.source;
+    //   const target = edge.reactFlow.target;
+    //   return (
+    //     flow.nodes.filter((node) => node._id === source || node._id === target)
+    //       .length === 2
+    //   );
+    // });
     flow.edges = flow.edges?.map((e) =>
       polyglotEdgeComponentMapping.applyTransformFunction(e)
     );
