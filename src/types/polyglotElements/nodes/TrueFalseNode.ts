@@ -12,14 +12,14 @@ export type TrueFalseNodeData = NodeData & {
   positvePoints: number;
 };
 
-export type TrueFalseNode = PolyglotNode & {
+export type TrueFalseNodeNode = PolyglotNode & {
   type: 'TrueFalseNode';
   data: TrueFalseNodeData;
 };
 
-polyglotNodeComponentMapping.registerMapping<TrueFalseNode>({
+polyglotNodeComponentMapping.registerMapping<TrueFalseNodeNode>({
   elementType: 'TrueFalseNode',
-  name: 'True/False',
+  name: 'True False',
   icon: icon.src,
   group: 'remember_assessment',
   propertiesComponent: TrueFalseNodeProperties,

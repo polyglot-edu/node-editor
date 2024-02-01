@@ -7,7 +7,7 @@ import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 export type MultipleChoiceQuestionNodeData = NodeData & {
   question: string;
   choices: string[];
-  isChoiceCorrect: boolean[];
+  isChoiceCorrect: boolean[]; 
 };
 
 export type MultipleChoiceQuestionNode = PolyglotNode & {
