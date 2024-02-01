@@ -8,6 +8,12 @@ const CodingQuestionNodeProperties = () => {
   const [language, setLanguage] = useState('csharp');
   return (
     <>
+      <div>
+        <b>Activity description</b>
+        <br />
+        In this activity learners will have to complete a coding exercise
+      </div>
+      <br />
       <NodeProperties />
       <MarkDownField label="Question" name="data.question" />
       <CodeField

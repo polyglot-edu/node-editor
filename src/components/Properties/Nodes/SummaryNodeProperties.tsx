@@ -6,7 +6,13 @@ import NodeProperties from './NodeProperties';
 const SummaryNodeProperties = () => {
   return (
     <>
-      <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
+      <div>
+        <b>Activity description</b>
+        <br />
+        In this activity learners will have to summarize a given text or
+        document
+      </div>
+      <br />
       <NodeProperties />
       <MarkDownField label="Text" name="data.text" />
       <TextField label="URL" name="data.link" />
