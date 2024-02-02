@@ -19,6 +19,7 @@ export * from './MultipleChoiceQuestionNode';
 export * from './Node';
 export * from './OpenQuestionNode';
 export * from './ProblemSolvingNode';
+export * from './PromptEngineeringNode';
 export * from './ReadMaterialNode';
 export * from './SimulationNode';
 export * from './SummaryNode';
