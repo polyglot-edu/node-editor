@@ -81,4 +81,3 @@ jobs:
               testMode: false
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
-
