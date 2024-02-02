@@ -200,6 +200,7 @@ const EditFlowModal = ({
                 title: title,
                 description: description,
                 tags: tags,
+                publish: 'false',
               });
               onClose();
             }}
