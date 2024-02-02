@@ -17,6 +17,7 @@ export { default as ReactFlowMindMapNode } from './ReactFlowMindMapNode/ReactFlo
 export { default as ReactFlowMultipleChoiceQuestionNode } from './ReactFlowMultipleChoiceQuestionNode/ReactFlowMultipleChoiceQuestionNode';
 export { default as ReactFlowOpenQuestionNode } from './ReactFlowOpenQuestionNode/ReactFlowOpenQuestionNode';
 export { default as ReactFlowProblemSolvingNode } from './ReactFlowProblemSolvingNode/ReactFlowProblemSolvingNode';
+export { default as ReactFlowPromptEngineeringNode } from './ReactFlowPromptEngineeringNode/ReactFlowPromptEngineeringNode';
 export { default as ReactFlowReadMaterialNode } from './ReactFlowReadMaterialNode/ReactFlowReadMaterialNode';
 export { default as ReactFlowSimulationNode } from './ReactFlowSimulationNode/ReactFlowSimulationNode';
 export { default as ReactFlowSummaryNode } from './ReactFlowSummaryNode/ReactFlowSummaryNode';
