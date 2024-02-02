@@ -184,4 +184,4 @@ const OpenQuestionNodeProperties = () => {
   );
 };
 
-export default OpenQuestionNodePropertiesNodeProperties;
+export default OpenQuestionNodeProperties;
