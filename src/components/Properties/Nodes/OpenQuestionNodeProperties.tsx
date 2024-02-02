@@ -8,7 +8,7 @@ import MarkDownField from '../../Forms/Fields/MarkDownField';
 import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
-const OpenQuestionNodePropertiesNodeProperties = () => {
+const OpenQuestionNodeProperties = () => {
   const { getValues, setValue, unregister } = useFormContext();
   const toast = useToast();
   // todo: unregister the parameters not used ->
@@ -18,8 +18,7 @@ const OpenQuestionNodePropertiesNodeProperties = () => {
       <div>
         <b>Activity description</b>
         <br />
-        In this activity learners will have to complete a sentence with the
-        appropriate word or phrase
+        In this activity learners will answer to an Open Question
       </div>
       <br />
       <NodeProperties />
