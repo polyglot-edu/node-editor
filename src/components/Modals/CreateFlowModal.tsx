@@ -95,7 +95,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             title: title,
             description: description,
             tags: tags,
-            publish: publish
+            publish: publish,
           };
           response = await API.createNewFlow(base_Flow);
           break;
