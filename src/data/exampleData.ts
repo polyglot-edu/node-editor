@@ -56,7 +56,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
       data: {
         question: 'domandona',
         correctAnswers: ['rispostona'],
-        aiQuestion: false,
+        isAnswerCorrect: [true],
       },
       reactFlow: {
         id: UUIDv4(),
