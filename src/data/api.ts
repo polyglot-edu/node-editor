@@ -132,6 +132,27 @@ export class APIV2 {
       flow
     );
   }
+  checkPublishFlowAsync(flow: PolyglotFlow): {
+    check: boolean;
+    message?: string;
+  } {
+    //function to check the completeness of the nodes
+    if (!flow.nodes) return { check: false, message: 'Error: no nodes found' };
+    flow.nodes.map((e) => {
+      let missingData = '';
+      if (!e.description) missingData += 'missing description; ';
+      const data = e.data;
+      for (const i in data) {
+        if (i == null) {
+          missingData += 'missing ' + i + ' ; ';
+        }
+      }
+      if (missingData != '')
+        return { check: false, message: 'Error: missing data: ' + missingData };
+    });
+
+    return { check: true };
+  }
   createNewFlow(flow: PolyglotFlowInfo): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   }
