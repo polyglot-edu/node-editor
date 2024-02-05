@@ -133,25 +133,35 @@ export class APIV2 {
     );
   }
   checkPublishFlowAsync(flow: PolyglotFlow): {
+    status: number;
     check: boolean;
     message?: string;
   } {
     //function to check the completeness of the nodes
-    if (!flow.nodes) return { check: false, message: 'Error: no nodes found' };
+    if (!flow.nodes)
+      return { status: 400, check: false, message: 'Error: no nodes found' };
     flow.nodes.map((e) => {
       let missingData = '';
       if (!e.description) missingData += 'missing description; ';
       const data = e.data;
+      console.log('checkpoint controllo');
+      console.log(data);
       for (const i in data) {
-        if (i == null) {
+        if (data.i == null) {
           missingData += 'missing ' + i + ' ; ';
         }
+        console.log(data.i);
       }
       if (missingData != '')
-        return { check: false, message: 'Error: missing data: ' + missingData };
-    });
+        return {
+          status: 400,
+          check: false,
+          message: 'Error: missing data: ' + missingData,
+        };
 
-    return { check: true };
+      console.log(missingData);
+    });
+    return { status: 200, check: true };
   }
   createNewFlow(flow: PolyglotFlowInfo): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);

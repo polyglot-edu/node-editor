@@ -22,7 +22,6 @@ import {
 } from '@chakra-ui/react';
 import Router from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
 import brandLogo from '../../public/solo_logo.png';
 import useStore from '../../store';
 import { useHasHydrated } from '../../utils/utils';
@@ -31,14 +30,13 @@ import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
-import PublishButton from './PublishButton';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
+  publishFlow: () => Promise<boolean>;
 };
 
-export default function EditorNav({ saveFunc }: EditorNavProps) {
+export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   const hydrated = useHasHydrated();
-  const prova = useFormContext();
   const [
     updateFlowInfo,
     checkSave,
@@ -57,6 +55,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     state.forwardAction,
   ]);
   const [saveLoading, setSaveLoading] = useState(false);
+  const [publishLoading, setPublishLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenRun,
@@ -125,8 +124,19 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             }}
             icon={<CopyIcon w={6} h={6} color="blue.500" />}
             isLoading={saveLoading}
-          />
-          <PublishButton />
+          /><ActionButton
+          label="Publish"
+          disabled={hydrated ? !checkSave : true}
+          onClick={async () => {
+            setPublishLoading(true);
+            const x = await publishFlow();
+            console.log(x);
+            setPublishLoading(false);
+            return;
+          }}
+          icon={<ArrowUpIcon w={6} h={6} color="blue.500" />}
+          isLoading={publishLoading}
+        />
           <DropDown
             name="File"
             options={[
