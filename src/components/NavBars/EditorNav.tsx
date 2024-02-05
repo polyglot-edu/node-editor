@@ -124,19 +124,20 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             }}
             icon={<CopyIcon w={6} h={6} color="blue.500" />}
             isLoading={saveLoading}
-          /><ActionButton
-          label="Publish"
-          disabled={hydrated ? !checkSave : true}
-          onClick={async () => {
-            setPublishLoading(true);
-            const x = await publishFlow();
-            console.log(x);
-            setPublishLoading(false);
-            return;
-          }}
-          icon={<ArrowUpIcon w={6} h={6} color="blue.500" />}
-          isLoading={publishLoading}
-        />
+          />
+          <ActionButton
+            label="Publish"
+            disabled={hydrated ? !checkSave : true}
+            onClick={async () => {
+              setPublishLoading(true);
+              const x = await publishFlow();
+              console.log(x);
+              setPublishLoading(false);
+              return;
+            }}
+            icon={<ArrowUpIcon w={6} h={6} color="blue.500" />}
+            isLoading={publishLoading}
+          />
           <DropDown
             name="File"
             options={[

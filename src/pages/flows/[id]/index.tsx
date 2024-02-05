@@ -130,7 +130,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             position: 'bottom-left',
             isClosable: true,
           });
-          return false;
+        return false;
       }
     } catch (err) {
       outputToast &&
@@ -142,7 +142,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
           position: 'bottom-left',
           isClosable: true,
         });
-        return false;
+      return false;
     }
   };
 
@@ -218,7 +218,13 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
 
   return (
     <>
-      {!loading && <FlowEditor mode={'write'} saveFlow={saveFlow} publishFlow={publishFlow}/>}
+      {!loading && (
+        <FlowEditor
+          mode={'write'}
+          saveFlow={saveFlow}
+          publishFlow={publishFlow}
+        />
+      )}
 
       {/* if is error */}
       <Modal

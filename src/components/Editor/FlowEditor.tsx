@@ -48,7 +48,11 @@ type FlowEditorProps = {
 
 const deleteKeyCodes = ['Backspace', 'Delete'];
 
-const FlowEditor = ({ saveFlow, publishFlow, onSelectionChange }: FlowEditorProps) => {
+const FlowEditor = ({
+  saveFlow,
+  publishFlow,
+  onSelectionChange,
+}: FlowEditorProps) => {
   const {
     getNodes,
     getEdges,
@@ -221,7 +225,7 @@ const FlowEditor = ({ saveFlow, publishFlow, onSelectionChange }: FlowEditorProp
 
   return (
     <Flex direction={'column'} h="100vh">
-      <EditorNav saveFunc={saveFlow} publishFlow={publishFlow}/>
+      <EditorNav saveFunc={saveFlow} publishFlow={publishFlow} />
       <Flex h={'full'} overflow="hidden">
         <ReactFlow
           // nodes setup
