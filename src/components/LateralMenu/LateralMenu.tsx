@@ -73,6 +73,7 @@ const listImplementedNodes = [
   'SummaryNode',
   'codingQuestionNode',
   'openQuestionNode',
+  'PromptEngineeringNode',
 ];
 export type LateralMenuProps = {
   isOpen: boolean;
