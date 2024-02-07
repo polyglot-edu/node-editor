@@ -105,7 +105,6 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
           });
         return false;
       }
-
       const response = await API.checkPublishFlowAsync(flow);
       if (response.check) {
         storeState.setLastSavedAction();
@@ -119,6 +118,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
         if (returnPath) router.push(returnPath);
+        //setValue publish->true
         return true;
       } else {
         outputToast &&
@@ -130,6 +130,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             position: 'bottom-left',
             isClosable: true,
           });
+        console.log(response.message);
         return false;
       }
     } catch (err) {

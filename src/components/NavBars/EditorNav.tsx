@@ -130,8 +130,12 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             disabled={hydrated ? !checkSave : true}
             onClick={async () => {
               setPublishLoading(true);
-              const x = await publishFlow();
-              console.log(x);
+              const published = await publishFlow();
+              if (published) {
+                //setValue('publish', true);
+                await saveFunc();
+              }
+              console.log(published);
               setPublishLoading(false);
               return;
             }}

@@ -144,13 +144,10 @@ export class APIV2 {
       let missingData = '';
       if (!e.description) missingData += 'missing description; ';
       const data = e.data;
-      console.log('checkpoint controllo');
-      console.log(data);
       for (const i in data) {
-        if (data.i == null) {
+        if (data[i] == null) {
           missingData += 'missing ' + i + ' ; ';
         }
-        console.log(data.i);
       }
       if (missingData != '')
         return {
@@ -158,8 +155,6 @@ export class APIV2 {
           check: false,
           message: 'Error: missing data: ' + missingData,
         };
-
-      console.log(missingData);
     });
     return { status: 200, check: true };
   }
