@@ -66,14 +66,12 @@ const configAssessment = [
 const listImplementedNodes = [
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
+  'OpenQuestionNode',
   'TrueFalseNode',
   'ReadMaterialNode',
-  'abstractNode',
   'WatchVideoNode',
   'SummaryNode',
   'codingQuestionNode',
-  'openQuestionNode',
-  'PromptEngineeringNode',
 ];
 export type LateralMenuProps = {
   isOpen: boolean;
@@ -157,7 +155,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                                 xl: '14px',
                               }}
                               onMouseOver={() =>
-                                listImplementedNodes.includes(nodes.index)
+                                true
                                   ? document
                                       .getElementById(nodes.key)
                                       ?.setAttribute(
@@ -177,17 +175,11 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                                   ?.removeAttribute('style')
                               }
                               onDragStart={(event) =>
-                                listImplementedNodes.includes(nodes.index)
-                                  ? onDragStart(event, nodes.index)
-                                  : null
+                                true ? onDragStart(event, nodes.index) : null
                               }
-                              draggable={
-                                listImplementedNodes.includes(nodes.index)
-                                  ? true
-                                  : false
-                              }
+                              draggable={true ? true : false}
                               title={
-                                listImplementedNodes.includes(nodes.index)
+                                true
                                   ? 'Drag the new Node type'
                                   : 'Node type not implemented yet'
                               }
@@ -251,7 +243,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                             className="nodeItem"
                             fontSize={{ base: '10px', md: '12px', xl: '14px' }}
                             onMouseOver={() =>
-                              listImplementedNodes.includes(nodes.index)
+                              true
                                 ? document
                                     .getElementById(nodes.key)
                                     ?.setAttribute(
@@ -271,17 +263,11 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                                 ?.removeAttribute('style')
                             }
                             onDragStart={(event) =>
-                              listImplementedNodes.includes(nodes.index)
-                                ? onDragStart(event, nodes.index)
-                                : null
+                              true ? onDragStart(event, nodes.index) : null
                             }
-                            draggable={
-                              listImplementedNodes.includes(nodes.index)
-                                ? true
-                                : false
-                            }
+                            draggable={true ? true : false}
                             title={
-                              listImplementedNodes.includes(nodes.index)
+                              true
                                 ? 'Drag the new Node type'
                                 : 'Node type not implemented yet'
                             }
@@ -309,3 +295,4 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
 };
 
 export default LateralMenu;
+
