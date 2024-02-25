@@ -11,7 +11,7 @@ const LessonTextNodeProperties = () => {
         the right side.
       </div>
       <br />
-      <NodeProperties />
+      <NodeProperties platform={["WebApp"]}/>
       <MarkDownField label="Text" name="data.text" />
     </>
   );

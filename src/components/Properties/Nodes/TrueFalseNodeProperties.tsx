@@ -12,7 +12,7 @@ const TrueFalseNodeProperties = () => {
         questions
       </div>
       <br />
-      <NodeProperties />
+      <NodeProperties platform={["WebApp"]}/>
       <TextField label="Instructions" name="data.instructions" isTextArea />
       <span style={{ float: 'right' }}>
         <TextField

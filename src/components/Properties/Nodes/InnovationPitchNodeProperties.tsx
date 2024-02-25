@@ -7,7 +7,7 @@ const InnovationPitchNodeProperties = () => {
   return (
     <>
       <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
-      <NodeProperties />
+      <NodeProperties platform={["WebApp"]}/>
       <MarkDownField label="Instructions" name="data.guidelines" />
       <MarkDownField label="Text" name="data.text" />
       <TextField label="URL" name="data.link" />

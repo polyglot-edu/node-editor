@@ -22,7 +22,7 @@ const OpenQuestionNodeProperties = () => {
         In this activity learners will answer to an Open Question
       </div>
       <br />
-      <NodeProperties />
+      <NodeProperties platform={["WebApp"]}/>
       <Button
         marginBottom={'5px'}
         id="buttonAI"
@@ -98,18 +98,6 @@ const OpenQuestionNodeProperties = () => {
             }
           />
         </Flex>
-        <EnumField
-          label="Question type"
-          name="data.questionType"
-          constraints={{ valueAsNumber: true }}
-          options={
-            <>
-              <option value={0} defaultChecked>
-                Open
-              </option>
-            </>
-          }
-        />
         <TextField label="Source material" name="data.text" />
         <Button
           marginBottom={'5px'}

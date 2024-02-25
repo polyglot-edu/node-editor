@@ -12,7 +12,7 @@ const CollaborativeModelingNodeProperties = () => {
         appropriate word or phrase
       </div>
       <br />
-      <NodeProperties />
+      <NodeProperties platform={["WebApp"]}/>
       <MarkDownField label="Question" name="data.question" />
       <ArrayField
         label="Correct Answers"

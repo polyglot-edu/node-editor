@@ -12,7 +12,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
         multiple options provided
       </div>
       <br />
-      <NodeProperties />
+      <NodeProperties platform={["WebApp", "VSCode"]}/>
       <TextField label="Question" name="data.question" isTextArea />
       <MultipleChoiceField
         label="Choices"
