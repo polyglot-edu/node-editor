@@ -22,7 +22,7 @@ const OpenQuestionNodeProperties = () => {
         In this activity learners will answer to an Open Question
       </div>
       <br />
-      <NodeProperties platform={["WebApp"]}/>
+      <NodeProperties platform={['WebApp']} />
       <Button
         marginBottom={'5px'}
         id="buttonAI"

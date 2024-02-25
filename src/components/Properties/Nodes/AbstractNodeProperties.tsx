@@ -20,7 +20,7 @@ const AbstractNodeProperties = () => {
 
   return (
     <>
-      <NodeProperties platform={["VSCode", "WebApp"]}/>
+      <NodeProperties platform={['VSCode', 'WebApp']} />
       <ConceptBuilderModal isOpen={isOpen} onClose={onClose} />
       <Button mt={4} leftIcon={<MdBuild />} onClick={onOpen}>
         Concept builder

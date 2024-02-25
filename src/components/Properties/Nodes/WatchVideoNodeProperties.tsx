@@ -10,7 +10,7 @@ const WatchVideoNodeProperties = () => {
         In this activity learners will be given a link to watch
       </div>
       <br />
-      <NodeProperties platform={["WebApp"]}/>
+      <NodeProperties platform={['WebApp']} />
       <TextField label="URL" name="data.link" />
     </>
   );

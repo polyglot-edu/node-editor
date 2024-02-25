@@ -13,7 +13,7 @@ const SummaryNodeProperties = () => {
         document
       </div>
       <br />
-      <NodeProperties platform={["WebApp"]}/>
+      <NodeProperties platform={['WebApp']} />
       <MarkDownField label="Text" name="data.text" />
       <TextField label="URL" name="data.link" />
       <Toggle label="Learners upload?" />

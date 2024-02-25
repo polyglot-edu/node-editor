@@ -12,7 +12,7 @@ const AnalyzingPlottingDataNodeProperties = () => {
         appropriate word or phrase
       </div>
       <br />
-      <NodeProperties platform={["WebApp"]}/>
+      <NodeProperties platform={['WebApp']} />
       <MarkDownField label="Question" name="data.question" />
       <ArrayField
         label="Correct Answers"

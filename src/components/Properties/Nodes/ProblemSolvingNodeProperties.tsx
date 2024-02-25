@@ -7,7 +7,7 @@ const ProblemSolvingNodeProperties = () => {
   return (
     <>
       <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
-      <NodeProperties platform={["WebApp"]}/>
+      <NodeProperties platform={['WebApp']} />
       <MarkDownField label="Text" name="data.text" />
       <TextField label="URL" name="data.link" />
       <Toggle label="Learners upload?" />
