@@ -155,7 +155,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                                 xl: '14px',
                               }}
                               onMouseOver={() =>
-                                true
+                                listImplementedNodes.includes(nodes.index)
                                   ? document
                                       .getElementById(nodes.key)
                                       ?.setAttribute(
