@@ -15,7 +15,7 @@ const PromptEngineeringNodeProperties = () => {
         exercise
       </div>
       <br />
-      <NodeProperties />
+      <NodeProperties platform={['WebApp']} />
       <MarkDownField label="Question" name="data.question" />
       <CodeField
         label="Template code"

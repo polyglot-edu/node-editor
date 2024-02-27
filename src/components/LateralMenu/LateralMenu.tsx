@@ -66,13 +66,12 @@ const configAssessment = [
 const listImplementedNodes = [
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
+  'OpenQuestionNode',
   'TrueFalseNode',
   'ReadMaterialNode',
-  'abstractNode',
   'WatchVideoNode',
   'SummaryNode',
   'codingQuestionNode',
-  'OpenQuestionNode',
 ];
 export type LateralMenuProps = {
   isOpen: boolean;

@@ -13,6 +13,7 @@ const OpenQuestionNodeProperties = () => {
   const toast = useToast();
   // todo: unregister the parameters not used ->
   //    if aiQuestion==true unregister(data.correctAnswers[]) else unregister(data.language,...)
+  //<option value={2}>Application of Skills</option> removed till confirmation
   return (
     <>
       <div>
@@ -21,7 +22,7 @@ const OpenQuestionNodeProperties = () => {
         In this activity learners will answer to an Open Question
       </div>
       <br />
-      <NodeProperties />
+      <NodeProperties platform={['WebApp']} />
       <Button
         marginBottom={'5px'}
         id="buttonAI"
@@ -36,7 +37,7 @@ const OpenQuestionNodeProperties = () => {
           document.getElementById('buttonManually')?.removeAttribute('hidden');
         }}
       >
-        Form to generate the question with AI
+        Create with AI
       </Button>
       <Button
         marginBottom={'5px'}
@@ -52,12 +53,12 @@ const OpenQuestionNodeProperties = () => {
           document.getElementById('buttonAI')?.removeAttribute('hidden');
         }}
       >
-        Form to create the question manually
+        Create manually
       </Button>
       <div id="manualQuestion" hidden={getValues('data.aiQuestion')}>
         <MarkDownField label="Question" name="data.question" />
         <ArrayField
-          label="Correct Answers"
+          label="Correct Answers/validation material"
           name="data.correctAnswers"
           option="Answer"
         />
@@ -92,30 +93,12 @@ const OpenQuestionNodeProperties = () => {
                   Factual Knowledge
                 </option>
                 <option value={1}>Understanding of Concepts</option>
-                <option value={2}>Application of Skills</option>
                 <option value={3}>Analysys And Evaluation</option>
               </>
             }
           />
         </Flex>
-        <EnumField
-          label="Question type"
-          name="data.questionType"
-          constraints={{ valueAsNumber: true }}
-          options={
-            <>
-              <option value={0} defaultChecked>
-                Open
-              </option>
-              <option value={1}>Short Answer</option>
-              <option value={2}>TrueFalse</option>
-            </>
-          }
-        />
-        <TextField
-          label="Material for the AI Question generation"
-          name="data.text"
-        />
+        <TextField label="Source material" name="data.text" />
         <Button
           marginBottom={'5px'}
           marginTop={'5px'}
@@ -176,7 +159,7 @@ const OpenQuestionNodeProperties = () => {
           Generate question
         </Button>
         <MarkDownField
-          label="Question generated for the AI Question generation (editable)"
+          label="Generated question (editable)"
           name="data.questionGenerated"
         />
       </div>

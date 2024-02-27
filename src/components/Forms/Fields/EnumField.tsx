@@ -14,9 +14,11 @@ export type EnumFieldProps = {
   align?: string;
   options: JSX.Element;
   constraints?: RegisterOptions;
+  hidden?: boolean;
 };
 
 const EnumField = ({
+  hidden,
   label,
   name,
   options,
@@ -27,7 +29,7 @@ const EnumField = ({
   const { error } = getFieldState(name);
 
   return (
-    <Box p={2} width={width}>
+    <Box p={2} width={width} hidden={hidden}>
       <FormControl isInvalid={error !== undefined}>
         <Select {...register(name, constraints)} borderColor={'grey'}>
           {options}

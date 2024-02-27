@@ -7,7 +7,7 @@ const ImageEvaluationNodeProperties = () => {
   return (
     <>
       <div style={{ color: 'red' }}>ATTENTION NODE NOT IMPLEMENTED YET!</div>
-      <NodeProperties />
+      <NodeProperties platform={['WebApp']} />
       <TextField label="URL" name="data.link" />
       <MarkDownField label="Question" name="data.question" />
       <MultipleChoiceField label="Answers" name="data.answers" />
