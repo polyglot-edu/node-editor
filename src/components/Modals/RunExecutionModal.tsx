@@ -35,7 +35,7 @@ const RunExecutionModal = ({ isOpen, onClose, flow }: ModelTemplateProps) => {
           <LinkBox>
             <Button colorScheme="blue">Download</Button>
             <LinkOverlay
-              href={`${process.env.BACK_URL}/api/flows/${flow._id}/run`}
+              href={`${process.env.BACK_URL}/api/flows/${flow._id}/runFirst`}
             />
           </LinkBox>
         </ModalFooter>
