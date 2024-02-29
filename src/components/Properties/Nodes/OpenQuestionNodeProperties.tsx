@@ -116,7 +116,7 @@ const OpenQuestionNodeProperties = () => {
               if (!text) {
                 setValue('data.questionGenerated', 'No text given');
                 //
-                throw 'no text given'
+                throw 'no text given';
               }
               //block for testing purpose
               const description = getValues('description');
