@@ -254,7 +254,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     },
     title: 'Example Flow #1',
     description: 'This is an example flow',
-    publish: 'false',
+    publish: false,
     tags: [],
     nodes: flowNodes,
     edges: flowEdges,
