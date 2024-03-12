@@ -140,22 +140,43 @@ export class APIV2 {
     //function to check the completeness of the nodes
     if (!flow.nodes)
       return { status: 400, check: false, message: 'Error: no nodes found' };
+    let missingData = '';
+    let startingNode = 0; //need to be == 1 at the end of the check
     flow.nodes.map((e) => {
-      let missingData = '';
-      if (!e.description) missingData += 'missing description; ';
+      let infoCheck = true;
+      if (!e.description) infoCheck = false;
       const data = e.data;
       for (const i in data) {
-        if (data[i] == null) {
-          missingData += 'missing ' + i + ' ; ';
+        if (!data[i] || data[i][0] == null) {
+          infoCheck = false;
         }
       }
-      if (missingData != '')
-        return {
-          status: 400,
-          check: false,
-          message: 'Error: missing data: ' + missingData,
-        };
+      if (!infoCheck) {
+        missingData += e.title + '; ';
+        return;
+      }
+      //if the node has all the info, check the edges-> for each node check if there are an edges with his id as source/target
+      let edgeCheck = false;
+      flow.edges.map((a) => {
+        if (a.reactFlow.target == e._id) edgeCheck = true; //meaning at least one edges has this node as target
+      });
+      if (edgeCheck) startingNode++; //if no edges has this node as target, it means it's a starting edge
     });
+    if (missingData != '')
+      return {
+        status: 400,
+        check: false,
+        message: ' Error: missing data for nodes: ' + missingData,
+      };
+    if (startingNode != 1)
+      return {
+        status: 400,
+        check: false,
+        message:
+          ' Error: detected ' +
+          startingNode +
+          ' starting nodes, exacly 1 node must has no incoming edges',
+      };
     return { status: 200, check: true };
   }
   createNewFlow(flow: PolyglotFlowInfo): Promise<AxiosResponse> {
