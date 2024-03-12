@@ -145,7 +145,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
               <ArrowUpIcon
                 w={6}
                 h={6}
-                color={getValues('publish') ? 'blue.500' : 'red.500'}
+                //color={getValues('publish') ? 'blue.500' : 'red.500'}
               />
             }
             isLoading={publishLoading}
