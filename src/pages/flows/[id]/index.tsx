@@ -118,6 +118,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
         if (returnPath) router.push(returnPath);
+
         //setValue publish->true
         return true;
       } else {
@@ -126,7 +127,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             title: 'Flow not published',
             description: 'Something is off with your flow!' + response.message,
             status: 'warning',
-            duration: 3000,
+            duration: 4000,
             position: 'bottom-left',
             isClosable: true,
           });

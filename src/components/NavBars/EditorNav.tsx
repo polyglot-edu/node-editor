@@ -22,6 +22,7 @@ import {
 } from '@chakra-ui/react';
 import Router from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
+import { useForm } from 'react-hook-form';
 import brandLogo from '../../public/solo_logo.png';
 import useStore from '../../store';
 import { useHasHydrated } from '../../utils/utils';
@@ -56,6 +57,8 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   ]);
   const [saveLoading, setSaveLoading] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
+  const { setValue, getValues } = useForm();
+  //const [publish, setPublish] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenRun,
@@ -119,6 +122,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             disabled={hydrated ? !checkSave : true}
             onClick={async () => {
               setSaveLoading(true);
+              setValue('publish', false);
               await saveFunc();
               setSaveLoading(false);
             }}
@@ -131,15 +135,19 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             onClick={async () => {
               setPublishLoading(true);
               const published = await publishFlow();
-              if (published) {
-                //setValue('publish', true);
-                await saveFunc();
-              }
+              setValue('publish', published);
               console.log(published);
+              if (published) await saveFunc();
               setPublishLoading(false);
               return;
             }}
-            icon={<ArrowUpIcon w={6} h={6} color="blue.500" />}
+            icon={
+              <ArrowUpIcon
+                w={6}
+                h={6}
+                color={getValues('publish') ? 'blue.500' : 'red.500'}
+              />
+            }
             isLoading={publishLoading}
           />
           <DropDown
