@@ -11,7 +11,9 @@ const NodeProperties = ({ platform }: NodePropertiesProps) => {
     <>
       {platform.map((p) => (
         // eslint-disable-next-line react/jsx-key
-        <option value={p} defaultChecked> {p} </option>
+        <option value={p} defaultChecked>
+          {p}
+        </option>
       ))}
     </>
   );
@@ -46,9 +48,7 @@ const NodeProperties = ({ platform }: NodePropertiesProps) => {
           label="Platform"
           name="platform"
           width="50%"
-          options={
-            option
-          }
+          options={option}
         />
       </Flex>
     </>

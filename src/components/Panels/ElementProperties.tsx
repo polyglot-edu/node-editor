@@ -137,7 +137,7 @@ const ElementProperties = ({
       </Box>
       <Box hidden={editorOpen} width={'500px'}>
         <FormProvider {...methods}>
-          {hydrated && <ElementProperty platform={['']}/>}
+          {hydrated && <ElementProperty platform={['']} />}
         </FormProvider>
 
         {children}
