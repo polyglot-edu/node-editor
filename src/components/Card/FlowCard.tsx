@@ -74,7 +74,8 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
               {flow.description}
             </Text>
             <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
-              In this Learning Path there are: {flow.nodes.length} nodes
+              In this Learning Path there are: {flow.nodes.length} learning
+              activities
             </Text>
           </CardBody>
 
