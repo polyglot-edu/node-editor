@@ -12,6 +12,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
+import { store } from 'fp-ts';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -20,7 +21,6 @@ import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
 import { PolyglotFlow } from '../../../types/polyglotElements';
 import auth0 from '../../../utils/auth0';
-import { store } from 'fp-ts';
 
 type FlowIndexProps = {
   accessToken: string | undefined;
@@ -108,7 +108,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
         return false;
       }
       const response = await API.checkPublishFlowAsync(flow);
-      if (response.status==200) {
+      if (response.status == 200) {
         storeState.setLastSavedAction();
         outputToast &&
           toast({
@@ -120,10 +120,10 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
         if (returnPath) router.push(returnPath);
-        
+
         storeState.updateFlowInfo(response.data);
         return true;
-      } else if(response.status==300){
+      } else if (response.status == 300) {
         outputToast &&
           toast({
             title: 'Flow not published',

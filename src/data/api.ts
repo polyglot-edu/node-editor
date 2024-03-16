@@ -183,14 +183,14 @@ export class APIV2 {
       `/api/flows/${flow._id}/publish`,
       flow
     );
-    
+
     console.log(response.data);
 
     return {
       status: response.status,
       check: true,
       message: response.statusText,
-      data: response.data
+      data: response.data,
     };
   }
   createNewFlow(flow: PolyglotFlowInfo): Promise<AxiosResponse> {
