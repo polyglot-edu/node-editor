@@ -77,7 +77,6 @@ const FlowEditor = ({
   }));
   const { resetSelectedElements } = useStoreApi().getState();
   const { project } = useReactFlow();
-
   // SETUP context menu
   const selectedElement = getSelectedElement();
 

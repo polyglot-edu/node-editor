@@ -132,14 +132,15 @@ export class APIV2 {
       flow
     );
   }
-  checkPublishFlowAsync(flow: PolyglotFlow): {
+  async checkPublishFlowAsync(flow: PolyglotFlow): Promise<{
     status: number;
     check: boolean;
     message?: string;
-  } {
+    data?: any;
+  }> {
     //function to check the completeness of the nodes
     if (!flow.nodes)
-      return { status: 400, check: false, message: 'Error: no nodes found' };
+      return { status: 300, check: false, message: 'Error: no nodes found' };
     let missingData = '';
     let startingNode = 0; //need to be == 1 at the end of the check
     flow.nodes.map((e) => {
@@ -164,20 +165,33 @@ export class APIV2 {
     });
     if (missingData != '')
       return {
-        status: 400,
+        status: 300,
         check: false,
         message: ' Error: missing data for nodes: ' + missingData,
       };
     if (startingNode != 1)
       return {
-        status: 400,
+        status: 300,
         check: false,
         message:
           ' Error: detected ' +
           startingNode +
           ' starting nodes, exacly 1 node must has no incoming edges',
       };
-    return { status: 200, check: true };
+
+    const response = await this.axios.put<{}, AxiosResponse, PolyglotFlow>(
+      `/api/flows/${flow._id}/publish`,
+      flow
+    );
+    
+    console.log(response.data);
+
+    return {
+      status: response.status,
+      check: true,
+      message: response.statusText,
+      data: response.data
+    };
   }
   createNewFlow(flow: PolyglotFlowInfo): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);

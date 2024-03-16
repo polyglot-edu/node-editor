@@ -20,6 +20,7 @@ import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
 import { PolyglotFlow } from '../../../types/polyglotElements';
 import auth0 from '../../../utils/auth0';
+import { store } from 'fp-ts';
 
 type FlowIndexProps = {
   accessToken: string | undefined;
@@ -65,6 +66,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
         if (returnPath) router.push(returnPath);
+        storeState.updateFlowInfo(response.data);
       } else {
         outputToast &&
           toast({
@@ -106,7 +108,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
         return false;
       }
       const response = await API.checkPublishFlowAsync(flow);
-      if (response.check) {
+      if (response.status==200) {
         storeState.setLastSavedAction();
         outputToast &&
           toast({
@@ -118,20 +120,20 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
         if (returnPath) router.push(returnPath);
-
-        //setValue publish->true
+        
+        storeState.updateFlowInfo(response.data);
         return true;
-      } else {
+      } else if(response.status==300){
         outputToast &&
           toast({
             title: 'Flow not published',
-            description: 'Something is off with your flow!' + response.message,
+            description: 'Something is off with your flow!' + response?.message,
             status: 'warning',
             duration: 4000,
             position: 'bottom-left',
             isClosable: true,
           });
-        console.log(response.message);
+        console.log(response?.message);
         return false;
       }
     } catch (err) {
@@ -146,6 +148,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
         });
       return false;
     }
+    return false;
   };
 
   useEffect(() => {
