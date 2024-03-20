@@ -2,6 +2,7 @@ import {
   ArrowBackIcon,
   ArrowForwardIcon,
   ArrowRightIcon,
+  ArrowUpIcon,
   CloseIcon,
   CopyIcon,
   EditIcon,
@@ -31,9 +32,10 @@ import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
+  publishFlow: () => Promise<boolean>;
 };
 
-export default function EditorNav({ saveFunc }: EditorNavProps) {
+export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   const hydrated = useHasHydrated();
   const [
     updateFlowInfo,
@@ -43,6 +45,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     flow,
     backAction,
     forwardAction,
+    getPublished,
   ] = useStore((state) => [
     state.updateFlowInfo,
     state.checkSave(),
@@ -51,8 +54,16 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     state.getFlow(),
     state.backAction,
     state.forwardAction,
+    state.published,
   ]);
+
+  let color = getPublished() ? 'green.500' : 'red.500';
+  function setColor(check: boolean) {
+    color = check ? 'green.500' : 'red.500';
+  }
+
   const [saveLoading, setSaveLoading] = useState(false);
+  const [publishLoading, setPublishLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenRun,
@@ -117,10 +128,24 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             onClick={async () => {
               setSaveLoading(true);
               await saveFunc();
+              setColor(false);
               setSaveLoading(false);
             }}
             icon={<CopyIcon w={6} h={6} color="blue.500" />}
             isLoading={saveLoading}
+          />
+          <ActionButton
+            label="Publish"
+            disabled={hydrated ? !checkSave : true}
+            onClick={async () => {
+              setPublishLoading(true);
+              const published = await publishFlow();
+              setColor(published);
+              setPublishLoading(false);
+              return;
+            }}
+            icon={<ArrowUpIcon w={6} h={6} color={color} />}
+            isLoading={publishLoading}
           />
           <DropDown
             name="File"

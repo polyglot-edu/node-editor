@@ -12,6 +12,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
+import { store } from 'fp-ts';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -65,6 +66,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
         if (returnPath) router.push(returnPath);
+        storeState.updateFlowInfo(response.data);
       } else {
         outputToast &&
           toast({
@@ -87,6 +89,66 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
           isClosable: true,
         });
     }
+  };
+
+  const publishFlow = async (outputToast = true, returnPath?: string) => {
+    try {
+      const storeState = useStore.getState();
+      const flow = storeState.getFlow();
+      if (!flow) {
+        outputToast &&
+          toast({
+            title: 'No flow found',
+            description: 'Try do some new changes',
+            status: 'warning',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+        return false;
+      }
+      const response = await API.checkPublishFlowAsync(flow);
+      if (response.status == 200) {
+        storeState.setLastSavedAction();
+        outputToast &&
+          toast({
+            title: 'Flow published',
+            description: 'The publication was successful',
+            status: 'success',
+            duration: 3000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+        if (returnPath) router.push(returnPath);
+
+        storeState.updateFlowInfo(response.data);
+        return true;
+      } else if (response.status == 300) {
+        outputToast &&
+          toast({
+            title: 'Flow not published',
+            description: 'Something is off with your flow!' + response?.message,
+            status: 'warning',
+            duration: 4000,
+            position: 'bottom-left',
+            isClosable: true,
+          });
+        console.log(response?.message);
+        return false;
+      }
+    } catch (err) {
+      outputToast &&
+        toast({
+          title: 'Internal Error',
+          description: 'Try later',
+          status: 'error',
+          duration: 3000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
+      return false;
+    }
+    return false;
   };
 
   useEffect(() => {
@@ -161,7 +223,13 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
 
   return (
     <>
-      {!loading && <FlowEditor mode={'write'} saveFlow={saveFlow} />}
+      {!loading && (
+        <FlowEditor
+          mode={'write'}
+          saveFlow={saveFlow}
+          publishFlow={publishFlow}
+        />
+      )}
 
       {/* if is error */}
       <Modal

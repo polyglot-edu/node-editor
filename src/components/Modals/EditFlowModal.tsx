@@ -49,6 +49,7 @@ const EditFlowModal = ({
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [tagName, setTagName] = useState('');
+  const [publish, setPublish] = useState(false);
   const [colorTag, setColorTag] = useState(colors[0]);
   const [tags, setTags] = useState([...flow.tags]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
@@ -200,6 +201,7 @@ const EditFlowModal = ({
                 title: title,
                 description: description,
                 tags: tags,
+                publish: publish,
               });
               onClose();
             }}
