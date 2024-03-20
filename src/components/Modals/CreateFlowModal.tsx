@@ -120,7 +120,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
           isClosable: true,
         });
       }
-      router.push('/flows/' + response.data.id);
+      router.push('/flows/' + response.data._id);
     } catch (error) {
       if ((error as Error).name === 'SyntaxError') {
         toast({
