@@ -1,5 +1,6 @@
 import { Button, Flex, useToast } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
+import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../../data/api';
 import ArrayField from '../../Forms/Fields/ArrayField';
@@ -9,6 +10,8 @@ import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
 const OpenQuestionNodeProperties = () => {
+  const [generatingLoading, setGeneratingLoading] = useState(false);
+
   const { getValues, setValue, unregister } = useFormContext();
   const toast = useToast();
   // todo: unregister the parameters not used ->
@@ -104,6 +107,7 @@ const OpenQuestionNodeProperties = () => {
           marginTop={'5px'}
           onClick={async () => {
             try {
+              setGeneratingLoading(true);
               const text = getValues('data.text');
               const language = getValues('data.language');
               const type = getValues('data.questionType');
@@ -112,12 +116,12 @@ const OpenQuestionNodeProperties = () => {
               if (!text) {
                 setValue('data.questionGenerated', 'No text given');
                 //
-                return;
+                throw 'no text given';
               }
               //block for testing purpose
               const description = getValues('description');
               console.log(description);
-              if (description != 'enable') return;
+              if (description != 'enable') throw ' Not enabled';
 
               const response: AxiosResponse = await API.generateNewAIQuestion({
                 language: language,
@@ -133,7 +137,9 @@ const OpenQuestionNodeProperties = () => {
               const correctAnswers = response.data.substring(pos2 + 15);
               setValue('data.questionGenerated', question);
               setValue('data.possibleAnswer', correctAnswers);
+              setGeneratingLoading(false);
             } catch (error) {
+              setGeneratingLoading(false);
               if ((error as Error).name === 'SyntaxError') {
                 toast({
                   title: 'Invalid syntax',
@@ -155,6 +161,7 @@ const OpenQuestionNodeProperties = () => {
               });
             }
           }}
+          isLoading={generatingLoading}
         >
           Generate question
         </Button>

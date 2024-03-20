@@ -43,6 +43,14 @@ const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
       <path
         className="react-flow__edge-path"
         d={svgPathString}
+        style={{
+          stroke: 'transparent',
+          strokeWidth: '4',
+        }}
+      />
+      <path
+        className="react-flow__edge-path"
+        d={svgPathString}
         markerEnd={markerEnd}
       />
       <EdgeLabelRenderer>
@@ -50,9 +58,10 @@ const ReactFlowSmartBezierEdge = (props: ReactFlowSmartBezierEdgeProps) => {
           style={{
             position: 'absolute',
             background: 'transparent',
+            strokeWidth: '100',
             padding: 10,
             fontSize: 12,
-            transform: `translate(${edgeCenterX - 20}px,${edgeCenterY - 20}px)`,
+            transform: `translate(${edgeCenterX - 15}px,${edgeCenterY - 15}px)`,
           }}
         >
           {label}
