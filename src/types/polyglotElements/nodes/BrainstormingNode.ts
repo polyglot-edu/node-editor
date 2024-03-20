@@ -5,8 +5,10 @@ import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type BrainstormingNodeData = NodeData & {
-  question: string;
-  correctAnswers: string[];
+  goal: string;
+  instructions: string;
+  group: number;
+  collaborativeTool: string;
 };
 
 export type BrainstormingNode = PolyglotNode & {
@@ -23,7 +25,9 @@ polyglotNodeComponentMapping.registerMapping<BrainstormingNode>({
   elementComponent: ReactFlowBrainstormingNode,
   defaultData: {
     ...defaultPolyglotNodeData,
-    question: '',
-    correctAnswers: [''],
+    goal: '',
+    instructions: '',
+    group: 0,
+    collaborativeTool: 'Miroboard',
   },
 });
