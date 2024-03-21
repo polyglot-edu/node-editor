@@ -111,23 +111,22 @@ const OpenQuestionNodeProperties = () => {
               const text = getValues('data.text');
               const language = getValues('data.language');
               const type = getValues('data.questionType');
-              const level = getValues('data.level');
               const category = getValues('data.questionCategory');
               if (!text) {
                 setValue('data.questionGenerated', 'No text given');
                 //
-                throw 'no text given';
+                throw ': No text given';
               }
               //block for testing purpose
               const description = getValues('description');
               console.log(description);
-              if (description != 'enable') throw ' Not enabled';
+              if (description != 'enable') throw ': Not enabled';
 
               const response: AxiosResponse = await API.generateNewAIQuestion({
                 language: language,
                 text: text,
                 type: type,
-                level: level,
+                level: 0,
                 category: category,
                 temperature: 0,
               });

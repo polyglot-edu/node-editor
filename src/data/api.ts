@@ -2,8 +2,9 @@ import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
+  AIMultichoiceType,
+  AIQuestionType,
   polyglotEdgeComponentMapping,
-  PolyglotExecutionNext,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
@@ -311,11 +312,15 @@ export const API = {
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
-  generateNewAIQuestion: (
-    body: PolyglotExecutionNext
-  ): Promise<AxiosResponse> => {
+  generateNewAIQuestion: (body: AIQuestionType): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
       `/QuestionExercise/generateexercise`,
+      body
+    );
+  },
+  generateNewAIMultiChoice: (body: AIMultichoiceType): Promise<AxiosResponse> => {
+    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+      `/QuizExercise/generateexercise`,
       body
     );
   },
