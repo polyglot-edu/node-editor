@@ -58,14 +58,6 @@ const MultipleChoiceQuestionNodeProperties = () => {
       >
         Create manually
       </Button>
-      <div id="manualQuestion" hidden={getValues('data.aiQuestion')}>
-        <TextField label="Question" name="data.question" isTextArea />
-        <MultipleChoiceField
-          label="Choices"
-          name="data.choices"
-          option="Risposta"
-        />
-      </div>
       <div id="aiQuestion" hidden={!getValues('data.aiQuestion')}>
         <Flex>
           <EnumField
@@ -169,7 +161,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
               );
               const answers = response.data.substring(pos3 + 9, pos4 - 2);
               const solution = response.data.substring(pos4 + 10);
-              setValue('data.generatedQuestion', question);
+              setValue('data.question', question);
               //missing to set the correct index true and the others false (setValue('data.', CorrectAnswerIndex);)
               //idea: create an array false and set true the corresponding index, set('data.isChoiceCorrect', array);
               //missing to set the array of answers (setValue('data.choices', answers);)
@@ -203,16 +195,13 @@ const MultipleChoiceQuestionNodeProperties = () => {
         >
           Generate question
         </Button>
-        <MarkDownField
-          label="Generated question (editable)"
-          name="data.question"
-        />
+      </div>
+      <TextField label="Question" name="data.question" isTextArea />
         <MultipleChoiceField
           label="Choices"
           name="data.choices"
           option="Risposta"
         />
-      </div>
     </>
   );
 };
