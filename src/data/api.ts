@@ -318,7 +318,9 @@ export const API = {
       body
     );
   },
-  generateNewAIMultiChoice: (body: AIMultichoiceType): Promise<AxiosResponse> => {
+  generateNewAIMultiChoice: (
+    body: AIMultichoiceType
+  ): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
       `/QuizExercise/generateexercise`,
       body

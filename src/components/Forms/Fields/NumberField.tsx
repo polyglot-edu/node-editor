@@ -40,12 +40,13 @@ const NumberField = ({
               setValue(name, c);
             }}
           />
-          <NumberDecrementStepper 
+          <NumberDecrementStepper
             onClick={() => {
               let c = getValues(name);
               c--;
               setValue(name, c);
-            }}/>
+            }}
+          />
         </NumberInputStepper>
       </NumberInput>
     </Box>
