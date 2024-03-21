@@ -75,9 +75,9 @@ const ArrayField = ({
           <Button
             colorScheme={'red'}
             onClick={() => {
-              const c = [...getValues('data.isQuestionCorrect')];
+              const c = [...getValues('data.isChoiceCorrect')];
               c.splice(index, 1);
-              setValue(`data.isQuestionCorrect`, c);
+              setValue(`data.isChoiceCorrect`, c);
               remove(index);
             }}
           >

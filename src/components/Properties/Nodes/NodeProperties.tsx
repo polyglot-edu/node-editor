@@ -7,16 +7,6 @@ export type NodePropertiesProps = {
 };
 
 const NodeProperties = ({ platform }: NodePropertiesProps) => {
-  const option: JSX.Element = (
-    <>
-      {platform.map((p) => (
-        // eslint-disable-next-line react/jsx-key
-        <option value={p} defaultChecked>
-          {p}
-        </option>
-      ))}
-    </>
-  );
   return (
     <>
       <TextField
@@ -48,7 +38,23 @@ const NodeProperties = ({ platform }: NodePropertiesProps) => {
           label="Platform"
           name="platform"
           width="50%"
-          options={option}
+          options={
+            //bug da fixare: quando apro un nuovo nodo (con un platform option diverso) non viene la piattaforma di defualt
+            //ma cerca di mettere il valore di defualt che trovava prima
+
+            //manca gestione altri campi oltre al primo dell'array =>
+            //  ()=>{ const x:JSX.Element=[];
+            //  platform.forEach(
+            //    (p)=>x.push(<option value={platform[0]}>
+            //    {platform[0]}
+            //    </option>))}
+            // da errore options-> cant have ()=>JSX.Element need Element
+            <>
+              <option value={platform[0]} defaultChecked>
+                {platform[0]}
+              </option>
+            </>
+          }
         />
       </Flex>
     </>

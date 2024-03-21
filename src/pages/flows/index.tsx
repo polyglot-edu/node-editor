@@ -91,7 +91,7 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
         />
         <Tabs pt="3%" onChange={(index) => setCurrentTab(index)}>
           <TabList>
-            <Tab>My Learning Paths: {flows.length}</Tab>
+            <Tab>My Learning Paths</Tab>
             <Tab>All</Tab>
           </TabList>
 
