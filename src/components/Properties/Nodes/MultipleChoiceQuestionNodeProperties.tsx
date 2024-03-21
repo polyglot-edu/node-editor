@@ -197,11 +197,11 @@ const MultipleChoiceQuestionNodeProperties = () => {
         </Button>
       </div>
       <TextField label="Question" name="data.question" isTextArea />
-        <MultipleChoiceField
-          label="Choices"
-          name="data.choices"
-          option="Risposta"
-        />
+      <MultipleChoiceField
+        label="Choices"
+        name="data.choices"
+        option="Risposta"
+      />
     </>
   );
 };
