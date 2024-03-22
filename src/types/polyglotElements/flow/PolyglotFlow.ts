@@ -10,6 +10,7 @@ export type PolyglotFlowInfo = {
   description: string;
   tags: { name: string; color: string }[];
   publish: boolean;
+  platform: string;
 };
 
 export type PolyglotFlow = PolyglotFlowInfo & {
