@@ -151,21 +151,24 @@ const MultipleChoiceQuestionNodeProperties = () => {
                 });
               const pos1 = response.data.search('Question: ');
               const pos2 = response.data.search('CorrectAnswerIndex: ');
-              const pos3 = response.data.search('Answers: ');
+              const pos3 = response.data.search('Answers:');
               const pos4 = response.data.search('Solution: ');
               const question = response.data.substring(pos1 + 10, pos2 - 1);
-              const CorrectAnswerIndex = response.data.substring(
-                pos2 + 20,
-                pos3 - 2
-              );
-
-              const answers = response.data.substring(pos3 + 9, pos4 - 2);
+              const CorrectAnswerIndexes = response.data
+                .substring(pos2 + 20, pos3 - 2)
+                .split(', ')
+                .map(Number);
+              const answers = response.data
+                .substring(pos3 + 9, pos4 - 2)
+                .split('\n');
+              const prova = new Array(answers.length).fill(false);
+              CorrectAnswerIndexes.forEach((element: number) => {
+                prova[element] = true;
+              });
               const solution = response.data.substring(pos4 + 10);
               setValue('data.question', question);
-              //missing to set the correct index true and the others false (setValue('data.', CorrectAnswerIndex);)
-              //idea: create an array false and set true the corresponding index, set('data.isChoiceCorrect', array);
-              //missing to set the array of answers (setValue('data.choices', answers);)
-              //need to create the array first (se filippo mette json è automatico)
+              setValue('data.choices', answers);
+              setValue('data.isChoiceCorrect', prova);
               setValue('data.solution', solution);
               setGeneratingLoading(false);
             } catch (error) {
