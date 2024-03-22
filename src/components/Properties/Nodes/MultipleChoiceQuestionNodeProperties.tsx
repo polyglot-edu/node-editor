@@ -114,7 +114,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
             name="data.n_o_d"
           />
         </Flex>
-        <TextField label="Source material" name="data.text" />
+        <TextField label="Source material" name="data.text" isTextArea />
         <Button
           marginBottom={'5px'}
           marginTop={'5px'}
