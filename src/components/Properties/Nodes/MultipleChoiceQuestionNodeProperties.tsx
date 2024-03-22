@@ -158,7 +158,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
                 pos2 + 20,
                 pos3 - 2
               );
-              
+
               const answers = response.data.substring(pos3 + 9, pos4 - 2);
               const solution = response.data.substring(pos4 + 10);
               setValue('data.question', question);
