@@ -4,7 +4,6 @@ import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../../data/api';
 import EnumField from '../../Forms/Fields/EnumField';
-import MarkDownField from '../../Forms/Fields/MarkDownField';
 import MultipleChoiceField from '../../Forms/Fields/MultipleChoiceField';
 import NumberField from '../../Forms/Fields/NumberField';
 import TextField from '../../Forms/Fields/TextField';
@@ -101,18 +100,18 @@ const MultipleChoiceQuestionNodeProperties = () => {
             name="data.n_o_ca"
           />
           <NumberField
-            defaultValue={1}
-            min={1}
-            max={5}
-            label={'n_o_d'}
-            name="data.n_o_d"
-          />
-          <NumberField
-            label={'nedd'}
+            label={'N° Easy Distractors'}
             name={'data.nedd'}
             defaultValue={1}
             min={1}
             max={5}
+          />
+          <NumberField
+            defaultValue={1}
+            min={1}
+            max={5}
+            label={'N° Distractors'}
+            name="data.n_o_d"
           />
         </Flex>
         <TextField label="Source material" name="data.text" />
@@ -159,6 +158,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
                 pos2 + 20,
                 pos3 - 2
               );
+              
               const answers = response.data.substring(pos3 + 9, pos4 - 2);
               const solution = response.data.substring(pos4 + 10);
               setValue('data.question', question);
