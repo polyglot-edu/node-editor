@@ -10,10 +10,11 @@ export type PolyglotFlowInfo = {
   description: string;
   tags: { name: string; color: string }[];
   publish: boolean;
+  /* to be discussed: do we want to save in the database the last summarized material of the professor? Or we give the tool to be live usage?
   sourceMaterial?: string;
   levelMaterial?: string;
   generatedMaterial?: string;
-  noW?: number;
+  noW?: number;*/
 };
 
 export type PolyglotFlow = PolyglotFlowInfo & {
@@ -30,4 +31,4 @@ export type PolyglotExecutionNext = {
   temperature: number;
 };
 
-export type SummarizerBody = { lesson: string; noW: number; level: string };
+export type SummarizerBody = { lesson: string; noW: string; level: string };
