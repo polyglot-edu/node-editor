@@ -10,6 +10,10 @@ export type PolyglotFlowInfo = {
   description: string;
   tags: { name: string; color: string }[];
   publish: boolean;
+  sourceMaterial?: string;
+  levelMaterial?: string;
+  generatedMaterial?: string;
+  noW?: number;
 };
 
 export type PolyglotFlow = PolyglotFlowInfo & {
@@ -25,3 +29,5 @@ export type PolyglotExecutionNext = {
   category: number;
   temperature: number;
 };
+
+export type SummarizerBody = { lesson: string; noW: number; level: string };
