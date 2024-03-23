@@ -7,7 +7,7 @@ export type NodePropertiesProps = {
 };
 
 const NodeProperties = ({ platform }: NodePropertiesProps) => {
-  if(!platform) platform=[''];
+  if (!platform) platform = [''];
   const option: JSX.Element = (
     <>
       {platform.map((p) => (
