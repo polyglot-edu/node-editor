@@ -3,10 +3,11 @@ import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 
 export type NodePropertiesProps = {
-  platform: string[];
+  platform?: string[];
 };
 
 const NodeProperties = ({ platform }: NodePropertiesProps) => {
+  if(!platform) platform=[''];
   const option: JSX.Element = (
     <>
       {platform.map((p) => (
