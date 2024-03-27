@@ -7,6 +7,7 @@ import {
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
+  SummarizerBody,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -316,6 +317,12 @@ export const API = {
   ): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
       `/QuestionExercise/generateexercise`,
+      body
+    );
+  },
+  summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
+    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+      `/Summarizer/summarizelesson`,
       body
     );
   },

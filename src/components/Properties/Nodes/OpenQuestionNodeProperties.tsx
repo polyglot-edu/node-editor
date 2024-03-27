@@ -12,11 +12,8 @@ import NodeProperties from './NodeProperties';
 const OpenQuestionNodeProperties = () => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
 
-  const { getValues, setValue, unregister } = useFormContext();
+  const { getValues, setValue } = useFormContext();
   const toast = useToast();
-  // todo: unregister the parameters not used ->
-  //    if aiQuestion==true unregister(data.correctAnswers[]) else unregister(data.language,...)
-  //<option value={2}>Application of Skills</option> removed till confirmation
   return (
     <>
       <div>
