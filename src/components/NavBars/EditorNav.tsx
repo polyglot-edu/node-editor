@@ -7,6 +7,7 @@ import {
   CopyIcon,
   EditIcon,
   ExternalLinkIcon,
+  ViewIcon,
 } from '@chakra-ui/icons';
 import {
   Box,
@@ -30,6 +31,7 @@ import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
+import SummarizerModal from '../Modals/SummarizerModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
   publishFlow: () => Promise<boolean>;
@@ -79,6 +81,11 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     isOpen: isOpenSave,
     onOpen: onOpenSave,
     onClose: onCloseSave,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenSummarizer,
+    onOpen: onOpenSummarizer,
+    onClose: onCloseSummarizer,
   } = useDisclosure();
 
   useEffect(() => {
@@ -188,6 +195,12 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
               },
             ]}
           />
+          <ActionButton
+            label="Summarizer Tool"
+            disabled={false}
+            onClick={onOpenSummarizer}
+            icon={<ViewIcon color="blue.500" />}
+          />
           <Spacer />
           <Button
             leftIcon={<CloseIcon />}
@@ -209,12 +222,18 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
       <ExportJsonModal isOpen={isOpen} onClose={onClose} flow={flow} />
       <RunExecutionModal isOpen={isOpenRun} onClose={onCloseRun} flow={flow} />
       {flow && (
-        <EditFlowModal
-          isOpen={isOpenEdit}
-          onClose={onCloseEdit}
-          flow={flow}
-          updateInfo={updateFlowInfo}
-        />
+        <>
+          <EditFlowModal
+            isOpen={isOpenEdit}
+            onClose={onCloseEdit}
+            flow={flow}
+            updateInfo={updateFlowInfo}
+          />
+          <SummarizerModal
+            isOpen={isOpenSummarizer}
+            onClose={onCloseSummarizer}
+          />
+        </>
       )}
       <SaveFlowModal
         isOpen={isOpenSave}
