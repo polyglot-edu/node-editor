@@ -22,13 +22,25 @@ export type PolyglotFlow = PolyglotFlowInfo & {
   edges: PolyglotEdge[];
 };
 
-export type PolyglotExecutionNext = {
+export type AIQuestionType = {
   language: string;
   text: string;
   type: number;
   level: number;
   category: number;
   temperature: number;
+};
+
+export type AIMultichoiceType = {
+  language: string;
+  text: string;
+  type: boolean;
+  level: number;
+  category: number;
+  temperature: number;
+  n_o_ca: number;
+  nedd: number;
+  n_o_d: number;
 };
 
 export type SummarizerBody = { lesson: string; noW: string; level: string };

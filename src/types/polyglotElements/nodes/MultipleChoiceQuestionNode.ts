@@ -8,6 +8,15 @@ export type MultipleChoiceQuestionNodeData = NodeData & {
   question: string;
   choices: string[];
   isChoiceCorrect: boolean[];
+  aiQuestion: boolean;
+  solution: string;
+  language: string;
+  text: string;
+  level: number;
+  questionCategory: number;
+  n_o_ca: number;
+  nedd: number;
+  n_o_d: number;
 };
 
 export type MultipleChoiceQuestionNode = PolyglotNode & {
@@ -27,5 +36,14 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
     choices: [],
     isChoiceCorrect: [],
     question: '',
+    aiQuestion: false,
+    solution: '',
+    language: '',
+    text: '',
+    level: 0,
+    questionCategory: 0,
+    n_o_ca: 0,
+    nedd: 0,
+    n_o_d: 0,
   },
 });
