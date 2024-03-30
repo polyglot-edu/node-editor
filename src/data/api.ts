@@ -324,7 +324,9 @@ export const API = {
   ): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
       `/QuizExercise/generateexercise`,
-
+      body
+    );
+  },
   summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
       `/Summarizer/summarizelesson`,
