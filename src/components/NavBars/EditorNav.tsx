@@ -229,10 +229,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             flow={flow}
             updateInfo={updateFlowInfo}
           />
-          <SummarizerModal
-            isOpen={isOpenSummarizer}
-            onClose={onCloseSummarizer}
-          />
         </>
       )}
       <SaveFlowModal
