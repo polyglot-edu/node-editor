@@ -160,7 +160,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
               CorrectAnswerIndexes.forEach((element: number) => {
                 prova[element] = true;
               });
-              
+
               const solution = response.data.substring(pos4 + 10);
               setValue('data.question', question);
               setValue('data.choices', answers);
