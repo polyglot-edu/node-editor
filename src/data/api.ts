@@ -30,11 +30,12 @@ const axios = axiosCreate.create({
   withCredentials: true,
 });
 
-const openQuestionGeneration = axiosCreate.create({
+const AIMaterialGeneration = axiosCreate.create({
   //baseURL: process.env.AIGENERATION_URL,
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
+    withCredentials: true,
     ApiKey: process.env.APIKEY,
   },
 });
@@ -314,7 +315,7 @@ export const API = {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
   generateNewAIQuestion: (body: AIQuestionType): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+    return AIMaterialGeneration.post<{}, AxiosResponse, {}>(
       `/QuestionExercise/generateexercise`,
       body
     );
@@ -322,13 +323,13 @@ export const API = {
   generateNewAIMultiChoice: (
     body: AIMultichoiceType
   ): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+    return AIMaterialGeneration.post<{}, AxiosResponse, {}>(
       `/QuizExercise/generateexercise`,
       body
     );
   },
   summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+    return AIMaterialGeneration.post<{}, AxiosResponse, {}>(
       `/Summarizer/summarizelesson`,
       body
     );
