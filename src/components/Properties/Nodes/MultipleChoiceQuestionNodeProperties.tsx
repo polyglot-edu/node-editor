@@ -132,7 +132,6 @@ const MultipleChoiceQuestionNodeProperties = () => {
                 //
                 throw ': no text given';
               }
-              console.log('sto provando');
               const response: AxiosResponse =
                 await API.generateNewAIMultiChoice({
                   language: language,
@@ -152,7 +151,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
               const question = response.data.substring(pos1 + 10, pos2 - 1);
               const CorrectAnswerIndexes = response.data
                 .substring(pos2 + 20, pos3 - 2)
-                .split(', ')
+                .split(',')
                 .map(Number);
               const answers = response.data
                 .substring(pos3 + 9, pos4 - 2)
@@ -161,6 +160,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
               CorrectAnswerIndexes.forEach((element: number) => {
                 prova[element] = true;
               });
+              
               const solution = response.data.substring(pos4 + 10);
               setValue('data.question', question);
               setValue('data.choices', answers);
