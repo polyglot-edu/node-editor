@@ -31,7 +31,6 @@ import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
-import SummarizerModal from '../Modals/SummarizerModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
   publishFlow: () => Promise<boolean>;
