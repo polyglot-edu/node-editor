@@ -7,8 +7,7 @@ import {
   CopyIcon,
   EditIcon,
   ExternalLinkIcon,
-  ViewIcon,
-} from '@chakra-ui/icons';
+  } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -193,12 +192,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
                 onClick: onOpenEdit,
               },
             ]}
-          />
-          <ActionButton
-            label="Summarizer Tool"
-            disabled={false}
-            onClick={onOpenSummarizer}
-            icon={<ViewIcon color="blue.500" />}
           />
           <Spacer />
           <Button
