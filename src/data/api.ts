@@ -36,7 +36,7 @@ const AIMaterialGeneration = axiosCreate.create({
   headers: {
     'Content-Type': 'application/json',
     withCredentials: true,
-    'Access-Control-Allow-Origin': '*',
+    Access: '*',
     ApiKey: process.env.APIKEY,
   },
 });

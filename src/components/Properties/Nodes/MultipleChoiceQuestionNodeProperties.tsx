@@ -132,13 +132,13 @@ const MultipleChoiceQuestionNodeProperties = () => {
                 //
                 throw ': no text given';
               }
-
+              console.log('sto provando');
               const response: AxiosResponse =
                 await API.generateNewAIMultiChoice({
                   language: language,
                   text: text,
                   type: true,
-                  level: 0,
+                  level: 1,
                   category: category,
                   temperature: 0,
                   n_o_ca: n_o_ca,
