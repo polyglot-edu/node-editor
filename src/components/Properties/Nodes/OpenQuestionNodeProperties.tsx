@@ -114,10 +114,6 @@ const OpenQuestionNodeProperties = () => {
                 //
                 throw ': No text given';
               }
-              //block for testing purpose
-              const description = getValues('description');
-              console.log(description);
-              if (description != 'enable') throw ': Not enabled';
 
               const response: AxiosResponse = await API.generateNewAIQuestion({
                 language: language,

@@ -49,8 +49,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                   throw ': no text given';
                 }
                 if (!noW) setNoW('200');
-                if (generatedMaterial != 'enable')
-                  throw ': you are not enabled';
+                
                 const response: AxiosResponse = await API.summarizerAI({
                   lesson: sourceMaterial,
                   level: level,
