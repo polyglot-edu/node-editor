@@ -55,7 +55,9 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                   level: level,
                   noW: noW,
                 });
-                setGeneratedMaterial(response.data);
+                const pos = response.data.search('Summary:');
+                const summary = response.data.substring(pos + 9);
+                setGeneratedMaterial(summary);
               } catch (error) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {
