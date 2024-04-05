@@ -7,7 +7,7 @@ import {
   CopyIcon,
   EditIcon,
   ExternalLinkIcon,
-  } from '@chakra-ui/icons';
+} from '@chakra-ui/icons';
 import {
   Box,
   Button,
