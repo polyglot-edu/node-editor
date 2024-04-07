@@ -4,11 +4,11 @@ import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   AIMultichoiceType,
   AIQuestionType,
+  polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
-  SummarizerBody,
-  polyglotEdgeComponentMapping,
   polyglotNodeComponentMapping,
+  SummarizerBody,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -323,8 +323,9 @@ export const API = {
     body: AIMultichoiceType
   ): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
-      `/QuizExercise/generateexercise`,
-    );},
+      `/QuizExercise/generateexercise`
+    );
+  },
   summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
       `/Summarizer/summarizelesson`,
