@@ -323,7 +323,8 @@ export const API = {
     body: AIMultichoiceType
   ): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
-      `/QuizExercise/generateexercise`
+      `/QuizExercise/generateexercise`,
+      body
     );
   },
   summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
