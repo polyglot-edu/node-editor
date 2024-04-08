@@ -1,12 +1,16 @@
-import { Flex } from '@chakra-ui/react';
+import { CloseButton, Flex } from '@chakra-ui/react';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 
 export type NodePropertiesProps = {
   platform?: string[];
+  activityDescription?: string;
 };
 
-const NodeProperties = ({ platform }: NodePropertiesProps) => {
+const NodeProperties = ({
+  platform,
+  activityDescription,
+}: NodePropertiesProps) => {
   if (!platform) platform = [''];
   const option: JSX.Element = (
     <>
@@ -20,6 +24,12 @@ const NodeProperties = ({ platform }: NodePropertiesProps) => {
   );
   return (
     <>
+      <div>
+        <b>Activity description</b>
+        <br />
+        {activityDescription}
+      </div>
+      <br />
       <TextField
         label="Title"
         name="title"
