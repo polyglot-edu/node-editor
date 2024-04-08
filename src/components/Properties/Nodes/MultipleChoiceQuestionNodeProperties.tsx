@@ -1,11 +1,7 @@
-import { Button, Flex, useToast } from '@chakra-ui/react';
-import { AxiosResponse } from 'axios';
+import { useToast } from '@chakra-ui/react';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
-import { API } from '../../../data/api';
-import EnumField from '../../Forms/Fields/EnumField';
 import MultipleChoiceField from '../../Forms/Fields/MultipleChoiceField';
-import NumberField from '../../Forms/Fields/NumberField';
 import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
@@ -196,6 +192,14 @@ const MultipleChoiceQuestionNodeProperties = () => {
           Generate question
         </Button>
       </div>
+      <div>
+        <b>Activity description</b>
+        <br />
+        In this activity learners will have to select the correct answer from
+        multiple options provided
+      </div>
+      <br />
+      <NodeProperties platform={['WebApp', 'VSCode']} />
       <TextField label="Question" name="data.question" isTextArea />
       <MultipleChoiceField
         label="Choices"

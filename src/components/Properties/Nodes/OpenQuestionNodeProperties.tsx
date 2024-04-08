@@ -1,19 +1,8 @@
-import { Button, Flex, useToast } from '@chakra-ui/react';
-import { AxiosResponse } from 'axios';
-import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { API } from '../../../data/api';
 import ArrayField from '../../Forms/Fields/ArrayField';
-import EnumField from '../../Forms/Fields/EnumField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
-import TextField from '../../Forms/Fields/TextField';
 import NodeProperties from './NodeProperties';
 
 const OpenQuestionNodeProperties = () => {
-  const [generatingLoading, setGeneratingLoading] = useState(false);
-
-  const { getValues, setValue } = useFormContext();
-  const toast = useToast();
   return (
     <>
       <NodeProperties
@@ -163,6 +152,19 @@ const OpenQuestionNodeProperties = () => {
           name="data.questionGenerated"
         />
       </div>
+      <div>
+        <b>Activity description</b>
+        <br />
+        In this activity learners will answer to an Open Question
+      </div>
+      <br />
+      <NodeProperties platform={['WebApp']} />
+      <MarkDownField label="Question" name="data.question" />
+      <ArrayField
+        label="Correct Answers/validation material"
+        name="data.correctAnswers"
+        option="Answer"
+      />
     </>
   );
 };
