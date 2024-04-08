@@ -68,7 +68,10 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [publish, setPublish] = useState('');
+  const [learningContext, setLearningContext] = useState('');
+  const [duration] = useState('');
+  const [topicName, setTopicName] = useState('');
+  const [topics, setTopics] = useState<string[]>([]);
   const [tagName, setTagName] = useState('');
   const [colorTag, setColorTag] = useState(colors[0]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
@@ -96,6 +99,9 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             description: description,
             tags: tags,
             publish: false,
+            duration: duration,
+            learningContext: learningContext,
+            topics: topics,
           };
           response = await API.createNewFlow(base_Flow);
           break;
@@ -182,6 +188,37 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                       setDescription(e.currentTarget.value);
                     }}
                   />
+                  <FormLabel mb={2} fontWeight={'bold'}>
+                    Learning context:
+                  </FormLabel>
+                  <Textarea
+                    placeholder="Insert learning context..."
+                    value={learningContext}
+                    onChange={(e) => setLearningContext(e.currentTarget.value)}
+                  />
+                  <FormLabel mb={2} fontWeight={'bold'}>
+                    Topics:
+                  </FormLabel>
+                  <Tooltip
+                    label="Press Enter↵ in the input box to add a topic"
+                    placement="top"
+                  >
+                    <Input
+                      placeholder="Insert topic..."
+                      w={'40%'}
+                      value={topicName}
+                      onKeyDown={(e) => {
+                        if (e.key === 'Enter') {
+                          setTopics((prev) => {
+                            prev.push(topicName.toUpperCase());
+                            return [...prev];
+                          });
+                          setTopicName('');
+                        }
+                      }}
+                      onChange={(e) => setTopicName(e.currentTarget.value)}
+                    />
+                  </Tooltip>
                   <FormLabel my={2} fontWeight={'bold'}>
                     Tags:
                   </FormLabel>
