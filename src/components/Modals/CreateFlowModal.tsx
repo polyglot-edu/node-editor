@@ -69,7 +69,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [learningContext, setLearningContext] = useState('');
-  const [duration,setDuration] = useState('');
+  const [duration, setDuration] = useState('');
   const [topicName, setTopicName] = useState('');
   const [topics, setTopics] = useState<string[]>([]);
   const [tagName, setTagName] = useState('');
