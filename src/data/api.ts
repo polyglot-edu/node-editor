@@ -170,6 +170,9 @@ export class APIV2 {
     if (!flow.nodes)
       return { status: 300, check: false, message: 'Error: no nodes found' };
     let missingData = '';
+    if (flow.description == '') missingData += 'descrition; ';
+    if (flow.duration == '') missingData += 'duration; ';
+    if (flow.learningContext == '') missingData += 'learning context; ';
     let startingNode = 0; //need to be == 1 at the end of the check
     flow.nodes.map((e) => {
       let infoCheck = true;
