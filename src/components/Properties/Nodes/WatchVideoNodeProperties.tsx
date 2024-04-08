@@ -4,13 +4,10 @@ import NodeProperties from './NodeProperties';
 const WatchVideoNodeProperties = () => {
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will be given a link to watch
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="In this activity learners will be given a link to watch"
+      />
       <TextField label="URL" name="data.link" />
     </>
   );

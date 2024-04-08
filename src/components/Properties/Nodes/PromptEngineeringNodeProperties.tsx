@@ -8,14 +8,11 @@ const PromptEngineeringNodeProperties = () => {
   const [language, setLanguage] = useState('csharp');
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will have to complete a prompt engineering
-        exercise
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="In this activity learners will have to complete a prompt engineering
+        exercise"
+      />
       <MarkDownField label="Question" name="data.question" />
       <CodeField
         label="Template code"

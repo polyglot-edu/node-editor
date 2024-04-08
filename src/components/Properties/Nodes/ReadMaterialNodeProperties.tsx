@@ -11,7 +11,10 @@ const ReadMaterialNodeProperties = () => {
         Insert a document URL, input text directly, or or add an existing OER
       </div>
       <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="Insert a document URL, input text directly, or or add an existing OER"
+      />
       <div>Material:</div>
       <MarkDownField label="Text" name="data.text" />
       <TextField label="URL" name="data.link" />
