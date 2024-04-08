@@ -5,14 +5,11 @@ import NodeProperties from './NodeProperties';
 const TrueFalseNodeProperties = () => {
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will have to provide answers to true and false
-        questions
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="In this activity learners will have to provide answers to true and false
+        questions"
+      />
       <TextField label="Instructions" name="data.instructions" isTextArea />
       <span style={{ float: 'right' }}>
         <TextField

@@ -17,14 +17,11 @@ const MultipleChoiceQuestionNodeProperties = () => {
   // todo: unregister the paramete
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will have to select the correct answer from
-        multiple options provided
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp', 'VSCode']} />
+      <NodeProperties
+        platform={['WebApp', 'VSCode']}
+        activityDescription="In this activity learners will have to select the correct answer from
+        multiple options provided"
+      />
       <Button
         marginBottom={'5px'}
         id="buttonAI"
@@ -142,7 +139,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
                   language: language,
                   text: text,
                   type: true,
-                  level: 0,
+                  level: 1,
                   category: category,
                   temperature: 0,
                   n_o_ca: n_o_ca,

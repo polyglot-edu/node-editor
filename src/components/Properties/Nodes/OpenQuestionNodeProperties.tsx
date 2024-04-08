@@ -16,13 +16,10 @@ const OpenQuestionNodeProperties = () => {
   const toast = useToast();
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will answer to an Open Question
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="In this activity learners will answer to an Open Question"
+      />
       <Button
         marginBottom={'5px'}
         id="buttonAI"
@@ -123,7 +120,7 @@ const OpenQuestionNodeProperties = () => {
                 language: language,
                 text: text,
                 type: type,
-                level: 0,
+                level: 1,
                 category: category,
                 temperature: 0,
               });

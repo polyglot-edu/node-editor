@@ -5,14 +5,11 @@ import NodeProperties from './NodeProperties';
 const BrainstormingNodeProperties = () => {
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will have to complete a sentence with the
-        appropriate word or phrase
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="In this activity learners will have to complete a sentence with the
+        appropriate word or phrase"
+      />
       <MarkDownField label="Goal" name="data.goal" />
       <MarkDownField label="Instructions" name="data.instructions" />
       <EnumField
