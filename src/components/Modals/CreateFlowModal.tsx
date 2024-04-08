@@ -69,7 +69,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
   const [learningContext, setLearningContext] = useState('');
-  const [duration] = useState('');
+  const [duration,setDuration] = useState('');
   const [topicName, setTopicName] = useState('');
   const [topics, setTopics] = useState<string[]>([]);
   const [tagName, setTagName] = useState('');
@@ -196,29 +196,53 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                     value={learningContext}
                     onChange={(e) => setLearningContext(e.currentTarget.value)}
                   />
-                  <FormLabel mb={2} fontWeight={'bold'}>
-                    Topics:
-                  </FormLabel>
-                  <Tooltip
-                    label="Press Enter↵ in the input box to add a topic"
-                    placement="top"
-                  >
-                    <Input
-                      placeholder="Insert topic..."
-                      w={'40%'}
-                      value={topicName}
-                      onKeyDown={(e) => {
-                        if (e.key === 'Enter') {
-                          setTopics((prev) => {
-                            prev.push(topicName.toUpperCase());
-                            return [...prev];
-                          });
-                          setTopicName('');
-                        }
+                  <Flex paddingTop={'8px'} align={'center'}>
+                    <FormLabel mb={2} fontWeight={'bold'}>
+                      Topics:
+                    </FormLabel>
+                    <Tooltip
+                      label="Press Enter↵ in the input box to add a topic"
+                      placement="top"
+                    >
+                      <Input
+                        placeholder="Insert topic..."
+                        w={'30%'}
+                        value={topicName}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setTopics((prev) => {
+                              prev.push(topicName.toUpperCase());
+                              return [...prev];
+                            });
+                            setTopicName('');
+                          }
+                        }}
+                        onChange={(e) => setTopicName(e.currentTarget.value)}
+                      />
+                    </Tooltip>
+                    <IconButton
+                      aria-label="Add Topic"
+                      disabled={!topicName}
+                      icon={<AddIcon />}
+                      rounded="md"
+                      onClick={() => {
+                        setTopics((prev) => {
+                          prev.push(topicName.toUpperCase());
+                          return [...prev];
+                        });
+                        setTopicName('');
                       }}
-                      onChange={(e) => setTopicName(e.currentTarget.value)}
                     />
-                  </Tooltip>
+                    <FormLabel paddingLeft={'5px'} mb={2} fontWeight={'bold'}>
+                      Duration:
+                    </FormLabel>
+                    <Input
+                      width={'50%'}
+                      placeholder="Insert duration..."
+                      value={duration}
+                      onChange={(e) => setDuration(e.currentTarget.value)}
+                    />
+                  </Flex>
                   <FormLabel my={2} fontWeight={'bold'}>
                     Tags:
                   </FormLabel>
