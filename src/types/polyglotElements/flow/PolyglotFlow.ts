@@ -9,6 +9,9 @@ export type PolyglotFlowInfo = {
   };
   description: string;
   tags: { name: string; color: string }[];
+  learningContext: string;
+  duration: string;
+  topics: string[];
   publish: boolean;
   /* to be discussed: do we want to save in the database the last summarized material of the professor? Or we give the tool to be live usage?
   sourceMaterial?: string;

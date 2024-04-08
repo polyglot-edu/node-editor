@@ -269,6 +269,9 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     description: 'This is an example flow',
     publish: false,
     tags: [],
+    learningContext: '',
+    duration: '0',
+    topics: [],
     nodes: flowNodes,
     edges: flowEdges,
   });

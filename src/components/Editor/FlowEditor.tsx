@@ -316,6 +316,7 @@ const FlowEditor = ({
         <ElementProperties
           selectedElement={selectedElement}
           isOpen={isOpenPanel}
+          onClose={onClosePanel}
         />
       </Flex>
     </Flex>
