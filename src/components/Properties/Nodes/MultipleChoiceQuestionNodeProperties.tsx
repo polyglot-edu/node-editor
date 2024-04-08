@@ -142,7 +142,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
                   language: language,
                   text: text,
                   type: true,
-                  level: 0,
+                  level: 1,
                   category: category,
                   temperature: 0,
                   n_o_ca: n_o_ca,

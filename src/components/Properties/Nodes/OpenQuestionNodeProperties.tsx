@@ -123,7 +123,7 @@ const OpenQuestionNodeProperties = () => {
                 language: language,
                 text: text,
                 type: type,
-                level: 0,
+                level: 1,
                 category: category,
                 temperature: 0,
               });
