@@ -223,7 +223,7 @@ const FlowEditor = ({
   }
 
   return (
-    <Flex direction={'column'} h="100vh" fontFamily={"Roboto"}>
+    <Flex direction={'column'} h="100vh" fontFamily={'Roboto'}>
       <EditorNav saveFunc={saveFlow} publishFlow={publishFlow} />
       <Flex h={'full'} overflow="hidden">
         <ReactFlow
