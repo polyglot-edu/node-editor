@@ -80,21 +80,37 @@ const OpenQuestionNodeProperties = () => {
             }
           />
           <EnumField
-            label="Question category"
-            name="data.questionCategory"
+            label="Level"
+            name="data.level"
             width="50%"
             constraints={{ valueAsNumber: true }}
             options={
               <>
                 <option value={0} defaultChecked>
-                  Factual Knowledge
+                  primary school
                 </option>
-                <option value={1}>Understanding of Concepts</option>
-                <option value={3}>Analysys And Evaluation</option>
+                <option value={1}>middle school</option>
+                <option value={2}>high school</option>
+                <option value={3}>college</option>
+                <option value={4}>academy</option>
               </>
             }
           />
         </Flex>
+        <EnumField
+          label="Question category"
+          name="data.questionCategory"
+          width="50%"
+          constraints={{ valueAsNumber: true }}
+          options={
+            <>
+              <option value={0} defaultChecked>
+                theoretical
+              </option>
+              <option value={2}>problem resolution</option>
+            </>
+          }
+        />
         <TextField label="Source material" name="data.text" isTextArea />
         <Button
           marginBottom={'5px'}
@@ -103,6 +119,8 @@ const OpenQuestionNodeProperties = () => {
             try {
               setGeneratingLoading(true);
               const text = getValues('data.text');
+              const title = getValues('data.title');
+              const level = getValues('data.level');
               const language = getValues('data.language');
               const type = getValues('data.questionType');
               const category = getValues('data.questionCategory');
@@ -116,20 +134,21 @@ const OpenQuestionNodeProperties = () => {
               console.log(description);
               if (description != 'enable') throw ': Not enabled';
 
-              const response: AxiosResponse = await API.generateNewAIQuestion({
+              const response: AxiosResponse = await API.generateNewExercise({
+                macroSubject: '',
+                title: title,
+                level: level,
+                typeOfExercise: 1, //=question
+                learningObjective: '', //ask the usage
+                bloomLevel: 0, //=remember
                 language: language,
-                text: text,
-                type: type,
-                level: 1,
-                category: category,
-                temperature: 0,
+                material: text,
+                assignmentType: category, //0=theoretical, 1=code, 2=problem_resolution,
+                topic: '',
+                temperature: 0.2,
               });
-              const pos1 = response.data.search('Question: ');
-              const pos2 = response.data.search('CorrectAnswer: ');
-              const question = response.data.substring(pos1 + 10, pos2 - 3);
-              const correctAnswers = response.data.substring(pos2 + 15);
-              setValue('data.questionGenerated', question);
-              setValue('data.possibleAnswer', correctAnswers);
+              setValue('data.questionGenerated', response.data.question);
+              setValue('data.possibleAnswer', response.data.solution);
               setGeneratingLoading(false);
             } catch (error) {
               setGeneratingLoading(false);

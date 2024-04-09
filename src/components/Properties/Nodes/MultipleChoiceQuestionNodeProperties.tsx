@@ -74,20 +74,38 @@ const MultipleChoiceQuestionNodeProperties = () => {
             }
           />
           <EnumField
-            label="Question category"
-            name="data.questionCategory"
+            label="Level"
+            name="data.level"
             width="50%"
             constraints={{ valueAsNumber: true }}
             options={
               <>
                 <option value={0} defaultChecked>
-                  Factual Knowledge
+                  primary school
                 </option>
-                <option value={1}>Understanding of Concepts</option>
+                <option value={1}>middle school</option>
+                <option value={2}>high school</option>
+                <option value={3}>college</option>
+                <option value={4}>academy</option>
               </>
             }
           />
         </Flex>
+        <EnumField
+          label="Question category"
+          name="data.questionCategory"
+          width="50%"
+          constraints={{ valueAsNumber: true }}
+          options={
+            <>
+              <option value={0} defaultChecked>
+                theoretical
+              </option>
+              <option value={1}>code</option>
+              <option value={2}>problem resolution</option>
+            </>
+          }
+        />
         <Flex>
           <NumberField
             defaultValue={1}
@@ -120,6 +138,8 @@ const MultipleChoiceQuestionNodeProperties = () => {
               setGeneratingLoading(true);
               const text = getValues('data.text');
               const language = getValues('data.language');
+              const level = getValues('data.level');
+              const title = getValues('data.title');
               const n_o_ca = getValues('data.n_o_ca');
               const n_o_d = getValues('data.n_o_d');
               const nedd = getValues('data.nedd');
@@ -134,18 +154,22 @@ const MultipleChoiceQuestionNodeProperties = () => {
               console.log(description);
               if (description != 'enable') throw ': Not enabled';
 
-              const response: AxiosResponse =
-                await API.generateNewAIMultiChoice({
-                  language: language,
-                  text: text,
-                  type: true,
-                  level: 1,
-                  category: category,
-                  temperature: 0,
-                  n_o_ca: n_o_ca,
-                  nedd: nedd,
-                  n_o_d: n_o_d,
-                });
+              const response: AxiosResponse = await API.generateNewExercise({
+                macroSubject: '',
+                title: title,
+                level: level,
+                typeOfExercise: 2, //=choice
+                learningObjective: '', //ask the usage
+                bloomLevel: 0, //=remember
+                language: language,
+                material: text,
+                correctAnswersNumber: n_o_ca,
+                distractorsNumber: n_o_d,
+                easilyDiscardableDistractorsNumber: nedd,
+                assignmentType: category,
+                topic: '',
+                temperature: 0.2,
+              });
               const pos1 = response.data.search('Question: ');
               const pos2 = response.data.search('CorrectAnswerIndex: ');
               const pos3 = response.data.search('Answers:');

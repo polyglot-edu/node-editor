@@ -3,7 +3,7 @@ import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   AIMultichoiceType,
-  AIQuestionType,
+  AIQuestionType as AIExerciseType,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
@@ -30,12 +30,13 @@ const axios = axiosCreate.create({
   withCredentials: true,
 });
 
-const openQuestionGeneration = axiosCreate.create({
-  //baseURL: process.env.AIGENERATION_URL,
+const AIAPIGeneration = axiosCreate.create({
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
     ApiKey: process.env.APIKEY,
+    modelName: 'gpt35Turbo',
+    endpoint: 'https://ai4edu.openai.azure.com/'
   },
 });
 
@@ -316,22 +317,14 @@ export const API = {
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
-  generateNewAIQuestion: (body: AIQuestionType): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
-      `/QuestionExercise/generateexercise`,
-      body
-    );
-  },
-  generateNewAIMultiChoice: (
-    body: AIMultichoiceType
-  ): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
-      `/QuizExercise/generateexercise`,
+  generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Exercises/GenerateExercise`,
       body
     );
   },
   summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
       `/Summarizer/summarizelesson`,
       body
     );
