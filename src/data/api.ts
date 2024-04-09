@@ -36,7 +36,7 @@ const AIAPIGeneration = axiosCreate.create({
     'Content-Type': 'application/json',
     ApiKey: process.env.APIKEY,
     modelName: 'gpt35Turbo',
-    endpoint: 'https://ai4edu.openai.azure.com/'
+    endpoint: 'https://ai4edu.openai.azure.com/',
   },
 });
 
