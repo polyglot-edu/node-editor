@@ -1,4 +1,10 @@
-import { Box, Button, Heading, useDisclosure } from '@chakra-ui/react';
+import {
+  Box,
+  Button,
+  CloseButton,
+  Heading,
+  useDisclosure,
+} from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
 import { useEffect, useRef, useState } from 'react';
 import {
@@ -22,6 +28,7 @@ export type ElementPropertiesProps = {
   selectedElement: PolyglotNode | PolyglotEdge | undefined;
   children?: React.ReactNode;
   isOpen?: boolean;
+  onClose: () => void;
 };
 
 const updateForm = (input: any, methods: UseFormReturn<FieldValues, any>) => {
@@ -58,6 +65,7 @@ const compareElements = (first: any, second: any) => {
 const ElementProperties = ({
   selectedElement,
   isOpen,
+  onClose,
   children,
 }: ElementPropertiesProps) => {
   const {
@@ -118,7 +126,14 @@ const ElementProperties = ({
       );
 
   return (
-    <Panel isOpen={isOpen}>
+    <Panel isOpen={isOpen} onClose={onClose}>
+      <CloseButton
+        float={'right'}
+        backgroundColor={'red.500'}
+        color={'white'}
+        variant="solid"
+        onClick={onClose}
+      />
       <Heading size="lg" mb={5}>
         Properties:
       </Heading>
@@ -137,7 +152,7 @@ const ElementProperties = ({
       </Box>
       <Box hidden={editorOpen} width={'500px'}>
         <FormProvider {...methods}>
-          {hydrated && <ElementProperty platform={['']} />}
+          {hydrated && <ElementProperty />}
         </FormProvider>
 
         {children}

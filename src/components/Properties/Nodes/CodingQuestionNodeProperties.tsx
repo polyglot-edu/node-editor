@@ -14,7 +14,10 @@ const CodingQuestionNodeProperties = () => {
         In this activity learners will have to complete a coding exercise
       </div>
       <br />
-      <NodeProperties platform={['VSCode']} />
+      <NodeProperties
+        platform={['VSCode']}
+        activityDescription="In this activity learners will have to complete a coding exercise"
+      />
       <MarkDownField label="Question" name="data.question" />
       <CodeField
         label="Template code"

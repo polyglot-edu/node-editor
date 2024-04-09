@@ -41,6 +41,7 @@ export type SelectedElement = {
 };
 
 interface ApplicationState {
+  published: any;
   currentAction: number;
   lastSavedAction: number;
   actions: Action[];
@@ -303,6 +304,10 @@ const useStore = create<ApplicationState>()(
             else
               state.updateEdge(element.reactFlow.id, element as PolyglotEdge);
           }
+        },
+        published: () => {
+          const publish = get().getFlow()?.publish;
+          return publish;
         },
         updateFlowInfo: (newValue, skipAction) => {
           if (!skipAction) {

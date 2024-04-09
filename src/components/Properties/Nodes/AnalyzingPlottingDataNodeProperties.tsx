@@ -5,14 +5,11 @@ import NodeProperties from './NodeProperties';
 const AnalyzingPlottingDataNodeProperties = () => {
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will have to complete a sentence with the
-        appropriate word or phrase
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="In this activity learners will have to complete a sentence with the
+        appropriate word or phrase"
+      />
       <MarkDownField label="Question" name="data.question" />
       <ArrayField
         label="Correct Answers"

@@ -12,20 +12,14 @@ import NodeProperties from './NodeProperties';
 const OpenQuestionNodeProperties = () => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
 
-  const { getValues, setValue, unregister } = useFormContext();
+  const { getValues, setValue } = useFormContext();
   const toast = useToast();
-  // todo: unregister the parameters not used ->
-  //    if aiQuestion==true unregister(data.correctAnswers[]) else unregister(data.language,...)
-  //<option value={2}>Application of Skills</option> removed till confirmation
   return (
     <>
-      <div>
-        <b>Activity description</b>
-        <br />
-        In this activity learners will answer to an Open Question
-      </div>
-      <br />
-      <NodeProperties platform={['WebApp']} />
+      <NodeProperties
+        platform={['WebApp']}
+        activityDescription="In this activity learners will answer to an Open Question"
+      />
       <Button
         marginBottom={'5px'}
         id="buttonAI"
@@ -101,7 +95,7 @@ const OpenQuestionNodeProperties = () => {
             }
           />
         </Flex>
-        <TextField label="Source material" name="data.text" />
+        <TextField label="Source material" name="data.text" isTextArea />
         <Button
           marginBottom={'5px'}
           marginTop={'5px'}
@@ -111,23 +105,22 @@ const OpenQuestionNodeProperties = () => {
               const text = getValues('data.text');
               const language = getValues('data.language');
               const type = getValues('data.questionType');
-              const level = getValues('data.level');
               const category = getValues('data.questionCategory');
               if (!text) {
                 setValue('data.questionGenerated', 'No text given');
                 //
-                throw 'no text given';
+                throw ': No text given';
               }
               //block for testing purpose
               const description = getValues('description');
               console.log(description);
-              if (description != 'enable') throw ' Not enabled';
+              if (description != 'enable') throw ': Not enabled';
 
               const response: AxiosResponse = await API.generateNewAIQuestion({
                 language: language,
                 text: text,
                 type: type,
-                level: level,
+                level: 1,
                 category: category,
                 temperature: 0,
               });

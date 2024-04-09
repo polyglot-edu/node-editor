@@ -1,5 +1,6 @@
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import {
+  Box,
   Button,
   Checkbox,
   Flex,
@@ -41,7 +42,30 @@ const ArrayField = ({
           <Controller
             name={`data.isChoiceCorrect.${index}`}
             render={({ field }) => (
-              <Checkbox size="lg" mr={2} {...field} isChecked={field.value} />
+              <Checkbox
+                size="lg"
+                mr={2}
+                {...field}
+                isChecked={field.value}
+                icon={
+                  field.value ? (
+                    <CheckIcon />
+                  ) : (
+                    <>
+                      <Box width="20px" height="20px" backgroundColor={'red'}>
+                        <CloseIcon
+                          width="10px"
+                          height="10px"
+                          marginBottom={'8px'}
+                          marginLeft={'3px'}
+                        />
+                      </Box>
+                    </>
+                  )
+                }
+                borderColor={'red'}
+                colorScheme={'green'}
+              />
             )}
           />
           <Input

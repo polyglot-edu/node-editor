@@ -68,6 +68,10 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [learningContext, setLearningContext] = useState('');
+  const [duration, setDuration] = useState('');
+  const [topicName, setTopicName] = useState('');
+  const [topics, setTopics] = useState<string[]>([]);
   const [tagName, setTagName] = useState('');
   const [colorTag, setColorTag] = useState(colors[0]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
@@ -94,6 +98,10 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             title: title,
             description: description,
             tags: tags,
+            publish: false,
+            duration: duration,
+            learningContext: learningContext,
+            topics: topics,
           };
           response = await API.createNewFlow(base_Flow);
           break;
@@ -118,7 +126,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
           isClosable: true,
         });
       }
-      router.push('/flows/' + response.data.id);
+      router.push('/flows/' + response.data._id);
     } catch (error) {
       if ((error as Error).name === 'SyntaxError') {
         toast({
@@ -180,6 +188,61 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                       setDescription(e.currentTarget.value);
                     }}
                   />
+                  <FormLabel mb={2} fontWeight={'bold'}>
+                    Learning context:
+                  </FormLabel>
+                  <Textarea
+                    placeholder="Insert learning context..."
+                    value={learningContext}
+                    onChange={(e) => setLearningContext(e.currentTarget.value)}
+                  />
+                  <Flex paddingTop={'8px'} align={'center'}>
+                    <FormLabel mb={2} fontWeight={'bold'}>
+                      Topics:
+                    </FormLabel>
+                    <Tooltip
+                      label="Press Enter↵ in the input box to add a topic"
+                      placement="top"
+                    >
+                      <Input
+                        placeholder="Insert topic..."
+                        w={'30%'}
+                        value={topicName}
+                        onKeyDown={(e) => {
+                          if (e.key === 'Enter') {
+                            setTopics((prev) => {
+                              prev.push(topicName.toUpperCase());
+                              return [...prev];
+                            });
+                            setTopicName('');
+                          }
+                        }}
+                        onChange={(e) => setTopicName(e.currentTarget.value)}
+                      />
+                    </Tooltip>
+                    <IconButton
+                      aria-label="Add Topic"
+                      disabled={!topicName}
+                      icon={<AddIcon />}
+                      rounded="md"
+                      onClick={() => {
+                        setTopics((prev) => {
+                          prev.push(topicName.toUpperCase());
+                          return [...prev];
+                        });
+                        setTopicName('');
+                      }}
+                    />
+                    <FormLabel paddingLeft={'5px'} mb={2} fontWeight={'bold'}>
+                      Duration:
+                    </FormLabel>
+                    <Input
+                      width={'50%'}
+                      placeholder="Insert duration..."
+                      value={duration}
+                      onChange={(e) => setDuration(e.currentTarget.value)}
+                    />
+                  </Flex>
                   <FormLabel my={2} fontWeight={'bold'}>
                     Tags:
                   </FormLabel>

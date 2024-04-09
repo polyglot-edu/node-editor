@@ -57,7 +57,11 @@ export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
     _id: UUIDv4(),
     title: 'New Flow',
     description: '',
+    publish: false,
     tags: [],
+    topics: [],
+    learningContext: '',
+    duration: '0',
     nodes: [],
     edges: [],
   };
@@ -83,16 +87,29 @@ export const createNewDefaultPolyglotNode: (
   };
 };
 
+const configUnconditionalEdge = [
+  'lessonTextNode',
+  'WatchVideoNode',
+  'ReadMaterialNode',
+  'MindMapNode',
+  'SummaryNode',
+  'ProblemSolvingNode',
+  'FindSolutionNode',
+  'CreateKeywordsListNode',
+  'MemoriseKeywordsListNode',
+  'PromptEngineeringNode',
+  'ProblemSolvingNode',
+];
+
 export const createNewDefaultPolyglotEdge = (
   sourceId: string,
   sourceType: string,
   targetId: string
 ): PolyglotEdge => {
   const id = UUIDv4();
-  const type =
-    (sourceType || '') == 'lessonTextNode'
-      ? 'unconditionalEdge'
-      : 'passFailEdge'; //to change into group type (learning)
+  const type = configUnconditionalEdge.includes(sourceType || '')
+    ? 'unconditionalEdge'
+    : 'passFailEdge'; //to change into group type (learning)
   console.log(type);
   return {
     _id: id,

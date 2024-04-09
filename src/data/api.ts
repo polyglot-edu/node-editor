@@ -2,11 +2,13 @@ import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
+  AIMultichoiceType,
+  AIQuestionType,
   polyglotEdgeComponentMapping,
-  PolyglotExecutionNext,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
+  SummarizerBody,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -158,6 +160,67 @@ export class APIV2 {
       flow
     );
   }
+  async checkPublishFlowAsync(flow: PolyglotFlow): Promise<{
+    status: number;
+    check: boolean;
+    message?: string;
+    data?: any;
+  }> {
+    //function to check the completeness of the nodes
+    if (!flow.nodes)
+      return { status: 300, check: false, message: 'Error: no nodes found' };
+    let missingData = '';
+    let startingNode = 0; //need to be == 1 at the end of the check
+    flow.nodes.map((e) => {
+      let infoCheck = true;
+      if (!e.description) infoCheck = false;
+      const data = e.data;
+      for (const i in data) {
+        if (!data[i] || data[i][0] == null) {
+          infoCheck = false;
+        }
+      }
+      if (!infoCheck) {
+        missingData += e.title + '; ';
+        return;
+      }
+      //if the node has all the info, check the edges-> for each node check if there are an edges with his id as source/target
+      let edgeCheck = false;
+      flow.edges.map((a) => {
+        if (a.reactFlow.target == e._id) edgeCheck = true; //meaning at least one edges has this node as target
+      });
+      if (edgeCheck) startingNode++; //if no edges has this node as target, it means it's a starting edge
+    });
+    if (missingData != '')
+      return {
+        status: 300,
+        check: false,
+        message: ' Error: missing data for nodes: ' + missingData,
+      };
+    if (startingNode != 1)
+      return {
+        status: 300,
+        check: false,
+        message:
+          ' Error: detected ' +
+          startingNode +
+          ' starting nodes, exacly 1 node must has no incoming edges',
+      };
+
+    const response = await this.axios.put<{}, AxiosResponse, PolyglotFlow>(
+      `/api/flows/${flow._id}/publish`,
+      flow
+    );
+
+    console.log(response.data);
+
+    return {
+      status: response.status,
+      check: true,
+      message: response.statusText,
+      data: response.data,
+    };
+  }
   createNewFlow(flow: PolyglotFlowInfo): Promise<AxiosResponse> {
     return this.axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   }
@@ -250,11 +313,23 @@ export const API = {
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
-  generateNewAIQuestion: (
-    body: PolyglotExecutionNext
-  ): Promise<AxiosResponse> => {
+  generateNewAIQuestion: (body: AIQuestionType): Promise<AxiosResponse> => {
     return openQuestionGeneration.post<{}, AxiosResponse, {}>(
       `/QuestionExercise/generateexercise`,
+      body
+    );
+  },
+  generateNewAIMultiChoice: (
+    body: AIMultichoiceType
+  ): Promise<AxiosResponse> => {
+    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+      `/QuizExercise/generateexercise`,
+      body
+    );
+  },
+  summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
+    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
+      `/Summarizer/summarizelesson`,
       body
     );
   },

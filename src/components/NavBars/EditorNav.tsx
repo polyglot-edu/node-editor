@@ -2,10 +2,12 @@ import {
   ArrowBackIcon,
   ArrowForwardIcon,
   ArrowRightIcon,
+  ArrowUpIcon,
   CloseIcon,
   CopyIcon,
   EditIcon,
   ExternalLinkIcon,
+  ViewIcon,
 } from '@chakra-ui/icons';
 import {
   Box,
@@ -29,11 +31,13 @@ import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
+import SummarizerModal from '../Modals/SummarizerModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
+  publishFlow: () => Promise<boolean>;
 };
 
-export default function EditorNav({ saveFunc }: EditorNavProps) {
+export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   const hydrated = useHasHydrated();
   const [
     updateFlowInfo,
@@ -43,6 +47,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     flow,
     backAction,
     forwardAction,
+    getPublished,
   ] = useStore((state) => [
     state.updateFlowInfo,
     state.checkSave(),
@@ -51,8 +56,16 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     state.getFlow(),
     state.backAction,
     state.forwardAction,
+    state.published,
   ]);
+
+  let color = getPublished() ? 'green.500' : 'red.500';
+  function setColor(check: boolean) {
+    color = check ? 'green.500' : 'red.500';
+  }
+
   const [saveLoading, setSaveLoading] = useState(false);
+  const [publishLoading, setPublishLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenRun,
@@ -68,6 +81,11 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     isOpen: isOpenSave,
     onOpen: onOpenSave,
     onClose: onCloseSave,
+  } = useDisclosure();
+  const {
+    isOpen: isOpenSummarizer,
+    onOpen: onOpenSummarizer,
+    onClose: onCloseSummarizer,
   } = useDisclosure();
 
   useEffect(() => {
@@ -117,10 +135,24 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
             onClick={async () => {
               setSaveLoading(true);
               await saveFunc();
+              setColor(false);
               setSaveLoading(false);
             }}
             icon={<CopyIcon w={6} h={6} color="blue.500" />}
             isLoading={saveLoading}
+          />
+          <ActionButton
+            label="Publish"
+            disabled={hydrated ? !checkSave : true}
+            onClick={async () => {
+              setPublishLoading(true);
+              const published = await publishFlow();
+              setColor(published);
+              setPublishLoading(false);
+              return;
+            }}
+            icon={<ArrowUpIcon w={6} h={6} color={color} />}
+            isLoading={publishLoading}
           />
           <DropDown
             name="File"
@@ -163,6 +195,12 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
               },
             ]}
           />
+          <ActionButton
+            label="Summarizer Tool"
+            disabled={false}
+            onClick={onOpenSummarizer}
+            icon={<ViewIcon color="blue.500" />}
+          />
           <Spacer />
           <Button
             leftIcon={<CloseIcon />}
@@ -184,12 +222,18 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
       <ExportJsonModal isOpen={isOpen} onClose={onClose} flow={flow} />
       <RunExecutionModal isOpen={isOpenRun} onClose={onCloseRun} flow={flow} />
       {flow && (
-        <EditFlowModal
-          isOpen={isOpenEdit}
-          onClose={onCloseEdit}
-          flow={flow}
-          updateInfo={updateFlowInfo}
-        />
+        <>
+          <EditFlowModal
+            isOpen={isOpenEdit}
+            onClose={onCloseEdit}
+            flow={flow}
+            updateInfo={updateFlowInfo}
+          />
+          <SummarizerModal
+            isOpen={isOpenSummarizer}
+            onClose={onCloseSummarizer}
+          />
+        </>
       )}
       <SaveFlowModal
         isOpen={isOpenSave}

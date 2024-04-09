@@ -9,6 +9,15 @@ export type PolyglotFlowInfo = {
   };
   description: string;
   tags: { name: string; color: string }[];
+  learningContext: string;
+  duration: string;
+  topics: string[];
+  publish: boolean;
+  /* to be discussed: do we want to save in the database the last summarized material of the professor? Or we give the tool to be live usage?
+  sourceMaterial?: string;
+  levelMaterial?: string;
+  generatedMaterial?: string;
+  noW?: number;*/
 };
 
 export type PolyglotFlow = PolyglotFlowInfo & {
@@ -16,7 +25,7 @@ export type PolyglotFlow = PolyglotFlowInfo & {
   edges: PolyglotEdge[];
 };
 
-export type PolyglotExecutionNext = {
+export type AIQuestionType = {
   language: string;
   text: string;
   type: number;
@@ -24,3 +33,17 @@ export type PolyglotExecutionNext = {
   category: number;
   temperature: number;
 };
+
+export type AIMultichoiceType = {
+  language: string;
+  text: string;
+  type: boolean;
+  level: number;
+  category: number;
+  temperature: number;
+  n_o_ca: number;
+  nedd: number;
+  n_o_d: number;
+};
+
+export type SummarizerBody = { lesson: string; noW: string; level: string };

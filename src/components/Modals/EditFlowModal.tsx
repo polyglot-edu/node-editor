@@ -46,9 +46,15 @@ const EditFlowModal = ({
   flow,
   updateInfo,
 }: EditFlowModalProps) => {
+  if (!flow.topics) flow.topics = [];
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
+  const [learningContext, setLearningContext] = useState('');
+  const [duration, setDuration] = useState('');
+  const [topicName, setTopicName] = useState('');
+  const [topics, setTopics] = useState([...flow.topics]);
   const [tagName, setTagName] = useState('');
+  const [publish] = useState(false);
   const [colorTag, setColorTag] = useState(colors[0]);
   const [tags, setTags] = useState([...flow.tags]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
@@ -57,6 +63,8 @@ const EditFlowModal = ({
     if (!flow) return;
     setTitle(flow.title);
     setDescription(flow.description);
+    setLearningContext(flow.learningContext);
+    setTopics([...flow.topics]);
     setColorTag(colors[0]);
     setTags([...flow.tags]);
   }, [flow]);
@@ -85,6 +93,80 @@ const EditFlowModal = ({
               value={description}
               onChange={(e) => setDescription(e.currentTarget.value)}
             />
+            <FormLabel mb={2} fontWeight={'bold'}>
+              Learning context:
+            </FormLabel>
+            <Textarea
+              placeholder="Insert learning context..."
+              value={learningContext}
+              onChange={(e) => setLearningContext(e.currentTarget.value)}
+            />
+            <Flex paddingTop={'8px'} align={'center'}>
+              <FormLabel mb={2} fontWeight={'bold'}>
+                Topics:
+              </FormLabel>
+              <Tooltip
+                label="Press Enter↵ in the input box to add a topic"
+                placement="top"
+              >
+                <Input
+                  placeholder="Insert topic..."
+                  w={'30%'}
+                  value={topicName}
+                  onKeyDown={(e) => {
+                    if (e.key === 'Enter') {
+                      setTopics((prev) => {
+                        prev.push(topicName.toUpperCase());
+                        return [...prev];
+                      });
+                      setTopicName('');
+                    }
+                  }}
+                  onChange={(e) => setTopicName(e.currentTarget.value)}
+                />
+              </Tooltip>
+              <IconButton
+                aria-label="Add Topic"
+                disabled={!topicName}
+                icon={<AddIcon />}
+                rounded="md"
+                onClick={() => {
+                  setTopics((prev) => {
+                    prev.push(topicName.toUpperCase());
+                    return [...prev];
+                  });
+                  setTopicName('');
+                }}
+              />
+              <FormLabel paddingLeft={'5px'} mb={2} fontWeight={'bold'}>
+                Duration:
+              </FormLabel>
+              <Input
+                width={'50%'}
+                placeholder="Insert duration..."
+                value={duration}
+                onChange={(e) => setDuration(e.currentTarget.value)}
+              />
+            </Flex>
+            {topics.map((topic, id) => (
+              <Button
+                key={topic}
+                variant={'unstyled'}
+                onClick={() =>
+                  setTopics((prev) => {
+                    prev.splice(id, 1);
+                    return [...prev];
+                  })
+                }
+              >
+                <Tag mr={1} fontWeight="bold" h={2}>
+                  <TagLeftIcon>
+                    <CloseIcon />
+                  </TagLeftIcon>
+                  <TagLabel>{topic}</TagLabel>
+                </Tag>
+              </Button>
+            ))}
           </FormControl>
           <FormLabel my={2} fontWeight={'bold'}>
             Click on the tags to add them:
@@ -200,6 +282,10 @@ const EditFlowModal = ({
                 title: title,
                 description: description,
                 tags: tags,
+                publish: publish,
+                learningContext: learningContext,
+                duration: duration,
+                topics: topics,
               });
               onClose();
             }}
