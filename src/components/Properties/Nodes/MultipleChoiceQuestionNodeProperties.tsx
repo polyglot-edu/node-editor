@@ -1,19 +1,15 @@
-import { Button, Flex, useToast } from '@chakra-ui/react';
-import { AxiosResponse } from 'axios';
-import { useState } from 'react';
-import { useFormContext } from 'react-hook-form';
-import { API } from '../../../data/api';
-import EnumField from '../../Forms/Fields/EnumField';
+import { Button, useDisclosure } from '@chakra-ui/react';
 import MultipleChoiceField from '../../Forms/Fields/MultipleChoiceField';
-import NumberField from '../../Forms/Fields/NumberField';
 import TextField from '../../Forms/Fields/TextField';
+import AIToolModal from '../../Modals/AIToolModal';
 import NodeProperties from './NodeProperties';
 
 const MultipleChoiceQuestionNodeProperties = () => {
-  const [generatingLoading, setGeneratingLoading] = useState(false);
-
-  const { getValues, setValue, unregister } = useFormContext();
-  const toast = useToast();
+  const {
+    isOpen: isOpenAITool,
+    onOpen: onOpenAITool,
+    onClose: onCloseAITool,
+  } = useDisclosure();
   // todo: unregister the paramete
   return (
     <>
@@ -22,204 +18,14 @@ const MultipleChoiceQuestionNodeProperties = () => {
         activityDescription="In this activity learners will have to select the correct answer from
         multiple options provided"
       />
-      <Button
-        marginBottom={'5px'}
-        id="buttonAI"
-        hidden={getValues('data.aiQuestion')}
-        onClick={() => {
-          setValue('data.aiQuestion', true);
-          document
-            .getElementById('manualQuestion')
-            ?.setAttribute('hidden', 'true');
-          document.getElementById('buttonAI')?.setAttribute('hidden', 'true');
-          document.getElementById('aiQuestion')?.removeAttribute('hidden');
-          document.getElementById('buttonManually')?.removeAttribute('hidden');
-        }}
-      >
+      <AIToolModal
+        isOpen={isOpenAITool}
+        onClose={onCloseAITool}
+        exType={'multipleChoiceQuestionNode'}
+      />
+      <Button marginBottom={'5px'} id="buttonAI" onClick={onOpenAITool}>
         Create with AI
       </Button>
-      <Button
-        marginBottom={'5px'}
-        id="buttonManually"
-        hidden={!getValues('data.aiQuestion')}
-        onClick={() => {
-          setValue('data.aiQuestion', false);
-          document.getElementById('aiQuestion')?.setAttribute('hidden', 'true');
-          document
-            .getElementById('buttonManually')
-            ?.setAttribute('hidden', 'true');
-          document.getElementById('manualQuestion')?.removeAttribute('hidden');
-          document.getElementById('buttonAI')?.removeAttribute('hidden');
-        }}
-      >
-        Create manually
-      </Button>
-      <div id="aiQuestion" hidden={!getValues('data.aiQuestion')}>
-        <Flex>
-          <EnumField
-            label="Language"
-            name="data.language"
-            width="50%"
-            constraints={{ valueAsNumber: false }}
-            options={
-              <>
-                <option value={'English'} defaultChecked>
-                  English
-                </option>
-                <option value={'Italian'}>Italian</option>
-                <option value={'French'}>French</option>
-                <option value={'German'}>German</option>
-                <option value={'Spanish'}>Spanish</option>
-              </>
-            }
-          />
-          <EnumField
-            label="Level"
-            name="data.level"
-            width="50%"
-            constraints={{ valueAsNumber: true }}
-            options={
-              <>
-                <option value={0} defaultChecked>
-                  primary school
-                </option>
-                <option value={1}>middle school</option>
-                <option value={2}>high school</option>
-                <option value={3}>college</option>
-                <option value={4}>academy</option>
-              </>
-            }
-          />
-        </Flex>
-        <EnumField
-          label="Question category"
-          name="data.questionCategory"
-          width="50%"
-          constraints={{ valueAsNumber: true }}
-          options={
-            <>
-              <option value={0} defaultChecked>
-                theoretical
-              </option>
-              <option value={1}>code</option>
-              <option value={2}>problem resolution</option>
-            </>
-          }
-        />
-        <Flex>
-          <NumberField
-            defaultValue={1}
-            min={1}
-            max={5}
-            label={'N° Correct Answers:'}
-            name="data.n_o_ca"
-          />
-          <NumberField
-            label={'N° Easy Distractors'}
-            name={'data.nedd'}
-            defaultValue={1}
-            min={1}
-            max={5}
-          />
-          <NumberField
-            defaultValue={1}
-            min={1}
-            max={5}
-            label={'N° Distractors'}
-            name="data.n_o_d"
-          />
-        </Flex>
-        <TextField label="Source material" name="data.text" isTextArea />
-        <Button
-          marginBottom={'5px'}
-          marginTop={'5px'}
-          onClick={async () => {
-            try {
-              setGeneratingLoading(true);
-              const text = getValues('data.text');
-              const language = getValues('data.language');
-              const level = getValues('data.level');
-              const title = getValues('data.title');
-              const n_o_ca = getValues('data.n_o_ca');
-              const n_o_d = getValues('data.n_o_d');
-              const nedd = getValues('data.nedd');
-              const category = getValues('data.questionCategory');
-              if (!text) {
-                setValue('data.question', 'No text given');
-                //
-                throw ': no text given';
-              }
-              //block for testing purpose
-              const description = getValues('description');
-              console.log(description);
-              if (description != 'enable') throw ': Not enabled';
-
-              const response: AxiosResponse = await API.generateNewExercise({
-                macroSubject: '',
-                title: title,
-                level: level,
-                typeOfExercise: 2, //=choice
-                learningObjective: '', //ask the usage
-                bloomLevel: 0, //=remember
-                language: language,
-                material: text,
-                correctAnswersNumber: n_o_ca,
-                distractorsNumber: n_o_d,
-                easilyDiscardableDistractorsNumber: nedd,
-                assignmentType: category,
-                topic: '',
-                temperature: 0.2,
-              });
-              const pos1 = response.data.search('Question: ');
-              const pos2 = response.data.search('CorrectAnswerIndex: ');
-              const pos3 = response.data.search('Answers:');
-              const pos4 = response.data.search('Solution: ');
-              const question = response.data.substring(pos1 + 10, pos2 - 1);
-              const CorrectAnswerIndexes = response.data
-                .substring(pos2 + 20, pos3 - 2)
-                .split(', ')
-                .map(Number);
-              const answers = response.data
-                .substring(pos3 + 9, pos4 - 2)
-                .split('\n');
-              const prova = new Array(answers.length).fill(false);
-              CorrectAnswerIndexes.forEach((element: number) => {
-                prova[element] = true;
-              });
-              const solution = response.data.substring(pos4 + 10);
-              setValue('data.question', question);
-              setValue('data.choices', answers);
-              setValue('data.isChoiceCorrect', prova);
-              setValue('data.solution', solution);
-              setGeneratingLoading(false);
-            } catch (error) {
-              setGeneratingLoading(false);
-              if ((error as Error).name === 'SyntaxError') {
-                toast({
-                  title: 'Invalid syntax',
-                  description: (error as Error).toString(),
-                  status: 'error',
-                  duration: 3000,
-                  position: 'bottom-left',
-                  isClosable: true,
-                });
-                return;
-              }
-              toast({
-                title: 'Internal Error',
-                description: 'Try later' + (error as Error),
-                status: 'error',
-                duration: 3000,
-                position: 'bottom-left',
-                isClosable: true,
-              });
-            }
-          }}
-          isLoading={generatingLoading}
-        >
-          Generate question
-        </Button>
-      </div>
       <TextField label="Question" name="data.question" isTextArea />
       <MultipleChoiceField
         label="Choices"

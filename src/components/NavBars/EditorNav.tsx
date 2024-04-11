@@ -31,7 +31,7 @@ import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
-import AIToolModal from '../Modals/AIToolModal';
+import SummarizerModal from '../Modals/SummarizerModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
   publishFlow: () => Promise<boolean>;
@@ -229,10 +229,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             flow={flow}
             updateInfo={updateFlowInfo}
           />
-          <AIToolModal
-            isOpen={isOpenAITool}
-            onClose={onCloseAITool}
-          />
+          <SummarizerModal isOpen={isOpenAITool} onClose={onCloseAITool} />
         </>
       )}
       <SaveFlowModal

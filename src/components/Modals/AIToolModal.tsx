@@ -22,14 +22,14 @@ import {
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';
-import { v4 as UUIDv4 } from 'uuid';
+import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
-import useStore from '../../store';
-import { PolyglotNode, TypeOfExercise } from '../../types/polyglotElements';
+import { TypeOfExercise } from '../../types/polyglotElements';
 
 export type ModelTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
+  exType: string;
 };
 
 export type Topic = {
@@ -38,7 +38,7 @@ export type Topic = {
   Description: string;
 };
 
-const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
+const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
   const [context, setContext] = useState('');
@@ -50,8 +50,8 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
     { Topic: 'prova', Type: 0, Description: '' },
   ]);
   const [topicIndex, setTopicIndex] = useState(0);
-  const [exerciseType, setExerciseType] = useState(1);
-  const [ca_n, setCA_N] = useState(0);
+  let exerciseType;
+  const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(0);
   const [eda_n, setEDA_N] = useState(0);
   const toast = useToast();
@@ -60,6 +60,19 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
   const [screen1, setScreen1] = useState(true);
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
+  const { setValue } = useFormContext();
+
+  switch (exType) {
+    case 'OpenQuestionNode':
+      exerciseType = 1;
+      break;
+    case 'multipleChoiceQuestionNode':
+      exerciseType = 4;
+      break;
+    default:
+      throw ': exercisetype error';
+  }
+
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
       <ModalOverlay />
@@ -88,7 +101,6 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                 setMacroSubject(response.data.MacroSubject);
                 setLevel(response.data.PerceivedDifficulty);
                 setTopicGen(response.data.MainTopics);
-                console.log(topicGen);
                 setScreen1(false);
                 setScreen2(true);
                 setGeneratingLoading(false);
@@ -253,6 +265,9 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
               try {
                 setGeneratingLoading(true);
                 if (!topicGen) throw ': no topic generated';
+                console.log('ca_n ' + ca_n);
+                console.log('da_n' + da_n);
+                console.log('eda_n' + eda_n);
                 const response: AxiosResponse = await API.generateNewExercise({
                   macroSubject: macroSubjectGen,
                   title: titleGen,
@@ -273,13 +288,10 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                 setScreen3(false);
                 setGeneratingLoading(false);
                 console.log(response.data);
-                const id = UUIDv4();
                 let dataGen;
-                let exType = '';
                 switch (exerciseType) {
                   case 1:
                     console.log('creating openQuestion');
-                    exType = 'OpenQuestionNode';
                     dataGen = {
                       question: response.data.Assignment,
                       material: sourceMaterial,
@@ -294,8 +306,10 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                       response.data.Distractors,
                       response.data.EasilyDiscardableDistractors
                     ); //response.data.
-                    answers.sort(() => Math.random() - 0.5);
                     console.log(answers);
+                    answers.sort(() => Math.random() - 0.5);
+                    console.log('sorted ' + answers);
+
                     const isAnswerCorrect = new Array(answers.length).fill(
                       false
                     );
@@ -303,46 +317,18 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                       if (response.data.Solutions.includes(value))
                         isAnswerCorrect[index] = true;
                     });
-                    exType = 'multipleChoiceQuestionNode';
                     dataGen = {
-                      question: response.data.question,
+                      question: response.data.Assignment,
                       choices: answers,
                       isChoiceCorrect: isAnswerCorrect,
-                      aiQuestion: false,
-                      solution: '',
-                      language: '',
-                      text: '',
-                      level: '',
-                      questionCategory: '',
-                      n_o_ca: '',
-                      nedd: '',
-                      n_o_d: '',
                     };
                     break;
                   default:
                     console.log('error in exerciseType');
                     throw ': generated type error';
                 }
-
-                const exerciseGiven: PolyglotNode = {
-                  _id: id,
-                  type: exType,
-                  title: titleGen,
-                  description: topicGen[topicIndex].Description,
-                  difficulty: 1,
-                  data: dataGen,
-                  reactFlow: {
-                    id: id,
-                    type: exType,
-                    position: {
-                      x: 200,
-                      y: 200,
-                    },
-                    data: undefined,
-                  },
-                };
-
-                useStore.getState().addNode(exerciseGiven);                
+                console.log(dataGen);
+                setValue('data', dataGen);
                 onClose();
               } catch (error) {
                 setGeneratingLoading(false);
@@ -371,7 +357,7 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
           >
             Generate Exercise
           </Button>
-          <FormLabel paddingTop={'5px'}>Topic</FormLabel>
+          <FormLabel paddingTop={'5px'}>Learning Objective</FormLabel>
           <FormControl label="Topic">
             <Select
               borderColor={'grey'}
@@ -390,54 +376,39 @@ const AIToolModal = ({ isOpen, onClose }: ModelTemplateProps) => {
               }
             </Select>
           </FormControl>
-          <FormLabel paddingTop={'5px'}>Exercise Type</FormLabel>
-          <FormControl>
-            <Select
-              borderColor={'grey'}
-              onChange={(event) =>
-                setExerciseType(Number(event.currentTarget.value))
-              }
-            >
-              <option value={1} defaultChecked>
-                Open question
-              </option>
-              <option value={4}>Multichoice</option>
-            </Select>
-          </FormControl>
           <Flex
             paddingTop={'5px'}
             alignItems={'center'}
             hidden={exerciseType == 1}
           >
             N° Correct Answers:
-            <NumberInput float={'right'} defaultValue={1} min={1} max={6}>
-              <NumberInputField
-                width={'80px'}
-                onChange={(e) => setCA_N(Number(e.currentTarget.value))}
-              />
+            <NumberInput
+              float={'right'}
+              defaultValue={ca_n}
+              min={1}
+              max={6}
+              width={'80px'}
+            >
+              <NumberInputField />
               <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
+                <NumberIncrementStepper onClick={() => setCA_N(ca_n + 1)} />
+                <NumberDecrementStepper onClick={() => setCA_N(ca_n - 1)} />
               </NumberInputStepper>
             </NumberInput>
             N° Distractors:
-            <NumberInput defaultValue={1} min={1} max={6} width={'80px'}>
-              <NumberInputField
-                onChange={(e) => setDA_N(Number(e.currentTarget.value))}
-              />
+            <NumberInput defaultValue={da_n} min={0} max={6} width={'80px'}>
+              <NumberInputField />
               <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
+                <NumberIncrementStepper onClick={() => setDA_N(da_n + 1)} />
+                <NumberDecrementStepper onClick={() => setDA_N(da_n - 1)} />
               </NumberInputStepper>
             </NumberInput>
             N° Easy Distractors:
-            <NumberInput defaultValue={1} min={1} max={6} width={'80px'}>
-              <NumberInputField
-                onChange={(e) => setEDA_N(Number(e.currentTarget.value))}
-              />
+            <NumberInput defaultValue={eda_n} min={0} max={6} width={'80px'}>
+              <NumberInputField />
               <NumberInputStepper>
-                <NumberIncrementStepper />
-                <NumberDecrementStepper />
+                <NumberIncrementStepper onClick={() => setEDA_N(eda_n + 1)} />
+                <NumberDecrementStepper onClick={() => setEDA_N(eda_n - 1)} />
               </NumberInputStepper>
             </NumberInput>
           </Flex>
