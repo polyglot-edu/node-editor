@@ -2,13 +2,13 @@ import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
-  AIMultichoiceType,
-  AIQuestionType as AIExerciseType,
+  AIExerciseType,
+  AnalyseType,
+  LOType,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
-  SummarizerBody,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -35,8 +35,8 @@ const AIAPIGeneration = axiosCreate.create({
   headers: {
     'Content-Type': 'application/json',
     ApiKey: process.env.APIKEY,
-    modelName: 'gpt35Turbo',
-    endpoint: 'https://ai4edu.openai.azure.com/',
+    SetupModel:
+      '{"secretKey": "72ad445a32ad4b899c9a90cb496aae20","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
   },
 });
 
@@ -317,15 +317,23 @@ export const API = {
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
-  generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
+
+  analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Exercises/GenerateExercise`,
+      `/Analyser/analyseMaterial`,
       body
     );
   },
-  summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
+  generateLO: (body: LOType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Summarizer/summarizelesson`,
+      `/LOGenerator/generatelearningobjective`,
+      body
+    );
+  },
+
+  generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Exercises/GenerateExercise`,
       body
     );
   },

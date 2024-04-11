@@ -31,7 +31,7 @@ import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
 import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
-import SummarizerModal from '../Modals/SummarizerModal';
+import AIToolModal from '../Modals/AIToolModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
   publishFlow: () => Promise<boolean>;
@@ -83,9 +83,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     onClose: onCloseSave,
   } = useDisclosure();
   const {
-    isOpen: isOpenSummarizer,
-    onOpen: onOpenSummarizer,
-    onClose: onCloseSummarizer,
+    isOpen: isOpenAITool,
+    onOpen: onOpenAITool,
+    onClose: onCloseAITool,
   } = useDisclosure();
 
   useEffect(() => {
@@ -196,9 +196,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             ]}
           />
           <ActionButton
-            label="Summarizer Tool"
+            label="AI tool"
             disabled={false}
-            onClick={onOpenSummarizer}
+            onClick={onOpenAITool}
             icon={<ViewIcon color="blue.500" />}
           />
           <Spacer />
@@ -229,9 +229,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             flow={flow}
             updateInfo={updateFlowInfo}
           />
-          <SummarizerModal
-            isOpen={isOpenSummarizer}
-            onClose={onCloseSummarizer}
+          <AIToolModal
+            isOpen={isOpenAITool}
+            onClose={onCloseAITool}
           />
         </>
       )}
