@@ -40,6 +40,7 @@ export type LOType = {
   Level: number;
   Context: string;
 };
+
 export type MaterialType = {
   topic: string;
   numberOfWords: number;
