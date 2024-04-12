@@ -54,24 +54,20 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                   return;
                 }
                 setGeneratingLoading(true);
-                const level = '0';
+                const level = '1';
                 if (!sourceMaterial) {
                   setGeneratedMaterial('No text given');
                   //
                   throw ': no text given';
                 }
                 if (!noW) setNoW('200');
-
-                const response: AxiosResponse = await API.summarizerAI({
-                  lesson: sourceMaterial,
-                  level: level,
-                  noW: noW,
+                const response: AxiosResponse = await API.summarize({
+                  material: sourceMaterial,
+                  level: Number(level),
+                  numberOfWords: Number(noW),
                 });
-                const pos = response.data.search('Summary:');
-                const summary = response.data.substring(pos + 9);
-                setGeneratedMaterial(summary);
+                setGeneratedMaterial(response.data);
                 setGeneratingLoading(false);
-                generateButton = true;
               } catch (error) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {
