@@ -83,9 +83,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     onClose: onCloseSave,
   } = useDisclosure();
   const {
-    isOpen: isOpenSummarizer,
-    onOpen: onOpenSummarizer,
-    onClose: onCloseSummarizer,
+    isOpen: isOpenAITool,
+    onOpen: onOpenSummarizeTool,
+    onClose: onCloseAITool,
   } = useDisclosure();
 
   useEffect(() => {
@@ -196,9 +196,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             ]}
           />
           <ActionButton
-            label="Summarizer Tool"
+            label="Summarizer tool"
             disabled={false}
-            onClick={onOpenSummarizer}
+            onClick={onOpenSummarizeTool}
             icon={<ViewIcon color="blue.500" />}
           />
           <Spacer />
@@ -229,10 +229,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             flow={flow}
             updateInfo={updateFlowInfo}
           />
-          <SummarizerModal
-            isOpen={isOpenSummarizer}
-            onClose={onCloseSummarizer}
-          />
+          <SummarizerModal isOpen={isOpenAITool} onClose={onCloseAITool} />
         </>
       )}
       <SaveFlowModal

@@ -42,21 +42,20 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
-                const level = '0';
+                const level = '1';
                 if (!sourceMaterial) {
                   setGeneratedMaterial('No text given');
                   //
                   throw ': no text given';
                 }
                 if (!noW) setNoW('200');
-                if (generatedMaterial != 'enable')
-                  throw ': you are not enabled';
-                const response: AxiosResponse = await API.summarizerAI({
-                  lesson: sourceMaterial,
-                  level: level,
-                  noW: noW,
+                const response: AxiosResponse = await API.summarize({
+                  material: sourceMaterial,
+                  level: Number(level),
+                  numberOfWords: Number(noW),
                 });
                 setGeneratedMaterial(response.data);
+                setGeneratingLoading(false);
               } catch (error) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {

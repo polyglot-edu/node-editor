@@ -2,13 +2,15 @@ import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
-  AIMultichoiceType,
-  AIQuestionType,
+  AIExerciseType,
+  AnalyseType,
+  LOType,
+  MaterialType,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
-  SummarizerBody,
+  SummarizeType,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -30,12 +32,13 @@ const axios = axiosCreate.create({
   withCredentials: true,
 });
 
-const openQuestionGeneration = axiosCreate.create({
-  //baseURL: process.env.AIGENERATION_URL,
+const AIAPIGeneration = axiosCreate.create({
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
     ApiKey: process.env.APIKEY,
+    SetupModel:
+      '{"secretKey": "72ad445a32ad4b899c9a90cb496aae20","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
   },
 });
 
@@ -170,6 +173,9 @@ export class APIV2 {
     if (!flow.nodes)
       return { status: 300, check: false, message: 'Error: no nodes found' };
     let missingData = '';
+    if (flow.description == '') missingData += 'descrition; ';
+    if (flow.duration == '') missingData += 'duration; ';
+    if (flow.learningContext == '') missingData += 'learning context; ';
     let startingNode = 0; //need to be == 1 at the end of the check
     flow.nodes.map((e) => {
       let infoCheck = true;
@@ -313,23 +319,38 @@ export const API = {
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
-  generateNewAIQuestion: (body: AIQuestionType): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
-      `/QuestionExercise/generateexercise`,
+
+  analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Analyser/analyseMaterial`,
       body
     );
   },
-  generateNewAIMultiChoice: (
-    body: AIMultichoiceType
-  ): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
-      `/QuizExercise/generateexercise`,
+
+  generateLO: (body: LOType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/LOGenerator/generatelearningobjective`,
       body
     );
   },
-  summarizerAI: (body: SummarizerBody): Promise<AxiosResponse> => {
-    return openQuestionGeneration.post<{}, AxiosResponse, {}>(
-      `/Summarizer/summarizelesson`,
+
+  generateMaterial: (body: MaterialType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/MaterialGenerator/generatematerial`,
+      body
+    );
+  },
+
+  summarize: (body: SummarizeType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Summarizer/summarise`,
+      body
+    );
+  },
+
+  generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Exercises/GenerateExercise`,
       body
     );
   },
