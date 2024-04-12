@@ -1,5 +1,4 @@
 import { Button, useDisclosure } from '@chakra-ui/react';
-import ArrayField from '../../Forms/Fields/ArrayField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import AIToolModal from '../../Modals/AIToolModal';
 import NodeProperties from './NodeProperties';
