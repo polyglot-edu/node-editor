@@ -20,6 +20,7 @@ export type ModelTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+let generateButton = false;
 
 const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
@@ -27,7 +28,6 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
   const [generatedMaterial, setGeneratedMaterial] = useState('');
   const [noW, setNoW] = useState('');
   const toast = useToast();
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
       <ModalOverlay />
@@ -41,6 +41,18 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             marginTop={'5px'}
             onClick={async () => {
               try {
+                if (generateButton) {
+                  toast({
+                    title: 'Invalid syntax',
+                    description:
+                      'You have already generated a summary with this setup, please change the source material or the number of words',
+                    status: 'error',
+                    duration: 5000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
+                  return;
+                }
                 setGeneratingLoading(true);
                 const level = '1';
                 if (!sourceMaterial) {
@@ -92,7 +104,10 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             <Input
               maxWidth={'80px'}
               value={noW}
-              onChange={(e) => setNoW(e.currentTarget.value)}
+              onChange={(e) => {
+                generateButton = false;
+                setNoW(e.currentTarget.value);
+              }}
             />
           </FormLabel>
 
@@ -105,7 +120,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             value={sourceMaterial}
             overflowY={'auto'}
             onChange={(e) => {
-              setGeneratingLoading(false);
+              generateButton = false;
               setSourceMaterial(e.currentTarget.value);
             }}
           />
