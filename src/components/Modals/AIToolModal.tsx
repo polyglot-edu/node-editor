@@ -51,6 +51,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
   ]);
   const [topicIndex, setTopicIndex] = useState(0);
   let exerciseType: number;
+  const [noW, setNoW] = useState(200);
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(0);
   const [eda_n, setEDA_N] = useState(0);
@@ -69,16 +70,30 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
     case 'multipleChoiceQuestionNode':
       exerciseType = 4;
       break;
+    case 'ReadMaterialNode':
+      exerciseType = 8;
+      break;
     default:
       throw ': exercisetype error';
   }
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Do you need help to generate your material?</ModalHeader>
         <ModalCloseButton />
+        <Button
+          onClick={() => {
+            setScreen1(true);
+            setScreen2(false);
+            setScreen3(false);
+            setSourceMaterial('');
+          }}
+          right={'0px'}
+          width={'80px'}
+        >
+          Cancel
+        </Button>
         <ModalBody hidden={!screen1}>
           <Text>
             STEP 1: Submit your material in this box to use our analyser.
@@ -257,27 +272,25 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
           />
         </ModalBody>
         <ModalBody hidden={!screen3}>
-          <Text>STEP 3: Choose the exercise you want to generate. </Text>
+          <Text>STEP 3: Choose the argument you want to generate. </Text>
           <Text>
             *Warning: after the exercise has been generated you need to close
             and reopen the node&apos;s properties to actually see the result*
           </Text>
           <Button
+            hidden={exerciseType == 8}
             marginBottom={'5px'}
             marginTop={'5px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
                 if (!topicGen) throw ': no topic generated';
-                console.log('ca_n ' + ca_n);
-                console.log('da_n' + da_n);
-                console.log('eda_n' + eda_n);
                 const response: AxiosResponse = await API.generateNewExercise({
                   macroSubject: macroSubjectGen,
                   title: titleGen,
                   level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
                   typeOfExercise: exerciseType, // 1=question, 4=choice,
-                  learningObjective: choices[choiceIndex][0],
+                  learningObjective: choices[choiceIndex],
                   bloomLevel: choiceIndex / 2, //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
                   language: language,
                   material: sourceMaterial,
@@ -361,6 +374,67 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
           >
             Generate Exercise
           </Button>
+          <Button
+            hidden={exerciseType != 8}
+            marginBottom={'5px'}
+            marginTop={'5px'}
+            onClick={async () => {
+              try {
+                setGeneratingLoading(true);
+                if (!topicGen) throw ': no topic generated';
+                const response: AxiosResponse = await API.generateMaterial({
+                  numberOfWords: noW,
+                  level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
+                  learningObjective: choices[choiceIndex],
+                  topic: topicGen[topicIndex].Topic,
+                });
+                setScreen1(true);
+                setScreen3(false);
+                setGeneratingLoading(false);
+                console.log(response.data);
+                let dataGen;
+                switch (exerciseType) {
+                  case 8:
+                    console.log('creating readMaterial');
+                    dataGen = {
+                      text: response.data,
+                      link: '',
+                    };
+                    break;
+                  default:
+                    console.log('error in exerciseType');
+                    throw ': generated type error';
+                }
+                console.log(dataGen);
+                setValue('data', dataGen);
+                onClose();
+              } catch (error) {
+                setGeneratingLoading(false);
+                if ((error as Error).name === 'SyntaxError') {
+                  toast({
+                    title: 'Invalid syntax',
+                    description: (error as Error).toString(),
+                    status: 'error',
+                    duration: 3000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
+                  return;
+                }
+                toast({
+                  title: 'Internal Error',
+                  description: 'Try later' + (error as Error),
+                  status: 'error',
+                  duration: 3000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
+              }
+            }}
+            isLoading={generatingLoading}
+          >
+            Generate Material
+          </Button>
           <FormLabel paddingTop={'5px'}>Learning Objective</FormLabel>
           <FormControl label="Topic">
             <Select
@@ -380,10 +454,11 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
               }
             </Select>
           </FormControl>
+          <Flex hidden={exerciseType != 8}></Flex>
           <Flex
             paddingTop={'5px'}
             alignItems={'center'}
-            hidden={exerciseType == 1}
+            hidden={exerciseType != 4}
           >
             N° Correct Answers:
             <NumberInput
