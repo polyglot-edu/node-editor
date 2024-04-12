@@ -5,12 +5,12 @@ import {
   AIExerciseType,
   AnalyseType,
   LOType,
-  SummarizeType,
+  MaterialType,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
-  MaterialType,
+  SummarizeType,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
