@@ -5,10 +5,12 @@ import {
   AIExerciseType,
   AnalyseType,
   LOType,
+  SummarizeType,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
+  MaterialType,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -324,9 +326,24 @@ export const API = {
       body
     );
   },
+
   generateLO: (body: LOType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
       `/LOGenerator/generatelearningobjective`,
+      body
+    );
+  },
+
+  generateMaterial: (body: MaterialType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/MaterialGenerator/generatematerial`,
+      body
+    );
+  },
+
+  summarize: (body: SummarizeType): Promise<AxiosResponse> => {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/Summarizer/summarise`,
       body
     );
   },

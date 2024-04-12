@@ -84,7 +84,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   } = useDisclosure();
   const {
     isOpen: isOpenAITool,
-    onOpen: onOpenAITool,
+    onOpen: onOpenSummarizeTool,
     onClose: onCloseAITool,
   } = useDisclosure();
 
@@ -196,9 +196,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             ]}
           />
           <ActionButton
-            label="AI tool"
+            label="Summarizer tool"
             disabled={false}
-            onClick={onOpenAITool}
+            onClick={onOpenSummarizeTool}
             icon={<ViewIcon color="blue.500" />}
           />
           <Spacer />

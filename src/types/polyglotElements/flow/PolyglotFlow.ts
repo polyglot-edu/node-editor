@@ -40,6 +40,18 @@ export type LOType = {
   Level: number;
   Context: string;
 };
+export type MaterialType = {
+  topic: string;
+  numberOfWords: number;
+  level: number;
+  learningObjective: string;
+};
+
+export type SummarizeType = {
+  material: string;
+  numberOfWords: number;
+  level: number;
+};
 
 export type AIExerciseType = {
   macroSubject?: string;

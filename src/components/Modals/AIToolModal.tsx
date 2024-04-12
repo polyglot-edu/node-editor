@@ -257,7 +257,11 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
           />
         </ModalBody>
         <ModalBody hidden={!screen3}>
-          <Text>STEP 3: Choose the exercise you want to generate.</Text>
+          <Text>STEP 3: Choose the exercise you want to generate. </Text>
+          <Text>
+            *Warning: after the exercise has been generated you need to close
+            and reopen the node&apos;s properties to actually see the result*
+          </Text>
           <Button
             marginBottom={'5px'}
             marginTop={'5px'}
