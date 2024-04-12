@@ -50,7 +50,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
     { Topic: 'prova', Type: 0, Description: '' },
   ]);
   const [topicIndex, setTopicIndex] = useState(0);
-  let exerciseType;
+  let exerciseType:number;
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(0);
   const [eda_n, setEDA_N] = useState(0);
