@@ -35,7 +35,6 @@ const ArrayField = ({
   });
 
   return (
-    //da rifattorizzare -> problem: when the api insert the new data the component doesn't rerender the answers
     <FormControl>
       <FormLabel htmlFor={name}>{label}</FormLabel>
       {fields.map((field, index) => (

@@ -1,4 +1,5 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, SkeletonText, useDisclosure } from '@chakra-ui/react';
+import { useState } from 'react';
 import MultipleChoiceField from '../../Forms/Fields/MultipleChoiceField';
 import TextField from '../../Forms/Fields/TextField';
 import AIToolModal from '../../Modals/AIToolModal';
@@ -10,6 +11,8 @@ const MultipleChoiceQuestionNodeProperties = () => {
     onOpen: onOpenAITool,
     onClose: onCloseAITool,
   } = useDisclosure();
+
+  const [generatingLoading, setGeneratingLoading] = useState(false);
   // todo: unregister the paramete
   return (
     <>
@@ -22,16 +25,39 @@ const MultipleChoiceQuestionNodeProperties = () => {
         isOpen={isOpenAITool}
         onClose={onCloseAITool}
         exType={'multipleChoiceQuestionNode'}
+        action={setGeneratingLoading}
       />
-      <Button marginBottom={'5px'} id="buttonAI" onClick={onOpenAITool}>
+      <Button
+        marginBottom={'5px'}
+        id="buttonAI"
+        onClick={() => {
+          setGeneratingLoading(true);
+          onOpenAITool();
+        }}
+      >
         Create with AI
       </Button>
-      <TextField label="Question" name="data.question" isTextArea />
-      <MultipleChoiceField
-        label="Choices"
-        name="data.choices"
-        option="Risposta"
-      />
+      <SkeletonText
+        noOfLines={4}
+        spacing="4"
+        skeletonHeight="2"
+        isLoaded={!generatingLoading}
+      >
+        <TextField label="Question" name="data.question" isTextArea />
+      </SkeletonText>
+      <SkeletonText
+        paddingTop={'5px'}
+        noOfLines={5}
+        spacing="8"
+        skeletonHeight="10"
+        isLoaded={!generatingLoading}
+      >
+        <MultipleChoiceField
+          label="Choices"
+          name="data.choices"
+          option="Risposta"
+        />
+      </SkeletonText>
     </>
   );
 };
