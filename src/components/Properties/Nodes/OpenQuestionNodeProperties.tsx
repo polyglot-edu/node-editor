@@ -1,4 +1,5 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, SkeletonText, useDisclosure } from '@chakra-ui/react';
+import { useState } from 'react';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import AIToolModal from '../../Modals/AIToolModal';
 import NodeProperties from './NodeProperties';
@@ -9,6 +10,7 @@ const OpenQuestionNodeProperties = () => {
     onOpen: onOpenAITool,
     onClose: onCloseAITool,
   } = useDisclosure();
+  const [generatingLoading, setGeneratingLoading] = useState(false);
   return (
     <>
       <NodeProperties
@@ -19,15 +21,31 @@ const OpenQuestionNodeProperties = () => {
         isOpen={isOpenAITool}
         onClose={onCloseAITool}
         exType={'OpenQuestionNode'}
+        action={setGeneratingLoading}
       />
-      <Button marginBottom={'5px'} id="buttonAI" onClick={onOpenAITool}>
+      <Button
+        marginBottom={'5px'}
+        id="buttonAI"
+        onClick={() => {
+          setGeneratingLoading(true);
+          onOpenAITool();
+        }}
+      >
         Create with AI
       </Button>
-      <MarkDownField label="Question" name="data.question" />
-      <MarkDownField
-        label="Correct Answers/validation material"
-        name="data.possibleAnswer"
-      />
+      <SkeletonText
+        noOfLines={8}
+        spacing="4"
+        skeletonHeight="2"
+        isLoaded={!generatingLoading}
+      >
+        <MarkDownField label="Question" name="data.question" />
+        <br />
+        <MarkDownField
+          label="Correct Answers/validation material"
+          name="data.possibleAnswer"
+        />
+      </SkeletonText>
     </>
   );
 };
