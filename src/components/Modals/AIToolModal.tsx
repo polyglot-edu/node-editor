@@ -385,6 +385,7 @@ const AIToolModal = ({
                 }
                 console.log(dataGen);
                 setValue('data', dataGen);
+                if (action) action(false);
                 onClose();
               } catch (error) {
                 setGeneratingLoading(false);
@@ -446,6 +447,7 @@ const AIToolModal = ({
                 }
                 console.log(dataGen);
                 setValue('data', dataGen);
+                if (action) action(false);
                 onClose();
               } catch (error) {
                 setGeneratingLoading(false);
