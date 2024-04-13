@@ -49,7 +49,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
         paddingTop={'5px'}
         noOfLines={5}
         spacing="8"
-        skeletonHeight="10"        
+        skeletonHeight="10"
         isLoaded={!generatingLoading}
       >
         <MultipleChoiceField

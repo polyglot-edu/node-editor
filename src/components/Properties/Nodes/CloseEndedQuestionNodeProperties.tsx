@@ -1,9 +1,9 @@
-import { Button, Skeleton, SkeletonText, useDisclosure } from '@chakra-ui/react';
+import { Button, SkeletonText, useDisclosure } from '@chakra-ui/react';
+import { useState } from 'react';
 import ArrayField from '../../Forms/Fields/ArrayField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import AIToolModal from '../../Modals/AIToolModal';
 import NodeProperties from './NodeProperties';
-import { useState } from 'react';
 
 const CloseEndedQuestionNodeProperties = () => {
   const {
@@ -34,7 +34,7 @@ const CloseEndedQuestionNodeProperties = () => {
         skeletonHeight="2"
         isLoaded={!generatingLoading}
       >
-      <MarkDownField label="Question" name="data.question" />
+        <MarkDownField label="Question" name="data.question" />
       </SkeletonText>
       <SkeletonText
         paddingTop={'5px'}
@@ -43,11 +43,11 @@ const CloseEndedQuestionNodeProperties = () => {
         skeletonHeight="10"
         isLoaded={!generatingLoading}
       >
-      <ArrayField
-        label="Correct Answers"
-        name="data.correctAnswers"
-        option="Answer"
-      />
+        <ArrayField
+          label="Correct Answers"
+          name="data.correctAnswers"
+          option="Answer"
+        />
       </SkeletonText>
     </>
   );

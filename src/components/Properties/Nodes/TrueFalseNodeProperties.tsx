@@ -25,11 +25,14 @@ const TrueFalseNodeProperties = () => {
         exType={'TrueFalseNode'}
         action={setGeneratingLoading}
       />
-      <Button marginBottom={'5px'} id="buttonAI" 
+      <Button
+        marginBottom={'5px'}
+        id="buttonAI"
         onClick={() => {
           setGeneratingLoading(true);
           onOpenAITool();
-        }}>
+        }}
+      >
         Create with AI
       </Button>
       <TextField label="Instructions" name="data.instructions" isTextArea />
