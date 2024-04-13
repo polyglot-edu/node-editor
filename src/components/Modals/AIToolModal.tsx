@@ -89,15 +89,19 @@ const AIToolModal = ({
       throw 'error in type';
   }
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        if (action) action(false);
+        onClose();
+      }}
+      size={'2xl'}
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Do you need help to generate your material?</ModalHeader>
-        <ModalCloseButton
-          onClick={() => {
-            if (action) action(false);
-          }}
-        />
+        <ModalCloseButton />
         <Button
           onClick={() => {
             setScreen1(true);
@@ -381,7 +385,6 @@ const AIToolModal = ({
                 }
                 console.log(dataGen);
                 setValue('data', dataGen);
-                if (action) action(false);
                 onClose();
               } catch (error) {
                 setGeneratingLoading(false);
@@ -430,7 +433,7 @@ const AIToolModal = ({
                 console.log(response.data);
                 let dataGen;
                 switch (exerciseType) {
-                  case 8:
+                  case 100:
                     console.log('creating readMaterial');
                     dataGen = {
                       text: response.data,
@@ -443,6 +446,7 @@ const AIToolModal = ({
                 }
                 console.log(dataGen);
                 setValue('data', dataGen);
+                onClose();
               } catch (error) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {
