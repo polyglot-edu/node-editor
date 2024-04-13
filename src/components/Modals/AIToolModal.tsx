@@ -289,10 +289,6 @@ const AIToolModal = ({
         </ModalBody>
         <ModalBody hidden={!screen3}>
           <Text>STEP 3: Choose the argument you want to generate. </Text>
-          <Text>
-            *Warning: after the exercise has been generated you need to close
-            and reopen the node&apos;s properties to actually see the result*
-          </Text>
           <Button
             hidden={exerciseType == 100}
             marginBottom={'5px'}
