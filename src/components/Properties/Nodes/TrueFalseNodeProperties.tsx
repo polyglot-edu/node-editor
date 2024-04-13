@@ -1,4 +1,5 @@
-import { Button, useDisclosure } from '@chakra-ui/react';
+import { Button, SkeletonText, useDisclosure } from '@chakra-ui/react';
+import { useState } from 'react';
 import TextField from '../../Forms/Fields/TextField';
 import TrueFalseField from '../../Forms/Fields/TrueFalseField';
 import AIToolModal from '../../Modals/AIToolModal';
@@ -10,6 +11,7 @@ const TrueFalseNodeProperties = () => {
     onOpen: onOpenAITool,
     onClose: onCloseAITool,
   } = useDisclosure();
+  const [generatingLoading, setGeneratingLoading] = useState(false);
   return (
     <>
       <NodeProperties
@@ -21,8 +23,13 @@ const TrueFalseNodeProperties = () => {
         isOpen={isOpenAITool}
         onClose={onCloseAITool}
         exType={'TrueFalseNode'}
+        action={setGeneratingLoading}
       />
-      <Button marginBottom={'5px'} id="buttonAI" onClick={onOpenAITool}>
+      <Button marginBottom={'5px'} id="buttonAI" 
+        onClick={() => {
+          setGeneratingLoading(true);
+          onOpenAITool();
+        }}>
         Create with AI
       </Button>
       <TextField label="Instructions" name="data.instructions" isTextArea />
@@ -38,11 +45,19 @@ const TrueFalseNodeProperties = () => {
         name="data.positivePoints"
         width="200px"
       />
-      <TrueFalseField
-        label="Questions"
-        name="data.questions"
-        option="Question"
-      />
+      <SkeletonText
+        paddingTop={'5px'}
+        noOfLines={2}
+        spacing="4"
+        skeletonHeight="5"
+        isLoaded={!generatingLoading}
+      >
+        <TrueFalseField
+          label="Questions"
+          name="data.questions"
+          option="Question"
+        />
+      </SkeletonText>
     </>
   );
 };

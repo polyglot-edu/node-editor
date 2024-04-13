@@ -30,6 +30,7 @@ export type ModelTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
   exType: string;
+  action?: (i: boolean) => void;
 };
 
 export type Topic = {
@@ -38,7 +39,12 @@ export type Topic = {
   Description: string;
 };
 
-const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
+const AIToolModal = ({
+  isOpen,
+  onClose,
+  exType,
+  action,
+}: ModelTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
   const [context, setContext] = useState('');
@@ -65,19 +71,19 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
   const word = exType == 'TrueFalseNode' ? 'Statements' : 'Answers';
   switch (exType) {
     case 'closeEndedQuestionNode':
-      exerciseType = 0;
+      exerciseType = 3;
       break;
     case 'OpenQuestionNode':
-      exerciseType = 1;
+      exerciseType = 0;
       break;
     case 'TrueFalseNode':
-      exerciseType = 4;
+      exerciseType = 2;
       break;
     case 'multipleChoiceQuestionNode':
       exerciseType = 4;
       break;
     case 'ReadMaterialNode':
-      exerciseType = 8;
+      exerciseType = 100;
       break;
     default:
       throw 'error in type';
@@ -87,7 +93,11 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Do you need help to generate your material?</ModalHeader>
-        <ModalCloseButton />
+        <ModalCloseButton
+          onClick={() => {
+            if (action) action(false);
+          }}
+        />
         <Button
           onClick={() => {
             setScreen1(true);
@@ -284,7 +294,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
             and reopen the node&apos;s properties to actually see the result*
           </Text>
           <Button
-            hidden={exerciseType == 8}
+            hidden={exerciseType == 100}
             marginBottom={'5px'}
             marginTop={'5px'}
             onClick={async () => {
@@ -314,19 +324,28 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                 let dataGen;
                 switch (exerciseType) {
                   case 0:
-                    console.log('creating close_ended_question');
-                    dataGen = {
-                      question: response.data.Assignment,
-                      correctAnswers: response.data.Solutions,
-                    };
-                    break;
-                  case 1:
                     console.log('creating openQuestion');
                     dataGen = {
                       question: response.data.Assignment,
                       material: sourceMaterial,
                       aiQuestion: false,
                       possibleAnswer: response.data.Solutions[0],
+                    };
+                    break;
+                  case 2:
+                    console.log('creating trueFalse');
+                    dataGen = {
+                      question: response.data.Assignment,
+                      material: sourceMaterial,
+                      aiQuestion: false,
+                      possibleAnswer: response.data.Solutions[0],
+                    };
+                    break;
+                  case 3:
+                    console.log('creating close_ended_question');
+                    dataGen = {
+                      question: response.data.Assignment,
+                      correctAnswers: response.data.Solutions,
                     };
                     break;
                   case 4:
@@ -366,6 +385,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                 }
                 console.log(dataGen);
                 setValue('data', dataGen);
+                if (action) action(false);
                 onClose();
               } catch (error) {
                 setGeneratingLoading(false);
@@ -395,7 +415,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
             Generate Exercise
           </Button>
           <Button
-            hidden={exerciseType != 8}
+            hidden={exerciseType != 100}
             marginBottom={'5px'}
             marginTop={'5px'}
             onClick={async () => {
@@ -427,7 +447,6 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                 }
                 console.log(dataGen);
                 setValue('data', dataGen);
-                onClose();
               } catch (error) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {
@@ -478,7 +497,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
           <Flex
             paddingTop={'5px'}
             alignItems={'center'}
-            hidden={exerciseType != 4}
+            hidden={exerciseType != 4 && exerciseType != 2}
           >
             N° Correct {word}:
             <NumberInput

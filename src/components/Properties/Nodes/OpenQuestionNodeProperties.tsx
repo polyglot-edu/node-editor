@@ -24,6 +24,7 @@ const OpenQuestionNodeProperties = () => {
         Create with AI
       </Button>
       <MarkDownField label="Question" name="data.question" />
+      <br />
       <MarkDownField
         label="Correct Answers/validation material"
         name="data.possibleAnswer"
