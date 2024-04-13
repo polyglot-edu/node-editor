@@ -62,10 +62,16 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
   const { setValue } = useFormContext();
-
+  const word = exType == 'TrueFalseNode' ? 'Statements' : 'Answers';
   switch (exType) {
+    case 'closeEndedQuestionNode':
+      exerciseType = 0;
+      break;
     case 'OpenQuestionNode':
       exerciseType = 1;
+      break;
+    case 'TrueFalseNode':
+      exerciseType = 4;
       break;
     case 'multipleChoiceQuestionNode':
       exerciseType = 4;
@@ -74,7 +80,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
       exerciseType = 8;
       break;
     default:
-      throw ': exercisetype error';
+      throw 'error in type';
   }
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
@@ -289,9 +295,9 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                   macroSubject: macroSubjectGen,
                   title: titleGen,
                   level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  typeOfExercise: exerciseType, // 1=question, 4=choice,
+                  typeOfExercise: exerciseType, //0=fill_the_gap, 1=question, 4=choice,
                   learningObjective: choices[choiceIndex],
-                  bloomLevel: choiceIndex / 2, //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
+                  bloomLevel: Math.round(choiceIndex / 2), //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
                   language: language,
                   material: sourceMaterial,
                   correctAnswersNumber: ca_n,
@@ -307,6 +313,13 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                 console.log(response.data);
                 let dataGen;
                 switch (exerciseType) {
+                  case 0:
+                    console.log('creating close_ended_question');
+                    dataGen = {
+                      question: response.data.Assignment,
+                      correctAnswers: response.data.Solutions,
+                    };
+                    break;
                   case 1:
                     console.log('creating openQuestion');
                     dataGen = {
@@ -334,11 +347,18 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                       if (response.data.Solutions.includes(value))
                         isAnswerCorrect[index] = true;
                     });
-                    dataGen = {
-                      question: response.data.Assignment,
-                      choices: answers,
-                      isChoiceCorrect: isAnswerCorrect,
-                    };
+                    if (exType == 'TrueFalseNode')
+                      dataGen = {
+                        instructions: 'Argument: ' + response.data.Assignment,
+                        questions: answers,
+                        isQuestionCorrect: isAnswerCorrect,
+                      };
+                    else
+                      dataGen = {
+                        question: response.data.Assignment,
+                        choices: answers,
+                        isChoiceCorrect: isAnswerCorrect,
+                      };
                     break;
                   default:
                     console.log('error in exerciseType');
@@ -460,7 +480,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
             alignItems={'center'}
             hidden={exerciseType != 4}
           >
-            N° Correct Answers:
+            N° Correct {word}:
             <NumberInput
               float={'right'}
               defaultValue={ca_n}
@@ -474,7 +494,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                 <NumberDecrementStepper onClick={() => setCA_N(ca_n - 1)} />
               </NumberInputStepper>
             </NumberInput>
-            N° Distractors:
+            N° Wrong {word}:
             <NumberInput defaultValue={da_n} min={0} max={6} width={'80px'}>
               <NumberInputField />
               <NumberInputStepper>
@@ -482,7 +502,7 @@ const AIToolModal = ({ isOpen, onClose, exType }: ModelTemplateProps) => {
                 <NumberDecrementStepper onClick={() => setDA_N(da_n - 1)} />
               </NumberInputStepper>
             </NumberInput>
-            N° Easy Distractors:
+            N° Easly wrong {word}:
             <NumberInput defaultValue={eda_n} min={0} max={6} width={'80px'}>
               <NumberInputField />
               <NumberInputStepper>

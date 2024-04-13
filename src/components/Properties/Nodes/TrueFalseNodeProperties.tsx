@@ -1,8 +1,15 @@
+import { Button, useDisclosure } from '@chakra-ui/react';
 import TextField from '../../Forms/Fields/TextField';
 import TrueFalseField from '../../Forms/Fields/TrueFalseField';
+import AIToolModal from '../../Modals/AIToolModal';
 import NodeProperties from './NodeProperties';
 
 const TrueFalseNodeProperties = () => {
+  const {
+    isOpen: isOpenAITool,
+    onOpen: onOpenAITool,
+    onClose: onCloseAITool,
+  } = useDisclosure();
   return (
     <>
       <NodeProperties
@@ -10,6 +17,14 @@ const TrueFalseNodeProperties = () => {
         activityDescription="In this activity learners will have to provide answers to true and false
         questions"
       />
+      <AIToolModal
+        isOpen={isOpenAITool}
+        onClose={onCloseAITool}
+        exType={'TrueFalseNode'}
+      />
+      <Button marginBottom={'5px'} id="buttonAI" onClick={onOpenAITool}>
+        Create with AI
+      </Button>
       <TextField label="Instructions" name="data.instructions" isTextArea />
       <span style={{ float: 'right' }}>
         <TextField
