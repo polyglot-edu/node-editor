@@ -25,7 +25,15 @@ const CloseEndedQuestionNodeProperties = () => {
         exType={'closeEndedQuestionNode'}
         action={setGeneratingLoading}
       />
-      <Button marginBottom={'5px'} id="buttonAI" title="Disabled momentarily">
+      <Button
+        marginBottom={'5px'}
+        id="buttonAI"
+        onClick={() => {
+          setGeneratingLoading(true);
+          onOpenAITool();
+        }}
+        
+      >
         Create with AI
       </Button>
       <SkeletonText
@@ -35,6 +43,7 @@ const CloseEndedQuestionNodeProperties = () => {
         isLoaded={!generatingLoading}
       >
         <MarkDownField label="Question" name="data.question" />
+        <MarkDownField label="Text to fill" name="data.textToFill" />
       </SkeletonText>
       <SkeletonText
         paddingTop={'5px'}

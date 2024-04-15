@@ -116,6 +116,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             width={['30px']}
             className="mr-3"
             alt="Polyglot Logo"
+            onClick={()=>{window.open('http://localhost:3000/flows/')}}
           />
           <ActionButton
             label="Back"
