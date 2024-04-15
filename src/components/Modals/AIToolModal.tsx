@@ -77,7 +77,7 @@ const AIToolModal = ({
       exerciseType = 0;
       break;
     case 'TrueFalseNode':
-      exerciseType = 2;
+      exerciseType = 4;
       break;
     case 'multipleChoiceQuestionNode':
       exerciseType = 4;
@@ -331,7 +331,7 @@ const AIToolModal = ({
                       aiQuestion: false,
                       possibleAnswer: response.data.Solutions[0],
                     };
-                    break;
+                    break; /*
                   case 2:
                     console.log('creating trueFalse');
                     dataGen = {
@@ -341,21 +341,23 @@ const AIToolModal = ({
                       possibleAnswer: response.data.Solutions[0],
                     };
                     break;
+                  */
                   case 3:
                     console.log('creating close_ended_question');
                     dataGen = {
                       question: response.data.Assignment,
                       correctAnswers: response.data.Solutions,
+                      textToFill: response.data.Plus,
                     };
                     break;
                   case 4:
                     console.log('creating multichoice');
+
                     const answers = [].concat(
                       response.data.Solutions,
                       response.data.Distractors,
                       response.data.EasilyDiscardableDistractors
                     ); //response.data.
-                    console.log(answers);
                     answers.sort(() => Math.random() - 0.5);
                     console.log('sorted ' + answers);
 
@@ -506,14 +508,17 @@ const AIToolModal = ({
               float={'right'}
               defaultValue={ca_n}
               min={1}
-              max={6}
+              max={1}
               width={'80px'}
+              title="soon: multiple correct answer"
             >
               <NumberInputField />
+              {/*
               <NumberInputStepper>
                 <NumberIncrementStepper onClick={() => setCA_N(ca_n + 1)} />
                 <NumberDecrementStepper onClick={() => setCA_N(ca_n - 1)} />
               </NumberInputStepper>
+              */}
             </NumberInput>
             N° Wrong {word}:
             <NumberInput defaultValue={da_n} min={0} max={6} width={'80px'}>
