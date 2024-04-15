@@ -331,7 +331,7 @@ const AIToolModal = ({
                       aiQuestion: false,
                       possibleAnswer: response.data.Solutions[0],
                     };
-                    break;/*
+                    break; /*
                   case 2:
                     console.log('creating trueFalse');
                     dataGen = {
@@ -342,7 +342,7 @@ const AIToolModal = ({
                     };
                     break;
                   */
-                 case 3:
+                  case 3:
                     console.log('creating close_ended_question');
                     dataGen = {
                       question: response.data.Assignment,
@@ -352,7 +352,7 @@ const AIToolModal = ({
                     break;
                   case 4:
                     console.log('creating multichoice');
-                    
+
                     const answers = [].concat(
                       response.data.Solutions,
                       response.data.Distractors,

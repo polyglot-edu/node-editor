@@ -32,7 +32,6 @@ const CloseEndedQuestionNodeProperties = () => {
           setGeneratingLoading(true);
           onOpenAITool();
         }}
-        
       >
         Create with AI
       </Button>
