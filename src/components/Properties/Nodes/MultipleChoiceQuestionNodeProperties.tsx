@@ -25,7 +25,7 @@ const MultipleChoiceQuestionNodeProperties = () => {
       <MultipleChoiceField
         label="Choices"
         name="data.choices"
-        option="Risposta"
+        option="Answer"
       />
     </>
   );
