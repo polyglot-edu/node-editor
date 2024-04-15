@@ -537,10 +537,6 @@ const AIToolModal = ({
               </NumberInputStepper>
             </NumberInput>
           </Flex>
-          <FormLabel mb={2} fontWeight={'bold'}>
-            Stuff:
-          </FormLabel>
-          <Textarea placeholder="stuff" maxHeight={'200px'} value={context} />
         </ModalBody>
       </ModalContent>
     </Modal>
