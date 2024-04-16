@@ -159,7 +159,7 @@ const AIToolModal = ({
           </FormLabel>
           <Textarea
             maxHeight={'200px'}
-            placeholder="Insert your material here..."
+            placeholder="Insert your material here, you can put your plain text or the link (attention some websites are crypted, sometimes the tool cannot access the actual text)..."
             value={sourceMaterial}
             overflowY={'auto'}
             onChange={(e) => {
@@ -273,7 +273,7 @@ const AIToolModal = ({
             Additional Context:
           </FormLabel>
           <Textarea
-            placeholder="Insert additional information about your target (optional)"
+            placeholder="Insert additional information about your target, for example 'My class is collaborative' or 'My class needs to do short assignment' (optional)"
             maxHeight={'200px'}
             value={context}
             onChange={(e) => setContext(e.currentTarget.value)}
@@ -333,9 +333,8 @@ const AIToolModal = ({
                   case 3:
                     console.log('creating close_ended_question');
                     dataGen = {
-                      question: response.data.Assignment,
+                      question: response.data.Assignment+'\n'+response.data.Plus,
                       correctAnswers: response.data.Solutions,
-                      textToFill: response.data.Plus,
                     };
                     break;
                   case 4:
