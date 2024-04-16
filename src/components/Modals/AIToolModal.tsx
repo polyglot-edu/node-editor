@@ -59,8 +59,8 @@ const AIToolModal = ({
   let exerciseType: number;
   const [noW, setNoW] = useState(200);
   const [ca_n, setCA_N] = useState(1);
-  const [da_n, setDA_N] = useState(0);
-  const [eda_n, setEDA_N] = useState(0);
+  const [da_n, setDA_N] = useState(1);
+  const [eda_n, setEDA_N] = useState(1);
   const toast = useToast();
   const [choices, setChoices] = useState<string[]>(['']);
   const [choiceIndex, setChoiceIndex] = useState(0);
@@ -96,24 +96,12 @@ const AIToolModal = ({
         onClose();
       }}
       size={'2xl'}
-      isCentered
+      isCentered      
     >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Do you need help to generate your material?</ModalHeader>
         <ModalCloseButton />
-        <Button
-          onClick={() => {
-            setScreen1(true);
-            setScreen2(false);
-            setScreen3(false);
-            setSourceMaterial('');
-          }}
-          right={'0px'}
-          width={'80px'}
-        >
-          Cancel
-        </Button>
         <ModalBody hidden={!screen1}>
           <Text>
             STEP 1: Submit your material in this box to use our analyser.
@@ -537,11 +525,20 @@ const AIToolModal = ({
               </NumberInputStepper>
             </NumberInput>
           </Flex>
-          <FormLabel mb={2} fontWeight={'bold'}>
-            Stuff:
-          </FormLabel>
-          <Textarea placeholder="stuff" maxHeight={'200px'} value={context} />
         </ModalBody>
+        <Button
+          onClick={() => {
+            setScreen1(true);
+            setScreen2(false);
+            setScreen3(false);
+            setSourceMaterial('');
+          }}
+          alignSelf={'center'}
+          width={'80px'}
+          bottom={'5px'}
+        >
+          Cancel
+        </Button>
       </ModalContent>
     </Modal>
   );
