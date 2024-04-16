@@ -42,7 +42,6 @@ const CloseEndedQuestionNodeProperties = () => {
         isLoaded={!generatingLoading}
       >
         <MarkDownField label="Question" name="data.question" />
-        <MarkDownField label="Text to fill" name="data.textToFill" />
       </SkeletonText>
       <SkeletonText
         paddingTop={'5px'}
