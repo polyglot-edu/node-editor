@@ -64,11 +64,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   const [publishLoading, setPublishLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
-    isOpen: isOpenRun,
-    onOpen: onOpenRun,
-    onClose: onCloseRun,
-  } = useDisclosure();
-  const {
     isOpen: isOpenEdit,
     onOpen: onOpenEdit,
     onClose: onCloseEdit,
@@ -78,12 +73,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     onOpen: onOpenSave,
     onClose: onCloseSave,
   } = useDisclosure();
-  const {
-    isOpen: isOpenSummarizer,
-    onOpen: onOpenSummarizer,
-    onClose: onCloseSummarizer,
-  } = useDisclosure();
-
   useEffect(() => {
     const isMac =
       typeof window !== 'undefined'
