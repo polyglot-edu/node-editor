@@ -96,7 +96,7 @@ const AIToolModal = ({
         onClose();
       }}
       size={'2xl'}
-      isCentered      
+      isCentered
     >
       <ModalOverlay />
       <ModalContent>
