@@ -1,7 +1,6 @@
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
-  ArrowRightIcon,
   ArrowUpIcon,
   CloseIcon,
   CopyIcon,
@@ -29,7 +28,6 @@ import { useHasHydrated } from '../../utils/utils';
 import Nav from '../Layout/NavBar';
 import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
-import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
 import SummarizerModal from '../Modals/SummarizerModal';
 type EditorNavProps = {
@@ -67,11 +65,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   const [saveLoading, setSaveLoading] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
-  const {
-    isOpen: isOpenRun,
-    onOpen: onOpenRun,
-    onClose: onCloseRun,
-  } = useDisclosure();
   const {
     isOpen: isOpenEdit,
     onOpen: onOpenEdit,
@@ -179,16 +172,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             ]}
           />
           <DropDown
-            name="Run"
-            options={[
-              {
-                name: 'Run on vscode',
-                icon: <ArrowRightIcon mr={2} />,
-                onClick: onOpenRun,
-              },
-            ]}
-          />
-          <DropDown
             name="Project"
             options={[
               {
@@ -223,7 +206,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
         </HStack>
       </Stack>
       <ExportJsonModal isOpen={isOpen} onClose={onClose} flow={flow} />
-      <RunExecutionModal isOpen={isOpenRun} onClose={onCloseRun} flow={flow} />
       {flow && (
         <>
           <EditFlowModal
