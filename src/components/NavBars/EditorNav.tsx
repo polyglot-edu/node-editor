@@ -1,7 +1,6 @@
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
-  ArrowRightIcon,
   ArrowUpIcon,
   CloseIcon,
   CopyIcon,
@@ -28,7 +27,6 @@ import { useHasHydrated } from '../../utils/utils';
 import Nav from '../Layout/NavBar';
 import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
-import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
