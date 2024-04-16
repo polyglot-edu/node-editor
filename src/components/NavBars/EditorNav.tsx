@@ -174,16 +174,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             ]}
           />
           <DropDown
-            name="Run"
-            options={[
-              {
-                name: 'Run on vscode',
-                icon: <ArrowRightIcon mr={2} />,
-                onClick: onOpenRun,
-              },
-            ]}
-          />
-          <DropDown
             name="Project"
             options={[
               {
@@ -212,7 +202,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
         </HStack>
       </Stack>
       <ExportJsonModal isOpen={isOpen} onClose={onClose} flow={flow} />
-      <RunExecutionModal isOpen={isOpenRun} onClose={onCloseRun} flow={flow} />
       {flow && (
         <>
           <EditFlowModal
