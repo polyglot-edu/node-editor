@@ -28,8 +28,6 @@ const ReactFlowSmartBezierEdgePassFail = (
 
   const edge = edgeMap.get(id);
 
-  const condition = edge?.data?.conditionKind;
-
   const nodes = useNodes();
 
   const getSmartEdgeResponse = getSmartEdge({
@@ -60,7 +58,7 @@ const ReactFlowSmartBezierEdgePassFail = (
       color: '#FF0072',
     },
     label: label,
-    style:{ stroke: condition == 'fail' ? 'red' : 'green' }
+    style:{ stroke: edge?.data?.conditionKind == 'fail' ? 'red' : 'green' }
   };
   */
 
@@ -79,7 +77,7 @@ const ReactFlowSmartBezierEdgePassFail = (
         d={svgPathString}
         markerEnd={markerEnd}
         style={{
-          stroke: condition == 'fail' ? 'red' : 'green',
+          stroke: edge?.data?.conditionKind == 'fail' ? 'red' : 'green',
         }}
       />
       <EdgeLabelRenderer>
