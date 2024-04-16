@@ -333,7 +333,8 @@ const AIToolModal = ({
                   case 3:
                     console.log('creating close_ended_question');
                     dataGen = {
-                      question: response.data.Assignment+'\n'+response.data.Plus,
+                      question:
+                        response.data.Assignment + '\n' + response.data.Plus,
                       correctAnswers: response.data.Solutions,
                     };
                     break;
