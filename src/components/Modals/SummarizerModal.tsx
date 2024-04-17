@@ -54,7 +54,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                   return;
                 }
                 setGeneratingLoading(true);
-                const level = '1';
+                const level = 0;
                 if (!sourceMaterial) {
                   setGeneratedMaterial('No text given');
                   //
@@ -63,7 +63,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                 if (!noW) setNoW('200');
                 const response: AxiosResponse = await API.summarize({
                   material: sourceMaterial,
-                  level: Number(level),
+                  level: level,
                   numberOfWords: Number(noW),
                 });
                 setGeneratedMaterial(response.data);
