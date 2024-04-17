@@ -340,14 +340,15 @@ const AIToolModal = ({
                     break;
                   case 4:
                     console.log('creating multichoice');
-
                     const answers = [].concat(
                       response.data.Solutions,
-                      response.data.Distractors,
-                      response.data.EasilyDiscardableDistractors
-                    ); //response.data.
+                      response.data.Distractors.splice(0, da_n + 1),
+                      response.data.EasilyDiscardableDistractors.splice(
+                        0,
+                        eda_n + 1
+                      )
+                    );
                     answers.sort(() => Math.random() - 0.5);
-                    console.log('sorted ' + answers);
 
                     const isAnswerCorrect = new Array(answers.length).fill(
                       false
