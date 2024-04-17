@@ -1,4 +1,4 @@
-export * from './CustomValidationEdge';
+//export * from './CustomValidationEdge';
 export * from './Edge';
 //export * from './ExactValueEdge';
 export * from './PassFailEdge';

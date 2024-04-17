@@ -4,7 +4,7 @@ import {
   AbstractNode,
   CloseEndedQuestionNode,
   CodingQuestionNode,
-  CustomValidationEdge,
+  //CustomValidationEdge,
   //ExactValueEdge,
   LessonNode,
   MultipleChoiceQuestionNode,
@@ -185,7 +185,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
       },
     },
   ];
-/*
+  /*
   const exactValueEdges: ExactValueEdge[] = [
     {
       _id: UUIDv4(),
@@ -227,7 +227,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
       },
     },
   ];
-
+/*
   const customValidationEdge: CustomValidationEdge[] = [
     {
       _id: UUIDv4(),
@@ -250,13 +250,13 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         },
       },
     },
-  ];
+  ];*/
 
   const flowEdges: PolyglotEdge[] = [
     ...passFailEdges,
     //...exactValueEdges,
     ...unconditionalEdge,
-    ...customValidationEdge,
+    //...customValidationEdge,
   ];
 
   exampleFlows.set('1', {
