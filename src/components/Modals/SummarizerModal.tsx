@@ -54,7 +54,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                   return;
                 }
                 setGeneratingLoading(true);
-                const level = 0;
+                const level = 1;
                 if (!sourceMaterial) {
                   setGeneratedMaterial('No text given');
                   //
