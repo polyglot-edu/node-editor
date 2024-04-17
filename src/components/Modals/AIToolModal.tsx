@@ -100,15 +100,29 @@ const AIToolModal = ({
     >
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Do you need help to generate your material?</ModalHeader>
+        <ModalHeader>
+          Do you need help to generate your learning activity?
+        </ModalHeader>
         <ModalCloseButton />
         <ModalBody hidden={!screen1}>
           <Text>
             STEP 1: Submit your material in this box to use our analyser.
           </Text>
+          <FormLabel mb={2} fontWeight={'bold'}>
+            Your material:
+          </FormLabel>
+          <Textarea
+            maxHeight={'200px'}
+            placeholder="Insert your material here, you can put your plain text or the link (attention some websites are crypted, sometimes the tool cannot access the actual text)..."
+            value={sourceMaterial}
+            overflowY={'auto'}
+            onChange={(e) => {
+              setGeneratingLoading(false);
+              setSourceMaterial(e.currentTarget.value);
+            }}
+          />
           <Button
-            marginBottom={'5px'}
-            marginTop={'5px'}
+            marginTop={'15px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
@@ -154,25 +168,70 @@ const AIToolModal = ({
           >
             Analyse Material
           </Button>
-          <FormLabel mb={2} fontWeight={'bold'}>
-            Your material:
-          </FormLabel>
-          <Textarea
-            maxHeight={'200px'}
-            placeholder="Insert your material here, you can put your plain text or the link (attention some websites are crypted, sometimes the tool cannot access the actual text)..."
-            value={sourceMaterial}
-            overflowY={'auto'}
-            onChange={(e) => {
-              setGeneratingLoading(false);
-              setSourceMaterial(e.currentTarget.value);
-            }}
-          />
         </ModalBody>
         <ModalBody hidden={!screen2}>
-          <Text>STEP 2: Choose the topic you want to submit.</Text>
+          <Text>STEP 2: Choose the topic you want to use.</Text>
+          <FormControl label="Level">
+            <FormLabel
+              mb={2}
+              fontWeight={'bold'}
+              paddingTop={'5px'}
+              paddingBottom={'-5px'}
+            >
+              Level:
+            </FormLabel>
+            <Select
+              borderColor={'grey'}
+              onChange={(event) => setLevel(Number(event.currentTarget.value))}
+            >
+              <option value={0} defaultChecked>
+                Primary School
+              </option>
+              <option value={1}>Middle School</option>
+              <option value={2}>High School</option>
+              <option value={3}>College</option>
+              <option value={4}>Academy</option>
+            </Select>
+          </FormControl>
+          <FormControl label="Topic" paddingTop={'5px'}>
+            <FormLabel
+              mb={2}
+              fontWeight={'bold'}
+              paddingTop={'5px'}
+              paddingBottom={'-5px'}
+            >
+              Topic:
+            </FormLabel>
+            <Select
+              borderColor={'grey'}
+              onChange={(event) =>
+                setTopicIndex(Number(event.currentTarget.value))
+              }
+            >
+              {
+                <>
+                  {topicGen.map((p, id) => {
+                    return (
+                      <option key={id} value={id}>
+                        <Box width={'100px'}>{p.Topic}</Box>
+                      </option>
+                    );
+                  })}
+                </>
+              }
+            </Select>
+          </FormControl>
+          <FormLabel
+            mb={2}
+            fontWeight={'bold'}
+            paddingTop={'5px'}
+            paddingBottom={'-5px'}
+          >
+            Topic Description:
+          </FormLabel>
+          <Text>{topicGen[topicIndex].Description}</Text>
           <Button
-            marginBottom={'5px'}
-            marginTop={'5px'}
+            marginTop={'15px'}
             onClick={async () => {
               try {
                 if (!topicGen) throw ': No topic generated';
@@ -224,58 +283,75 @@ const AIToolModal = ({
             }}
             isLoading={generatingLoading}
           >
-            Submit Topic
+            Select Level and Topic
           </Button>
-          <FormControl label="Level">
-            <Select
-              borderColor={'grey'}
-              onChange={(event) => setLevel(Number(event.currentTarget.value))}
-            >
-              <option value={0} defaultChecked>
-                Primary School
-              </option>
-              <option value={1}>Middle School</option>
-              <option value={2}>High School</option>
-              <option value={3}>College</option>
-              <option value={4}>Academy</option>
-            </Select>
-          </FormControl>
-          <FormControl label="Topic" paddingTop={'5px'}>
+        </ModalBody>
+        <ModalBody hidden={!screen3}>
+          <Text>
+            STEP 3: Choose the learning objective you want to achieve.{' '}
+          </Text>
+          <FormLabel paddingTop={'5px'}>Learning Objective</FormLabel>
+          <FormControl label="Topic">
             <Select
               borderColor={'grey'}
               onChange={(event) =>
-                setTopicIndex(Number(event.currentTarget.value))
+                setChoiceIndex(Number(event.currentTarget.value))
               }
             >
               {
                 <>
-                  {topicGen.map((p, id) => {
-                    return (
-                      <option key={id} value={id}>
-                        <Box width={'100px'}>Topic: {p.Topic}</Box>
-                      </option>
-                    );
-                  })}
+                  {choices.map((p, id) => (
+                    <option key={id} value={id}>
+                      <p>{p}</p>
+                    </option>
+                  ))}
                 </>
               }
             </Select>
           </FormControl>
-          <FormLabel
-            mb={2}
-            fontWeight={'bold'}
+          <Flex hidden={exerciseType != 8}></Flex>
+          <Flex
             paddingTop={'5px'}
-            paddingBottom={'-5px'}
+            alignItems={'center'}
+            hidden={exerciseType != 4 && exerciseType != 2}
           >
-            Topic Description:
-          </FormLabel>
-          <Text>{topicGen[topicIndex].Description}</Text>
-        </ModalBody>
-        <ModalBody hidden={!screen3}>
-          <Text>STEP 3: Choose the argument you want to generate. </Text>
+            N° Correct {word}:
+            <NumberInput
+              float={'right'}
+              defaultValue={ca_n}
+              min={1}
+              max={1}
+              width={'80px'}
+              title="soon: multiple correct answer"
+            >
+              <NumberInputField />
+              {/*
+              <NumberInputStepper>
+                <NumberIncrementStepper onClick={() => setCA_N(ca_n + 1)} />
+                <NumberDecrementStepper onClick={() => setCA_N(ca_n - 1)} />
+              </NumberInputStepper>
+              */}
+            </NumberInput>
+            N° Wrong {word}:
+            <NumberInput defaultValue={da_n} min={0} max={6} width={'80px'}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper onClick={() => setDA_N(da_n + 1)} />
+                <NumberDecrementStepper onClick={() => setDA_N(da_n - 1)} />
+              </NumberInputStepper>
+            </NumberInput>
+            N° Easy Wrong {word}:
+            <NumberInput defaultValue={eda_n} min={0} max={6} width={'80px'}>
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper onClick={() => setEDA_N(eda_n + 1)} />
+                <NumberDecrementStepper onClick={() => setEDA_N(eda_n - 1)} />
+              </NumberInputStepper>
+            </NumberInput>
+          </Flex>
           <Button
             hidden={exerciseType == 100}
-            marginBottom={'5px'}
-            marginTop={'5px'}
+            marginTop={'15px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
@@ -333,10 +409,10 @@ const AIToolModal = ({
                     console.log('creating multichoice');
                     const answers = [].concat(
                       response.data.Solutions,
-                      response.data.Distractors.splice(0, da_n + 1),
+                      response.data.Distractors.splice(0, da_n),
                       response.data.EasilyDiscardableDistractors.splice(
                         0,
-                        eda_n + 1
+                        eda_n
                       )
                     );
                     answers.sort(() => Math.random() - 0.5);
@@ -394,12 +470,11 @@ const AIToolModal = ({
             }}
             isLoading={generatingLoading}
           >
-            Generate Exercise
+            Generate Learning Activity
           </Button>
           <Button
             hidden={exerciseType != 100}
-            marginBottom={'5px'}
-            marginTop={'5px'}
+            marginTop={'15px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
@@ -458,65 +533,6 @@ const AIToolModal = ({
           >
             Generate Material
           </Button>
-          <FormLabel paddingTop={'5px'}>Learning Objective</FormLabel>
-          <FormControl label="Topic">
-            <Select
-              borderColor={'grey'}
-              onChange={(event) =>
-                setChoiceIndex(Number(event.currentTarget.value))
-              }
-            >
-              {
-                <>
-                  {choices.map((p, id) => (
-                    <option key={id} value={id}>
-                      <p>{p}</p>
-                    </option>
-                  ))}
-                </>
-              }
-            </Select>
-          </FormControl>
-          <Flex hidden={exerciseType != 8}></Flex>
-          <Flex
-            paddingTop={'5px'}
-            alignItems={'center'}
-            hidden={exerciseType != 4 && exerciseType != 2}
-          >
-            N° Correct {word}:
-            <NumberInput
-              float={'right'}
-              defaultValue={ca_n}
-              min={1}
-              max={1}
-              width={'80px'}
-              title="soon: multiple correct answer"
-            >
-              <NumberInputField />
-              {/*
-              <NumberInputStepper>
-                <NumberIncrementStepper onClick={() => setCA_N(ca_n + 1)} />
-                <NumberDecrementStepper onClick={() => setCA_N(ca_n - 1)} />
-              </NumberInputStepper>
-              */}
-            </NumberInput>
-            N° Wrong {word}:
-            <NumberInput defaultValue={da_n} min={0} max={6} width={'80px'}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper onClick={() => setDA_N(da_n + 1)} />
-                <NumberDecrementStepper onClick={() => setDA_N(da_n - 1)} />
-              </NumberInputStepper>
-            </NumberInput>
-            N° Easly wrong {word}:
-            <NumberInput defaultValue={eda_n} min={0} max={6} width={'80px'}>
-              <NumberInputField />
-              <NumberInputStepper>
-                <NumberIncrementStepper onClick={() => setEDA_N(eda_n + 1)} />
-                <NumberDecrementStepper onClick={() => setEDA_N(eda_n - 1)} />
-              </NumberInputStepper>
-            </NumberInput>
-          </Flex>
         </ModalBody>
         <Button
           onClick={() => {
@@ -525,11 +541,11 @@ const AIToolModal = ({
             setScreen3(false);
             setSourceMaterial('');
           }}
-          alignSelf={'center'}
           width={'80px'}
-          bottom={'5px'}
+          bottom={'12'}
+          alignSelf={'center'}
         >
-          Cancel
+          Restart
         </Button>
       </ModalContent>
     </Modal>
