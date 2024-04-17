@@ -269,15 +269,6 @@ const AIToolModal = ({
             Topic Description:
           </FormLabel>
           <Text>{topicGen[topicIndex].Description}</Text>
-          <FormLabel mb={2} fontWeight={'bold'}>
-            Additional Context:
-          </FormLabel>
-          <Textarea
-            placeholder="Insert additional information about your target, for example 'My class is collaborative' or 'My class needs to do short assignment' (optional)"
-            maxHeight={'200px'}
-            value={context}
-            onChange={(e) => setContext(e.currentTarget.value)}
-          />
         </ModalBody>
         <ModalBody hidden={!screen3}>
           <Text>STEP 3: Choose the argument you want to generate. </Text>
