@@ -39,6 +39,10 @@ export type Topic = {
   Description: string;
 };
 
+function delay(ms: number) {
+  return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
 const AIToolModal = ({
   isOpen,
   onClose,
@@ -47,7 +51,6 @@ const AIToolModal = ({
 }: ModelTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
-  const [context, setContext] = useState('');
   const [titleGen, setTitle] = useState('');
   const [macroSubjectGen, setMacroSubject] = useState('');
   const [language, setLanguage] = useState('');
@@ -61,12 +64,12 @@ const AIToolModal = ({
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(1);
   const [eda_n, setEDA_N] = useState(1);
-  const toast = useToast();
   const [choices, setChoices] = useState<string[]>(['']);
   const [choiceIndex, setChoiceIndex] = useState(0);
   const [screen1, setScreen1] = useState(true);
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
+  const toast = useToast();
   const { setValue } = useFormContext();
   const word = exType == 'TrueFalseNode' ? 'Statements' : 'Answers';
   switch (exType) {
@@ -372,9 +375,6 @@ const AIToolModal = ({
                   topic: topicGen[topicIndex].Topic,
                   temperature: 0.2,
                 });
-                setScreen1(true);
-                setScreen3(false);
-                setGeneratingLoading(false);
                 console.log(response.data);
                 let dataGen;
                 switch (exerciseType) {
@@ -436,11 +436,29 @@ const AIToolModal = ({
                         choices: answers,
                         isChoiceCorrect: isAnswerCorrect,
                       };
+                    if (
+                      !response.data.Distractors[0] &&
+                      !response.data.EasilyDiscardableDistractors[0]
+                    ) {
+                      toast({
+                        title: 'Generating Error',
+                        description:
+                          'The AI was not able to generate a complete multichoice exercise, we suggest to generate an Open Question or a Close Ended Question for this topic',
+                        status: 'warning',
+                        duration: 4000,
+                        position: 'bottom-left',
+                        isClosable: false,
+                      });
+                      await delay(3000);
+                    }
                     break;
                   default:
                     console.log('error in exerciseType');
                     throw ': generated type error';
                 }
+                setScreen1(true);
+                setScreen3(false);
+                setGeneratingLoading(false);
                 console.log(dataGen);
                 setValue('data', dataGen);
                 if (action) action(false);
