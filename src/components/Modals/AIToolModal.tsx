@@ -170,7 +170,7 @@ const AIToolModal = ({
           </Button>
         </ModalBody>
         <ModalBody hidden={!screen2}>
-          <Text>STEP 2: Choose the topic you want to use.</Text>
+          <Text>STEP 2: Choose the Level and Topic you want to use.</Text>
           <FormControl label="Level">
             <FormLabel
               mb={2}
