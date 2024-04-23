@@ -144,7 +144,7 @@ const AIToolModal = ({
                 setScreen1(false);
                 setScreen2(true);
                 setGeneratingLoading(false);
-              } catch (error) {
+              } catch (error: any) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
@@ -157,14 +157,36 @@ const AIToolModal = ({
                   });
                   return;
                 }
-                toast({
-                  title: 'Internal Error',
-                  description: 'Try later' + (error as Error),
-                  status: 'error',
-                  duration: 3000,
-                  position: 'bottom-left',
-                  isClosable: true,
-                });
+                if (error.response.status) {
+                  if (error.response.status == 500)
+                    toast({
+                      title: 'Internal Error',
+                      description:
+                        'We are sorry, the resourse is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they may not be analyzed correctly',
+                      status: 'error',
+                      duration: 3000,
+                      position: 'bottom-left',
+                      isClosable: true,
+                    });
+                  else if (error.response.status != 200)
+                    toast({
+                      title: 'Internal Error',
+                      description:
+                        'Internal Server error, try again. If the error persists try change material.',
+                      status: 'error',
+                      duration: 3000,
+                      position: 'bottom-left',
+                      isClosable: true,
+                    });
+                } else
+                  toast({
+                    title: 'Internal Error',
+                    description: 'Try later ' + (error as Error),
+                    status: 'error',
+                    duration: 3000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
               }
             }}
             isLoading={generatingLoading}
