@@ -185,7 +185,7 @@ const AIToolModal = ({
                     position: 'bottom-left',
                     isClosable: true,
                   });
-              }finally {
+              } finally {
                 setGeneratingLoading(false);
               }
             }}
@@ -313,7 +313,7 @@ const AIToolModal = ({
                     position: 'bottom-left',
                     isClosable: true,
                   });
-              }finally {
+              } finally {
                 setGeneratingLoading(false);
               }
             }}
@@ -526,7 +526,7 @@ const AIToolModal = ({
                     position: 'bottom-left',
                     isClosable: true,
                   });
-              }finally {
+              } finally {
                 setGeneratingLoading(false);
               }
             }}
@@ -598,7 +598,7 @@ const AIToolModal = ({
                     position: 'bottom-left',
                     isClosable: true,
                   });
-              }finally {
+              } finally {
                 setGeneratingLoading(false);
               }
             }}
