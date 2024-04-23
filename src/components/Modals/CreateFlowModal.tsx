@@ -145,7 +145,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
           title: 'Server Error',
           description:
             'We are sorry, server was not able to create your flow. Error: ' +
-            error.response.data.error.message,
+            error.response.data.message,
           status: 'error',
           duration: 5000,
           position: 'bottom-left',
