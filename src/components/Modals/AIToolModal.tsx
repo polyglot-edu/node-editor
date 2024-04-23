@@ -20,7 +20,7 @@ import {
   Textarea,
   useToast,
 } from '@chakra-ui/react';
-import { AxiosResponse } from 'axios';
+import { AxiosError, AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
@@ -139,7 +139,7 @@ const AIToolModal = ({
                 setScreen1(false);
                 setScreen2(true);
                 setGeneratingLoading(false);
-              } catch (error) {
+              } catch (error: any) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
@@ -152,9 +152,30 @@ const AIToolModal = ({
                   });
                   return;
                 }
+                if (error.status) {
+                  if (error.status == 500)
+                    toast({
+                      title: 'Internal Error',
+                      description: 'We are sorry, the resourse is not analyzable, try with other material or try copy the text inside the URL.',
+                      status: 'error',
+                      duration: 3000,
+                      position: 'bottom-left',
+                      isClosable: true,
+                    });
+
+                  else if (error.status != 200)
+                    toast({
+                      title: 'Internal Error',
+                      description: 'Internal Server error, try again. If the error persists try change material.',
+                      status: 'error',
+                      duration: 3000,
+                      position: 'bottom-left',
+                      isClosable: true,
+                    });                    
+                }else
                 toast({
                   title: 'Internal Error',
-                  description: 'Try later' + (error as Error),
+                  description: 'Try later ' + (error as Error),
                   status: 'error',
                   duration: 3000,
                   position: 'bottom-left',
