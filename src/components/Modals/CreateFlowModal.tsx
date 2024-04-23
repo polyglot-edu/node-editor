@@ -247,10 +247,10 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                       }}
                     />
                     <FormLabel paddingLeft={'5px'} mb={2} fontWeight={'bold'}>
-                      Duration:
+                      Duration (hours):
                     </FormLabel>
                     <Input
-                      width={'50%'}
+                      width={'27%'}
                       placeholder="Insert duration..."
                       value={duration}
                       onChange={(e) => setDuration(e.currentTarget.value)}
