@@ -119,7 +119,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
         onClose();
         toast({
           title: 'Flow not created',
-          description: 'Something is off with your flow!',
+          description: 'Something is off with your flow! Try again',
           status: 'warning',
           duration: 3000,
           position: 'bottom-left',
@@ -127,7 +127,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
         });
       }
       router.push('/flows/' + response.data._id);
-    } catch (error) {
+    } catch (error: any) {
       if ((error as Error).name === 'SyntaxError') {
         toast({
           title: 'Invalid syntax',
@@ -139,14 +139,27 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
         });
         return;
       }
-      toast({
-        title: 'Internal Error',
-        description: 'Try later' + (error as Error),
-        status: 'error',
-        duration: 3000,
-        position: 'bottom-left',
-        isClosable: true,
-      });
+      console.log(error);
+      if (error.response.status)
+        toast({
+          title: 'Server Error',
+          description:
+            'We are sorry, server was not able to create your flow. Error: ' +
+            error.response.data.error.message,
+          status: 'error',
+          duration: 5000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
+      else
+        toast({
+          title: 'Generic Error',
+          description: 'Try later ' + (error as Error),
+          status: 'error',
+          duration: 5000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
     } finally {
       setLoading(false);
     }
