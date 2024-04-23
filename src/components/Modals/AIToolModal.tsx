@@ -156,31 +156,32 @@ const AIToolModal = ({
                   if (error.status == 500)
                     toast({
                       title: 'Internal Error',
-                      description: 'We are sorry, the resourse is not analyzable, try with other material or try copy the text inside the URL.',
+                      description:
+                        'We are sorry, the resourse is not analyzable, try with other material or try copy the text inside the URL.',
                       status: 'error',
                       duration: 3000,
                       position: 'bottom-left',
                       isClosable: true,
                     });
-
                   else if (error.status != 200)
                     toast({
                       title: 'Internal Error',
-                      description: 'Internal Server error, try again. If the error persists try change material.',
+                      description:
+                        'Internal Server error, try again. If the error persists try change material.',
                       status: 'error',
                       duration: 3000,
                       position: 'bottom-left',
                       isClosable: true,
-                    });                    
-                }else
-                toast({
-                  title: 'Internal Error',
-                  description: 'Try later ' + (error as Error),
-                  status: 'error',
-                  duration: 3000,
-                  position: 'bottom-left',
-                  isClosable: true,
-                });
+                    });
+                } else
+                  toast({
+                    title: 'Internal Error',
+                    description: 'Try later ' + (error as Error),
+                    status: 'error',
+                    duration: 3000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
               }
             }}
             isLoading={generatingLoading}
