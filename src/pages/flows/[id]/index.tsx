@@ -12,7 +12,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
-import { store } from 'fp-ts';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -78,13 +77,14 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
       }
-    } catch (err) {
+    } catch (err: any) {
       outputToast &&
         toast({
           title: 'Internal Error',
-          description: 'Try later',
+          description:
+            'Unexpected error, ' + err.message + '. Try to fix it or try later',
           status: 'error',
-          duration: 3000,
+          duration: 5000,
           position: 'bottom-left',
           isClosable: true,
         });
