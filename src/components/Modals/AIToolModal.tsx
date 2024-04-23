@@ -162,7 +162,7 @@ const AIToolModal = ({
                     toast({
                       title: 'Internal Error',
                       description:
-                        'We are sorry, the resourse is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they may not be analyzed correctly',
+                        'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
                       status: 'error',
                       duration: 3000,
                       position: 'bottom-left',
