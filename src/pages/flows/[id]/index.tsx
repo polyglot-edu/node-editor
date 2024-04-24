@@ -42,8 +42,9 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
       if (!flow) {
         outputToast &&
           toast({
-            title: 'No flow found',
-            description: 'Try do some new changes',
+            title: 'Saving error',
+            description:
+              'Error during saving, the backend could not save correctly, try again.',
             status: 'warning',
             duration: 3000,
             position: 'bottom-left',
@@ -70,7 +71,9 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
         outputToast &&
           toast({
             title: 'Flow not saved',
-            description: 'Something is off with your flow!',
+            description:
+              'Something is off with your flow, error: ' +
+              response.data.message,
             status: 'warning',
             duration: 3000,
             position: 'bottom-left',
@@ -81,8 +84,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
       outputToast &&
         toast({
           title: 'Internal Error',
-          description:
-            'Unexpected error, ' + err.message + '. Try to fix it or try later',
+          description: 'Unexpected error, fix it or try again. ' + err.message,
           status: 'error',
           duration: 5000,
           position: 'bottom-left',
@@ -98,8 +100,8 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
       if (!flow) {
         outputToast &&
           toast({
-            title: 'No flow found',
-            description: 'Try do some new changes',
+            title: 'Publish error',
+            description: 'Error on publishing, try saving your progress first.',
             status: 'warning',
             duration: 3000,
             position: 'bottom-left',
