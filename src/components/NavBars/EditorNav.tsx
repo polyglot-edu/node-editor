@@ -1,7 +1,6 @@
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
-  ArrowRightIcon,
   ArrowUpIcon,
   CloseIcon,
   CopyIcon,
@@ -29,7 +28,6 @@ import { useHasHydrated } from '../../utils/utils';
 import Nav from '../Layout/NavBar';
 import EditFlowModal from '../Modals/EditFlowModal';
 import ExportJsonModal from '../Modals/ExportJsonModal';
-import RunExecutionModal from '../Modals/RunExecutionModal';
 import SaveFlowModal from '../Modals/SaveFlowModal';
 import SummarizerModal from '../Modals/SummarizerModal';
 type EditorNavProps = {
@@ -68,11 +66,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
   const [publishLoading, setPublishLoading] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
-    isOpen: isOpenRun,
-    onOpen: onOpenRun,
-    onClose: onCloseRun,
-  } = useDisclosure();
-  const {
     isOpen: isOpenEdit,
     onOpen: onOpenEdit,
     onClose: onCloseEdit,
@@ -83,9 +76,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     onClose: onCloseSave,
   } = useDisclosure();
   const {
-    isOpen: isOpenSummarizer,
-    onOpen: onOpenSummarizer,
-    onClose: onCloseSummarizer,
+    isOpen: isOpenAITool,
+    onOpen: onOpenSummarizeTool,
+    onClose: onCloseAITool,
   } = useDisclosure();
 
   useEffect(() => {
@@ -116,6 +109,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             width={['30px']}
             className="mr-3"
             alt="Polyglot Logo"
+            onClick={() => {
+              window.open('http://localhost:3000/flows/');
+            }}
           />
           <ActionButton
             label="Back"
@@ -176,16 +172,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             ]}
           />
           <DropDown
-            name="Run"
-            options={[
-              {
-                name: 'Run on vscode',
-                icon: <ArrowRightIcon mr={2} />,
-                onClick: onOpenRun,
-              },
-            ]}
-          />
-          <DropDown
             name="Project"
             options={[
               {
@@ -196,9 +182,9 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             ]}
           />
           <ActionButton
-            label="Summarizer Tool"
+            label="Summarizer tool"
             disabled={false}
-            onClick={onOpenSummarizer}
+            onClick={onOpenSummarizeTool}
             icon={<ViewIcon color="blue.500" />}
           />
           <Spacer />
@@ -220,7 +206,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
         </HStack>
       </Stack>
       <ExportJsonModal isOpen={isOpen} onClose={onClose} flow={flow} />
-      <RunExecutionModal isOpen={isOpenRun} onClose={onCloseRun} flow={flow} />
       {flow && (
         <>
           <EditFlowModal
@@ -229,10 +214,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             flow={flow}
             updateInfo={updateFlowInfo}
           />
-          <SummarizerModal
-            isOpen={isOpenSummarizer}
-            onClose={onCloseSummarizer}
-          />
+          <SummarizerModal isOpen={isOpenAITool} onClose={onCloseAITool} />
         </>
       )}
       <SaveFlowModal

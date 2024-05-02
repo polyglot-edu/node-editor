@@ -8,8 +8,8 @@ export type TrueFalseNodeData = NodeData & {
   instructions: string;
   questions: string[];
   isQuestionCorrect: boolean[];
-  negativePoints: number;
-  positvePoints: number;
+  negativePoints?: number;
+  positvePoints?: number;
 };
 
 export type TrueFalseNodeNode = PolyglotNode & {
