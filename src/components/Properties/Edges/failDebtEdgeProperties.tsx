@@ -31,7 +31,7 @@ const FailDebtEdgeProperties = () => {
     getValues('data.learningObjective'),
   ]);
   const [hide1, setHide1] = useState(!topicGen[0]);
-  const [description, setDescription]= useState('');
+  const [description, setDescription] = useState('');
 
   return (
     <>
@@ -171,7 +171,7 @@ const FailDebtEdgeProperties = () => {
             Submit Topic
           </Button>
         </Box>
-        <Box hidden={choices[0] == ''||choices[0] == undefined}>
+        <Box hidden={choices[0] == '' || choices[0] == undefined}>
           <FormControl label="Learning Objective">
             <Select
               borderColor={'grey'}
