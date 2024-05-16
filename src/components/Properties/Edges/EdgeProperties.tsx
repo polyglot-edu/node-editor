@@ -22,7 +22,7 @@ const config = [
     ],
   },
   {
-    edgeTypes: ['customValidationEdge', 'exactValueEdge', 'passFailEdge'],
+    edgeTypes: ['customValidationEdge', 'exactValueEdge', 'passFailEdge', 'failDebtEdge'],
     nodeTypes: [
       'multipleChoiceQuestionNode',
       'codingQuestionNode',

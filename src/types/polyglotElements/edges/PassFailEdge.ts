@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import PassFailEdgeProperties from '../../../components/Properties/Edges/PassFailEdgeProperties';
+import PassFailEdgeProperties from '../../../components/Properties/Edges/passFailEdgeProperties';
 import { ReactFlowSmartBezierEdgePassFail } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
