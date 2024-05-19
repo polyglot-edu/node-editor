@@ -134,7 +134,6 @@ const AIToolModal = ({
                 setTitle(response.data.Title);
                 setLanguage(response.data.Language);
                 setMacroSubject(response.data.MacroSubject);
-                setLevel(response.data.PerceivedDifficulty);
                 setTopicGen(response.data.MainTopics);
                 setScreen1(false);
                 setScreen2(true);
