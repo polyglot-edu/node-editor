@@ -1,8 +1,8 @@
 import * as t from 'io-ts';
+import PassFailEdgeProperties from '../../../components/Properties/Edges/passFailEdgeProperties';
 import { ReactFlowSmartBezierEdgePassFail } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
-import PassFailEdgeProperties from '../../../components/Properties/Edges/passFailEdgeProperties';
 
 export const PassFailEdgeConditionKind_IoTs = t.union([
   t.literal('pass'),
