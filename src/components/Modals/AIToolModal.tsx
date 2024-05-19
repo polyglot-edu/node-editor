@@ -134,7 +134,6 @@ const AIToolModal = ({
                 setTitle(response.data.Title);
                 setLanguage(response.data.Language);
                 setMacroSubject(response.data.MacroSubject);
-                setLevel(response.data.PerceivedDifficulty);
                 setTopicGen(response.data.MainTopics);
                 setScreen1(false);
                 setScreen2(true);
@@ -207,7 +206,6 @@ const AIToolModal = ({
                   response.data.Evaluating[1],
                 ]);
                 console.log('step2');
-                console.log(choices);
                 setScreen2(false);
                 setScreen3(true);
                 setGeneratingLoading(false);
