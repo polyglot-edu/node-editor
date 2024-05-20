@@ -1,5 +1,5 @@
 import * as t from 'io-ts';
-import FailDebtEdgeProperties from '../../../components/Properties/Edges/failDebtEdgeProperties';
+import FailDebtEdgeProperties from '../../../components/Properties/Edges/FailDebtEdgeProperties';
 import { ReactFlowSmartBezierEdgePassFail } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { TypeOfExercise } from '../flow/PolyglotFlow';
