@@ -139,10 +139,10 @@ const EditFlowModal = ({
                 }}
               />
               <FormLabel paddingLeft={'5px'} mb={2} fontWeight={'bold'}>
-                Duration:
+                Duration (Hours):
               </FormLabel>
               <Input
-                width={'50%'}
+                width={'27%'}
                 placeholder="Insert duration..."
                 value={duration}
                 onChange={(e) => setDuration(e.currentTarget.value)}

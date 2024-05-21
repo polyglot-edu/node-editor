@@ -20,6 +20,7 @@ export type ModelTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
 };
+let generateButton = false;
 
 const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
@@ -27,7 +28,6 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
   const [generatedMaterial, setGeneratedMaterial] = useState('');
   const [noW, setNoW] = useState('');
   const toast = useToast();
-
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
       <ModalOverlay />
@@ -41,8 +41,20 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             marginTop={'5px'}
             onClick={async () => {
               try {
+                if (generateButton) {
+                  toast({
+                    title: 'Invalid syntax',
+                    description:
+                      'You have already generated a summary with this setup, please change the source material or the number of words',
+                    status: 'error',
+                    duration: 5000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
+                  return;
+                }
                 setGeneratingLoading(true);
-                const level = '1';
+                const level = 1;
                 if (!sourceMaterial) {
                   setGeneratedMaterial('No text given');
                   //
@@ -51,12 +63,12 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                 if (!noW) setNoW('200');
                 const response: AxiosResponse = await API.summarize({
                   material: sourceMaterial,
-                  level: Number(level),
+                  level: level,
                   numberOfWords: Number(noW),
                 });
                 setGeneratedMaterial(response.data);
                 setGeneratingLoading(false);
-              } catch (error) {
+              } catch (error: any) {
                 setGeneratingLoading(false);
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
@@ -69,14 +81,25 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
                   });
                   return;
                 }
-                toast({
-                  title: 'Internal Error',
-                  description: 'Try later' + (error as Error),
-                  status: 'error',
-                  duration: 3000,
-                  position: 'bottom-left',
-                  isClosable: true,
-                });
+                if (error.response.status)
+                  toast({
+                    title: 'Generation Error',
+                    description:
+                      'We are sorry, server was not able to generate the material, please, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
+                    status: 'error',
+                    duration: 5000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
+                else
+                  toast({
+                    title: 'Generic Error',
+                    description: 'Try later ' + (error as Error),
+                    status: 'error',
+                    duration: 5000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
               }
             }}
             isLoading={generatingLoading}
@@ -92,7 +115,10 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             <Input
               maxWidth={'80px'}
               value={noW}
-              onChange={(e) => setNoW(e.currentTarget.value)}
+              onChange={(e) => {
+                generateButton = false;
+                setNoW(e.currentTarget.value);
+              }}
             />
           </FormLabel>
 
@@ -105,7 +131,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             value={sourceMaterial}
             overflowY={'auto'}
             onChange={(e) => {
-              setGeneratingLoading(false);
+              generateButton = false;
               setSourceMaterial(e.currentTarget.value);
             }}
           />
