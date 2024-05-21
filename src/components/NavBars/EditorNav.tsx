@@ -110,7 +110,7 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             className="mr-3"
             alt="Polyglot Logo"
             onClick={() => {
-              window.open('http://localhost:3000/flows/');
+              Router.push('/flows');
             }}
           />
           <ActionButton
