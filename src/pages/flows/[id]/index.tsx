@@ -79,7 +79,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
             isClosable: true,
           });
       }
-    } catch (err:any) {
+    } catch (err: any) {
       outputToast &&
         toast({
           title: 'Internal Error',
