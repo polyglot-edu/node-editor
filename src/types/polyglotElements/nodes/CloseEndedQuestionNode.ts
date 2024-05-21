@@ -6,7 +6,8 @@ import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type CloseEndedQuestionNodeData = NodeData & {
   question: string;
-  correctAnswers: string[];
+  correctAnswers: string[];  
+  textToFill?: string;
   isAnswerCorrect: boolean[];
 };
 
