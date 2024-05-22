@@ -324,14 +324,14 @@ export const API = {
 
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Analyser/analyseMaterial`,
+      `/MaterialAnalyser/analyseMaterial`,
       body
     );
   },
 
   generateLO: (body: LOType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/LOGenerator/generatelearningobjective`,
+      `/LearningObjectiveGenerator/generateLearningObjective`,
       body
     );
   },
