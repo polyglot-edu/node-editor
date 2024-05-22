@@ -12,7 +12,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosError } from 'axios';
-import { store } from 'fp-ts';
 import { GetServerSideProps } from 'next';
 import { useRouter } from 'next/router';
 import { useEffect, useMemo, useState } from 'react';
@@ -43,9 +42,9 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
       if (!flow) {
         outputToast &&
           toast({
-            title: 'No flow found',
-            description: 'Try do some new changes',
-            status: 'warning',
+            title: 'Saving error',
+            description:
+              'Error during saving, the backend could not save correctly, try again.',
             duration: 3000,
             position: 'bottom-left',
             isClosable: true,
@@ -71,20 +70,22 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
         outputToast &&
           toast({
             title: 'Flow not saved',
-            description: 'Something is off with your flow!',
+            description:
+              'Something is off with your flow, error: ' +
+              response.data.message,
             status: 'warning',
             duration: 3000,
             position: 'bottom-left',
             isClosable: true,
           });
       }
-    } catch (err) {
+    } catch (err: any) {
       outputToast &&
         toast({
           title: 'Internal Error',
-          description: 'Try later',
+          description: 'Unexpected error, fix it or try again. ' + err.message,
           status: 'error',
-          duration: 3000,
+          duration: 5000,
           position: 'bottom-left',
           isClosable: true,
         });
@@ -98,8 +99,8 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
       if (!flow) {
         outputToast &&
           toast({
-            title: 'No flow found',
-            description: 'Try do some new changes',
+            title: 'Publish error',
+            description: 'Error on publishing, try saving your progress first.',
             status: 'warning',
             duration: 3000,
             position: 'bottom-left',

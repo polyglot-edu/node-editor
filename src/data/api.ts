@@ -36,6 +36,8 @@ const AIAPIGeneration = axiosCreate.create({
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
     'Content-Type': 'application/json',
+    withCredentials: true,
+    Access: '*',
     ApiKey: process.env.APIKEY,
     SetupModel:
       '{"secretKey": "72ad445a32ad4b899c9a90cb496aae20","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
