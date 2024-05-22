@@ -396,7 +396,7 @@ const AIToolModal = ({
                   macroSubject: macroSubjectGen,
                   title: titleGen,
                   level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  typeOfExercise: exerciseType, //0=fill_the_gap, 1=question, 4=choice,
+                  typeOfActivity: exerciseType, //0=fill_the_gap, 1=question, 4=choice,
                   learningObjective: choices[choiceIndex],
                   bloomLevel: Math.round(choiceIndex / 2), //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
                   language: language,
