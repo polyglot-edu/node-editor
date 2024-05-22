@@ -345,7 +345,7 @@ export const API = {
 
   summarize: (body: SummarizeType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Summarizer/summarise`,
+      `/Summarizer/summarize`,
       body
     );
   },
