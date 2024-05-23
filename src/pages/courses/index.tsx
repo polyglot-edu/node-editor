@@ -84,16 +84,16 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
     <>
       <Navbar user={user} />
       <Box px="10%">
-        <Heading py="5%">Learning Paths</Heading>
+        <Heading py="5%">Courses</Heading>
         <SearchBar
           inputValue={searchValue}
           setInputValue={setSearchValue}
           items={suggestions}
-          placeholder="Search learning paths..."
+          placeholder="Search courses..."
         />
         <Tabs pt="3%" onChange={(index) => setCurrentTab(index)}>
           <TabList>
-            <Tab>My Learning Paths: {flows.length}</Tab>
+            <Tab>My Courses: {flows.length}</Tab>
             <Tab>All courses</Tab>
             <Tab>Subscribed Courses</Tab>
           </TabList>
