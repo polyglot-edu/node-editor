@@ -6,7 +6,7 @@ import TextField from '../../Forms/Fields/TextField';
 
 const config = [
   {
-    edgeTypes: ['unconditionalEdge'],
+    edgeTypes: ['unconditionalEdge', 'manuallyProgressEdge'],
     nodeTypes: [
       'lessonTextNode',
       'WatchVideoNode',
@@ -19,6 +19,7 @@ const config = [
       'MemoriseKeywordsListNode',
       'PromptEngineeringNode',
       'ProblemSolvingNode',
+      'CollaborativeModelingNode',
     ],
   },
   {
@@ -27,6 +28,7 @@ const config = [
       'exactValueEdge',
       'passFailEdge',
       'failDebtEdge',
+      'manuallyProgressEdge',
     ],
     nodeTypes: [
       'multipleChoiceQuestionNode',
@@ -39,7 +41,6 @@ const config = [
       'InnovationPitchNode',
       'OpenQuestionNode',
       'FlowChartNode',
-      'CollaborativeModelingNode',
       'AnalyzingPlottingDataNode',
       'CalculationNode',
       'SimulationNode',

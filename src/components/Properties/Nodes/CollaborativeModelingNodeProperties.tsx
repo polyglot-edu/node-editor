@@ -1,4 +1,5 @@
 import ArrayField from '../../Forms/Fields/ArrayField';
+import EnumField from '../../Forms/Fields/EnumField';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import NodeProperties from './NodeProperties';
 
@@ -6,16 +7,24 @@ const CollaborativeModelingNodeProperties = () => {
   return (
     <>
       <NodeProperties
-        platform={['WebApp']}
-        activityDescription="In this activity learners will have to complete a sentence with the
-        appropriate word or phrase"
+        platform={['Eraser']}
+        activityDescription="In this activity learners will have to collaborate to solve an assignment and create a scheme"
       />
-      <MarkDownField label="Question" name="data.question" />
-      <ArrayField
-        label="Correct Answers"
-        name="data.correctAnswers"
-        option="Answer"
-      />
+      <MarkDownField label="Assignment" name="data.assignment" />
+      <EnumField
+          label="Scheme Model"
+          name="data.scheme"
+          width="50%"
+          constraints={{ valueAsNumber: false }}
+          options={
+            <>
+              <option value={'flowChart'}>Flow Chart</option>
+              <option value={'cloudArchitecture'}>Cloud Architecture</option>
+              <option value={'entityRelationship'}>Entity Relationship</option>
+              <option value={'general'}>General Scheme</option>
+            </>
+          }
+        />
     </>
   );
 };

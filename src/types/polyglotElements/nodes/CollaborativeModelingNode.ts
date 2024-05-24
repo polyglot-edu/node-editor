@@ -5,8 +5,8 @@ import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type CollaborativeModelingNodeData = NodeData & {
-  question: string;
-  correctAnswers: string[];
+  assignment: string;
+  scheme: string;
 };
 
 export type CollaborativeModelingNode = PolyglotNode & {
@@ -23,7 +23,7 @@ polyglotNodeComponentMapping.registerMapping<CollaborativeModelingNode>({
   elementComponent: ReactFlowCollaborativeModelingNode,
   defaultData: {
     ...defaultPolyglotNodeData,
-    question: '',
-    correctAnswers: [''],
+    assignment: '',
+    scheme: '',
   },
 });
