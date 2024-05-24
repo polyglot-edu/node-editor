@@ -12,19 +12,19 @@ const CollaborativeModelingNodeProperties = () => {
       />
       <MarkDownField label="Assignment" name="data.assignment" />
       <EnumField
-          label="Scheme Model"
-          name="data.scheme"
-          width="50%"
-          constraints={{ valueAsNumber: false }}
-          options={
-            <>
-              <option value={'flowChart'}>Flow Chart</option>
-              <option value={'cloudArchitecture'}>Cloud Architecture</option>
-              <option value={'entityRelationship'}>Entity Relationship</option>
-              <option value={'general'}>General Scheme</option>
-            </>
-          }
-        />
+        label="Scheme Model"
+        name="data.scheme"
+        width="50%"
+        constraints={{ valueAsNumber: false }}
+        options={
+          <>
+            <option value={'flowChart'}>Flow Chart</option>
+            <option value={'cloudArchitecture'}>Cloud Architecture</option>
+            <option value={'entityRelationship'}>Entity Relationship</option>
+            <option value={'general'}>General Scheme</option>
+          </>
+        }
+      />
     </>
   );
 };
