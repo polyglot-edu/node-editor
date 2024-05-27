@@ -40,10 +40,12 @@ import Editor from '@monaco-editor/react';
 import { AxiosResponse } from 'axios';
 import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
+import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
-import { PolyglotFlow, PolyglotFlowInfo } from '../../types/polyglotElements';
+import { PolyglotCourseInfo } from '../../types/polyglotElements';
 
-type CreateFlowModalProps = {
+
+type CreateCourseModalProps = {
   isOpen: boolean;
   onClose: () => void;
   API: APIV2;
@@ -62,20 +64,18 @@ export const colors = [
   'green',
 ];
 
-const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
-  const [currentTab, setCurrentTab] = useState(0);
+const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => {
   const [flow, setFlow] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [learningContext, setLearningContext] = useState('');
-  const [duration, setDuration] = useState('');
-  const [topicName, setTopicName] = useState('');
-  const [topics, setTopics] = useState<string[]>([]);
   const [tagName, setTagName] = useState('');
   const [colorTag, setColorTag] = useState(colors[0]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
   const [tags, setTags] = useState<{ name: string; color: string }[]>([]);
+  const [searchValue, setSearchValue] = useState('');
+  const [suggestions, setSuggestions] = useState<string[]>([]);
+
 
   const toast = useToast();
   const router = useRouter();
@@ -86,40 +86,32 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
     setTags([]);
   }, [isOpen]);
 
+  useEffect(() => {
+    console.log('useEffect');
+    API.loadFlowList().then((resp) => {
+      setSuggestions([...new Set(resp.data.map((flow) => flow.title))]);
+    });
+  }, [searchValue, API]);
+
   const createFlow = async () => {
     try {
       let response: AxiosResponse;
 
       setLoading(true);
 
-      switch (currentTab) {
-        case 0:
-          const base_Flow: PolyglotFlowInfo = {
-            title: title,
-            description: description,
-            tags: tags,
-            publish: false,
-            duration: duration,
-            learningContext: learningContext,
-            topics: topics,
-          };
-          response = await API.createNewFlow(base_Flow);
-          break;
-        case 1:
-          if (!flow) return;
-          const poly_flow: PolyglotFlow = JSON.parse(flow);
-          response = await API.createNewFlowJson(poly_flow);
-          break;
-        default:
-          console.log('Tab not defined');
-          return;
-      }
+      const base_course: PolyglotCourseInfo = {
+        title: title,
+        description: description,
+        tags: tags,
+      };
 
+      response = await API.createNewCourse(base_course);
+     
       if (response.status !== 200) {
         onClose();
         toast({
-          title: 'Flow not created',
-          description: 'Something is off with your flow! Try again',
+          title: 'Course not created',
+          description: 'Something is off with your course! Try again',
           status: 'warning',
           duration: 3000,
           position: 'bottom-left',
@@ -144,7 +136,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
         toast({
           title: 'Server Error',
           description:
-            'We are sorry, server was not able to create your flow. Error: ' +
+            'We are sorry, server was not able to create your course. Error: ' +
             error.response.data.message,
           status: 'error',
           duration: 5000,
@@ -172,10 +164,9 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
         <ModalHeader>Create Flow</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Tabs onChange={(index) => setCurrentTab(index)}>
+          <Tabs>
             <TabList>
               <Tab>Custom</Tab>
-              <Tab>Import JSON</Tab>
             </TabList>
 
             <TabPanels>
@@ -201,60 +192,15 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                       setDescription(e.currentTarget.value);
                     }}
                   />
-                  <FormLabel mb={2} fontWeight={'bold'}>
-                    Learning context:
-                  </FormLabel>
-                  <Textarea
-                    placeholder="Insert learning context..."
-                    value={learningContext}
-                    onChange={(e) => setLearningContext(e.currentTarget.value)}
+                  <Flex paddingTop={'8px'} align={'center'}>
+                  </Flex>
+                  <SearchBar
+                    inputValue={searchValue}
+                    setInputValue={setSearchValue}
+                    items={suggestions}
+                    placeholder="Search learning paths..."
                   />
                   <Flex paddingTop={'8px'} align={'center'}>
-                    <FormLabel mb={2} fontWeight={'bold'}>
-                      Topics:
-                    </FormLabel>
-                    <Tooltip
-                      label="Press Enter↵ in the input box to add a topic"
-                      placement="top"
-                    >
-                      <Input
-                        placeholder="Insert topic..."
-                        w={'30%'}
-                        value={topicName}
-                        onKeyDown={(e) => {
-                          if (e.key === 'Enter') {
-                            setTopics((prev) => {
-                              prev.push(topicName.toUpperCase());
-                              return [...prev];
-                            });
-                            setTopicName('');
-                          }
-                        }}
-                        onChange={(e) => setTopicName(e.currentTarget.value)}
-                      />
-                    </Tooltip>
-                    <IconButton
-                      aria-label="Add Topic"
-                      disabled={!topicName}
-                      icon={<AddIcon />}
-                      rounded="md"
-                      onClick={() => {
-                        setTopics((prev) => {
-                          prev.push(topicName.toUpperCase());
-                          return [...prev];
-                        });
-                        setTopicName('');
-                      }}
-                    />
-                    <FormLabel paddingLeft={'5px'} mb={2} fontWeight={'bold'}>
-                      Duration (Hours):
-                    </FormLabel>
-                    <Input
-                      width={'27%'}
-                      placeholder="Insert duration..."
-                      value={duration}
-                      onChange={(e) => setDuration(e.currentTarget.value)}
-                    />
                   </Flex>
                   <FormLabel my={2} fontWeight={'bold'}>
                     Tags:
@@ -398,4 +344,4 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   );
 };
 
-export default CreateFlowModal;
+export default CreateCourseModal;

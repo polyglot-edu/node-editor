@@ -1,34 +1,45 @@
 import { DeleteIcon } from '@chakra-ui/icons';
 import {
+  Accordion,
+  AccordionButton,
+  AccordionIcon,
+  AccordionItem,
+  AccordionPanel,
   Avatar,
   Badge,
+  Box,
   Button,
   Card,
   CardBody,
   CardFooter,
-  Heading,
   HStack,
+  Heading,
   Image,
   LinkBox,
-  LinkOverlay,
+  List,
+  ListIcon,
+  ListItem,
   SpaceProps,
   Spacer,
   Stack,
   Text,
-  Tooltip,
+  Tooltip
 } from '@chakra-ui/react';
+import { MdCheckCircle } from "react-icons/md";
 import cardImage from '../../public/test_card.png';
-import { PolyglotFlow } from '../../types/polyglotElements';
+import { PolyglotCourse } from '../../types/polyglotElements';
 
-type FlowCardProps = {
+type CourseCardProps = {
   py?: SpaceProps['py'];
   px?: SpaceProps['px'];
   canDelete?: boolean;
-  setSelected?: (flowId: string) => void;
-  flow: PolyglotFlow;
+  canEdit?: boolean;
+  isSubscribed?: boolean;
+  setSelected?: (courseId: string) => void;
+  course: PolyglotCourse;
 };
 
-const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
+const CourseCard = ({ course, px, py, canDelete, setSelected }: CourseCardProps) => {
   return (
     <LinkBox px={px} py={py}>
       <Card
@@ -55,7 +66,7 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
               >
                 <Tooltip label="Delete" placement="right">
                   <DeleteIcon
-                    onClick={() => setSelected?.(flow._id!)}
+                    onClick={() => setSelected?.(course._id!)}
                     w={5}
                     h={5}
                     color="red"
@@ -63,20 +74,44 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
                 </Tooltip>
               </Button>
             )}
-            <Heading size="md">{flow.title}</Heading>
-            {flow.tags &&
-              flow.tags.map((tag, id) => (
+            <Heading size="md">{course.title}</Heading>
+            {course.tags &&
+              course.tags.map((tag, id) => (
                 <Badge key={id} mr={1} colorScheme={tag.color}>
                   {tag.name}
                 </Badge>
               ))}
             <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
-              {flow.description}
+              {course.description}
             </Text>
             <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
-              In this Learning Path there are: {flow.nodes.length} learning
-              activities
+              In this Course there are: {course.flows.length} learning
+              paths
             </Text>
+            <Accordion allowMultiple>
+              <AccordionItem>
+                <h2>
+                  <AccordionButton>
+                    <Box as='span' flex='1' textAlign='left'>
+                      Course flows
+                    </Box>
+                    <AccordionIcon />
+                  </AccordionButton>
+                </h2>
+                <AccordionPanel pb={4}>
+                <List spacing={3}>
+                  {
+                    course.flows.map((flow, id) => (
+                      <ListItem key={id}>
+                        <ListIcon as={MdCheckCircle} color='green.500' />
+                        {flow.title}
+                      </ListItem>
+                    ))
+                  }
+                </List>
+                </AccordionPanel>
+              </AccordionItem>
+            </Accordion>
           </CardBody>
 
           <CardFooter>
@@ -84,22 +119,21 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
               <>
                 <Spacer />
                 <HStack pl={5} spacing="2" align="center" h="full">
-                  <Text fontSize={'xs'}>{flow.author?.username}</Text>
-                  <Avatar name={flow.author?.username} size="sm" />
+                  <Text fontSize={'xs'}>{course.author?.username}</Text>
+                  <Avatar name={course.author?.username} size="sm" />
                 </HStack>
               </>
             )}
           </CardFooter>
         </Stack>
       </Card>
-      <LinkOverlay href={`/flows/${flow._id}`} />
     </LinkBox>
   );
 };
 
-export default FlowCard;
+export default CourseCard;
 
-export function ScheletonFlowCards() {
+export function ScheletonCourseCard() {
   return (
     <div className="animate-pulse bg-gray-300 w-2/3 h-12 p-3 rounded"></div>
   );
