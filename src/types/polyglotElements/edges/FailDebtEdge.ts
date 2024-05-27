@@ -2,8 +2,8 @@ import * as t from 'io-ts';
 import FailDebtEdgeProperties from '../../../components/Properties/Edges/failDebtEdgeProperties';
 import { ReactFlowSmartBezierEdgePassFail } from '../../../components/ReactFlowEdge';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
-import { TypeOfExercise } from '../flow/PolyglotFlow';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
+import { TypeOfExercise } from '../AIGenerativeTypes/AIGenerativeTypes';
 
 export const FailDebtEdgeConditionKind_IoTs = t.literal('fail');
 
