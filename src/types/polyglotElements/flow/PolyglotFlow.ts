@@ -30,9 +30,16 @@ export type ProgressInfo = {
   userId: string;
 };
 
+export type ManualProgressInfo = {
+  ctxId: string;
+  satisfiedConditions: string[];
+  flowId?: string;
+  authorId: string;
+};
+
 export type UserBaseInfo = {
   ctx: {
-    ctxId: string;
+    flowId: string;
     username: string;
     currentNode: string;
     conditions: [{ edgeId: string; conditionKind: string }];

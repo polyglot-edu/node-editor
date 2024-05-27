@@ -2,10 +2,10 @@ import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
+  ManualProgressInfo,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
-  PolyglotNode,
   polyglotNodeComponentMapping,
   ProgressInfo,
 } from '../types/polyglotElements';
@@ -333,9 +333,16 @@ export const API = {
     );
   },
 
-  getActualNodeInfo: (body: {ctxId:string}): Promise<AxiosResponse> => {
+  manualProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(
-      `/api/execution/progressInfo`,
+      `/api/execution/progressAction`,
+      body
+    );
+  },
+
+  getActualNodeInfo: (body: { ctxId: string }): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/execution/actual`,
       body
     );
   },
