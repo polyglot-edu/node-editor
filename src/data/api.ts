@@ -2,16 +2,20 @@ import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
-  AIExerciseType,
-  AnalyseType,
-  LOType,
-  MaterialType,
+  ManualProgressInfo,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
-  SummarizeType,
+  ProgressInfo,
 } from '../types/polyglotElements';
+import {
+  AIExerciseType,
+  AnalyseType,
+  LOType,
+  MaterialType,
+  SummarizeType,
+} from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
 import { createNewDefaultPolyglotFlow } from '../utils/utils';
@@ -320,6 +324,24 @@ export const API = {
   },
   createNewFlow: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
+  },
+
+  progressInfo: (body: ProgressInfo): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/execution/progressInfo`,
+      body
+    );
+  },
+
+  manualProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/execution/progressAction`,
+      body
+    );
+  },
+
+  getActualNodeInfo: (body: { ctxId: string }): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(`/api/execution/actual`, body);
   },
 
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {

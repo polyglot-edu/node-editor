@@ -10,7 +10,7 @@ import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../../data/api';
-import { TypeOfExercise } from '../../../types/polyglotElements';
+import { TypeOfExercise } from '../../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 import EdgeProperties from './EdgeProperties';

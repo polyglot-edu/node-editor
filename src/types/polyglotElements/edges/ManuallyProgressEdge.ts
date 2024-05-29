@@ -1,61 +1,34 @@
 import * as t from 'io-ts';
-import FailDebtEdgeProperties from '../../../components/Properties/Edges/failDebtEdgeProperties';
+import ManuallyProgressEdgeProperties from '../../../components/Properties/Edges/ManuallyProgressEdge';
 import { ReactFlowSmartBezierEdgePassFail } from '../../../components/ReactFlowEdge';
-import { TypeOfExercise } from '../AIGenerativeTypes/AIGenerativeTypes';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
-export const FailDebtEdgeConditionKind_IoTs = t.literal('fail');
-
-type FailDebtEdgeConditionKind = t.TypeOf<
-  typeof FailDebtEdgeConditionKind_IoTs
+export const ManuallyProgressConditionKind_IoTs = t.union([
+  t.literal('pass'),
+  t.literal('fail'),
+]);
+type ManuallyProgressEdgeConditionKind = t.TypeOf<
+  typeof ManuallyProgressConditionKind_IoTs
 >;
 
-type Topic = {
-  Topic: string;
-  Type: TypeOfExercise;
-  Description: string;
+export type ManuallyProgressEdgeData = EdgeData & {
+  conditionKind: ManuallyProgressEdgeConditionKind;
 };
 
-export type FailDebtEdgeData = EdgeData & {
-  conditionKind: FailDebtEdgeConditionKind;
-  material: string;
-  macroSubject: string;
-  topic: Topic;
-  learningObjective: string;
-  title: string;
-  language: string;
-  level: number;
-  temperature: number;
-  typeOfExercise: number;
-  assignmentType: number;
-  bloomLevel: number;
+export type ManuallyProgressEdge = PolyglotEdge & {
+  type: 'manuallyProgressEdge';
+  data: ManuallyProgressEdgeData;
 };
 
-export type FailDebtEdge = PolyglotEdge & {
-  type: 'failDebtEdge';
-  data: FailDebtEdgeData;
-};
-
-polyglotEdgeComponentMapping.registerMapping<FailDebtEdge>({
-  elementType: 'failDebtEdge',
-  name: 'Fail with debt',
-  propertiesComponent: FailDebtEdgeProperties,
+polyglotEdgeComponentMapping.registerMapping<ManuallyProgressEdge>({
+  elementType: 'manuallyProgressEdge',
+  name: 'ManualProgress',
+  propertiesComponent: ManuallyProgressEdgeProperties,
   elementComponent: ReactFlowSmartBezierEdgePassFail,
   defaultData: {
     ...defaultPolyglotEdgeData,
-    conditionKind: 'fail',
-    material: '',
-    macroSubject: '',
-    topic: { Topic: '', Description: 'setup', Type: 0 },
-    learningObjective: '',
-    title: '',
-    language: '',
-    level: 2,
-    temperature: 0.2,
-    typeOfExercise: 0,
-    assignmentType: 0,
-    bloomLevel: 0,
+    conditionKind: 'pass',
   },
   transformData: (edge) => {
     const code = `
@@ -77,10 +50,11 @@ async Task<(bool, string)> validate(PolyglotValidationContext context) {
 
     var conditionKind = context.Condition.Data.conditionKind switch
     {
+        "pass" => true,
         "fail" => false,
         _ => throw new Exception("Unknown condition kind")
     };
-    return (conditionKind == isSubmissionCorrect, "Fail with Debt edge");
+    return (conditionKind == isSubmissionCorrect, "Pass/Fail edge");
 }    
 `;
 
