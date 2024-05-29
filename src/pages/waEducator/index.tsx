@@ -100,7 +100,7 @@ const UserCard = ({ user, px, py }: UserCardProps) => {
                       }).then((resp) => {
                         setIsLoading(false);
                         console.log(resp.data);
-                        setNodeInfo(resp.data); 
+                        setNodeInfo(resp.data);
                         toast({
                           title: 'Progress registered',
                           description:
