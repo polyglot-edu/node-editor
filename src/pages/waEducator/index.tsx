@@ -4,11 +4,8 @@ import {
   Card,
   CardBody,
   Flex,
-  FormControl,
-  FormLabel,
   Heading,
   Image,
-  Select,
   SpaceProps,
   Stack,
   Tab,
@@ -22,28 +19,31 @@ import {
 import { useEffect, useState } from 'react';
 import { API } from '../../data/api';
 import cardImage from '../../public/collaborative_icon.png';
+import flowImage from '../../public/test_card.png';
 import {
   PolyglotFlow,
   PolyglotNodeValidation,
   UserBaseInfo,
 } from '../../types/polyglotElements';
 
-type FlowCardProps = {
+type UserCardProps = {
   py?: SpaceProps['py'];
   px?: SpaceProps['px'];
   user: UserBaseInfo;
 };
 
-const UserCard = ({ user, px, py }: FlowCardProps) => {
-  console.log(user);
+const UserCard = ({ user, px, py }: UserCardProps) => {
   const [nodeInfo, setNodeInfo] = useState<PolyglotNodeValidation>();
   const toast = useToast();
+  const [isLoading, setIsLoading] = useState(false);
 
   useEffect(() => {
     API.getActualNodeInfo({ ctxId: user.key }).then((resp) => {
       setNodeInfo(resp.data);
     });
   }, [API]);
+
+  const completeHidden = !nodeInfo?.validation[0];
 
   return (
     <Flex px={px} py={py}>
@@ -66,35 +66,65 @@ const UserCard = ({ user, px, py }: FlowCardProps) => {
               Actual node: {nodeInfo?.title}
             </Text>
             {nodeInfo &&
-              nodeInfo.validation.map((validation) => (
-                // eslint-disable-next-line react/jsx-key
-                <Button
-                  backgroundColor={
-                    validation.data.conditionKind == 'pass'
-                      ? 'green.500'
-                      : 'red.500'
-                  }
-                  onClick={() =>
-                    API.manualProgress({
-                      ctxId: user.key,
-                      satisfiedConditions: [validation.id],
-                      flowId: user.ctx.flowId,
-                      authorId: 'admin',
-                    }).then((resp) =>
-                      toast({
-                        title: 'Progress registered',
-                        description: resp.data,
-                        status: 'success',
-                        duration: 3000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      })
-                    )
-                  }
-                >
-                  {validation.title}
-                </Button>
-              ))}
+              nodeInfo.validation.map((validation) => {
+                if (validation.type != 'manuallyProgressEdge')
+                  return (
+                    <Heading
+                      size="xs"
+                      color="#bd7342"
+                      float={'right'}
+                      hidden={!nodeInfo?.validation}
+                    >
+                      validation edge
+                    </Heading>
+                  );
+                return (
+                  // eslint-disable-next-line react/jsx-key
+                  <Button
+                    backgroundColor={
+                      validation.data.conditionKind == 'pass'
+                        ? 'green.300'
+                        : 'red.300'
+                    }
+                    float={'right'}
+                    height={'6'}
+                    marginRight={'5px'}
+                    isLoading={isLoading}
+                    onClick={() => {
+                      setIsLoading(true);
+                      API.manualProgress({
+                        ctxId: user.key,
+                        satisfiedConditions: [validation.id],
+                        flowId: user.ctx.flowId,
+                        authorId: 'admin', //userId with authentication enabled
+                      }).then((resp) => {
+                        setIsLoading(false);
+                        console.log(resp.data);
+                        setNodeInfo(resp.data); 
+                        toast({
+                          title: 'Progress registered',
+                          description:
+                            'The progress had been registered correctly.',
+                          status: 'success',
+                          duration: 3000,
+                          position: 'bottom-left',
+                          isClosable: true,
+                        });
+                      });
+                    }}
+                  >
+                    {validation.title}
+                  </Button>
+                );
+              })}
+            <Heading
+              size="xs"
+              color="#3c9e56"
+              float={'right'}
+              hidden={!completeHidden}
+            >
+              completed
+            </Heading>
           </CardBody>
         </Stack>
       </Card>
@@ -102,24 +132,65 @@ const UserCard = ({ user, px, py }: FlowCardProps) => {
   );
 };
 
+type FlowCardProps = {
+  py?: SpaceProps['py'];
+  px?: SpaceProps['px'];
+  setSelected: (flowId: string) => void;
+  setUsers: (arg0: any) => void;
+  flow: PolyglotFlow;
+};
+
+const SimpleFlowCard = ({
+  flow,
+  px,
+  py,
+  setSelected,
+  setUsers,
+}: FlowCardProps) => {
+  return (
+    <Card
+      direction={{ base: 'column', sm: 'row' }}
+      overflow="hidden"
+      variant="outline"
+      px={px}
+      py={py}
+      onClick={async () => {
+        const response = await API.progressInfo({
+          flowId: flow._id ?? '',
+          userId: 'admin',
+        });
+
+        setUsers(response.data);
+        setSelected(flow._id ?? '');
+      }}
+    >
+      <Image
+        objectFit="cover"
+        maxW={{ base: '100%', sm: '200px' }}
+        src={flowImage.src}
+        alt="Flow card"
+      />
+
+      <Stack w="full">
+        <CardBody>
+          <Heading size="md">{flow.title}</Heading>
+          <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
+            {flow.description}
+          </Text>
+          <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
+            In this Learning Path there are: {flow.nodes.length} learning
+            activities
+          </Text>
+        </CardBody>
+      </Stack>
+    </Card>
+  );
+};
+
 const FlowsListWorkadventure = () => {
   const [users, setUsers] = useState<UserBaseInfo[]>([]);
   const [flowId, setFlowId] = useState('');
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
-
-  const handleChange = async (event: { target: { value: any } }) => {
-    const selectedValue = event.target.value;
-    await setFlowId(selectedValue);
-
-    console.log('Selected option:', selectedValue);
-
-    const response = await API.progressInfo({
-      flowId: flowId,
-      userId: 'admin',
-    });
-
-    setUsers(response.data);
-  };
 
   useEffect(() => {
     API.loadFlowList().then((resp) => {
@@ -132,7 +203,7 @@ const FlowsListWorkadventure = () => {
   return (
     <>
       <Box px="10%">
-        <Heading py="5%">Learners doing your Learning path</Heading>
+        <Heading py="3%">Learners doing your Learning paths</Heading>
         {/*
           <SearchBar
             inputValue={searchValue}
@@ -141,57 +212,50 @@ const FlowsListWorkadventure = () => {
             placeholder="Search learning paths..."
           />
         */}
-        <Tabs pt="3%">
+        <Tabs>
           <TabList>
             <Tab>All</Tab>
           </TabList>
-          <Box p={2} paddingTop={'15px'}>
-            <FormControl>
-              <Select onChange={handleChange}>
-                {flows.map((flow, index) => (
-                  <option
-                    key={index}
-                    value={flow._id}
-                    onSelect={() => console.log(flow._id)}
-                  >
-                    {flow.title}
-                  </option>
-                ))}
-              </Select>
-              <FormLabel
-                style={{
-                  font: '15px',
-                  top: '-13px',
-                  left: '15px',
-                  zIndex: '2px',
-                  position: 'absolute',
-                  backgroundColor: 'white',
-                }}
-              >
-                Choose your Learning Path
-              </FormLabel>
-            </FormControl>
-          </Box>
+
           <TabPanels>
             <TabPanel>
-              <Box
-                style={{
-                  padding: '5px',
-                  flexWrap: 'wrap',
-                  justifyContent: 'space-around',
-                  display: 'flex',
-                }}
-              >
-                {users.length ? (
-                  users.map((user, id) => (
-                    <UserCard key={id} user={user} py={1} px={1} />
-                  ))
-                ) : (
-                  <Heading size={'md'} textAlign="center">
-                    No Learner found! Look in another flow ;)
-                  </Heading>
-                )}
-              </Box>
+              {flows.length ? (
+                flows.map((flow, id) => (
+                  <Box key={id} marginBottom={'5px'}>
+                    <SimpleFlowCard
+                      key={id}
+                      flow={flow}
+                      py={1}
+                      setSelected={setFlowId}
+                      setUsers={setUsers}
+                    />
+                    <Box
+                      style={{
+                        padding: '5px',
+                        flexWrap: 'wrap',
+                        justifyContent: 'space-around',
+                        display: 'flex',
+                      }}
+                      hidden={flowId != flow._id}
+                    >
+                      {users.length ? (
+                        users.map((user, id) => (
+                          <UserCard key={id} user={user} py={1} px={1} />
+                        ))
+                      ) : (
+                        <Heading size={'md'} textAlign="center">
+                          No Learner found! Look in another flow ;)
+                        </Heading>
+                      )}
+                    </Box>
+                  </Box>
+                ))
+              ) : (
+                <Heading size={'md'} textAlign="center">
+                  You have created 0 Learning paths! <br />
+                  Go create one ;)
+                </Heading>
+              )}
             </TabPanel>
           </TabPanels>
         </Tabs>
