@@ -251,7 +251,7 @@ export class APIV2 {
       depth: depth,
     });
   }
-  
+
   loadCourses(query?: string): Promise<AxiosResponse<PolyglotCourse[]>> {
     return this.axios.get('/api/course' + (query ? query : ''));
   }
@@ -263,7 +263,6 @@ export class APIV2 {
   deleteCourse(courseId: string): Promise<AxiosResponse> {
     return this.axios.delete('/api/course/' + courseId);
   }
-
 }
 
 export const API = {
