@@ -23,10 +23,13 @@ import {
   Text,
   Textarea,
   Tooltip,
-  useDisclosure
+  useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { PolyglotCourse, PolyglotCourseInfo } from '../../types/polyglotElements';
+import {
+  PolyglotCourse,
+  PolyglotCourseInfo,
+} from '../../types/polyglotElements';
 import { colors } from './CreateCourseModal';
 
 export type EditCourseModalProps = {

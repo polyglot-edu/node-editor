@@ -43,7 +43,6 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
 import { PolyglotCourseInfo } from '../../types/polyglotElements';
 
-
 type CreateCourseModalProps = {
   isOpen: boolean;
   onClose: () => void;
@@ -64,7 +63,12 @@ export const colors = [
   'green',
 ];
 
-const CreateCourseModal = ({ isOpen, onClose, API, setOpenModal }: CreateCourseModalProps) => {
+const CreateCourseModal = ({
+  isOpen,
+  onClose,
+  API,
+  setOpenModal,
+}: CreateCourseModalProps) => {
   const [flow, setFlow] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -75,7 +79,6 @@ const CreateCourseModal = ({ isOpen, onClose, API, setOpenModal }: CreateCourseM
   const [tags, setTags] = useState<{ name: string; color: string }[]>([]);
   const [searchValue, setSearchValue] = useState('');
   const [suggestions, setSuggestions] = useState<string[]>([]);
-
 
   const toast = useToast();
 
@@ -93,8 +96,6 @@ const CreateCourseModal = ({ isOpen, onClose, API, setOpenModal }: CreateCourseM
 
   const createCourse = async () => {
     try {
-      
-
       setLoading(true);
 
       const base_course: PolyglotCourseInfo = {
@@ -104,7 +105,7 @@ const CreateCourseModal = ({ isOpen, onClose, API, setOpenModal }: CreateCourseM
       };
 
       const response: AxiosResponse = await API.createNewCourse(base_course);
-     
+
       if (response.status !== 201) {
         onClose();
         toast({
@@ -191,16 +192,14 @@ const CreateCourseModal = ({ isOpen, onClose, API, setOpenModal }: CreateCourseM
                       setDescription(e.currentTarget.value);
                     }}
                   />
-                  <Flex paddingTop={'8px'} align={'center'}>
-                  </Flex>
+                  <Flex paddingTop={'8px'} align={'center'}></Flex>
                   <SearchBar
                     inputValue={searchValue}
                     setInputValue={setSearchValue}
                     items={suggestions}
                     placeholder="Search learning paths..."
                   />
-                  <Flex paddingTop={'8px'} align={'center'}>
-                  </Flex>
+                  <Flex paddingTop={'8px'} align={'center'}></Flex>
                   <FormLabel my={2} fontWeight={'bold'}>
                     Tags:
                   </FormLabel>
@@ -333,7 +332,7 @@ const CreateCourseModal = ({ isOpen, onClose, API, setOpenModal }: CreateCourseM
             isLoading={loading}
             loadingText="Creating"
             colorScheme="blue"
-            onClick={()=>{
+            onClick={() => {
               createCourse();
               setOpenModal('');
             }}

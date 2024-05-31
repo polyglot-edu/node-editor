@@ -13,8 +13,8 @@ import {
   CardBody,
   CardFooter,
   Flex,
-  HStack,
   Heading,
+  HStack,
   Image,
   LinkBox,
   List,
@@ -24,9 +24,9 @@ import {
   Spacer,
   Stack,
   Text,
-  Tooltip
+  Tooltip,
 } from '@chakra-ui/react';
-import { MdCheckCircle } from "react-icons/md";
+import { MdCheckCircle } from 'react-icons/md';
 import cardImage from '../../public/test_card.png';
 import { PolyglotCourse } from '../../types/polyglotElements';
 import FlowCard from './FlowCard';
@@ -44,7 +44,17 @@ type CourseCardProps = {
   course: PolyglotCourse;
 };
 
-const CourseCard = ({ course, px, py, canDelete, canEdit, canEnroll, setSelected, setOpenModal, onEnroll }: CourseCardProps) => {
+const CourseCard = ({
+  course,
+  px,
+  py,
+  canDelete,
+  canEdit,
+  canEnroll,
+  setSelected,
+  setOpenModal,
+  onEnroll,
+}: CourseCardProps) => {
   return (
     <LinkBox px={px} py={py}>
       <Card
@@ -61,53 +71,57 @@ const CourseCard = ({ course, px, py, canDelete, canEdit, canEnroll, setSelected
 
         <Stack w="full">
           <CardBody>
-            <Flex
-            float={'right'}
-            >
-            {canEdit && (
+            <Flex float={'right'}>
+              {canEdit && (
+                <Button
+                  zIndex={11}
+                  float={'right'}
+                  variant="unstyled"
+                  hidden={!canEdit}
+                >
+                  <Tooltip label="Edit" placement="left">
+                    <EditIcon
+                      onClick={() => {
+                        setSelected?.(course._id!);
+                        setOpenModal?.('edit');
+                      }}
+                      w={5}
+                      h={5}
+                      color="blue"
+                    />
+                  </Tooltip>
+                </Button>
+              )}
+              {canDelete && (
+                <Button
+                  zIndex={11}
+                  float={'right'}
+                  variant="unstyled"
+                  hidden={!canDelete}
+                >
+                  <Tooltip label="Delete" placement="right">
+                    <DeleteIcon
+                      onClick={() => {
+                        setSelected?.(course._id!);
+                        setOpenModal?.('delete');
+                      }}
+                      w={5}
+                      h={5}
+                      color="red"
+                    />
+                  </Tooltip>
+                </Button>
+              )}
               <Button
                 zIndex={11}
-                float={'right'}
-                variant="unstyled"
-                hidden={!canEdit}
+                colorScheme="blue"
+                size={'sm'}
+                variant="solid"
+                hidden={!canEnroll}
+                onClick={() => onEnroll?.(course._id!)}
               >
-                <Tooltip label="Edit" placement="left">
-                  <EditIcon
-                    onClick={() => {setSelected?.(course._id!); setOpenModal?.('edit')}}
-                    w={5}
-                    h={5}
-                    color="blue"
-                  />
-                </Tooltip>
+                enroll
               </Button>
-            )}
-            {canDelete && (
-              <Button
-                zIndex={11}
-                float={'right'}
-                variant="unstyled"
-                hidden={!canDelete}
-              >
-                <Tooltip label="Delete" placement="right">
-                  <DeleteIcon
-                    onClick={() => {setSelected?.(course._id!); setOpenModal?.('delete')}}
-                    w={5}
-                    h={5}
-                    color="red"
-                  />
-                </Tooltip>
-              </Button>
-            )}
-            <Button
-              zIndex={11}
-              colorScheme='blue'
-              size={'sm'}
-              variant="solid"
-              hidden={!canEnroll}
-              onClick={() => onEnroll?.(course._id!)}
-            >
-              enroll
-            </Button>
             </Flex>
             <Heading size="md">{course.title}</Heading>
             {course.tags &&
@@ -120,37 +134,32 @@ const CourseCard = ({ course, px, py, canDelete, canEdit, canEnroll, setSelected
               {course.description}
             </Text>
             <Text pt={2} whiteSpace={'pre-wrap'} noOfLines={3}>
-              In this Course there are: {course.flows.length} learning
-              paths
+              In this Course there are: {course.flows.length} learning paths
             </Text>
             <Accordion allowMultiple>
               <AccordionItem>
                 <h2>
                   <AccordionButton>
-                    <Box as='span' flex='1' textAlign='left'>
+                    <Box as="span" flex="1" textAlign="left">
                       Course flows
                     </Box>
                     <AccordionIcon />
                   </AccordionButton>
                 </h2>
                 <AccordionPanel pb={4}>
-                <List spacing={3}>
-                  {
-                    course.flows.map((flow, id) => (
+                  <List spacing={3}>
+                    {course.flows.map((flow, id) => (
                       <ListItem key={id}>
-                        <ListIcon as={MdCheckCircle} color='green.500' />
+                        <ListIcon as={MdCheckCircle} color="green.500" />
                         {flow.title}
                       </ListItem>
-                    ))
-                  }
-                  {
-                    course.flows.map((flow, id) => (
+                    ))}
+                    {course.flows.map((flow, id) => (
                       <ListItem key={id}>
-                        <FlowCard flow={flow}/>
+                        <FlowCard flow={flow} />
                       </ListItem>
-                    ))
-                  }
-                </List>
+                    ))}
+                  </List>
                 </AccordionPanel>
               </AccordionItem>
             </Accordion>

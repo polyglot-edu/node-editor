@@ -33,7 +33,9 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
   const [courses, setCourses] = useState<PolyglotCourse[]>([]);
-  const [selectedCourseId, setSelectedCourseId] = useState<string | undefined>();
+  const [selectedCourseId, setSelectedCourseId] = useState<
+    string | undefined
+  >();
   const { user, isLoading, error } = useUser();
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
@@ -53,7 +55,6 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
     onClose: ecOnClose,
     onOpen: ecOnOpen,
   } = useDisclosure();
-
 
   // User need to be loaded
   const API = useMemo(() => new APIV2(accessToken), [accessToken]);
@@ -86,7 +87,7 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
       });
     }
   }, [user, searchValue, API, currentTab, openModal]);
-  
+
   useEffect(() => {
     console.log('openModal', openModal);
     switch (openModal) {
@@ -110,7 +111,7 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
   if (isLoading) return null;
 
   if (error) console.error(error);
-  
+
   return (
     <>
       <Navbar user={user} />
@@ -163,7 +164,9 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
                   bg={'blue.400'}
                   _hover={{ bg: 'blue.600' }}
                   icon={<AddIcon fontSize={'xl'} color="white" />}
-                  onClick={()=>{setOpenModal('create')}}
+                  onClick={() => {
+                    setOpenModal('create');
+                  }}
                 />
               </Tooltip>
             </TabPanel>
@@ -192,21 +195,21 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
             <TabPanel pt="3%">
               {courses.length ? (
                 courses.map((course, id) => (
-                    <CourseCard
-                      key={id}
-                      course={course}
-                      py={1}
-                      canDelete={false}
-                      canEdit={false}
-                      canEnroll={true}
-                      setSelected={setSelectedCourseId}
-                      setOpenModal={setOpenModal}
-                    />
+                  <CourseCard
+                    key={id}
+                    course={course}
+                    py={1}
+                    canDelete={false}
+                    canEdit={false}
+                    canEnroll={true}
+                    setSelected={setSelectedCourseId}
+                    setOpenModal={setOpenModal}
+                  />
                 ))
               ) : (
-              <Heading size={'md'} textAlign="center">
-                You have 0 Courses available! <br />
-              </Heading>
+                <Heading size={'md'} textAlign="center">
+                  You have 0 Courses available! <br />
+                </Heading>
               )}
             </TabPanel>
           </TabPanels>
@@ -217,10 +220,10 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
             ccOnClose();
             setOpenModal('');
           }}
-          setOpenModal={setOpenModal} 
+          setOpenModal={setOpenModal}
           API={API}
         />
-        {selectedCourseId&& (
+        {selectedCourseId && (
           <EditCourseModal
             isOpen={ecOpen}
             onClose={() => {
@@ -231,11 +234,13 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
             course={courses.find((course) => course._id === selectedCourseId)!}
             updateInfo={
               //async (courseInfo) => {}
-              () => {return;}
+              () => {
+                return;
+              }
             }
           />
         )}
-        {selectedCourseId&& (
+        {selectedCourseId && (
           <DeleteCourseModal
             isOpen={dcOpen}
             onClose={() => {

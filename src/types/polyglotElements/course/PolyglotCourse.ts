@@ -11,6 +11,6 @@ export type PolyglotCourseInfo = {
   };
 };
 
-export type PolyglotCourse = PolyglotCourseInfo &{
+export type PolyglotCourse = PolyglotCourseInfo & {
   flows: PolyglotFlow[];
 };

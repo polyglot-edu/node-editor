@@ -1,55 +1,54 @@
 import {
-    Button,
-    Modal,
-    ModalBody,
-    ModalCloseButton,
-    ModalContent,
-    ModalFooter,
-    ModalHeader,
-    ModalOverlay,
-    Text,
+  Button,
+  Modal,
+  ModalBody,
+  ModalCloseButton,
+  ModalContent,
+  ModalFooter,
+  ModalHeader,
+  ModalOverlay,
+  Text,
 } from '@chakra-ui/react';
-  
-  export type ModelTemplateProps = {
-    isOpen: boolean;
-    onClose: () => void;
-    courseId: string;
-    deleteFunc: (courseId: string) => Promise<void>;
-  };
-  
-  const DeleteCourseModal = ({
-    isOpen,
-    onClose,
-    courseId,
-    deleteFunc,
-  }: ModelTemplateProps) => {
-    return (
-      <Modal isOpen={isOpen} onClose={onClose} isCentered>
-        <ModalOverlay />
-        <ModalContent>
-          <ModalHeader>Delete Course</ModalHeader>
-          <ModalCloseButton />
-          <ModalBody>
-            <Text>
-              Are you sure? <br /> This action is irreversable!
-            </Text>
-          </ModalBody>
-  
-          <ModalFooter>
-            <Button
-              colorScheme="red"
-              onClick={async () => {
-                onClose();
-                await deleteFunc(courseId);
-              }}
-            >
-              Delete
-            </Button>
-          </ModalFooter>
-        </ModalContent>
-      </Modal>
-    );
-  };
-  
-  export default DeleteCourseModal;
-  
+
+export type ModelTemplateProps = {
+  isOpen: boolean;
+  onClose: () => void;
+  courseId: string;
+  deleteFunc: (courseId: string) => Promise<void>;
+};
+
+const DeleteCourseModal = ({
+  isOpen,
+  onClose,
+  courseId,
+  deleteFunc,
+}: ModelTemplateProps) => {
+  return (
+    <Modal isOpen={isOpen} onClose={onClose} isCentered>
+      <ModalOverlay />
+      <ModalContent>
+        <ModalHeader>Delete Course</ModalHeader>
+        <ModalCloseButton />
+        <ModalBody>
+          <Text>
+            Are you sure? <br /> This action is irreversable!
+          </Text>
+        </ModalBody>
+
+        <ModalFooter>
+          <Button
+            colorScheme="red"
+            onClick={async () => {
+              onClose();
+              await deleteFunc(courseId);
+            }}
+          >
+            Delete
+          </Button>
+        </ModalFooter>
+      </ModalContent>
+    </Modal>
+  );
+};
+
+export default DeleteCourseModal;

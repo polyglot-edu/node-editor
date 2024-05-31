@@ -8,11 +8,11 @@ import {
   MaterialType,
   PolyglotCourse,
   PolyglotCourseInfo,
+  polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
+  polyglotNodeComponentMapping,
   SummarizeType,
-  polyglotEdgeComponentMapping,
-  polyglotNodeComponentMapping
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -247,11 +247,11 @@ export class APIV2 {
     });
   }
 
-  loadCourses (query?: string) : Promise<AxiosResponse<PolyglotCourse[]>> {
+  loadCourses(query?: string): Promise<AxiosResponse<PolyglotCourse[]>> {
     return this.axios.get('/api/course' + (query ? query : ''));
   }
 
-  createNewCourse (course: PolyglotCourseInfo) : Promise<AxiosResponse> {
+  createNewCourse(course: PolyglotCourseInfo): Promise<AxiosResponse> {
     return this.axios.post('/api/course', course);
   }
 
@@ -340,7 +340,7 @@ export const API = {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
 
-  loadCourses: () : Promise<AxiosResponse> => {
+  loadCourses: (): Promise<AxiosResponse> => {
     return axios.get('/api/courses');
   },
 
