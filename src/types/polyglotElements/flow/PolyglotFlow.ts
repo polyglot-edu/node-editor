@@ -32,7 +32,7 @@ export type ProgressInfo = {
 
 export type ManualProgressInfo = {
   ctxId: string;
-  satisfiedConditions: string[];
+  satisfiedConditions?: string[];
   flowId?: string;
   authorId: string;
 };

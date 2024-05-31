@@ -3,6 +3,8 @@ import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   ManualProgressInfo,
+  PolyglotCourse,
+  PolyglotCourseInfo,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
@@ -51,6 +53,7 @@ const AIAPIGeneration = axiosCreate.create({
 type AutocompleteOutput = string[];
 
 export class APIV2 {
+  [x: string]: any;
   axios: AxiosInstance;
   redirect401: boolean;
   redirect401URL?: string;
@@ -248,6 +251,18 @@ export class APIV2 {
       depth: depth,
     });
   }
+
+  loadCourses(query?: string): Promise<AxiosResponse<PolyglotCourse[]>> {
+    return this.axios.get('/api/course' + (query ? query : ''));
+  }
+
+  createNewCourse(course: PolyglotCourseInfo): Promise<AxiosResponse> {
+    return this.axios.post('/api/course', course);
+  }
+
+  deleteCourse(courseId: string): Promise<AxiosResponse> {
+    return this.axios.delete('/api/course/' + courseId);
+  }
 }
 
 export const API = {
@@ -336,6 +351,13 @@ export const API = {
   manualProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(
       `/api/execution/progressAction`,
+      body
+    );
+  },
+
+  resetProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/execution/resetProgress`,
       body
     );
   },

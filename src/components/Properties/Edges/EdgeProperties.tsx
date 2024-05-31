@@ -19,8 +19,11 @@ const config = [
       'MemoriseKeywordsListNode',
       'PromptEngineeringNode',
       'ProblemSolvingNode',
-      'CollaborativeModelingNode',
     ],
+  },
+  {
+    edgeTypes: ['manuallyProgressEdge'],
+    nodeTypes: ['CollaborativeModelingNode'],
   },
   {
     edgeTypes: [
