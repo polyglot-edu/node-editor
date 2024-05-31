@@ -1,3 +1,4 @@
+import { RepeatIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -5,6 +6,7 @@ import {
   CardBody,
   Flex,
   Heading,
+  IconButton,
   Image,
   SpaceProps,
   Stack,
@@ -16,15 +18,19 @@ import {
   Text,
   useToast,
 } from '@chakra-ui/react';
-import { useEffect, useState } from 'react';
-import { API } from '../../data/api';
+import { GetServerSideProps } from 'next';
+import { useEffect, useMemo, useState } from 'react';
+import { API, APIV2 } from '../../data/api';
 import cardImage from '../../public/collaborative_icon.png';
 import flowImage from '../../public/test_card.png';
 import {
+  PolyglotCourse,
   PolyglotFlow,
   PolyglotNodeValidation,
   UserBaseInfo,
 } from '../../types/polyglotElements';
+import auth0 from '../../utils/auth0';
+import CourseCard from '../../components/Card/CourseCard';
 
 type UserCardProps = {
   py?: SpaceProps['py'];
@@ -61,6 +67,18 @@ const UserCard = ({ user, px, py }: UserCardProps) => {
 
         <Stack w="full">
           <CardBody width={'300px'}>
+            <IconButton
+              float={'right'}
+              aria-label="Reset Execution"
+              icon={<RepeatIcon />}
+              onClick={() =>
+                API.resetProgress({ ctxId: user.key, authorId: 'admin' }).then(
+                  (resp) => {
+                    console.log(resp.data);
+                  }
+                )
+              }
+            />
             <Heading size="md">{user.ctx.username}</Heading>
             <Text pt={2} whiteSpace={'pre-wrap'}>
               Actual node: {nodeInfo?.title}
@@ -187,15 +205,25 @@ const SimpleFlowCard = ({
   );
 };
 
-const FlowsListWorkadventure = () => {
+type FlowIndexProps = {
+  accessToken: string | undefined;
+};
+
+const FlowsListWorkadventure = ({ accessToken }: FlowIndexProps) => {
   const [users, setUsers] = useState<UserBaseInfo[]>([]);
   const [flowId, setFlowId] = useState('');
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
+  const [courses, setCourses] = useState<PolyglotCourse[]>([]);
+
+  const API = useMemo(() => new APIV2(accessToken), [accessToken]);
 
   useEffect(() => {
     API.loadFlowList().then((resp) => {
       setFlows(resp.data);
       setFlowId(resp.data[0]._id ?? '');
+    });
+    API.loadCourses().then((resp) => {
+      setCourses(resp.data);
     });
   }, [API]);
 
@@ -219,49 +247,69 @@ const FlowsListWorkadventure = () => {
 
           <TabPanels>
             <TabPanel>
-              {flows.length ? (
-                flows.map((flow, id) => (
-                  <Box key={id} marginBottom={'5px'}>
-                    <SimpleFlowCard
-                      key={id}
-                      flow={flow}
-                      py={1}
-                      setSelected={setFlowId}
-                      setUsers={setUsers}
-                    />
-                    <Box
-                      style={{
-                        padding: '5px',
-                        flexWrap: 'wrap',
-                        justifyContent: 'space-around',
-                        display: 'flex',
-                      }}
-                      hidden={flowId != flow._id}
-                    >
-                      {users.length ? (
-                        users.map((user, id) => (
-                          <UserCard key={id} user={user} py={1} px={1} />
-                        ))
-                      ) : (
-                        <Heading size={'md'} textAlign="center">
-                          No Learner found! Look in another flow ;)
-                        </Heading>
-                      )}
-                    </Box>
+              {courses.map((course) => {
+                return (
+                  <Box key={course._id}>
+                    <CourseCard course={course} />
+                    {flows.length ? (
+                      flows.map((flow) => (
+                        <Box key={flow._id} marginBottom={'5px'}>
+                          <SimpleFlowCard
+                            key={flow._id}
+                            flow={flow}
+                            py={1}
+                            setSelected={setFlowId}
+                            setUsers={setUsers}
+                          />
+                          <Box
+                            style={{
+                              padding: '5px',
+                              flexWrap: 'wrap',
+                              justifyContent: 'space-around',
+                              display: 'flex',
+                            }}
+                            hidden={flowId != flow._id}
+                          >
+                            {users.length ? (
+                              users.map((user, id) => (
+                                <UserCard key={id} user={user} py={1} px={1} />
+                              ))
+                            ) : (
+                              <Heading size={'md'} textAlign="center">
+                                No Learner found! Look in another flow ;)
+                              </Heading>
+                            )}
+                          </Box>
+                        </Box>
+                      ))
+                    ) : (
+                      <Heading size={'md'} textAlign="center">
+                        You have created 0 Learning paths! <br />
+                        Go create one ;)
+                      </Heading>
+                    )}
                   </Box>
-                ))
-              ) : (
-                <Heading size={'md'} textAlign="center">
-                  You have created 0 Learning paths! <br />
-                  Go create one ;)
-                </Heading>
-              )}
+                );
+              })}
             </TabPanel>
           </TabPanels>
         </Tabs>
+        {/*<CreateCourseModal isOpen={cfOpen} onClose={cfOnClose} API={API} />*/}
       </Box>
     </>
   );
 };
 
 export default FlowsListWorkadventure;
+
+export const getServerSideProps: GetServerSideProps = async (ctx) => {
+  const session = await auth0.getSession(ctx.req, ctx.res);
+
+  if (!session) return { props: {} };
+
+  return {
+    props: {
+      accessToken: session.accessToken,
+    },
+  };
+};
