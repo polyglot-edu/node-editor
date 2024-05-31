@@ -6,6 +6,7 @@ import {
   AnalyseType,
   LOType,
   MaterialType,
+  PolyglotCourse,
   PolyglotCourseInfo,
   PolyglotFlow,
   PolyglotFlowInfo,
@@ -246,12 +247,20 @@ export class APIV2 {
     });
   }
 
-  loadCourses () : Promise<AxiosResponse> {
-    return this.axios.get('/api/course');
+  loadCourses (query?: string) : Promise<AxiosResponse<PolyglotCourse[]>> {
+    return this.axios.get('/api/course' + (query ? query : ''));
   }
 
   createNewCourse (course: PolyglotCourseInfo) : Promise<AxiosResponse> {
     return this.axios.post('/api/course', course);
+  }
+
+  deleteCourse(courseId: string): Promise<AxiosResponse> {
+    return this.axios.delete('/api/course/' + courseId);
+  }
+
+  enrollCourse(courseId: string): Promise<AxiosResponse> {
+    return this.axios.put('/api/course/' + courseId + '/enroll');
   }
 }
 

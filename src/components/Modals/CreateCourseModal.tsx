@@ -38,7 +38,6 @@ import {
 } from '@chakra-ui/react';
 import Editor from '@monaco-editor/react';
 import { AxiosResponse } from 'axios';
-import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
@@ -49,6 +48,7 @@ type CreateCourseModalProps = {
   isOpen: boolean;
   onClose: () => void;
   API: APIV2;
+  setOpenModal: (value: string) => void;
 };
 
 export const colors = [
@@ -64,7 +64,7 @@ export const colors = [
   'green',
 ];
 
-const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => {
+const CreateCourseModal = ({ isOpen, onClose, API, setOpenModal }: CreateCourseModalProps) => {
   const [flow, setFlow] = useState<string | undefined>(undefined);
   const [loading, setLoading] = useState(false);
   const [title, setTitle] = useState('');
@@ -78,7 +78,6 @@ const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => 
 
 
   const toast = useToast();
-  const router = useRouter();
 
   // reset tags on reopen
   useEffect(() => {
@@ -87,15 +86,14 @@ const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => 
   }, [isOpen]);
 
   useEffect(() => {
-    console.log('useEffect');
     API.loadFlowList().then((resp) => {
       setSuggestions([...new Set(resp.data.map((flow) => flow.title))]);
     });
   }, [searchValue, API]);
 
-  const createFlow = async () => {
+  const createCourse = async () => {
     try {
-      let response: AxiosResponse;
+      
 
       setLoading(true);
 
@@ -105,9 +103,9 @@ const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => 
         tags: tags,
       };
 
-      response = await API.createNewCourse(base_course);
+      const response: AxiosResponse = await API.createNewCourse(base_course);
      
-      if (response.status !== 200) {
+      if (response.status !== 201) {
         onClose();
         toast({
           title: 'Course not created',
@@ -118,7 +116,6 @@ const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => 
           isClosable: true,
         });
       }
-      router.push('/flows/' + response.data._id);
     } catch (error: any) {
       if ((error as Error).name === 'SyntaxError') {
         toast({
@@ -154,6 +151,8 @@ const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => 
         });
     } finally {
       setLoading(false);
+      isOpen = false;
+      console.log('Course created');
     }
   };
 
@@ -161,7 +160,7 @@ const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => 
     <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Create Flow</ModalHeader>
+        <ModalHeader>Create Course</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Tabs>
@@ -334,7 +333,10 @@ const CreateCourseModal = ({ isOpen, onClose, API }: CreateCourseModalProps) => 
             isLoading={loading}
             loadingText="Creating"
             colorScheme="blue"
-            onClick={createFlow}
+            onClick={()=>{
+              createCourse();
+              setOpenModal('');
+            }}
           >
             Create
           </Button>

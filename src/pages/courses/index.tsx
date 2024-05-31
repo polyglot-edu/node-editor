@@ -16,7 +16,8 @@ import { GetServerSideProps } from 'next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import CourseCard from '../../components/Card/CourseCard';
 import CreateCourseModal from '../../components/Modals/CreateCourseModal';
-import DeleteFlowModal from '../../components/Modals/DeleteFlowModal';
+import DeleteCourseModal from '../../components/Modals/DeleteCourseModal';
+import EditCourseModal from '../../components/Modals/EditCourseModal';
 import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
@@ -32,44 +33,79 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
   const [currentTab, setCurrentTab] = useState(0);
   const [flows, setFlows] = useState<PolyglotFlow[]>([]);
   const [courses, setCourses] = useState<PolyglotCourse[]>([]);
-  const [selectedFlowId, setSelectedFlowId] = useState<string | undefined>();
+  const [selectedCourseId, setSelectedCourseId] = useState<string | undefined>();
   const { user, isLoading, error } = useUser();
   const [suggestions, setSuggestions] = useState<string[]>([]);
   const [searchValue, setSearchValue] = useState('');
+  const [openModal, setOpenModal] = useState('');
   const {
-    isOpen: cfOpen,
-    onClose: cfOnClose,
-    onOpen: cfOnOpen,
+    isOpen: ccOpen,
+    onClose: ccOnClose,
+    onOpen: ccOnOpen,
   } = useDisclosure();
   const {
-    isOpen: dfOpen,
-    onClose: dfOnClose,
-    onOpen: dfOnOpen,
+    isOpen: dcOpen,
+    onClose: dcOnClose,
+    onOpen: dcOnOpen,
   } = useDisclosure();
+  const {
+    isOpen: ecOpen,
+    onClose: ecOnClose,
+    onOpen: ecOnOpen,
+  } = useDisclosure();
+
 
   // User need to be loaded
   const API = useMemo(() => new APIV2(accessToken), [accessToken]);
 
-  const deleteFlow = useCallback(
-    async (flowId: string) => {
-      await API.deleteFlow(flowId);
-      setFlows((prev) => prev.filter((flow) => flow._id !== flowId));
+  const deleteCourse = useCallback(
+    async (courseId: string) => {
+      await API.deleteCourse(courseId);
+      setCourses((prev) => prev.filter((course) => course._id !== courseId));
+    },
+    [API]
+  );
+
+  const enrollCourse = useCallback(
+    async (courseId: string) => {
+      console.log('Enrolling in course', courseId);
+      await API.enrollCourse(courseId);
     },
     [API]
   );
 
   useEffect(() => {
-    if (!selectedFlowId) return;
-    dfOnOpen();
-  }, [dfOnOpen, selectedFlowId]);
-
-  useEffect(() => {
     if (user || process.env.TEST_MODE === 'true') {
-      API.loadCourses().then((resp) => {
+      let queryparams = '';
+      if (currentTab === 0) queryparams = '?me=true&';
+      else if (searchValue) queryparams = '?';
+      if (searchValue) queryparams += 'q=' + searchValue;
+      API.loadCourses(queryparams).then((resp) => {
         setCourses(resp.data);
+        setSuggestions([...new Set(resp.data.map((flow) => flow.title))]);
       });
     }
-  }, [user, searchValue, API, currentTab]);
+  }, [user, searchValue, API, currentTab, openModal]);
+  
+  useEffect(() => {
+    console.log('openModal', openModal);
+    switch (openModal) {
+      case 'create':
+        ccOnOpen();
+        break;
+      case 'edit':
+        ecOnOpen();
+        break;
+      case 'delete':
+        dcOnOpen();
+        break;
+      default:
+        ccOnClose();
+        ecOnClose();
+        dcOnClose();
+        break;
+    }
+  }, [selectedCourseId, openModal]);
 
   if (isLoading) return null;
 
@@ -102,7 +138,10 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
                     course={course}
                     py={1}
                     canDelete={true}
-                    setSelected={setSelectedFlowId}
+                    canEdit={true}
+                    canEnroll={false}
+                    setSelected={setSelectedCourseId}
+                    setOpenModal={setOpenModal}
                   />
                 ))
               ) : (
@@ -114,7 +153,7 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
               <Tooltip label="Create Course">
                 <IconButton
                   hidden={!(user || process.env.TEST_MODE === 'true')}
-                  aria-label="Course Flow"
+                  aria-label="Create Course"
                   position={'fixed'}
                   right={10}
                   bottom={10}
@@ -124,22 +163,88 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
                   bg={'blue.400'}
                   _hover={{ bg: 'blue.600' }}
                   icon={<AddIcon fontSize={'xl'} color="white" />}
-                  onClick={cfOnOpen}
+                  onClick={()=>{setOpenModal('create')}}
                 />
               </Tooltip>
             </TabPanel>
+            <TabPanel pt="3%">
+              {courses.length ? (
+                courses.map((course, id) => (
+                  <CourseCard
+                    key={id}
+                    course={course}
+                    py={1}
+                    canDelete={false}
+                    canEdit={false}
+                    canEnroll={true}
+                    setSelected={setSelectedCourseId}
+                    setOpenModal={setOpenModal}
+                    onEnroll={enrollCourse}
+                  />
+                ))
+              ) : (
+                <Heading size={'md'} textAlign="center">
+                  You have 0 Courses available! <br />
+                  Create one with the + button ;)
+                </Heading>
+              )}
+            </TabPanel>
+            <TabPanel pt="3%">
+              {courses.length ? (
+                courses.map((course, id) => (
+                    <CourseCard
+                      key={id}
+                      course={course}
+                      py={1}
+                      canDelete={false}
+                      canEdit={false}
+                      canEnroll={true}
+                      setSelected={setSelectedCourseId}
+                      setOpenModal={setOpenModal}
+                    />
+                ))
+              ) : (
+              <Heading size={'md'} textAlign="center">
+                You have 0 Courses available! <br />
+              </Heading>
+              )}
+            </TabPanel>
           </TabPanels>
         </Tabs>
-        <CreateCourseModal isOpen={cfOpen} onClose={cfOnClose} API={API} />
-        {selectedFlowId && (
-          <DeleteFlowModal
-            isOpen={dfOpen}
+        <CreateCourseModal
+          isOpen={ccOpen}
+          onClose={() => {
+            ccOnClose();
+            setOpenModal('');
+          }}
+          setOpenModal={setOpenModal} 
+          API={API}
+        />
+        {selectedCourseId&& (
+          <EditCourseModal
+            isOpen={ecOpen}
             onClose={() => {
-              dfOnClose();
-              setSelectedFlowId(undefined);
+              ecOnClose();
+              setSelectedCourseId(undefined);
+              setOpenModal('');
             }}
-            deleteFunc={deleteFlow}
-            flowId={selectedFlowId}
+            course={courses.find((course) => course._id === selectedCourseId)!}
+            updateInfo={
+              //async (courseInfo) => {}
+              () => {return;}
+            }
+          />
+        )}
+        {selectedCourseId&& (
+          <DeleteCourseModal
+            isOpen={dcOpen}
+            onClose={() => {
+              dcOnClose();
+              setSelectedCourseId(undefined);
+              setOpenModal('');
+            }}
+            deleteFunc={deleteCourse}
+            courseId={selectedCourseId}
           />
         )}
       </Box>

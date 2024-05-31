@@ -1,11 +1,9 @@
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
-  IconButton,
   Input,
   Modal,
   ModalBody,
@@ -22,58 +20,52 @@ import {
   PopoverHeader,
   PopoverTrigger,
   Portal,
-  Tag,
-  TagLabel,
-  TagLeftIcon,
   Text,
   Textarea,
   Tooltip,
-  useDisclosure,
+  useDisclosure
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
-import { PolyglotFlow, PolyglotFlowInfo } from '../../types/polyglotElements';
-import { colors } from './CreateFlowModal';
-type EditFlowModalProps = {
+import { PolyglotCourse, PolyglotCourseInfo } from '../../types/polyglotElements';
+import { colors } from './CreateCourseModal';
+
+export type EditCourseModalProps = {
   isOpen: boolean;
   onClose: () => void;
-  flow: PolyglotFlow;
-  updateInfo: (flowInfo: PolyglotFlowInfo) => void;
+  course: PolyglotCourse;
+  updateInfo: (courseInfo: PolyglotCourseInfo) => void;
 };
 
-const EditFlowModal = ({
+const EditCourseModal = ({
   isOpen,
   onClose,
-  flow,
+  course,
   updateInfo,
-}: EditFlowModalProps) => {
-  if (!flow.topics) flow.topics = [];
+}: EditCourseModalProps) => {
+  //if (!course.topics) flow.topics = [];
   const [title, setTitle] = useState('');
   const [description, setDescription] = useState('');
-  const [learningContext, setLearningContext] = useState('');
-  const [duration, setDuration] = useState('');
-  const [topicName, setTopicName] = useState('');
-  const [topics, setTopics] = useState([...flow.topics]);
+  //const [toplllls, setTopics] = useState([...course.topics]);
   const [tagName, setTagName] = useState('');
   const [publish] = useState(false);
   const [colorTag, setColorTag] = useState(colors[0]);
-  const [tags, setTags] = useState([...flow.tags]);
+  //const [tags, setTags] = useState([...course.tags]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
 
   useEffect(() => {
-    if (!flow) return;
-    setTitle(flow.title);
-    setDescription(flow.description);
-    setLearningContext(flow.learningContext);
-    setTopics([...flow.topics]);
+    if (!course) return;
+    setTitle(course.title);
+    setDescription(course.description);
+    //setTopics([...flow.topics]);
     setColorTag(colors[0]);
-    setTags([...flow.tags]);
-  }, [flow]);
+    //setTags([...flow.tags]);
+  }, [course]);
 
   return (
     <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Edit Flow</ModalHeader>
+        <ModalHeader>Edit Course</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <FormControl>
@@ -93,80 +85,6 @@ const EditFlowModal = ({
               value={description}
               onChange={(e) => setDescription(e.currentTarget.value)}
             />
-            <FormLabel mb={2} fontWeight={'bold'}>
-              Learning context:
-            </FormLabel>
-            <Textarea
-              placeholder="Insert learning context..."
-              value={learningContext}
-              onChange={(e) => setLearningContext(e.currentTarget.value)}
-            />
-            <Flex paddingTop={'8px'} align={'center'}>
-              <FormLabel mb={2} fontWeight={'bold'}>
-                Topics:
-              </FormLabel>
-              <Tooltip
-                label="Press Enter↵ in the input box to add a topic"
-                placement="top"
-              >
-                <Input
-                  placeholder="Insert topic..."
-                  w={'30%'}
-                  value={topicName}
-                  onKeyDown={(e) => {
-                    if (e.key === 'Enter') {
-                      setTopics((prev) => {
-                        prev.push(topicName.toUpperCase());
-                        return [...prev];
-                      });
-                      setTopicName('');
-                    }
-                  }}
-                  onChange={(e) => setTopicName(e.currentTarget.value)}
-                />
-              </Tooltip>
-              <IconButton
-                aria-label="Add Topic"
-                disabled={!topicName}
-                icon={<AddIcon />}
-                rounded="md"
-                onClick={() => {
-                  setTopics((prev) => {
-                    prev.push(topicName.toUpperCase());
-                    return [...prev];
-                  });
-                  setTopicName('');
-                }}
-              />
-              <FormLabel paddingLeft={'5px'} mb={2} fontWeight={'bold'}>
-                Duration (Hours):
-              </FormLabel>
-              <Input
-                width={'27%'}
-                placeholder="Insert duration..."
-                value={duration}
-                onChange={(e) => setDuration(e.currentTarget.value)}
-              />
-            </Flex>
-            {topics.map((topic, id) => (
-              <Button
-                key={topic}
-                variant={'unstyled'}
-                onClick={() =>
-                  setTopics((prev) => {
-                    prev.splice(id, 1);
-                    return [...prev];
-                  })
-                }
-              >
-                <Tag mr={1} fontWeight="bold" h={2}>
-                  <TagLeftIcon>
-                    <CloseIcon />
-                  </TagLeftIcon>
-                  <TagLabel>{topic}</TagLabel>
-                </Tag>
-              </Button>
-            ))}
           </FormControl>
           <FormLabel my={2} fontWeight={'bold'}>
             Click on the tags to add them:
@@ -218,7 +136,7 @@ const EditFlowModal = ({
                 placeholder="Insert tag name..."
                 w={'40%'}
                 value={tagName}
-                onKeyDown={(e) => {
+                /*onKeyDown={(e) => {
                   if (e.key === 'Enter') {
                     setTags((prev) => {
                       prev.push({
@@ -229,46 +147,11 @@ const EditFlowModal = ({
                     });
                     setTagName('');
                   }
-                }}
+                }}*/
                 onChange={(e) => setTagName(e.currentTarget.value)}
               />
             </Tooltip>
-            <IconButton
-              aria-label="Add Tag"
-              disabled={!tagName}
-              icon={<AddIcon />}
-              rounded="md"
-              onClick={() => {
-                setTags((prev) => {
-                  prev.push({
-                    name: tagName.toUpperCase(),
-                    color: colorTag,
-                  });
-                  return [...prev];
-                });
-                setTagName('');
-              }}
-            />
           </Flex>
-          {tags.map((tag, id) => (
-            <Button
-              key={id}
-              variant={'unstyled'}
-              onClick={() =>
-                setTags((prev) => {
-                  prev.splice(id, 1);
-                  return [...prev];
-                })
-              }
-            >
-              <Tag mr={1} colorScheme={tag.color} fontWeight="bold" h={2}>
-                <TagLeftIcon>
-                  <CloseIcon />
-                </TagLeftIcon>
-                <TagLabel>{tag.name}</TagLabel>
-              </Tag>
-            </Button>
-          ))}
         </ModalBody>
 
         <ModalFooter>
@@ -277,15 +160,10 @@ const EditFlowModal = ({
             loadingText="Creating"
             colorScheme="blue"
             onClick={() => {
-              if (!title || !description || !tags) return;
+              if (!title || !description) return;
               updateInfo({
                 title: title,
                 description: description,
-                tags: tags,
-                publish: publish,
-                learningContext: learningContext,
-                duration: duration,
-                topics: topics,
               });
               onClose();
             }}
@@ -298,4 +176,4 @@ const EditFlowModal = ({
   );
 };
 
-export default EditFlowModal;
+export default EditCourseModal;
