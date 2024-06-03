@@ -370,7 +370,7 @@ export const API = {
   },
 
   getActualNodeInfo: (body: { ctxId: string }): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(`/api/execution/actual`, body);
+    return axiosProgress.post<{}, AxiosResponse, {}>(`/api/execution/actual`, body);
   },
 
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
