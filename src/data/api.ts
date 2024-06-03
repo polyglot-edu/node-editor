@@ -322,6 +322,31 @@ export const API = {
     return axios.post<{}, AxiosResponse, {}>(`/api/flows`, flow);
   },
 
+  progressInfo: (body: ProgressInfo): Promise<AxiosResponse> => {
+    return axiosProgress.post<{}, AxiosResponse, {}>(
+      `/api/execution/progressInfo`,
+      body
+    );
+  },
+
+  manualProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
+    return axiosProgress.post<{}, AxiosResponse, {}>(
+      `/api/execution/progressAction`,
+      body
+    );
+  },
+
+  resetProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
+    return axiosProgress.post<{}, AxiosResponse, {}>(
+      `/api/execution/resetProgress`,
+      body
+    );
+  },
+
+  getActualNodeInfo: (body: { ctxId: string }): Promise<AxiosResponse> => {
+    return axiosProgress.post<{}, AxiosResponse, {}>(`/api/execution/actual`, body);
+  },
+
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
       `/Analyser/analyseMaterial`,
