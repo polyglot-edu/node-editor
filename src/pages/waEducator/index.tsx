@@ -54,101 +54,90 @@ const UserCard = ({ user, px, py }: UserCardProps) => {
   const completeHidden = !nodeInfo?.validation[0];
 
   return (
-    <Flex px={px} py={py}>
-      <Card
-        direction={{ base: 'column', sm: 'row' }}
-        overflow="hidden"
-        variant="outline"
-      >
-        <Image
-          objectFit="cover"
-          maxW={{ base: '100%', sm: '200px' }}
-          src={cardImage.src}
-          alt="Flow card"
-        />
+      <Card direction={{ base: 'column', sm: 'row' }} variant="outline" height={'120px'} mt={5}>
 
-        <Stack w="full">
-          <CardBody width={'300px'}>
-            <IconButton
-              float={'right'}
-              aria-label="Reset Execution"
-              icon={<RepeatIcon />}
-              onClick={() =>
-                API.resetProgress({ ctxId: user.key, authorId: 'admin' }).then(
-                  (resp) => {
+        <Image objectFit="cover" src={cardImage.src} alt="Flow card" />
+
+        <Stack>
+          <CardBody maxW={'600px'}>
+            <Box float={'right'} textAlign="right">
+              <IconButton
+                marginRight={'5px'}
+                aria-label="Reset Execution"
+                icon={<RepeatIcon />}
+                onClick={() =>
+                  API.resetProgress({
+                    ctxId: user.key,
+                    authorId: 'admin',
+                  }).then((resp) => {
                     console.log(resp.data);
-                  }
-                )
-              }
-            />
-            <Heading size="md">{user.ctx.username}</Heading>
-            <Text pt={2} whiteSpace={'pre-wrap'}>
-              Actual node: {nodeInfo?.title}
-            </Text>
-            {nodeInfo &&
-              nodeInfo.validation.map((validation) => {
-                if (validation.type != 'manuallyProgressEdge')
+                  })
+                }
+              />
+              {nodeInfo &&
+                nodeInfo.validation.map((validation) => {
+                  if (validation.type != 'manuallyProgressEdge')
+                    return (
+                      <Heading
+                        size="xs"
+                        color="#bd7342"
+                        hidden={!nodeInfo?.validation}
+                      >
+                        validation edge
+                      </Heading>
+                    );
                   return (
-                    <Heading
-                      size="xs"
-                      color="#bd7342"
-                      float={'right'}
-                      hidden={!nodeInfo?.validation}
-                    >
-                      validation edge
-                    </Heading>
-                  );
-                return (
-                  // eslint-disable-next-line react/jsx-key
-                  <Button
-                    backgroundColor={
-                      validation.data.conditionKind == 'pass'
-                        ? 'green.300'
-                        : 'red.300'
-                    }
-                    float={'right'}
-                    height={'6'}
-                    marginRight={'5px'}
-                    isLoading={isLoading}
-                    onClick={() => {
-                      setIsLoading(true);
-                      API.manualProgress({
-                        ctxId: user.key,
-                        satisfiedConditions: [validation.id],
-                        flowId: user.ctx.flowId,
-                        authorId: 'admin', //userId with authentication enabled
-                      }).then((resp) => {
-                        setIsLoading(false);
-                        console.log(resp.data);
-                        setNodeInfo(resp.data);
-                        toast({
-                          title: 'Progress registered',
-                          description:
-                            'The progress had been registered correctly.',
-                          status: 'success',
-                          duration: 3000,
-                          position: 'bottom-left',
-                          isClosable: true,
+                    // eslint-disable-next-line react/jsx-key
+                    <Button
+                      backgroundColor={
+                        validation.data.conditionKind == 'pass'
+                          ? 'green.300'
+                          : 'red.300'
+                      }
+                      height={'6'}
+                      marginRight={'5px'}
+                      isLoading={isLoading}
+                      onClick={() => {
+                        setIsLoading(true);
+                        API.manualProgress({
+                          ctxId: user.key,
+                          satisfiedConditions: [validation.id],
+                          flowId: user.ctx.flowId,
+                          authorId: 'admin', //userId with authentication enabled
+                        }).then((resp) => {
+                          setIsLoading(false);
+                          console.log(resp.data);
+                          setNodeInfo(resp.data);
+                          toast({
+                            title: 'Progress registered',
+                            description:
+                              'The progress had been registered correctly.',
+                            status: 'success',
+                            duration: 3000,
+                            position: 'bottom-left',
+                            isClosable: true,
+                          });
                         });
-                      });
-                    }}
-                  >
-                    {validation.title}
-                  </Button>
-                );
-              })}
-            <Heading
-              size="xs"
-              color="#3c9e56"
-              float={'right'}
-              hidden={!completeHidden}
-            >
-              completed
-            </Heading>
+                      }}
+                    >
+                      {validation.title ? validation.title : 'continue'}
+                    </Button>
+                  );
+                })}
+              <Heading size="xs" color="#3c9e56" hidden={!completeHidden}>
+                completed
+              </Heading>
+            </Box>
+            <Box >
+              <Heading size="md">{user.ctx.username}</Heading>
+              <Text pt={2} whiteSpace={'pre-wrap'}>
+                Actual node: <br />
+                {nodeInfo?.title}
+              </Text>
+            </Box>
           </CardBody>
         </Stack>
       </Card>
-    </Flex>
   );
 };
 
@@ -239,7 +228,7 @@ const FlowsListWorkadventure = ({ accessToken }: FlowIndexProps) => {
   if (!users) return;
   return (
     <>
-      <Box px="10%">
+      <Box px="10%" paddingBottom={'10px'}>
         <Heading py="3%">Learners doing your Learning paths</Heading>
         {/*
           <SearchBar
@@ -288,7 +277,7 @@ const FlowsListWorkadventure = ({ accessToken }: FlowIndexProps) => {
                                 style={{
                                   padding: '5px',
                                   flexWrap: 'wrap',
-                                  justifyContent: 'space-around',
+                                  justifyContent: 'space-evenly',
                                   display: 'flex',
                                 }}
                                 hidden={flowId != flow._id}
