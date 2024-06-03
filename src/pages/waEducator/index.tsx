@@ -75,10 +75,7 @@ const UserCard = ({ user, setUser }: UserCardProps) => {
                   authorId: 'admin',
                 }).then((resp) => {
                   setUser((prev: any) =>
-                    prev.filter((localUser: any) => {
-                      console.log(localUser.key !== user.key);
-                      return localUser.key !== user.key;
-                    })
+                    prev.filter((localUser: any) => localUser.key !== user.key)
                   );
                   console.log(resp.data);
                 })
