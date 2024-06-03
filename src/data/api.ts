@@ -38,6 +38,13 @@ const axios = axiosCreate.create({
   withCredentials: true,
 });
 
+const axiosProgress = axiosCreate.create({
+  baseURL: process.env.BACK_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 const AIAPIGeneration = axiosCreate.create({
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
@@ -342,21 +349,21 @@ export const API = {
   },
 
   progressInfo: (body: ProgressInfo): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
+    return axiosProgress.post<{}, AxiosResponse, {}>(
       `/api/execution/progressInfo`,
       body
     );
   },
 
   manualProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
+    return axiosProgress.post<{}, AxiosResponse, {}>(
       `/api/execution/progressAction`,
       body
     );
   },
 
   resetProgress: (body: ManualProgressInfo): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
+    return axiosProgress.post<{}, AxiosResponse, {}>(
       `/api/execution/resetProgress`,
       body
     );

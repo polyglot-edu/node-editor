@@ -15,7 +15,7 @@ import {
 } from '@chakra-ui/react';
 import { useCallback } from 'react';
 import { APIV2 } from '../../data/api';
-import cardImage from '../../public/test_card.png';
+import cardImage from '../../public/screenLPs.png';
 import { PolyglotCourse } from '../../types/polyglotElements';
 import DeleteCourseModal from '../Modals/DeleteCourseModal';
 
@@ -56,6 +56,7 @@ const CourseCardSemplified = ({
       overflow="hidden"
       variant="outline"
       onClick={openChildren}
+      backgroundColor={'blue.100'}
     >
       <Image
         objectFit="cover"
