@@ -2,5 +2,6 @@ export * from './CustomValidationEdge';
 export * from './Edge';
 export * from './ExactValueEdge';
 export * from './FailDebtEdge';
+export * from './ManuallyProgressEdge';
 export * from './PassFailEdge';
 export * from './UnconditionalEdge';

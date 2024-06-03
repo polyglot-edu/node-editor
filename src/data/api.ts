@@ -2,16 +2,22 @@ import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
-  AIExerciseType,
-  AnalyseType,
-  LOType,
-  MaterialType,
+  ManualProgressInfo,
+  PolyglotCourse,
+  PolyglotCourseInfo,
   polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
   polyglotNodeComponentMapping,
-  SummarizeType,
+  ProgressInfo,
 } from '../types/polyglotElements';
+import {
+  AIExerciseType,
+  AnalyseType,
+  LOType,
+  MaterialType,
+  SummarizeType,
+} from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
 import { createNewDefaultPolyglotFlow } from '../utils/utils';
@@ -32,6 +38,13 @@ const axios = axiosCreate.create({
   withCredentials: true,
 });
 
+const axiosProgress = axiosCreate.create({
+  baseURL: process.env.BACK_URL,
+  headers: {
+    'Content-Type': 'application/json',
+  },
+});
+
 const AIAPIGeneration = axiosCreate.create({
   baseURL: 'https://skapi.polyglot-edu.com',
   headers: {
@@ -47,6 +60,7 @@ const AIAPIGeneration = axiosCreate.create({
 type AutocompleteOutput = string[];
 
 export class APIV2 {
+  [x: string]: any;
   axios: AxiosInstance;
   redirect401: boolean;
   redirect401URL?: string;
@@ -244,6 +258,18 @@ export class APIV2 {
       depth: depth,
     });
   }
+
+  loadCourses(query?: string): Promise<AxiosResponse<PolyglotCourse[]>> {
+    return this.axios.get('/api/course' + (query ? query : ''));
+  }
+
+  createNewCourse(course: PolyglotCourseInfo): Promise<AxiosResponse> {
+    return this.axios.post('/api/course', course);
+  }
+
+  deleteCourse(courseId: string): Promise<AxiosResponse> {
+    return this.axios.delete('/api/course/' + courseId);
+  }
 }
 
 export const API = {
@@ -352,14 +378,14 @@ export const API = {
 
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Analyser/analyseMaterial`,
+      `/MaterialAnalyser/analyseMaterial`,
       body
     );
   },
 
   generateLO: (body: LOType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/LOGenerator/generatelearningobjective`,
+      `/LearningObjectiveGenerator/generateLearningObjective`,
       body
     );
   },
@@ -373,7 +399,7 @@ export const API = {
 
   summarize: (body: SummarizeType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Summarizer/summarise`,
+      `/Summarizer/summarize`,
       body
     );
   },

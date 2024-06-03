@@ -94,7 +94,6 @@ const FlowIndexPage = ({ accessToken }: FlowIndexPageProps) => {
             <Tab>My Learning Paths: {flows.length}</Tab>
             <Tab>All</Tab>
           </TabList>
-
           <TabPanels>
             <TabPanel pt="3%">
               {flows.length ? (
