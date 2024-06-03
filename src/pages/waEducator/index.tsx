@@ -4,7 +4,6 @@ import {
   Button,
   Card,
   CardBody,
-  Flex,
   Heading,
   IconButton,
   Image,
@@ -38,9 +37,10 @@ type UserCardProps = {
   py?: SpaceProps['py'];
   px?: SpaceProps['px'];
   user: UserBaseInfo;
+  setUser: any;
 };
 
-const UserCard = ({ user, px, py }: UserCardProps) => {
+const UserCard = ({ user, setUser }: UserCardProps) => {
   const [nodeInfo, setNodeInfo] = useState<PolyglotNodeValidation>();
   const toast = useToast();
   const [isLoading, setIsLoading] = useState(false);
@@ -54,37 +54,33 @@ const UserCard = ({ user, px, py }: UserCardProps) => {
   const completeHidden = !nodeInfo?.validation[0];
 
   return (
-    <Flex px={px} py={py}>
-      <Card
-        direction={{ base: 'column', sm: 'row' }}
-        overflow="hidden"
-        variant="outline"
-      >
-        <Image
-          objectFit="cover"
-          maxW={{ base: '100%', sm: '200px' }}
-          src={cardImage.src}
-          alt="Flow card"
-        />
+    <Card
+      direction={{ base: 'column', sm: 'row' }}
+      variant="outline"
+      height={'120px'}
+      mt={5}
+    >
+      <Image objectFit="cover" src={cardImage.src} alt="Flow card" />
 
-        <Stack w="full">
-          <CardBody width={'300px'}>
+      <Stack>
+        <CardBody maxW={'600px'}>
+          <Box float={'right'} textAlign="right">
             <IconButton
-              float={'right'}
+              marginRight={'5px'}
               aria-label="Reset Execution"
               icon={<RepeatIcon />}
               onClick={() =>
-                API.resetProgress({ ctxId: user.key, authorId: 'admin' }).then(
-                  (resp) => {
-                    console.log(resp.data);
-                  }
-                )
+                API.resetProgress({
+                  ctxId: user.key,
+                  authorId: 'admin',
+                }).then((resp) => {
+                  setUser((prev: any) =>
+                    prev.filter((localUser: any) => localUser.key !== user.key)
+                  );
+                  console.log(resp.data);
+                })
               }
             />
-            <Heading size="md">{user.ctx.username}</Heading>
-            <Text pt={2} whiteSpace={'pre-wrap'}>
-              Actual node: {nodeInfo?.title}
-            </Text>
             {nodeInfo &&
               nodeInfo.validation.map((validation) => {
                 if (validation.type != 'manuallyProgressEdge')
@@ -92,7 +88,6 @@ const UserCard = ({ user, px, py }: UserCardProps) => {
                     <Heading
                       size="xs"
                       color="#bd7342"
-                      float={'right'}
                       hidden={!nodeInfo?.validation}
                     >
                       validation edge
@@ -106,7 +101,6 @@ const UserCard = ({ user, px, py }: UserCardProps) => {
                         ? 'green.300'
                         : 'red.300'
                     }
-                    float={'right'}
                     height={'6'}
                     marginRight={'5px'}
                     isLoading={isLoading}
@@ -133,22 +127,24 @@ const UserCard = ({ user, px, py }: UserCardProps) => {
                       });
                     }}
                   >
-                    {validation.title}
+                    {validation.title ? validation.title : 'continue'}
                   </Button>
                 );
               })}
-            <Heading
-              size="xs"
-              color="#3c9e56"
-              float={'right'}
-              hidden={!completeHidden}
-            >
+            <Heading size="xs" color="#3c9e56" hidden={!completeHidden}>
               completed
             </Heading>
-          </CardBody>
-        </Stack>
-      </Card>
-    </Flex>
+          </Box>
+          <Box>
+            <Heading size="md">{user.ctx.username}</Heading>
+            <Text pt={2} whiteSpace={'pre-wrap'}>
+              Actual node: <br />
+              {nodeInfo?.title}
+            </Text>
+          </Box>
+        </CardBody>
+      </Stack>
+    </Card>
   );
 };
 
@@ -179,7 +175,6 @@ const SimpleFlowCard = ({
           flowId: flow._id ?? '',
           userId: 'admin',
         });
-
         setUsers(response.data);
         setSelected(flow._id ?? '');
       }}
@@ -239,7 +234,7 @@ const FlowsListWorkadventure = ({ accessToken }: FlowIndexProps) => {
   if (!users) return;
   return (
     <>
-      <Box px="10%">
+      <Box px="10%" paddingBottom={'10px'}>
         <Heading py="3%">Learners doing your Learning paths</Heading>
         {/*
           <SearchBar
@@ -288,7 +283,7 @@ const FlowsListWorkadventure = ({ accessToken }: FlowIndexProps) => {
                                 style={{
                                   padding: '5px',
                                   flexWrap: 'wrap',
-                                  justifyContent: 'space-around',
+                                  justifyContent: 'space-evenly',
                                   display: 'flex',
                                 }}
                                 hidden={flowId != flow._id}
@@ -298,6 +293,7 @@ const FlowsListWorkadventure = ({ accessToken }: FlowIndexProps) => {
                                     <UserCard
                                       key={id}
                                       user={user}
+                                      setUser={setUsers}
                                       py={1}
                                       px={1}
                                     />
