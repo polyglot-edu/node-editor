@@ -15,6 +15,7 @@ export { default as ReactFlowLessonNode } from './ReactFlowLessonNode/ReactFlowL
 export { default as ReactFlowMemoriseKeywordsListNode } from './ReactFlowMemoriseKeywordsListNode/ReactFlowMemoriseKeywordsListNode';
 export { default as ReactFlowMindMapNode } from './ReactFlowMindMapNode/ReactFlowMindMapNode';
 export { default as ReactFlowMultipleChoiceQuestionNode } from './ReactFlowMultipleChoiceQuestionNode/ReactFlowMultipleChoiceQuestionNode';
+export { default as ReactFlowNewTypeNode } from './ReactFlowNewTypeNode/ReactFlowNewTypeNode';
 export { default as ReactFlowOpenQuestionNode } from './ReactFlowOpenQuestionNode/ReactFlowOpenQuestionNode';
 export { default as ReactFlowProblemSolvingNode } from './ReactFlowProblemSolvingNode/ReactFlowProblemSolvingNode';
 export { default as ReactFlowPromptEngineeringNode } from './ReactFlowPromptEngineeringNode/ReactFlowPromptEngineeringNode';
@@ -22,4 +23,5 @@ export { default as ReactFlowReadMaterialNode } from './ReactFlowReadMaterialNod
 export { default as ReactFlowSimulationNode } from './ReactFlowSimulationNode/ReactFlowSimulationNode';
 export { default as ReactFlowSummaryNode } from './ReactFlowSummaryNode/ReactFlowSummaryNode';
 export { default as ReactFlowTrueFalseNode } from './ReactFlowTrueFalseNode/ReactFlowTrueFalseNode';
+export { default as ReactFlowUMLModelingNode } from './ReactFlowUMLModelingNode/ReactFlowUMLModelingNode';
 export { default as ReactFlowWatchVideoNode } from './ReactFlowWatchVideoNode/ReactFlowWatchVideoNode';
