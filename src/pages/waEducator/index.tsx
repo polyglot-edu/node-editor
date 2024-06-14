@@ -52,7 +52,8 @@ const UserCard = ({ user, setUser }: UserCardProps) => {
   }, [API]);
 
   const completeHidden = !nodeInfo?.validation[0];
-
+  console.log('cicle: ');
+  console.log(nodeInfo?.validation);
   return (
     <Card
       direction={{ base: 'column', sm: 'row' }}
@@ -63,7 +64,7 @@ const UserCard = ({ user, setUser }: UserCardProps) => {
       <Image objectFit="cover" src={cardImage.src} alt="Flow card" />
 
       <Stack>
-        <CardBody maxW={'600px'}>
+        <CardBody>
           <Box float={'right'} textAlign="right">
             <IconButton
               marginRight={'5px'}
@@ -83,6 +84,7 @@ const UserCard = ({ user, setUser }: UserCardProps) => {
             />
             {nodeInfo &&
               nodeInfo.validation.map((validation) => {
+                console.log('id: ' + validation.id);
                 if (validation.type != 'manuallyProgressEdge')
                   return (
                     <Heading
@@ -90,7 +92,7 @@ const UserCard = ({ user, setUser }: UserCardProps) => {
                       color="#bd7342"
                       hidden={!nodeInfo?.validation}
                     >
-                      validation edge
+                      validation: {validation.title}
                     </Heading>
                   );
                 return (
