@@ -50,6 +50,8 @@ spec:
               value: "{{ .Values.env.testMode }}"
             - name: APIKEY
               value: "{{ .Values.env.apiKey }}"
+            - name: SETUPMODEL
+              value: "{{ .Values.env.setupModel }}"
             - name: AIGENERATION_URL
               value: "{{ .Values.env.aiGenerationUrl }}"
           ports:
