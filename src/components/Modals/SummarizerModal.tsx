@@ -41,6 +41,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
             marginTop={'5px'}
             onClick={async () => {
               try {
+                console.log(process.env.SETUPMODEL);
                 if (generateButton) {
                   toast({
                     title: 'Invalid syntax',
