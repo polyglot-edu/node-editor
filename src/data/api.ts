@@ -405,7 +405,7 @@ export const API = {
 
   generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Exercises/GenerateExercise`,
+      `/ActivityGenerator/generateActivity`,
       body
     );
   },
