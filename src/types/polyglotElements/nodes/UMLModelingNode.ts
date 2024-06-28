@@ -1,6 +1,6 @@
 import UMLModelingNodeProperties from '../../../components/Properties/Nodes/UMLModelingNodeProperties';
 import { ReactFlowUMLModelingNode } from '../../../components/ReactFlowNode';
-import icon from '../../../public/collaborative_icon.png';
+import icon from '../../../public/papyrusWebIcon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
@@ -8,7 +8,7 @@ export type UMLModelingNodeData = NodeData & {
   assignment: string;
   idUML: string;
   projectUML: string;
-  collaborative: boolean;
+  typeExercise: string;
 };
 
 export type UMLModelingNode = PolyglotNode & {
@@ -28,6 +28,6 @@ polyglotNodeComponentMapping.registerMapping<UMLModelingNode>({
     assignment: '',
     idUML: '',
     projectUML: '',
-    collaborative: false,
+    typeExercise: 'type1',
   },
 });
