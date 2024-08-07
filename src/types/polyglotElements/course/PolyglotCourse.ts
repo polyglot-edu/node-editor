@@ -17,29 +17,29 @@ export type PolyglotCourse = PolyglotCourseInfo & {
 };
 
 export type PolyglotCourseBody = {
-  "language": string,
-  "macroSubject": string,
-  "title": string,
-  "level": number,
-  "topic": string,
-  "numberOfLessons": number,
-  "lessonDuration": number
+  language: string;
+  macroSubject: string;
+  title: string;
+  level: number;
+  topic: string;
+  numberOfLessons: number;
+  lessonDuration: number;
 };
 
 export type PolyglotLessonBody = {
-  "mainTopics": Topic[],
-  "language": string,
-  "macroSubject": string,
-  "title": string,
-  "level": number,
-  "learningObjective": string,
-  "bloomLevel": number,
-  "context": string,
-  "temperature": number
+  mainTopics: Topic[];
+  language: string;
+  macroSubject: string;
+  title: string;
+  level: number;
+  learningObjective: string;
+  bloomLevel: number;
+  context: string;
+  temperature: number;
 };
 
 export type Topic = {
-  "topic": string,
-  "type": number,
-  "description": string
-}
+  topic: string;
+  type: number;
+  description: string;
+};

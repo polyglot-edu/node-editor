@@ -111,8 +111,8 @@ const lessonTypes = [
 
 export type Lesson = {
   title: string;
-  activities: Activity[];  
-}
+  activities: Activity[];
+};
 
 export type TabTableProps = {
   lesson: Lesson;
@@ -122,11 +122,7 @@ export type TabTableProps = {
 
 const TableLearningPath = forwardRef<HTMLDivElement, TabTableProps>(
   (props, ref) => {
-    const {
-      lesson,
-      handleApprovedLesson,
-      loading
-    } = props;
+    const { lesson, handleApprovedLesson, loading } = props;
     const hydrated = useHasHydrated();
     const [data, setData] = useState<rowData[]>([]);
 
@@ -134,37 +130,58 @@ const TableLearningPath = forwardRef<HTMLDivElement, TabTableProps>(
       const newData = lesson.activities.map((activity) => ({
         lessonType: activity.Type ? 'Assessment' : 'Learning',
         timeDuration: activity.Duration,
-        activityType: activity.Type ? activityTypes[parseInt(activity.Details)].activityType : 'Knowledge Exposition',
+        activityType: activity.Type
+          ? activityTypes[parseInt(activity.Details)].activityType
+          : 'Knowledge Exposition',
         activityDescription: activity.Type ? activity.Topic : activity.Details,
       }));
       setData(newData);
     }, [lesson]);
 
-    const handleLessonTypeChange = (index: number, selectedTypeIndex: number) => {
-      setData(produce(draft => {
-        draft[index].lessonType = lessonTypes[selectedTypeIndex].name;
-      }));
+    const handleLessonTypeChange = (
+      index: number,
+      selectedTypeIndex: number
+    ) => {
+      setData(
+        produce((draft) => {
+          draft[index].lessonType = lessonTypes[selectedTypeIndex].name;
+        })
+      );
     };
 
-    const handleActivityTypeChange = (index: number, selectedTypeIndex: number) => {
-      const lessonTypeIndex = lessonTypes.findIndex((lessonType) => lessonType.name === data[index].lessonType);
-      const filteredActivity = activityTypes.filter((activity) => activity.lessonType === lessonTypes[lessonTypeIndex].name);
-      setData(produce(draft => {
-        draft[index].activityType = filteredActivity[selectedTypeIndex].activityType;
-      }));
+    const handleActivityTypeChange = (
+      index: number,
+      selectedTypeIndex: number
+    ) => {
+      const lessonTypeIndex = lessonTypes.findIndex(
+        (lessonType) => lessonType.name === data[index].lessonType
+      );
+      const filteredActivity = activityTypes.filter(
+        (activity) => activity.lessonType === lessonTypes[lessonTypeIndex].name
+      );
+      setData(
+        produce((draft) => {
+          draft[index].activityType =
+            filteredActivity[selectedTypeIndex].activityType;
+        })
+      );
     };
 
     const handleTineDurationChange = (index: number, value: string) => {
-      setData(produce(draft => {
-        draft[index].timeDuration = parseInt(value);
-      }));
+      setData(
+        produce((draft) => {
+          draft[index].timeDuration = parseInt(value);
+        })
+      );
     };
 
     const handleEditDescription = (index: number, description: string) => {
       console.log('description', description);
-      setData(produce(draft => {
-        draft[index].activityDescription = description;
-      }));
+      setData(
+        produce((draft) => {
+          draft[index].activityDescription = description;
+        })
+      );
     };
 
     const handleDeleteRow = (index: number) => {
@@ -206,8 +223,6 @@ const TableLearningPath = forwardRef<HTMLDivElement, TabTableProps>(
     );
   }
 );
-
-
 
 TableLearningPath.displayName = 'TableLearningPath';
 export default TableLearningPath;

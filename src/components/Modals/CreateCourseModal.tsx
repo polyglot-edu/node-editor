@@ -41,13 +41,19 @@ import {
   Tooltip,
   Tr,
   useDisclosure,
-  useToast
+  useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
-import { LOType, PolyglotCourseBody, PolyglotCourseInfo, PolyglotLessonBody, Topic } from '../../types/polyglotElements';
+import {
+  LOType,
+  PolyglotCourseBody,
+  PolyglotCourseInfo,
+  PolyglotLessonBody,
+  Topic,
+} from '../../types/polyglotElements';
 import TableLearningPath from '../Tables/LearningPathTable';
 import { rowData } from '../Tables/LearningPathTable/CustomLearningPathTable';
 
@@ -58,30 +64,30 @@ type CreateCourseModalProps = {
   setOpenModal: (value: string) => void;
 };
 
-type Lesson ={
-    Title: string;
-    Topics: string[];
+type Lesson = {
+  Title: string;
+  Topics: string[];
 };
 
-export type Activity ={
+export type Activity = {
   Type: boolean;
   Topic: string;
   Details: string;
   Duration: number;
 };
 
-export type finishedLesson={
+export type finishedLesson = {
   title: string;
   description: string;
   activities: finishedActivity[];
-}
+};
 
-type finishedActivity ={
+type finishedActivity = {
   lessonType: string;
   activityType: string;
   timeDuration: number;
   activityDescription: string;
-}
+};
 
 export const colors = [
   'gray',
@@ -126,8 +132,7 @@ const CreateCourseModal = ({
   const [learningObjectives, setLearningObjectives] = useState<string[]>([]);
   const [choosedObjective, setChoosedObjective] = useState(0);
   const [lessonDesctiption, setLessonDesctiption] = useState('');
-  const [modalHeader, setModalHeader] = useState("CreateCourse")
-
+  const [modalHeader, setModalHeader] = useState('CreateCourse');
 
   const toast = useToast();
 
@@ -135,7 +140,7 @@ const CreateCourseModal = ({
   useEffect(() => {
     setColorTag(colors[0]);
     setTags([]);
-    setModalHeader("Create Course");
+    setModalHeader('Create Course');
   }, [isOpen]);
 
   useEffect(() => {
@@ -210,28 +215,36 @@ const CreateCourseModal = ({
   const planCourse = async () => {
     try {
       setLoading(true);
-        const body: PolyglotCourseBody ={
+      const body: PolyglotCourseBody = {
         language: language,
         macroSubject: macroSubject,
         title: topic,
         level: level,
         topic: topic,
         numberOfLessons: lessons,
-        lessonDuration: duration
-      }
+        lessonDuration: duration,
+      };
       console.log(body);
       const response: AxiosResponse = await API.planCourse(body);
       setPlannedCourse(response.data.Plan);
       console.log(plannedCourse);
-    }catch (error: any) {
+    } catch (error: any) {
       console.log(error);
-    }finally {
+    } finally {
       setLoading(false);
     }
   };
-  
-  const handleFinishedLesson = (lesson: rowData[], lessonTitle: string, lessonDescription: string) => {
-    const finishedLesson: finishedLesson = {title: lessonTitle, description: lessonDescription, activities: []};
+
+  const handleFinishedLesson = (
+    lesson: rowData[],
+    lessonTitle: string,
+    lessonDescription: string
+  ) => {
+    const finishedLesson: finishedLesson = {
+      title: lessonTitle,
+      description: lessonDescription,
+      activities: [],
+    };
     finishedLesson.activities = lesson.map((activity) => ({
       lessonType: activity.lessonType,
       activityType: activity.activityType,
@@ -251,17 +264,27 @@ const CreateCourseModal = ({
       const body: LOType = {
         Topic: lessonTitle,
         Level: level,
-        Context: "",
-      }
+        Context: '',
+      };
 
       const response: AxiosResponse = await API.generateLO(body);
       console.log('LO RESPONSE: ', response.data);
       let learningObjectivesRes: string[] = response.data.Remembering;
-      learningObjectivesRes = learningObjectivesRes.concat(response.data.Understanding);
-      learningObjectivesRes = learningObjectivesRes.concat(response.data.Applying);
-      learningObjectivesRes = learningObjectivesRes.concat(response.data.Analyzing);
-      learningObjectivesRes = learningObjectivesRes.concat(response.data.Evaluating);
-      learningObjectivesRes = learningObjectivesRes.concat(response.data.Creating);
+      learningObjectivesRes = learningObjectivesRes.concat(
+        response.data.Understanding
+      );
+      learningObjectivesRes = learningObjectivesRes.concat(
+        response.data.Applying
+      );
+      learningObjectivesRes = learningObjectivesRes.concat(
+        response.data.Analyzing
+      );
+      learningObjectivesRes = learningObjectivesRes.concat(
+        response.data.Evaluating
+      );
+      learningObjectivesRes = learningObjectivesRes.concat(
+        response.data.Creating
+      );
 
       setLearningObjectives(learningObjectivesRes);
       console.log(learningObjectivesRes);
@@ -278,7 +301,7 @@ const CreateCourseModal = ({
       const topics: Topic[] = lesson.Topics.map((topic) => ({
         topic: topic,
         type: 0,
-        description: "",
+        description: '',
       }));
       const body: PolyglotLessonBody = {
         mainTopics: topics,
@@ -288,14 +311,13 @@ const CreateCourseModal = ({
         level: level,
         learningObjective: learningObjectives[choosedObjective],
         bloomLevel: bloomLevel,
-        context: "",
-        temperature: 0.2
+        context: '',
+        temperature: 0.2,
       };
-      
+
       const response: AxiosResponse = await API.planLesson(body);
       const lessonRes: Activity[] = response.data;
       setPlannedLesson(lessonRes);
-
     } catch (error: any) {
       console.log(error);
     } finally {
@@ -312,12 +334,12 @@ const CreateCourseModal = ({
         tags: tags,
       };
       API.saveAICourse(body, finishedCourse);
-    }catch (error: any) {
+    } catch (error: any) {
       console.log(error);
-    }finally {
+    } finally {
       setLoading(false);
     }
-  }
+  };
 
   useEffect(() => {
     console.log(level);
@@ -329,7 +351,7 @@ const CreateCourseModal = ({
       <ModalContent>
         <ModalHeader>{modalHeader}</ModalHeader>
         <ModalCloseButton />
-        <ModalBody hidden={!(showScreen==1)}>
+        <ModalBody hidden={!(showScreen == 1)}>
           <FormControl>
             <FormLabel my={2} fontWeight={'bold'}>
               Title:
@@ -375,12 +397,7 @@ const CreateCourseModal = ({
                 </PopoverTrigger>
                 <Portal>
                   {/* https://github.com/chakra-ui/chakra-ui/issues/3043 */}
-                  <Box
-                    zIndex="popover"
-                    w="full"
-                    h="full"
-                    position={'relative'}
-                  >
+                  <Box zIndex="popover" w="full" h="full" position={'relative'}>
                     <PopoverContent>
                       <PopoverArrow />
                       <PopoverHeader>
@@ -458,12 +475,7 @@ const CreateCourseModal = ({
                   })
                 }
               >
-                <Tag
-                  mr={1}
-                  colorScheme={tag.color}
-                  fontWeight="bold"
-                  h={2}
-                >
+                <Tag mr={1} colorScheme={tag.color} fontWeight="bold" h={2}>
                   <TagLeftIcon>
                     <CloseIcon />
                   </TagLeftIcon>
@@ -484,101 +496,112 @@ const CreateCourseModal = ({
             Create
           </Button>
         </ModalBody>
-        <ModalBody hidden={!(showScreen==2)}>
+        <ModalBody hidden={!(showScreen == 2)}>
           <FormControl>
-          <FormLabel my={2} fontWeight={'bold'}>
-            Title:
-          </FormLabel>
-          <Input
-            placeholder="Insert title..."
-            onChange={(e) => {
-              e.preventDefault();
-              setTitle(e.currentTarget.value);
-            }}
-          />
-          <FormLabel my={2} fontWeight={'bold'}>
-            Description:
-          </FormLabel>
-          <Textarea
-            placeholder="Insert description..."
-            onChange={(e) => {
-              e.preventDefault();
-              setDescription(e.currentTarget.value);
-            }}
-          />
-          <FormLabel my={2} fontWeight={'bold'}>
-            Language:
-          </FormLabel>
-          <Input
-            placeholder="olny english for now..."
-            onChange={(e) => {
-              e.preventDefault();
-              setLanguage(e.currentTarget.value);
-            }}
-          />
-          <FormLabel my={2} fontWeight={'bold'}>
-            Macro subject:
-          </FormLabel>
-          <Input
-            placeholder="Example: Math, Computer Science, etc..."
-            onChange={(e) => {
-              e.preventDefault();
-              setMacroSubject(e.currentTarget.value);
-            }}
-          />
-          <FormLabel my={2} fontWeight={'bold'}>
-            Level:
-          </FormLabel>
-          
-          <Select placeholder='Select option' onChange={(event)=>{setLevel(parseInt(event.target.value))}}>
-            <option value={1}>primary school</option>
-            <option value={2}>middle school</option>
-            <option value={3}>high school</option>
-            <option value={4}>college</option>
-            <option value={5}>academy</option>
-          </Select>
-          <FormLabel my={2} fontWeight={'bold'}>
-            Topic:
-          </FormLabel>
-          <Input
-            placeholder="Example: Algebra, Calculus, etc..."
-            onChange={(e) => {
-              e.preventDefault();
-              setTopic(e.currentTarget.value);
-            }}
-          />
-          <FormLabel my={2} fontWeight={'bold'}>
-            Number of lessons:
-          </FormLabel>
-          <NumberInput defaultValue={2} min={2} clampValueOnBlur={false}
-            onChange={(value) => {
-              let lessons = parseInt(value);
-              if (lessons < 2) lessons = 2;
-              setLessons(lessons);
-            }}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
-          <FormLabel my={2} fontWeight={'bold'}>
-            lessons duration (in minutes):
-          </FormLabel>
-          <NumberInput defaultValue={1} min={1} clampValueOnBlur={false}
-            onChange={(value) => {
-              let duration = parseInt(value);
-              if (duration < 1) duration = 1;
-              setDuration(duration);
-            }}
-          >
-            <NumberInputField />
-            <NumberInputStepper>
-              <NumberIncrementStepper />
-              <NumberDecrementStepper />
-            </NumberInputStepper>
-          </NumberInput>
+            <FormLabel my={2} fontWeight={'bold'}>
+              Title:
+            </FormLabel>
+            <Input
+              placeholder="Insert title..."
+              onChange={(e) => {
+                e.preventDefault();
+                setTitle(e.currentTarget.value);
+              }}
+            />
+            <FormLabel my={2} fontWeight={'bold'}>
+              Description:
+            </FormLabel>
+            <Textarea
+              placeholder="Insert description..."
+              onChange={(e) => {
+                e.preventDefault();
+                setDescription(e.currentTarget.value);
+              }}
+            />
+            <FormLabel my={2} fontWeight={'bold'}>
+              Language:
+            </FormLabel>
+            <Input
+              placeholder="olny english for now..."
+              onChange={(e) => {
+                e.preventDefault();
+                setLanguage(e.currentTarget.value);
+              }}
+            />
+            <FormLabel my={2} fontWeight={'bold'}>
+              Macro subject:
+            </FormLabel>
+            <Input
+              placeholder="Example: Math, Computer Science, etc..."
+              onChange={(e) => {
+                e.preventDefault();
+                setMacroSubject(e.currentTarget.value);
+              }}
+            />
+            <FormLabel my={2} fontWeight={'bold'}>
+              Level:
+            </FormLabel>
+
+            <Select
+              placeholder="Select option"
+              onChange={(event) => {
+                setLevel(parseInt(event.target.value));
+              }}
+            >
+              <option value={1}>primary school</option>
+              <option value={2}>middle school</option>
+              <option value={3}>high school</option>
+              <option value={4}>college</option>
+              <option value={5}>academy</option>
+            </Select>
+            <FormLabel my={2} fontWeight={'bold'}>
+              Topic:
+            </FormLabel>
+            <Input
+              placeholder="Example: Algebra, Calculus, etc..."
+              onChange={(e) => {
+                e.preventDefault();
+                setTopic(e.currentTarget.value);
+              }}
+            />
+            <FormLabel my={2} fontWeight={'bold'}>
+              Number of lessons:
+            </FormLabel>
+            <NumberInput
+              defaultValue={2}
+              min={2}
+              clampValueOnBlur={false}
+              onChange={(value) => {
+                let lessons = parseInt(value);
+                if (lessons < 2) lessons = 2;
+                setLessons(lessons);
+              }}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
+            <FormLabel my={2} fontWeight={'bold'}>
+              lessons duration (in minutes):
+            </FormLabel>
+            <NumberInput
+              defaultValue={1}
+              min={1}
+              clampValueOnBlur={false}
+              onChange={(value) => {
+                let duration = parseInt(value);
+                if (duration < 1) duration = 1;
+                setDuration(duration);
+              }}
+            >
+              <NumberInputField />
+              <NumberInputStepper>
+                <NumberIncrementStepper />
+                <NumberDecrementStepper />
+              </NumberInputStepper>
+            </NumberInput>
           </FormControl>
           <Button
             type="submit"
@@ -593,37 +616,39 @@ const CreateCourseModal = ({
             Plan Course
           </Button>
         </ModalBody>
-        <ModalBody hidden={!(showScreen==3)}>
+        <ModalBody hidden={!(showScreen == 3)}>
           <TableContainer>
-            <Table variant="striped" colorScheme='blue'>
-              {plannedCourse.length?(
+            <Table variant="striped" colorScheme="blue">
+              {plannedCourse.length ? (
                 <Thead>
-                <Tr>
-                  <Th>Lesson Title</Th>
-                  <Th>Topics</Th>
-                </Tr>
-              </Thead>
-              ):(
+                  <Tr>
+                    <Th>Lesson Title</Th>
+                    <Th>Topics</Th>
+                  </Tr>
+                </Thead>
+              ) : (
                 <Thead>
-                <Tr>
-                  <Th>No Lessons Planned</Th>
-                </Tr>
-              </Thead>
+                  <Tr>
+                    <Th>No Lessons Planned</Th>
+                  </Tr>
+                </Thead>
               )}
               <Tbody>
                 {plannedCourse.map((lesson) => (
                   <Tr key={lesson.Title}>
                     <Td style={{ whiteSpace: 'pre-wrap' }}>{lesson.Title}</Td>
                     {lesson.Topics.map((topic) => (
-                        <Input defaultValue={topic}
-                          key={topic}
-                          onChange={(e) => {
-                            e.preventDefault();
-                            lesson.Topics[lesson.Topics.indexOf(topic)] = e.currentTarget.value;
-                            setPlannedCourse([...plannedCourse]);
-                            console.log(plannedCourse);
-                          }}
-                        />
+                      <Input
+                        defaultValue={topic}
+                        key={topic}
+                        onChange={(e) => {
+                          e.preventDefault();
+                          lesson.Topics[lesson.Topics.indexOf(topic)] =
+                            e.currentTarget.value;
+                          setPlannedCourse([...plannedCourse]);
+                          console.log(plannedCourse);
+                        }}
+                      />
                     ))}
                   </Tr>
                 ))}
@@ -645,18 +670,20 @@ const CreateCourseModal = ({
           </Button>
         </ModalBody>
         {plannedCourse.map((lesson, index) => (
-          <ModalBody hidden={!(showScreen==(4 + index * 2))} key={index}>
+          <ModalBody hidden={!(showScreen == 4 + index * 2)} key={index}>
             <FormControl>
               {/* questo formlabel da un errore in console */}
               <FormLabel fontWeight={'bold'}>
-                Chooose a learning objective for {lesson.Title} 
+                Chooose a learning objective for {lesson.Title}
               </FormLabel>
               <Select
                 onChange={(e) => {
                   e.preventDefault();
                   console.log(e.currentTarget.selectedIndex);
                   setChoosedObjective(e.currentTarget.selectedIndex);
-                  setBloomLevel(Math.round((e.currentTarget.selectedIndex/2)+0.9));
+                  setBloomLevel(
+                    Math.round(e.currentTarget.selectedIndex / 2 + 0.9)
+                  );
                 }}
               >
                 {learningObjectives.map((objective) => (
@@ -688,43 +715,45 @@ const CreateCourseModal = ({
           </ModalBody>
         ))}
         {plannedCourse.map((lesson, index) => (
-          <ModalBody hidden={!(showScreen==(5 + index * 2))} key={index}>
-            {(index != plannedCourse.length-1)?(
+          <ModalBody hidden={!(showScreen == 5 + index * 2)} key={index}>
+            {index != plannedCourse.length - 1 ? (
               <TableLearningPath
-                loading={loading} 
-                lesson={{title: lesson.Title, activities: plannedLesson}}
-                handleApprovedLesson={(rowData)=>{
-                  handleFinishedLesson(rowData, lesson.Title, lessonDesctiption);
+                loading={loading}
+                lesson={{ title: lesson.Title, activities: plannedLesson }}
+                handleApprovedLesson={(rowData) => {
+                  handleFinishedLesson(
+                    rowData,
+                    lesson.Title,
+                    lessonDesctiption
+                  );
                   setShowScreen(showScreen + 1);
                   generateLearningObjectives(plannedCourse[index + 1].Title);
-                  setModalHeader(plannedCourse[index + 1].Title)
+                  setModalHeader(plannedCourse[index + 1].Title);
                 }}
               />
-            ):(
+            ) : (
               <TableLearningPath
-                loading={loading}  
-                lesson={{title: lesson.Title, activities: plannedLesson}}
-                handleApprovedLesson={(rowData)=>{
-                  handleFinishedLesson(rowData, lesson.Title, lessonDesctiption);
+                loading={loading}
+                lesson={{ title: lesson.Title, activities: plannedLesson }}
+                handleApprovedLesson={(rowData) => {
+                  handleFinishedLesson(
+                    rowData,
+                    lesson.Title,
+                    lessonDesctiption
+                  );
                   setShowScreen(showScreen + 1);
-                  setModalHeader("Save Course");
+                  setModalHeader('Save Course');
                 }}
               />
             )}
           </ModalBody>
         ))}
-          <ModalBody hidden={!(showScreen==plannedCourse.length*2+4)}>
-            <FormLabel>
-              <Button
-                onClick={saveCourse}
-              >
-                save course to database
-              </Button>
-              <Button>
-                download course syllabus as pdf
-              </Button>
-            </FormLabel>
-          </ModalBody>
+        <ModalBody hidden={!(showScreen == plannedCourse.length * 2 + 4)}>
+          <FormLabel>
+            <Button onClick={saveCourse}>save course to database</Button>
+            <Button>download course syllabus as pdf</Button>
+          </FormLabel>
+        </ModalBody>
       </ModalContent>
     </Modal>
   );

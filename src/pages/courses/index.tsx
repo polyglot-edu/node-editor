@@ -22,7 +22,10 @@ import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
-import { PolyglotCourse, PolyglotCourseInfo } from '../../types/polyglotElements/course/PolyglotCourse';
+import {
+  PolyglotCourse,
+  PolyglotCourseInfo,
+} from '../../types/polyglotElements/course/PolyglotCourse';
 import auth0 from '../../utils/auth0';
 
 type CourseIndexPageProps = {
@@ -78,7 +81,8 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
   const updateCourseInfo = useCallback(
     async (courseId: string, course: PolyglotCourseInfo) => {
       await API.editCourseInfo(courseId, course);
-    },[API]
+    },
+    [API]
   );
 
   useEffect(() => {

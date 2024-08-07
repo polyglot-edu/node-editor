@@ -13,8 +13,8 @@ import {
   CardBody,
   CardFooter,
   Flex,
-  HStack,
   Heading,
+  HStack,
   Image,
   LinkBox,
   List,
@@ -23,7 +23,7 @@ import {
   Spacer,
   Stack,
   Text,
-  Tooltip
+  Tooltip,
 } from '@chakra-ui/react';
 import cardImage from '../../public/screenLPs.png';
 import { PolyglotCourse } from '../../types/polyglotElements';

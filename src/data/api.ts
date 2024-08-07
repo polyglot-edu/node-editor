@@ -10,12 +10,12 @@ import {
   PolyglotCourse,
   PolyglotCourseBody,
   PolyglotCourseInfo,
+  polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
   PolyglotLessonBody,
-  SummarizeType,
-  polyglotEdgeComponentMapping,
   polyglotNodeComponentMapping,
+  SummarizeType,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -266,11 +266,17 @@ export class APIV2 {
     return this.axios.put('/api/course/' + courseId + '/enroll');
   }
 
-  editCourseInfo(courseId: string, course: PolyglotCourseInfo): Promise<AxiosResponse> {
+  editCourseInfo(
+    courseId: string,
+    course: PolyglotCourseInfo
+  ): Promise<AxiosResponse> {
     return this.axios.put('/api/course/' + courseId, course);
   }
 
-  saveAICourse(course: PolyglotCourseInfo, lessons: finishedLesson[]): Promise<AxiosResponse> {
+  saveAICourse(
+    course: PolyglotCourseInfo,
+    lessons: finishedLesson[]
+  ): Promise<AxiosResponse> {
     return this.axios.post('/api/course/createAI', { course, lessons });
   }
 
@@ -410,5 +416,4 @@ export const API = {
       body
     );
   },
-
 };

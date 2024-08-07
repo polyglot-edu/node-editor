@@ -13,9 +13,9 @@ import {
   DragDropContext,
   Draggable,
   DraggableProvided,
-  DropResult,
   Droppable,
   DroppableProvided,
+  DropResult,
 } from 'react-beautiful-dnd';
 
 import { useHasHydrated } from '../../../utils/utils';
@@ -46,21 +46,21 @@ export type activityType = {
 };
 
 const CustomLearningPathTable = forwardRef<
-HTMLDivElement,
-TableLearningPathProps
+  HTMLDivElement,
+  TableLearningPathProps
 >((props, ref) => {
-const {
-  titles,
-  data,
-  activityTypes,
-  lessonTypes,
-  handleLessonTypeChange,
-  handleActivityTypeChange,
-  handleTimeDurationChange,
-  handleEditDescription,
-  handleDeleteRow,
-  setTableData,
-} = props;
+  const {
+    titles,
+    data,
+    activityTypes,
+    lessonTypes,
+    handleLessonTypeChange,
+    handleActivityTypeChange,
+    handleTimeDurationChange,
+    handleEditDescription,
+    handleDeleteRow,
+    setTableData,
+  } = props;
   const hydrated = useHasHydrated();
   const { isOpen, onOpen, onClose } = useDisclosure();
   const [currentDescription, setCurrentDescription] = useState('');
@@ -88,26 +88,26 @@ const {
           >
             <Tr w="fit-content">
               {titles.map((title: string, index: number) => (
-                  <Th
-                    key={index}
-                    borderWidth="2px"
-                    borderColor="black"
-                    color="black"
-                    textTransform="none"
-                    px={0}
-                    display="Table-cell"
-                    // className={isPrinting && title === 'Action' ? 'hide-on-print' : ''}
-                    // maxW={index === 4 ? "30%" : 'auto'}
-                    cursor="default"
-                  >
-                    <Flex justify="center" p={0}>
-                      {title}
-                    </Flex>
-                  </Th>
-                ))}
+                <Th
+                  key={index}
+                  borderWidth="2px"
+                  borderColor="black"
+                  color="black"
+                  textTransform="none"
+                  px={0}
+                  display="Table-cell"
+                  // className={isPrinting && title === 'Action' ? 'hide-on-print' : ''}
+                  // maxW={index === 4 ? "30%" : 'auto'}
+                  cursor="default"
+                >
+                  <Flex justify="center" p={0}>
+                    {title}
+                  </Flex>
+                </Th>
+              ))}
             </Tr>
           </Thead>
-          {(
+          {
             <DragDropContext onDragEnd={handleDragEnd}>
               <Droppable droppableId="droppable">
                 {(provided: DroppableProvided) => (
@@ -133,8 +133,12 @@ const {
                                 handleLessonTypeChange={handleLessonTypeChange}
                                 providedDraggable={provided}
                                 handleDeleteRow={handleDeleteRow}
-                                handleActivityTypeChange={handleActivityTypeChange}
-                                handleTimeDurationChange={handleTimeDurationChange}
+                                handleActivityTypeChange={
+                                  handleActivityTypeChange
+                                }
+                                handleTimeDurationChange={
+                                  handleTimeDurationChange
+                                }
                                 handleEditDescription={handleEditDescription}
                               />
                             )
@@ -146,7 +150,7 @@ const {
                 )}
               </Droppable>
             </DragDropContext>
-          )}
+          }
         </Table>
       </TableContainer>
     </Flex>

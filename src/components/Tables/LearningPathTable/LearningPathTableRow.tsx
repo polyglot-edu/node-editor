@@ -1,5 +1,18 @@
 import { DeleteIcon, DragHandleIcon } from '@chakra-ui/icons';
-import { Button, Flex, Input, NumberDecrementStepper, NumberIncrementStepper, NumberInput, NumberInputField, NumberInputStepper, Select, Td, Tooltip, Tr } from '@chakra-ui/react';
+import {
+  Button,
+  Flex,
+  Input,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
+  Select,
+  Td,
+  Tooltip,
+  Tr,
+} from '@chakra-ui/react';
 import { DraggableProvided } from 'react-beautiful-dnd';
 import { activityType, lessonType, rowData } from './CustomLearningPathTable';
 
@@ -28,7 +41,6 @@ export default function LearningPathTableRow({
   handleTimeDurationChange,
   handleEditDescription,
 }: TableLearningPathRowProps) {
-
   const onLessonChange = (e: React.ChangeEvent<HTMLSelectElement>) => {
     const selectedIndex = e.target.selectedIndex;
     handleLessonTypeChange(indexRow, selectedIndex);
@@ -43,19 +55,19 @@ export default function LearningPathTableRow({
   return (
     <Tr ref={providedDraggable.innerRef} {...providedDraggable.draggableProps}>
       {/* Drag item */}
-        {
-          <Td
-            borderWidth="2px"
-            borderColor="black"
-            px={0}
-            {...providedDraggable.dragHandleProps}
-            w="fit-content"
-          >
-            <Flex w="100%" justify="center" px={0}>
-              <DragHandleIcon />
-            </Flex>
-          </Td>
-        }
+      {
+        <Td
+          borderWidth="2px"
+          borderColor="black"
+          px={0}
+          {...providedDraggable.dragHandleProps}
+          w="fit-content"
+        >
+          <Flex w="100%" justify="center" px={0}>
+            <DragHandleIcon />
+          </Flex>
+        </Td>
+      }
       {/* Number */}
       <Td borderWidth="2px" borderColor="black" w="fit-content" px={2}>
         <Flex w="100%" justify="center" px={0} cursor="default">
@@ -63,42 +75,30 @@ export default function LearningPathTableRow({
         </Flex>
       </Td>
       {/* Lesson Type */}
-      <Td
-        borderWidth="2px"
-        borderColor="black"
-        w="fit-content"
-        px={2}
-      >
+      <Td borderWidth="2px" borderColor="black" w="fit-content" px={2}>
         <Flex w="100%" justify="center" px={0}>
-          <Select 
-            variant='filled'
+          <Select
+            variant="filled"
             value={row.lessonType}
-            onChange={(onLessonChange)}
+            onChange={onLessonChange}
           >
             {lessonTypes.map((lessonType) => (
               <option key={lessonType.name} value={lessonType.name}>
                 {lessonType.name}
               </option>
             ))}
-
           </Select>
         </Flex>
       </Td>
       {/* Activity Type */}
-      <Td
-        borderWidth="2px"
-        borderColor="black"
-        w="fit-content"
-        px={2}
-      >
+      <Td borderWidth="2px" borderColor="black" w="fit-content" px={2}>
         <Flex w="100%" justify="center" px={0}>
           <Select
-            variant='filled'
+            variant="filled"
             value={row.activityType}
-            onChange={(onActivityChange)}
+            onChange={onActivityChange}
           >
-            
-            {activityTypes.map((activityType) => 
+            {activityTypes.map((activityType) =>
               activityType.lessonType === row.lessonType ? (
                 <option key={activityType.activityType}>
                   {activityType.activityType}
@@ -109,15 +109,10 @@ export default function LearningPathTableRow({
         </Flex>
       </Td>
       {/* Time */}
-      <Td
-        borderWidth="2px"
-        borderColor="black"
-        w="fit-content"
-        px={2}
-      >
+      <Td borderWidth="2px" borderColor="black" w="fit-content" px={2}>
         <Flex w="100%" justify="center" px={0}>
           {
-            <NumberInput 
+            <NumberInput
               defaultValue={row.timeDuration}
               minW="75px"
               maxW="100px"
@@ -146,26 +141,26 @@ export default function LearningPathTableRow({
         <Flex w="100%" justify="flex-start" px={0}>
           <Input
             defaultValue={row.activityDescription}
-            onChange={(e) =>{
+            onChange={(e) => {
               e.preventDefault();
               const value = e.target.value;
               console.log('value', value);
-              handleEditDescription(indexRow, value)
+              handleEditDescription(indexRow, value);
             }}
           />
         </Flex>
       </Td>
       {/* Delete */}
-      <Td
-        borderWidth="2px"
-        borderColor="black"
-        w="fit-content"
-        px={2}
-      >
+      <Td borderWidth="2px" borderColor="black" w="fit-content" px={2}>
         <Flex w="100%" justify="center" px={0}>
           <Button>
             <Tooltip label="Delete" placement="right">
-              <DeleteIcon onClick={() => handleDeleteRow(indexRow)} w={5} h={5} color="red" />
+              <DeleteIcon
+                onClick={() => handleDeleteRow(indexRow)}
+                w={5}
+                h={5}
+                color="red"
+              />
             </Tooltip>
           </Button>
         </Flex>
