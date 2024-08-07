@@ -14,10 +14,10 @@ export type ModelTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
   courseId: string;
-  deleteFunc: (courseId: string) => Promise<void>;
+  deleteFunc: (flowId: string) => Promise<void>;
 };
 
-const DeleteCourseModal = ({
+const DeleteFlowModal = ({
   isOpen,
   onClose,
   courseId,
@@ -27,7 +27,7 @@ const DeleteCourseModal = ({
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Delete Course</ModalHeader>
+        <ModalHeader>Delete Learning Path</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text>
@@ -51,4 +51,4 @@ const DeleteCourseModal = ({
   );
 };
 
-export default DeleteCourseModal;
+export default DeleteFlowModal;

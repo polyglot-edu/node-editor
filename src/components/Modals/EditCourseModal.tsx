@@ -36,13 +36,15 @@ export type EditCourseModalProps = {
   isOpen: boolean;
   onClose: () => void;
   course: PolyglotCourse;
-  updateInfo: (courseInfo: PolyglotCourseInfo) => void;
+  courseId: string
+  updateInfo: (courseId: string, courseInfo: PolyglotCourseInfo) => void;
 };
 
 const EditCourseModal = ({
   isOpen,
   onClose,
   course,
+  courseId,
   updateInfo,
 }: EditCourseModalProps) => {
   //if (!course.topics) flow.topics = [];
@@ -164,10 +166,13 @@ const EditCourseModal = ({
             colorScheme="blue"
             onClick={() => {
               if (!title || !description) return;
-              updateInfo({
-                title: title,
-                description: description,
-              });
+              updateInfo(
+                courseId,
+                {
+                  title: title,
+                  description: description,
+                }
+              );
               onClose();
             }}
           >

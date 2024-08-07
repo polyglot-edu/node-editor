@@ -1,5 +1,6 @@
 import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
 import Router from 'next/router';
+import { finishedLesson } from '../components/Modals/CreateCourseModal';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
   AIExerciseType,
@@ -7,12 +8,14 @@ import {
   LOType,
   MaterialType,
   PolyglotCourse,
+  PolyglotCourseBody,
   PolyglotCourseInfo,
-  polyglotEdgeComponentMapping,
   PolyglotFlow,
   PolyglotFlowInfo,
-  polyglotNodeComponentMapping,
+  PolyglotLessonBody,
   SummarizeType,
+  polyglotEdgeComponentMapping,
+  polyglotNodeComponentMapping,
 } from '../types/polyglotElements';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import { User } from '../types/user';
@@ -262,6 +265,35 @@ export class APIV2 {
   enrollCourse(courseId: string): Promise<AxiosResponse> {
     return this.axios.put('/api/course/' + courseId + '/enroll');
   }
+
+  editCourseInfo(courseId: string, course: PolyglotCourseInfo): Promise<AxiosResponse> {
+    return this.axios.put('/api/course/' + courseId, course);
+  }
+
+  saveAICourse(course: PolyglotCourseInfo, lessons: finishedLesson[]): Promise<AxiosResponse> {
+    return this.axios.post('/api/course/createAI', { course, lessons });
+  }
+
+  planCourse(body: PolyglotCourseBody): Promise<AxiosResponse> {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/CoursePlanner/planCourse`,
+      body
+    );
+  }
+
+  generateLO(body: LOType): Promise<AxiosResponse> {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/LearningObjectiveGenerator/generateLearningObjective`,
+      body
+    );
+  }
+
+  planLesson(body: PolyglotLessonBody): Promise<AxiosResponse> {
+    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/LessonPlanner/planLesson`,
+      body
+    );
+  }
 }
 
 export const API = {
@@ -378,4 +410,5 @@ export const API = {
       body
     );
   },
+
 };

@@ -22,7 +22,7 @@ import Navbar from '../../components/NavBars/NavBar';
 import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
-import { PolyglotCourse } from '../../types/polyglotElements/course/PolyglotCourse';
+import { PolyglotCourse, PolyglotCourseInfo } from '../../types/polyglotElements/course/PolyglotCourse';
 import auth0 from '../../utils/auth0';
 
 type CourseIndexPageProps = {
@@ -73,6 +73,12 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
       await API.enrollCourse(courseId);
     },
     [API]
+  );
+
+  const updateCourseInfo = useCallback(
+    async (courseId: string, course: PolyglotCourseInfo) => {
+      await API.editCourseInfo(courseId, course);
+    },[API]
   );
 
   useEffect(() => {
@@ -127,7 +133,6 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
           <TabList>
             <Tab>My Courses: {courses.length}</Tab>
             <Tab>All courses</Tab>
-            <Tab>Subscribed Courses</Tab>
           </TabList>
 
           <TabPanels>
@@ -140,7 +145,6 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
                     py={1}
                     canDelete={true}
                     canEdit={true}
-                    canEnroll={false}
                     setSelected={setSelectedCourseId}
                     setOpenModal={setOpenModal}
                   />
@@ -179,36 +183,14 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
                     py={1}
                     canDelete={false}
                     canEdit={false}
-                    canEnroll={true}
                     setSelected={setSelectedCourseId}
                     setOpenModal={setOpenModal}
-                    onEnroll={enrollCourse}
                   />
                 ))
               ) : (
                 <Heading size={'md'} textAlign="center">
                   You have 0 Courses available! <br />
                   Create one with the + button ;)
-                </Heading>
-              )}
-            </TabPanel>
-            <TabPanel pt="3%">
-              {courses.length ? (
-                courses.map((course, id) => (
-                  <CourseCard
-                    key={id}
-                    course={course}
-                    py={1}
-                    canDelete={false}
-                    canEdit={false}
-                    canEnroll={true}
-                    setSelected={setSelectedCourseId}
-                    setOpenModal={setOpenModal}
-                  />
-                ))
-              ) : (
-                <Heading size={'md'} textAlign="center">
-                  You have 0 Courses available! <br />
                 </Heading>
               )}
             </TabPanel>
@@ -232,12 +214,8 @@ const CourseIndexPage = ({ accessToken }: CourseIndexPageProps) => {
               setOpenModal('');
             }}
             course={courses.find((course) => course._id === selectedCourseId)!}
-            updateInfo={
-              //async (courseInfo) => {}
-              () => {
-                return;
-              }
-            }
+            courseId={selectedCourseId}
+            updateInfo={updateCourseInfo}
           />
         )}
         {selectedCourseId && (

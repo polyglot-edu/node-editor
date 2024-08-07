@@ -13,21 +13,19 @@ import {
   CardBody,
   CardFooter,
   Flex,
-  Heading,
   HStack,
+  Heading,
   Image,
   LinkBox,
   List,
-  ListIcon,
   ListItem,
   SpaceProps,
   Spacer,
   Stack,
   Text,
-  Tooltip,
+  Tooltip
 } from '@chakra-ui/react';
-import { MdCheckCircle } from 'react-icons/md';
-import cardImage from '../../public/test_card.png';
+import cardImage from '../../public/screenLPs.png';
 import { PolyglotCourse } from '../../types/polyglotElements';
 import FlowCard from './FlowCard';
 
@@ -36,11 +34,9 @@ type CourseCardProps = {
   px?: SpaceProps['px'];
   canDelete?: boolean;
   canEdit?: boolean;
-  canEnroll?: boolean;
   isSubscribed?: boolean;
   setSelected?: (courseId: string) => void;
   setOpenModal?: (modal: string) => void;
-  onEnroll?: (courseId: string) => void;
   course: PolyglotCourse;
 };
 
@@ -50,10 +46,8 @@ const CourseCard = ({
   py,
   canDelete,
   canEdit,
-  canEnroll,
   setSelected,
   setOpenModal,
-  onEnroll,
 }: CourseCardProps) => {
   return (
     <LinkBox px={px} py={py}>
@@ -112,16 +106,6 @@ const CourseCard = ({
                   </Tooltip>
                 </Button>
               )}
-              <Button
-                zIndex={11}
-                colorScheme="blue"
-                size={'sm'}
-                variant="solid"
-                hidden={!canEnroll}
-                onClick={() => onEnroll?.(course._id!)}
-              >
-                enroll
-              </Button>
             </Flex>
             <Heading size="md">{course.title}</Heading>
             {course.tags &&
@@ -148,12 +132,6 @@ const CourseCard = ({
                 </h2>
                 <AccordionPanel pb={4}>
                   <List spacing={3}>
-                    {course.flows.map((flow, id) => (
-                      <ListItem key={id}>
-                        <ListIcon as={MdCheckCircle} color="green.500" />
-                        {flow.title}
-                      </ListItem>
-                    ))}
                     {course.flows.map((flow, id) => (
                       <ListItem key={id}>
                         <FlowCard flow={flow} />
