@@ -1,6 +1,6 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import icon from '../../../public/collaborative_icon.png';
+import icon from '../../../public/papyrusWebIcon.png';
 import useStore from '../../../store';
 import { UMLModelingNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';

@@ -49,6 +49,7 @@ const config = [
       'SimulationNode',
       'InnovationPitchNode',
       'BrainstormingNode',
+      'UMLModelingNode'
     ],
   },
 ];
