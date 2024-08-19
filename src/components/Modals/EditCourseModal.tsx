@@ -1,7 +1,5 @@
 import {
-  Box,
   Button,
-  Flex,
   FormControl,
   FormLabel,
   Input,
@@ -12,17 +10,7 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
-  Popover,
-  PopoverArrow,
-  PopoverBody,
-  PopoverCloseButton,
-  PopoverContent,
-  PopoverHeader,
-  PopoverTrigger,
-  Portal,
-  Text,
   Textarea,
-  Tooltip,
   useDisclosure,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
@@ -91,72 +79,6 @@ const EditCourseModal = ({
               onChange={(e) => setDescription(e.currentTarget.value)}
             />
           </FormControl>
-          <FormLabel my={2} fontWeight={'bold'}>
-            Click on the tags to add them:
-          </FormLabel>
-          <Flex mb={2}>
-            <Popover isOpen={ioPop} onClose={ocPop}>
-              <PopoverTrigger>
-                <Button
-                  colorScheme={colorTag}
-                  rounded="md"
-                  onClick={opPop}
-                  borderWidth={2}
-                  borderColor={'gray.300'}
-                />
-              </PopoverTrigger>
-              <Portal>
-                {/* https://github.com/chakra-ui/chakra-ui/issues/3043 */}
-                <Box zIndex="popover" w="full" h="full" position={'relative'}>
-                  <PopoverContent>
-                    <PopoverArrow />
-                    <PopoverHeader>
-                      <Text fontWeight={'bold'}>Select Color</Text>
-                    </PopoverHeader>
-                    <PopoverCloseButton />
-                    <PopoverBody>
-                      {colors.map((value, id) => (
-                        <Button
-                          key={id}
-                          colorScheme={value}
-                          rounded="md"
-                          mr={2}
-                          mb={2}
-                          onClick={() => {
-                            setColorTag(value);
-                            ocPop();
-                          }}
-                        />
-                      ))}
-                    </PopoverBody>
-                  </PopoverContent>
-                </Box>
-              </Portal>
-            </Popover>
-            <Tooltip
-              label="Press Enter↵ in the input box to add a tag"
-              placement="top"
-            >
-              <Input
-                placeholder="Insert tag name..."
-                w={'40%'}
-                value={tagName}
-                /*onKeyDown={(e) => {
-                  if (e.key === 'Enter') {
-                    setTags((prev) => {
-                      prev.push({
-                        name: tagName.toUpperCase(),
-                        color: colorTag,
-                      });
-                      return [...prev];
-                    });
-                    setTagName('');
-                  }
-                }}*/
-                onChange={(e) => setTagName(e.currentTarget.value)}
-              />
-            </Tooltip>
-          </Flex>
         </ModalBody>
 
         <ModalFooter>

@@ -751,7 +751,6 @@ const CreateCourseModal = ({
         <ModalBody hidden={!(showScreen == plannedCourse.length * 2 + 4)}>
           <FormLabel>
             <Button onClick={saveCourse}>save course to database</Button>
-            <Button>download course syllabus as pdf</Button>
           </FormLabel>
         </ModalBody>
       </ModalContent>

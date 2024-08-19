@@ -27,7 +27,7 @@ const DeleteFlowModal = ({
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />
       <ModalContent>
-        <ModalHeader>Delete Learning Path</ModalHeader>
+        <ModalHeader>Delete Course</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
           <Text>
