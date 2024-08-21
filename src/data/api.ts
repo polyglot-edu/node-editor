@@ -430,7 +430,7 @@ export const API = {
 
   generateNewProject: (body: PapyProject): Promise<AxiosResponse> => {
     return axiosPapyGame.post<{}, AxiosResponse, {}>(
-      `/ActivityGenerator/generateActivity`,
+      `/newBlankProject`,
       body
     );
   },

@@ -1,17 +1,4 @@
-import {
-  Box,
-  Button,
-  Flex,
-  FormLabel,
-  Menu,
-  MenuButton,
-  MenuItemOption,
-  MenuList,
-  MenuOptionGroup,
-  Select,
-  SkeletonText,
-  Stack,
-} from '@chakra-ui/react';
+import { Box, Button, FormLabel, Select } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../../data/api';
@@ -110,7 +97,7 @@ const UMLModelingNodeProperties = () => {
         >
           Type
         </FormLabel>
-        <Box>{assignemntText}</Box>
+        <Box marginTop={'10px'}>Assignment text: <br/>{assignemntText}</Box>
       </Box>
 
       <Box hidden={mode != 'Custom'} marginTop={'10px'}>
@@ -120,35 +107,48 @@ const UMLModelingNodeProperties = () => {
             !projectsList?.find((value) => value.id == getValues('data.idUML'))
           }
           onClick={() => {
-            console.log('Project generated');
+            console.log('generate project');
+            const id = (Math.random() + 1).toString(36).substring(7);
+            API.generateNewProject({
+              ctxId: '',
+              assignment_id: id,
+              nomeUtente: '',
+            })
+              .then(async (response) => {
+                console.log(response.data);
+                setValue('data.idUML', response.data.project_id);
+                setValue('data.projectUML', response.data.representation_id);
+              })
+              .catch(async (error: any) => {
+                console.log(error);
+              });
           }}
         >
           Generate project
         </Button>
-        <Box>
-          Click here to define the UML model as sample for your exercise
-          validation
-          <Button
-            disabled={
-              getValues('data.idUML') != '' &&
-              projectsList?.find(
-                (value) => value.id == getValues('data.idUML')
-              ) != undefined
-            }
-            onClick={() => {
-              window.open(
-                'https://papygame.tech/projects/' +
-                  getValues('data.idUML') +
-                  '/edit/' +
-                  getValues('data.projectUML'),
-                '_blank'
-              );
-            }}
-          >
-            PapyrusWeb
-          </Button>
+        <Box marginTop={'10px'}>
+          Click to open our UML modeling platform to define your custom exercise
         </Box>
-        <Box
+        <Button
+          disabled={
+            getValues('data.idUML') != '' &&
+            projectsList?.find(
+              (value) => value.id == getValues('data.idUML')
+            ) != undefined
+          }
+          onClick={() => {
+            window.open(
+              'https://papygame.tech/projects/' +
+                getValues('data.idUML') +
+                '/edit/' +
+                getValues('data.projectUML'),
+              '_blank'
+            );
+          }}
+        >
+          PapyrusWeb
+        </Button>
+        <Box marginTop={'10px'}
           hidden={
             getValues('data.idUML') != '' &&
             projectsList?.find(
@@ -158,7 +158,7 @@ const UMLModelingNodeProperties = () => {
         >
           <MarkDownField label="Assignment" name="data.assignment" />
         </Box>
-        <Button
+        <Button marginTop={'10px'}
           hidden={
             getValues('data.idUML') != '' &&
             projectsList?.find(
