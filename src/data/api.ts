@@ -19,11 +19,14 @@ import {
   SummarizeType,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
+import {
+  PapyAssignment,
+  PapyProject,
+} from '../types/polyglotElements/PapyrusTypes/PapyrusTypes';
 import { User } from '../types/user';
 import { createNewDefaultPolyglotFlow } from '../utils/utils';
 import abstractFlows from './abstractExample';
 import exampleFlows from './exampleData';
-import { PapyAssignment, PapyProject } from '../types/polyglotElements/PapyrusTypes/PapyrusTypes';
 
 export type aiAPIResponse = {
   Date: string;
@@ -422,9 +425,7 @@ export const API = {
   },
 
   getAssignmentProjects: (): Promise<AxiosResponse> => {
-    return axiosPapyGame.get<{}, AxiosResponse, {}>(
-      `/assignmentProjects`
-    );
+    return axiosPapyGame.get<{}, AxiosResponse, {}>(`/assignmentProjects`);
   },
 
   generateNewProject: (body: PapyProject): Promise<AxiosResponse> => {
@@ -433,12 +434,8 @@ export const API = {
       body
     );
   },
-  
-  generateNewAssignment: (body: PapyAssignment): Promise<AxiosResponse> => {
-    return axiosPapyGame.post<{}, AxiosResponse, {}>(
-      `/newAssignment`,
-      body
-    );
-  },
 
+  generateNewAssignment: (body: PapyAssignment): Promise<AxiosResponse> => {
+    return axiosPapyGame.post<{}, AxiosResponse, {}>(`/newAssignment`, body);
+  },
 };
