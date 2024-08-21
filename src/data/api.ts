@@ -429,10 +429,7 @@ export const API = {
   },
 
   generateNewProject: (body: PapyProject): Promise<AxiosResponse> => {
-    return axiosPapyGame.post<{}, AxiosResponse, {}>(
-      `/newBlankProject`,
-      body
-    );
+    return axiosPapyGame.post<{}, AxiosResponse, {}>(`/newAssignmentProject`, body);
   },
 
   generateNewAssignment: (body: PapyAssignment): Promise<AxiosResponse> => {

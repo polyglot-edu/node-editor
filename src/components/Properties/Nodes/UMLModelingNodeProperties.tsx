@@ -97,7 +97,10 @@ const UMLModelingNodeProperties = () => {
         >
           Type
         </FormLabel>
-        <Box marginTop={'10px'}>Assignment text: <br/>{assignemntText}</Box>
+        <Box marginTop={'10px'}>
+          Assignment text: <br />
+          {assignemntText}
+        </Box>
       </Box>
 
       <Box hidden={mode != 'Custom'} marginTop={'10px'}>
@@ -110,9 +113,7 @@ const UMLModelingNodeProperties = () => {
             console.log('generate project');
             const id = (Math.random() + 1).toString(36).substring(7);
             API.generateNewProject({
-              ctxId: '',
-              assignment_id: id,
-              nomeUtente: '',
+              nomeUtente: id,
             })
               .then(async (response) => {
                 console.log(response.data);
@@ -148,7 +149,8 @@ const UMLModelingNodeProperties = () => {
         >
           PapyrusWeb
         </Button>
-        <Box marginTop={'10px'}
+        <Box
+          marginTop={'10px'}
           hidden={
             getValues('data.idUML') != '' &&
             projectsList?.find(
@@ -158,7 +160,8 @@ const UMLModelingNodeProperties = () => {
         >
           <MarkDownField label="Assignment" name="data.assignment" />
         </Box>
-        <Button marginTop={'10px'}
+        <Button
+          marginTop={'10px'}
           hidden={
             getValues('data.idUML') != '' &&
             projectsList?.find(
@@ -166,7 +169,10 @@ const UMLModelingNodeProperties = () => {
             ) != undefined
           }
           onClick={() => {
-            console.log('Assignment generated');
+            API.generateNewAssignment({
+              project_id: getValues('data.idUML'),
+              assignment_text: getValues('data.assignment'),
+            });
           }}
         >
           Generate assignment

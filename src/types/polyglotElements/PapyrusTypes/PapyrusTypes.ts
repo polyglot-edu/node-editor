@@ -1,6 +1,4 @@
 export type PapyProject = {
-  ctxId: string;
-  assignment_id: string;
   nomeUtente: string;
 };
 
