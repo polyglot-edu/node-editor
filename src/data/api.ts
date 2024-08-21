@@ -23,6 +23,7 @@ import { User } from '../types/user';
 import { createNewDefaultPolyglotFlow } from '../utils/utils';
 import abstractFlows from './abstractExample';
 import exampleFlows from './exampleData';
+import { PapyAssignment, PapyProject } from '../types/polyglotElements/PapyrusTypes/PapyrusTypes';
 
 export type aiAPIResponse = {
   Date: string;
@@ -56,6 +57,13 @@ const AIAPIGeneration = axiosCreate.create({
       '{"secretKey": "' +
       process.env.SETUPMODEL +
       '","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
+  },
+});
+
+const axiosPapyGame = axiosCreate.create({
+  baseURL: 'https://papygame.tech/api/v1',
+  headers: {
+    'Content-Type': 'application/json',
   },
 });
 
@@ -412,4 +420,25 @@ export const API = {
       body
     );
   },
+
+  getAssignmentProjects: (): Promise<AxiosResponse> => {
+    return axiosPapyGame.get<{}, AxiosResponse, {}>(
+      `/assignmentProjects`
+    );
+  },
+
+  generateNewProject: (body: PapyProject): Promise<AxiosResponse> => {
+    return axiosPapyGame.post<{}, AxiosResponse, {}>(
+      `/ActivityGenerator/generateActivity`,
+      body
+    );
+  },
+  
+  generateNewAssignment: (body: PapyAssignment): Promise<AxiosResponse> => {
+    return axiosPapyGame.post<{}, AxiosResponse, {}>(
+      `/newAssignment`,
+      body
+    );
+  },
+
 };

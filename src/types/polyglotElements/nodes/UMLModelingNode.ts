@@ -8,7 +8,7 @@ export type UMLModelingNodeData = NodeData & {
   assignment: string;
   idUML: string;
   projectUML: string;
-  typeExercise: string;
+  mode: string;
 };
 
 export type UMLModelingNode = PolyglotNode & {
@@ -28,6 +28,6 @@ polyglotNodeComponentMapping.registerMapping<UMLModelingNode>({
     assignment: '',
     idUML: '',
     projectUML: '',
-    typeExercise: 'type1',
+    mode: 'default',
   },
 });

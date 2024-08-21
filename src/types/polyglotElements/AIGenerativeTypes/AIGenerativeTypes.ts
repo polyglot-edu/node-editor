@@ -45,3 +45,5 @@ export type AIExerciseType = {
 };
 
 export type SummarizerBody = { lesson: string; noW: string; level: string };
+
+
