@@ -21,6 +21,7 @@ import {
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import {
   PapyAssignment,
+  PapyAssignmentAPI,
   PapyProject,
 } from '../types/polyglotElements/PapyrusTypes/PapyrusTypes';
 import { User } from '../types/user';
@@ -435,7 +436,7 @@ export const API = {
     );
   },
 
-  generateNewAssignment: (body: PapyAssignment): Promise<AxiosResponse> => {
+  generateNewAssignment: (body: PapyAssignmentAPI): Promise<AxiosResponse> => {
     return axiosPapyGame.post<{}, AxiosResponse, {}>(`/newAssignment`, body);
   },
 };
