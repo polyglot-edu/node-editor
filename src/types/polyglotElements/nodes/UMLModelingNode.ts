@@ -2,13 +2,16 @@ import UMLModelingNodeProperties from '../../../components/Properties/Nodes/UMLM
 import { ReactFlowUMLModelingNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/papyrusWebIcon.png';
 import { polyglotNodeComponentMapping } from '../elementMapping';
+import { PapyTag } from '../PapyrusTypes/PapyrusTypes';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type UMLModelingNodeData = NodeData & {
   assignment: string;
+  title: string;
   idUML: string;
   projectUML: string;
   mode: string;
+  tags?: PapyTag[];
 };
 
 export type UMLModelingNode = PolyglotNode & {
@@ -26,8 +29,10 @@ polyglotNodeComponentMapping.registerMapping<UMLModelingNode>({
   defaultData: {
     ...defaultPolyglotNodeData,
     assignment: '',
+    title: '',
     idUML: '',
     projectUML: '',
-    mode: 'default',
+    mode: 'Default',
+    tags: [],
   },
 });
