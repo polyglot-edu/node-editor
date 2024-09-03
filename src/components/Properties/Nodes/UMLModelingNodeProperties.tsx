@@ -153,13 +153,15 @@ const UMLModelingNodeProperties = () => {
           ))}
         </Box>
       </Box>
-      <Box hidden={mode != 'Custom'} 
+      <Box
+        hidden={mode != 'Custom'}
         margin={'2'}
         border={'solid'}
         borderColor={'grey'}
         borderRadius={'8px'}
         borderWidth={'1px'}
-        padding={'5px'}>
+        padding={'5px'}
+      >
         <Button
           hidden={
             getValues('data.idUML') != '' &&
