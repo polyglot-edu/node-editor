@@ -33,13 +33,14 @@ import TextField from '../../Forms/Fields/TextField';
 import { colors } from '../../Modals/CreateFlowModal';
 import NodeProperties from './NodeProperties';
 type AssignmentProjectsList = PapyAssignment[];
+
 const UMLModelingNodeProperties = () => {
   const toast = useToast();
   const [loading, setLoading] = useState(false);
   const [projectsList, setProjectsList] = useState<AssignmentProjectsList>();
   const { getValues, setValue } = useFormContext();
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
-  const [mode, setMode] = useState<string>(getValues('data.mode'));
+  const [mode, setMode] = useState<string>('Default');
   const [assignemntText, setAssignemntText] = useState<string>(
     getValues('data.assignment')
   );
@@ -52,6 +53,7 @@ const UMLModelingNodeProperties = () => {
       .then(async (response) => {
         console.log(response.data);
         setProjectsList(response.data);
+        setMode(getValues('data.mode'));
       })
       .catch(async (error: any) => {
         console.log(error);
@@ -86,7 +88,16 @@ const UMLModelingNodeProperties = () => {
         Custom
       </Button>
 
-      <Box hidden={mode != 'Default'} marginTop={'10px'}>
+      <Box
+        hidden={mode != 'Default'}
+        margin={'2'}
+        border={'solid'}
+        borderColor={'grey'}
+        borderRadius={'8px'}
+        borderWidth={'1px'}
+        padding={'5px'}
+      >
+        Select the assignment:
         <Select
           onChange={(event) => {
             console.log(event.target.value);
@@ -116,7 +127,11 @@ const UMLModelingNodeProperties = () => {
           {projectsList?.map((item, index) => {
             return (
               <>
-                <option key={index} value={item.projectId}>
+                <option
+                  key={index}
+                  value={item.projectId}
+                  selected={item.projectId == getValues('data.idUML')}
+                >
                   {item.assignmentTitle}
                 </option>
               </>
@@ -138,8 +153,15 @@ const UMLModelingNodeProperties = () => {
           ))}
         </Box>
       </Box>
-
-      <Box hidden={mode != 'Custom'} marginTop={'10px'}>
+      <Box
+        hidden={mode != 'Custom'}
+        margin={'2'}
+        border={'solid'}
+        borderColor={'grey'}
+        borderRadius={'8px'}
+        borderWidth={'1px'}
+        padding={'5px'}
+      >
         <Button
           hidden={
             getValues('data.idUML') != '' &&
@@ -179,7 +201,7 @@ const UMLModelingNodeProperties = () => {
             ) != undefined
           }
         >
-          <Box marginTop={'10px'}>
+          <Box>
             Click to open our UML modeling platform to define your custom
             exercise
           </Box>

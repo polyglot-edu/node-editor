@@ -20,7 +20,7 @@ polyglotNodeComponentMapping.registerMapping<NewTypeNode>({
   elementType: 'NewTypeNode',
   name: 'New Type xText',
   icon: icon.src,
-  group: 'understand_assessment',
+  group: '',
   propertiesComponent: NewTypeNodeProperties,
   elementComponent: ReactFlowNewTypeNode,
   defaultData: {
