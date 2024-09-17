@@ -163,12 +163,12 @@ const UMLModelingNodeProperties = () => {
         padding={'5px'}
       >
         <Button
-          hidden={
+          /*hidden={
             getValues('data.idUML') != '' &&
             !projectsList?.find(
               (value) => value.projectId == getValues('data.idUML')
             )
-          }
+          }*/
           onClick={() => {
             setLoading(true);
             console.log('generate project');
@@ -195,10 +195,11 @@ const UMLModelingNodeProperties = () => {
         </Button>
         <Box
           hidden={
-            getValues('data.idUML') != '' &&
-            projectsList?.find(
-              (value) => value.projectId == getValues('data.idUML')
-            ) != undefined
+            getValues('data.idUML') != '' 
+            //&&
+            //projectsList?.find(
+            //  (value) => value.projectId == getValues('data.idUML')
+            //) != undefined
           }
         >
           <Box>
