@@ -195,7 +195,7 @@ const UMLModelingNodeProperties = () => {
         </Button>
         <Box
           hidden={
-            getValues('data.idUML') != ''
+            getValues('data.idUML') == ''
             //&&
             //projectsList?.find(
             //  (value) => value.projectId == getValues('data.idUML')
