@@ -10,13 +10,13 @@ import {
 } from '@chakra-ui/react';
 import { useRouter } from 'next/router';
 
-export type ModelTemplateProps = {
+export type ModaTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
   saveFunc: (outputToast?: boolean, returnPath?: string) => Promise<void>;
 };
 
-const SaveFlowModal = ({ isOpen, onClose, saveFunc }: ModelTemplateProps) => {
+const SaveFlowModal = ({ isOpen, onClose, saveFunc }: ModaTemplateProps) => {
   const router = useRouter();
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>

@@ -10,7 +10,7 @@ import {
   Text,
 } from '@chakra-ui/react';
 
-export type ModelTemplateProps = {
+export type ModaTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
   flowId: string;
@@ -22,7 +22,7 @@ const DeleteFlowModal = ({
   onClose,
   flowId,
   deleteFunc,
-}: ModelTemplateProps) => {
+}: ModaTemplateProps) => {
   return (
     <Modal isOpen={isOpen} onClose={onClose} isCentered>
       <ModalOverlay />

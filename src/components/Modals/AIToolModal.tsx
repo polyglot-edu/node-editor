@@ -26,7 +26,7 @@ import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
 import { TypeOfExercise } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
-export type ModelTemplateProps = {
+export type ModaTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
   exType: string;
@@ -48,7 +48,7 @@ const AIToolModal = ({
   onClose,
   exType,
   action,
-}: ModelTemplateProps) => {
+}: ModaTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
   const [titleGen, setTitle] = useState('');
