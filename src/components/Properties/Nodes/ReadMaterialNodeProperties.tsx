@@ -2,6 +2,7 @@ import { Button, SkeletonText, useDisclosure } from '@chakra-ui/react';
 import { useState } from 'react';
 import MarkDownField from '../../Forms/Fields/MarkDownField';
 import TextField from '../../Forms/Fields/TextField';
+import FileUploadDownload from '../../Forms/Fields/UploadDownloadField';
 import AIToolModal from '../../Modals/AIToolModal';
 import NodeProperties from './NodeProperties';
 
@@ -42,6 +43,7 @@ const ReadMaterialNodeProperties = () => {
       >
         <MarkDownField label="Text" name="data.text" />
         <TextField label="URL" name="data.link" />
+        <FileUploadDownload nodeId={"1"} />
       </SkeletonText>
     </>
   );
