@@ -8,22 +8,26 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
-import React, { useState } from 'react';
+import { useEffect, useState } from 'react';
 import { API } from '../../../data/api';
 import useStore from '../../../store';
 
-const FileUploadDownload = ({ nodeId }: { nodeId: string }) => {
-  const [file, setFile] = useState(null);
+const FileUploadDownload = () => {
+  const [file, setFile] = useState<File>();
+  const [nodeId, setNodeId] = useState('1');
   const toast = useToast();
-  const { getNodes } = useStore((store) => ({
-    getNodes: store.reactFlowNodes,
-  }));
-  const nodeId2 = getNodes();
-  console.log(nodeId2);
   // Gestione del file selezionato
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0]);
   };
+
+  useEffect(() => {
+    setNodeId(useStore.getState().getSelectedNode()?._id || '1');
+    console.log(nodeId);
+    API.downloadFile({ nodeId }).then((response) => {
+      if (response.data) setFile(response.data);
+    });
+  }, []);
 
   // Funzione per l'upload
   const handleUpload = async () => {
@@ -44,6 +48,7 @@ const FileUploadDownload = ({ nodeId }: { nodeId: string }) => {
 
     const formData = new FormData();
     formData.append('file', file);
+    formData.append('name', file.name);
 
     try {
       API.uploadFile({
@@ -71,8 +76,13 @@ const FileUploadDownload = ({ nodeId }: { nodeId: string }) => {
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
+      console.log(response.data.filename);
 
-      link.setAttribute('download', 'uploadedFile.pdf');
+      console.log(response.data);
+      link.setAttribute(
+        'download',
+        response.data.filename || 'uploadedFile.pdf'
+      );
 
       document.body.appendChild(link);
       link.click();

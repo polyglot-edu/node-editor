@@ -43,7 +43,7 @@ const ReadMaterialNodeProperties = () => {
       >
         <MarkDownField label="Text" name="data.text" />
         <TextField label="URL" name="data.link" />
-        <FileUploadDownload nodeId={'1'} />
+        <FileUploadDownload/>
       </SkeletonText>
     </>
   );
