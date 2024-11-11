@@ -390,6 +390,27 @@ export const API = {
     );
   },
 
+  //API for upload and download into database
+  uploadFile: (body: {
+    nodeId: string;
+    file: FormData;
+  }): Promise<AxiosResponse> => {
+    return axiosProgress.post('/api/file/upload/' + body.nodeId, body.file, {
+      headers: {
+        'Content-Type': 'multipart/form-data',
+      },
+    });
+  },
+
+  downloadFile: (body: { nodeId: string }): Promise<AxiosResponse> => {
+    return axiosProgress.get<AxiosResponse>(
+      `/api/file/download/${body.nodeId}`,
+      {
+        responseType: 'blob',
+      }
+    );
+  },
+
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
     return AIAPIGeneration.post<{}, AxiosResponse, {}>(
       `/MaterialAnalyser/analyseMaterial`,

@@ -13,13 +13,13 @@ import {
 } from '@chakra-ui/react';
 import { PolyglotFlow } from '../../types/polyglotElements';
 
-export type ModelTemplateProps = {
+export type ModaTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
   flow: Nullable<PolyglotFlow>;
 };
 
-const RunExecutionModal = ({ isOpen, onClose, flow }: ModelTemplateProps) => {
+const RunExecutionModal = ({ isOpen, onClose, flow }: ModaTemplateProps) => {
   if (!flow) return null;
   return (
     <Modal isOpen={isOpen} onClose={onClose}>

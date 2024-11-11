@@ -16,13 +16,13 @@ import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { API } from '../../data/api';
 
-export type ModelTemplateProps = {
+export type ModaTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
 };
 let generateButton = false;
 
-const SummarizerModal = ({ isOpen, onClose }: ModelTemplateProps) => {
+const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
   const [generatedMaterial, setGeneratedMaterial] = useState('');
