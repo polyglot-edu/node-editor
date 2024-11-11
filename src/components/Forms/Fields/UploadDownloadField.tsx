@@ -108,7 +108,7 @@ const FileUploadDownload = () => {
           Scarica File
         </Button>
       </Center>
-      <Text hidden={file == null}>File selezionato: {file && file.name}</Text>
+      <Text hidden={file == null}>Un File presente: {file && file.name}</Text>
     </VStack>
   );
 };
