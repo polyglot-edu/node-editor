@@ -13,7 +13,6 @@ import { useEffect, useState } from 'react';
 import { API } from '../../../data/api';
 import useStore from '../../../store';
 
-
 const FileUploadDownload = () => {
   const [file, setFile] = useState<File>();
   const [nodeId, setNodeId] = useState<string>();
@@ -29,16 +28,16 @@ const FileUploadDownload = () => {
   }));
 
   useEffect(() => {
-  const selectedElement = getSelectedElement();
+    const selectedElement = getSelectedElement();
     if (!selectedElement) return;
     setNodeId(selectedElement._id);
     API.downloadFile({ nodeId: selectedElement._id })
       .then((response) => {
         if (response.data) {
-          const contentDisposition = response.headers["content-disposition"];
+          const contentDisposition = response.headers['content-disposition'];
           const filename = contentDisposition
-            ?.split("filename=")?.[1]
-            ?.replace(/"/g, "");
+            ?.split('filename=')?.[1]
+            ?.replace(/"/g, '');
           setFilename(filename);
         }
       })
@@ -48,7 +47,7 @@ const FileUploadDownload = () => {
   }, []);
   // Funzione per l'upload
   const handleUpload = async () => {
-    if(!nodeId) return
+    if (!nodeId) return;
     if (!file) {
       toast({
         title: 'Seleziona un file e inserisci un ID nodo.',
@@ -88,33 +87,30 @@ const FileUploadDownload = () => {
 
   // Funzione per il download
   const handleDownload = async () => {
-    if(!nodeId) return
-    try { 
-    const response = await API.downloadFile({ nodeId });
-    const contentDisposition = response.headers["content-disposition"];
-    const filename = contentDisposition
-      ?.split("filename=")?.[1]
-      ?.replace(/"/g, "");
-    const url = window.URL.createObjectURL(new Blob([response.data]));
-    const link = document.createElement('a');
-    link.href = url;
-    link.setAttribute(
-      'download',
-      filename || 'uploadedFile.pdf'
-    );
-    document.body.appendChild(link);
-    link.click();
-    link.remove();
-    window.URL.revokeObjectURL(url);
-        
+    if (!nodeId) return;
+    try {
+      const response = await API.downloadFile({ nodeId });
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition
+        ?.split('filename=')?.[1]
+        ?.replace(/"/g, '');
+      const url = window.URL.createObjectURL(new Blob([response.data]));
+      const link = document.createElement('a');
+      link.href = url;
+      link.setAttribute('download', filename || 'uploadedFile.pdf');
+      document.body.appendChild(link);
+      link.click();
+      link.remove();
+      window.URL.revokeObjectURL(url);
+
       return;
     } catch (error: any) {
-          console.log(error);
-          if (error.status == 304)
-            toast({
-              title: 'There are no file for this node',
-              status: 'info',
-            });
+      console.log(error);
+      if (error.status == 304)
+        toast({
+          title: 'There are no file for this node',
+          status: 'info',
+        });
       toast({ title: 'Errore durante il download del file.', status: 'error' });
     }
   };
