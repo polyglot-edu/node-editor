@@ -60,7 +60,7 @@ const AIAPIGeneration = axiosCreate.create({
     SetupModel:
       '{"secretKey": "' +
       process.env.SETUPMODEL +
-      '","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
+      '","modelName": "GPT-4o-MINI","endpoint": "https://ai4edu.openai.azure.com/"}',
   },
 });
 
