@@ -50,20 +50,6 @@ const axiosProgress = axiosCreate.create({
   },
 });
 
-const AIAPIGeneration = axiosCreate.create({
-  baseURL: 'https://skapi.polyglot-edu.com',
-  headers: {
-    'Content-Type': 'application/json',
-    withCredentials: true,
-    Access: '*',
-    ApiKey: process.env.APIKEY,
-    SetupModel:
-      '{"secretKey": "' +
-      process.env.SETUPMODEL +
-      '","modelName": "gpt35Turbo","endpoint": "https://ai4edu.openai.azure.com/"}',
-  },
-});
-
 const axiosPapyGame = axiosCreate.create({
   baseURL: 'https://papygame.tech/api/v1',
   headers: {
@@ -412,36 +398,36 @@ export const API = {
   },
 
   analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/MaterialAnalyser/analyseMaterial`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/MaterialAnalyser`,
       body
     );
   },
 
   generateLO: (body: LOType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/LearningObjectiveGenerator/generateLearningObjective`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/LearningObjectiveGenerator`,
       body
     );
   },
 
   generateMaterial: (body: MaterialType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/MaterialGenerator/generatematerial`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/MaterialGenerator`,
       body
     );
   },
 
   summarize: (body: SummarizeType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/Summarizer/summarize`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/Summarizer`,
       body
     );
   },
 
   generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
-    return AIAPIGeneration.post<{}, AxiosResponse, {}>(
-      `/ActivityGenerator/generateActivity`,
+    return axios.post<{}, AxiosResponse, {}>(
+      `/api/openai/ActivityGenerator`,
       body
     );
   },
