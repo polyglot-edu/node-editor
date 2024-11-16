@@ -136,6 +136,7 @@ const AIToolModal = ({
                 const response: AxiosResponse = await API.analyseMaterial({
                   material: sourceMaterial,
                 });
+                console.log(response);
                 setTitle(response.data.Title);
                 setLanguage(response.data.Language);
                 setMacroSubject(response.data.MacroSubject);
@@ -144,6 +145,7 @@ const AIToolModal = ({
                 setScreen1(false);
                 setScreen2(true);
               } catch (error: any) {
+                console.log(error);
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
                     title: 'Invalid syntax',
@@ -155,36 +157,37 @@ const AIToolModal = ({
                   });
                   return;
                 }
-                if (error.response.status) {
-                  if (error.response.status == 500)
+                if (error.response)
+                  if (error.response.status) {
+                    if (error.response.status == 500)
+                      toast({
+                        title: 'Material Error',
+                        description:
+                          'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
+                        status: 'error',
+                        duration: 5000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                    else if (error.response.status != 200)
+                      toast({
+                        title: 'AI API Error',
+                        description:
+                          'Internal Server error, try again. If the error persists try change material.',
+                        status: 'error',
+                        duration: 5000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                  } else
                     toast({
-                      title: 'Material Error',
-                      description:
-                        'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
+                      title: 'Generic Error',
+                      description: 'Try later ' + (error as Error),
                       status: 'error',
                       duration: 5000,
                       position: 'bottom-left',
                       isClosable: true,
                     });
-                  else if (error.response.status != 200)
-                    toast({
-                      title: 'AI API Error',
-                      description:
-                        'Internal Server error, try again. If the error persists try change material.',
-                      status: 'error',
-                      duration: 5000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
-                } else
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
               } finally {
                 setGeneratingLoading(false);
               }

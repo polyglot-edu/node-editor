@@ -20,7 +20,6 @@ import {
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import {
-  PapyAssignment,
   PapyAssignmentAPI,
   PapyProject,
 } from '../types/polyglotElements/PapyrusTypes/PapyrusTypes';
@@ -419,10 +418,7 @@ export const API = {
   },
 
   summarize: (body: SummarizeType): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
-      `/api/openai/Summarizer`,
-      body
-    );
+    return axios.post<{}, AxiosResponse, {}>(`/api/openai/Summarizer`, body);
   },
 
   generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
