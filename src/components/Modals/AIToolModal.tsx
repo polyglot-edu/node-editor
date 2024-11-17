@@ -134,7 +134,7 @@ const AIToolModal = ({
                   throw ': no text given';
                 }
                 const response: AxiosResponse = await API.analyseMaterial({
-                  "material": sourceMaterial,
+                  material: sourceMaterial,
                 });
                 console.log(response);
                 setTitle(response.data.Title);
@@ -265,9 +265,9 @@ const AIToolModal = ({
                 if (!topicGen) throw ': No topic generated';
                 setGeneratingLoading(true);
                 const response: AxiosResponse = await API.generateLO({
-                  "Topic": topicGen[topicIndex].Topic,
-                  "Level": level,
-                  "Context": '',
+                  Topic: topicGen[topicIndex].Topic,
+                  Level: level,
+                  Context: '',
                 });
                 setChoices([
                   response.data.Remembering[0],
@@ -396,20 +396,20 @@ const AIToolModal = ({
                 setGeneratingLoading(true);
                 if (!topicGen) throw ': no topic generated';
                 const response: AxiosResponse = await API.generateNewExercise({
-                  "macroSubject": macroSubjectGen,
-                  "title": titleGen,
-                  "level": level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  "typeOfActivity": exerciseType, //0=fill_the_gap, 1=question, 4=choice,
-                  "learningObjective": choices[choiceIndex],
-                  "bloomLevel": Math.round(choiceIndex / 2), //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
-                  "language": language,
-                  "material": sourceMaterial,
-                  "correctAnswersNumber": ca_n,
-                  "distractorsNumber": da_n,
-                  "easilyDiscardableDistractorsNumber": eda_n,
-                  "assignmentType": topicGen[topicIndex].Type, //0=theoretical, 1=code, 2=problem_resolution,
-                  "topic": topicGen[topicIndex].Topic,
-                  "temperature": 0.2,
+                  macroSubject: macroSubjectGen,
+                  title: titleGen,
+                  level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
+                  typeOfActivity: exerciseType, //0=fill_the_gap, 1=question, 4=choice,
+                  learningObjective: choices[choiceIndex],
+                  bloomLevel: Math.round(choiceIndex / 2), //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
+                  language: language,
+                  material: sourceMaterial,
+                  correctAnswersNumber: ca_n,
+                  distractorsNumber: da_n,
+                  easilyDiscardableDistractorsNumber: eda_n,
+                  assignmentType: topicGen[topicIndex].Type, //0=theoretical, 1=code, 2=problem_resolution,
+                  topic: topicGen[topicIndex].Topic,
+                  temperature: 0.2,
                 });
                 console.log(response.data);
                 let dataGen;
@@ -545,10 +545,10 @@ const AIToolModal = ({
                 setGeneratingLoading(true);
                 if (!topicGen) throw ': no topic generated';
                 const response: AxiosResponse = await API.generateMaterial({
-                  "numberOfWords": noW,
-                  "level": level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  "learningObjective": choices[choiceIndex],
-                  "topic": topicGen[topicIndex].Topic,
+                  numberOfWords: noW,
+                  level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
+                  learningObjective: choices[choiceIndex],
+                  topic: topicGen[topicIndex].Topic,
                 });
                 setScreen1(true);
                 setScreen3(false);
