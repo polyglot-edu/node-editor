@@ -95,7 +95,6 @@ const FileUploadDownload = () => {
     }
   };
 
-  // Funzione per il download
   const handleDownload = async () => {
     if (!nodeId) return;
     try {
