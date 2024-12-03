@@ -12,6 +12,7 @@ import { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { API } from '../../../data/api';
 import useStore from '../../../store';
+import { PolyglotNode } from '../../../types/polyglotElements';
 
 const FileUploadDownload = () => {
   const [file, setFile] = useState<File>();
@@ -23,15 +24,15 @@ const FileUploadDownload = () => {
     setFile(event.target.files[0]);
   };
 
-  const { getSelectedElement } = useStore((store) => ({
-    getSelectedElement: store.getSelectedElement,
+  const { selectedElement } = useStore((store) => ({
+    selectedElement: store.getSelectedElement,
   }));
 
   useEffect(() => {
-    const selectedElement = getSelectedElement();
     if (!selectedElement) return;
-    setNodeId(selectedElement._id);
-    API.downloadFile({ nodeId: selectedElement._id })
+    setNodeId((selectedElement as unknown as PolyglotNode)._id);
+    if (!nodeId) return;
+    API.downloadFile({ nodeId })
       .then((response) => {
         if (response.data) {
           const contentDisposition = response.headers['content-disposition'];
@@ -43,21 +44,22 @@ const FileUploadDownload = () => {
       })
       .catch((error: AxiosResponse) => {
         console.log(error);
+        setFilename('Nessun file disponibile');
       });
-  }, []);
-  // Funzione per l'upload
+  }, [selectedElement]);
+
   const handleUpload = async () => {
     if (!nodeId) return;
     if (!file) {
       toast({
-        title: 'Seleziona un file e inserisci un ID nodo.',
+        title: 'Select a file.',
         status: 'warning',
       });
       return;
     }
     if (file.type !== 'application/pdf') {
       toast({
-        title: 'Il file selezionato non è un PDF.',
+        title: 'Selected file must be PDF.',
         status: 'warning',
       });
       return;
@@ -71,12 +73,20 @@ const FileUploadDownload = () => {
       API.uploadFile({
         nodeId,
         file: formData,
-      }).then((resp) =>
-        toast({
-          title: 'File uploaded successfully.\n' + resp.data,
-          status: 'success',
-        })
-      );
+      })
+        .then((resp) =>
+          toast({
+            title: 'File uploaded successfully.\n' + resp.data,
+            status: 'success',
+          })
+        )
+        .catch((error: AxiosResponse) => {
+          if (error.status == 413)
+            toast({
+              title: 'Selected file is too Large.\n',
+              status: 'error',
+            });
+        });
     } catch (error) {
       toast({
         title: "File's upload failed",
@@ -85,7 +95,6 @@ const FileUploadDownload = () => {
     }
   };
 
-  // Funzione per il download
   const handleDownload = async () => {
     if (!nodeId) return;
     try {
