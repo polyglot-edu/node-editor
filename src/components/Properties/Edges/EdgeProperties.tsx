@@ -22,7 +22,7 @@ const config = [
     ],
   },
   {
-    edgeTypes: ['manuallyProgressEdge','passFailEdge'],
+    edgeTypes: ['manuallyProgressEdge', 'passFailEdge'],
     nodeTypes: ['CollaborativeModelingNode'],
   },
   {
