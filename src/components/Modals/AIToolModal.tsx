@@ -24,7 +24,12 @@ import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
-import { EducationLevel, LearningOutcome, QuestionType, Topic } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import {
+  EducationLevel,
+  LearningOutcome,
+  QuestionType,
+  Topic,
+} from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -396,8 +401,8 @@ const AIToolModal = ({
                   education_level: EducationLevel.College,
                   learning_outcome: LearningOutcome.ApplyKnowledge,
                   duration: 0,
-                  language : 'string;',
-                  model: 'string;',                
+                  language: 'string;',
+                  model: 'string;',
                 });
                 console.log(response.data);
                 let dataGen;
@@ -539,7 +544,7 @@ const AIToolModal = ({
                   education_level: EducationLevel.College,
                   learning_outcome: LearningOutcome.ApplyKnowledge,
                   duration: 0,
-                  language:  'string;',
+                  language: 'string;',
                   model: 'string;',
                 });
                 setScreen1(true);

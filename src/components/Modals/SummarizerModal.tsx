@@ -15,7 +15,11 @@ import {
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { API } from '../../data/api';
-import { SummarizeStyle, LearningOutcome, EducationLevel } from '../../types/polyglotElements';
+import {
+  EducationLevel,
+  LearningOutcome,
+  SummarizeStyle,
+} from '../../types/polyglotElements';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
