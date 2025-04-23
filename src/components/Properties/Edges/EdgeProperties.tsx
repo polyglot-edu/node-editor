@@ -13,6 +13,7 @@ const config = [
       'ReadMaterialNode',
       'MindMapNode',
       'SummaryNode',
+      'ScanningNode',
       'ProblemSolvingNode',
       'FindSolutionNode',
       'CreateKeywordsListNode',
