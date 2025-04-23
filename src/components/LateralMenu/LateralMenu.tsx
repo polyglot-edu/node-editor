@@ -71,6 +71,7 @@ const listImplementedNodes = [
   'ReadMaterialNode',
   'WatchVideoNode',
   'SummaryNode',
+  'ScanningNode',
   'codingQuestionNode',
   'CollaborativeModelingNode',
   'UMLModelingNode',

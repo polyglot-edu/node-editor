@@ -22,6 +22,7 @@ export * from './OpenQuestionNode';
 export * from './ProblemSolvingNode';
 export * from './PromptEngineeringNode';
 export * from './ReadMaterialNode';
+export * from './ScanningNode';
 export * from './SimulationNode';
 export * from './SummaryNode';
 export * from './TrueFalseNode';
