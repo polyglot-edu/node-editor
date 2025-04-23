@@ -24,19 +24,13 @@ import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
-import { TypeOfExercise } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import { EducationLevel, LearningOutcome, QuestionType, Topic } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
   onClose: () => void;
   exType: string;
   action?: (i: boolean) => void;
-};
-
-export type Topic = {
-  Topic: string;
-  Type: TypeOfExercise;
-  Description: string;
 };
 
 function delay(ms: number) {
@@ -56,7 +50,7 @@ const AIToolModal = ({
   const [language, setLanguage] = useState('');
   const [level, setLevel] = useState(0);
   const [topicGen, setTopicGen] = useState<Topic[]>([
-    { Topic: 'prova', Type: 0, Description: '' },
+    { topic: 'prova', explanation: '' },
   ]);
   const [topicIndex, setTopicIndex] = useState(0);
   let exerciseType: number;
@@ -134,7 +128,7 @@ const AIToolModal = ({
                   throw ': no text given';
                 }
                 const response: AxiosResponse = await API.analyseMaterial({
-                  material: sourceMaterial,
+                  text: sourceMaterial,
                 });
                 console.log(response);
                 setTitle(response.data.Title);
@@ -241,7 +235,7 @@ const AIToolModal = ({
                   {topicGen.map((p, id) => {
                     return (
                       <option key={id} value={id}>
-                        <Box width={'100px'}>{p.Topic}</Box>
+                        <Box width={'100px'}>{p.topic}</Box>
                       </option>
                     );
                   })}
@@ -257,14 +251,14 @@ const AIToolModal = ({
           >
             Topic Description:
           </FormLabel>
-          <Text>{topicGen[topicIndex].Description}</Text>
+          <Text>{topicGen[topicIndex].explanation}</Text>
           <Button
             marginTop={'15px'}
             onClick={async () => {
               try {
                 if (!topicGen) throw ': No topic generated';
                 setGeneratingLoading(true);
-                const response: AxiosResponse = await API.generateLO({
+                /*const response: AxiosResponse = await API.generateLO({
                   Topic: topicGen[topicIndex].Topic,
                   Level: level,
                   Context: '',
@@ -280,7 +274,7 @@ const AIToolModal = ({
                   response.data.Analyzing[1],
                   response.data.Evaluating[0],
                   response.data.Evaluating[1],
-                ]);
+                ]);*/
                 console.log('step2');
                 console.log(choices);
                 setScreen2(false);
@@ -396,20 +390,14 @@ const AIToolModal = ({
                 setGeneratingLoading(true);
                 if (!topicGen) throw ': no topic generated';
                 const response: AxiosResponse = await API.generateNewExercise({
-                  macroSubject: macroSubjectGen,
-                  title: titleGen,
-                  level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  typeOfActivity: exerciseType, //0=fill_the_gap, 1=question, 4=choice,
-                  learningObjective: choices[choiceIndex],
-                  bloomLevel: Math.round(choiceIndex / 2), //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
-                  language: language,
-                  material: sourceMaterial,
-                  correctAnswersNumber: ca_n,
-                  distractorsNumber: da_n,
-                  easilyDiscardableDistractorsNumber: eda_n,
-                  assignmentType: topicGen[topicIndex].Type, //0=theoretical, 1=code, 2=problem_resolution,
-                  topic: topicGen[topicIndex].Topic,
-                  temperature: 0.2,
+                  title: 'string',
+                  macro_subject: 'string',
+                  topics: [],
+                  education_level: EducationLevel.College,
+                  learning_outcome: LearningOutcome.ApplyKnowledge,
+                  duration: 0,
+                  language : 'string;',
+                  model: 'string;',                
                 });
                 console.log(response.data);
                 let dataGen;
@@ -545,10 +533,14 @@ const AIToolModal = ({
                 setGeneratingLoading(true);
                 if (!topicGen) throw ': no topic generated';
                 const response: AxiosResponse = await API.generateMaterial({
-                  numberOfWords: noW,
-                  level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  learningObjective: choices[choiceIndex],
-                  topic: topicGen[topicIndex].Topic,
+                  title: 'string;',
+                  macro_subject: 'string;',
+                  topics: [],
+                  education_level: EducationLevel.College,
+                  learning_outcome: LearningOutcome.ApplyKnowledge,
+                  duration: 0,
+                  language:  'string;',
+                  model: 'string;',
                 });
                 setScreen1(true);
                 setScreen3(false);

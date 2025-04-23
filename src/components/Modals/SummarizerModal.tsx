@@ -15,6 +15,7 @@ import {
 import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { API } from '../../data/api';
+import { SummarizeStyle, LearningOutcome, EducationLevel } from '../../types/polyglotElements';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -62,9 +63,11 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
                 }
                 if (!noW) setNoW('200');
                 const response: AxiosResponse = await API.summarize({
-                  material: sourceMaterial,
-                  level: level,
-                  numberOfWords: Number(noW),
+                  text: 'string;',
+                  model: 'string;',
+                  style: SummarizeStyle.Abstractive,
+                  education_level: EducationLevel.College,
+                  learning_outcome: LearningOutcome.ApplyKnowledge,
                 });
                 setGeneratedMaterial(response.data);
                 setGeneratingLoading(false);
