@@ -10,14 +10,14 @@ import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../../data/api';
-import { TypeOfExercise } from '../../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import { QuestionType } from '../../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import EnumField from '../../Forms/Fields/EnumField';
 import TextField from '../../Forms/Fields/TextField';
 import EdgeProperties from './EdgeProperties';
 
 type Topic = {
   Topic: string;
-  Type: TypeOfExercise;
+  Type: QuestionType;
   Description: string;
 };
 
@@ -76,10 +76,12 @@ const FailDebtEdgeProperties = () => {
           marginTop={'5px'}
           onClick={async () => {
             try {
+              if (!generatingLoading) return;
               setGeneratingLoading(true);
               const response: AxiosResponse = await API.analyseMaterial({
-                material: getValues('data.material'),
+                text: getValues('data.material'),
               });
+              //da gestire la response è cambiata aaaaaaaaaaaaaaaaaaaaaaaaa
               setValue('data.title', response.data.Title);
               setValue('data.language', response.data.Language);
               setValue('data.macroSubject', response.data.MacroSubject);
@@ -143,7 +145,7 @@ const FailDebtEdgeProperties = () => {
                 setGeneratingLoading(true);
                 const level: number = getValues('data.level');
                 console.log(level);
-                const response: AxiosResponse = await API.generateLO({
+                /*const response: AxiosResponse = await API.generateLO({
                   Topic: topicGen[topicIndex].Topic,
                   Level: Number(level),
                   Context: '',
@@ -159,7 +161,7 @@ const FailDebtEdgeProperties = () => {
                   response.data.Analyzing[1],
                   response.data.Evaluating[0],
                   response.data.Evaluating[1],
-                ]);
+                ]);*/
                 console.log('step2');
                 setGeneratingLoading(false);
               } catch (error) {

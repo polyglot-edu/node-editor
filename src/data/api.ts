@@ -14,9 +14,8 @@ import {
 import {
   AIExerciseType,
   AnalyseType,
-  LOType,
   MaterialType,
-  SummarizeType,
+  SummerizerBody,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
 import {
@@ -403,13 +402,6 @@ export const API = {
     );
   },
 
-  generateLO: (body: LOType): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
-      `/api/openai/LearningObjectiveGenerator`,
-      body
-    );
-  },
-
   generateMaterial: (body: MaterialType): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(
       `/api/openai/MaterialGenerator`,
@@ -417,7 +409,7 @@ export const API = {
     );
   },
 
-  summarize: (body: SummarizeType): Promise<AxiosResponse> => {
+  summarize: (body: SummerizerBody): Promise<AxiosResponse> => {
     return axios.post<{}, AxiosResponse, {}>(`/api/openai/Summarizer`, body);
   },
 
