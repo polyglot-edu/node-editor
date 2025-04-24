@@ -1,7 +1,7 @@
 import * as t from 'io-ts';
 import FailDebtEdgeProperties from '../../../components/Properties/Edges/failDebtEdgeProperties';
 import { ReactFlowSmartBezierEdgePassFail } from '../../../components/ReactFlowEdge';
-import { TypeOfExercise } from '../AIGenerativeTypes/AIGenerativeTypes';
+import { QuestionType } from '../AIGenerativeTypes/AIGenerativeTypes';
 import { polyglotEdgeComponentMapping } from '../elementMapping';
 import { defaultPolyglotEdgeData, EdgeData, PolyglotEdge } from './Edge';
 
@@ -13,7 +13,7 @@ type FailDebtEdgeConditionKind = t.TypeOf<
 
 type Topic = {
   Topic: string;
-  Type: TypeOfExercise;
+  Type: QuestionType;
   Description: string;
 };
 
@@ -47,7 +47,7 @@ polyglotEdgeComponentMapping.registerMapping<FailDebtEdge>({
     conditionKind: 'fail',
     material: '',
     macroSubject: '',
-    topic: { Topic: '', Description: 'setup', Type: 0 },
+    topic: { Topic: '', Description: 'setup', Type: QuestionType.OpenQuestion },
     learningObjective: '',
     title: '',
     language: '',

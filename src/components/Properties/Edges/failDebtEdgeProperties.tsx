@@ -76,6 +76,7 @@ const FailDebtEdgeProperties = () => {
           marginTop={'5px'}
           onClick={async () => {
             try {
+              if (!generatingLoading) return;
               setGeneratingLoading(true);
               const response: AxiosResponse = await API.analyseMaterial({
                 text: getValues('data.material'),

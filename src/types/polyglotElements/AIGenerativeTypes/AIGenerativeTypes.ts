@@ -87,7 +87,7 @@ export type AIExerciseGenerated = {
   easily_discardable_distractors: string[];
   type: QuestionType;
   language: string;
-}
+};
 
 export type LOType = {
   //outdate
