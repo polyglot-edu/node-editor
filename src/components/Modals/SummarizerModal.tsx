@@ -8,6 +8,7 @@ import {
   ModalContent,
   ModalHeader,
   ModalOverlay,
+  Select,
   Text,
   Textarea,
   useToast,
@@ -31,10 +32,28 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
   const [generatedMaterial, setGeneratedMaterial] = useState('');
+  const [learningOutcome, setLearningOutcome] = useState<LearningOutcome>(
+    LearningOutcome.ApplyKnowledge
+  );
+  const [summarizeStyle, setSummarizeStyle] = useState<SummarizeStyle>(
+    SummarizeStyle.Abstractive
+  );
+  const [eduLevel, setEduLevel] = useState<EducationLevel>(
+    EducationLevel.College
+  );
   const [noW, setNoW] = useState('');
   const toast = useToast();
   return (
-    <Modal isOpen={isOpen} onClose={onClose} size={'2xl'} isCentered>
+    <Modal
+      isOpen={isOpen}
+      onClose={() => {
+        setSourceMaterial('');
+        setGeneratingLoading(false);
+        onClose();
+      }}
+      size={'2xl'}
+      isCentered
+    >
       <ModalOverlay />
       <ModalContent>
         <ModalHeader>Do you need help to summarize your material?</ModalHeader>
@@ -46,6 +65,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
             marginTop={'5px'}
             onClick={async () => {
               try {
+                console.log('testing');
                 if (generateButton) {
                   toast({
                     title: 'Invalid syntax',
@@ -59,21 +79,21 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
                   return;
                 }
                 setGeneratingLoading(true);
-                const level = 1;
                 if (!sourceMaterial) {
                   setGeneratedMaterial('No text given');
                   //
                   throw ': no text given';
                 }
                 if (!noW) setNoW('200');
+                if (!summarizeStyle || !eduLevel || !learningOutcome) return;
                 const response: AxiosResponse = await API.summarize({
-                  text: 'string;',
-                  model: 'string;',
-                  style: SummarizeStyle.Abstractive,
-                  education_level: EducationLevel.College,
-                  learning_outcome: LearningOutcome.ApplyKnowledge,
+                  text: sourceMaterial,
+                  model: 'Gemini',
+                  style: summarizeStyle,
+                  education_level: eduLevel,
+                  learning_outcome: learningOutcome,
                 });
-                setGeneratedMaterial(response.data);
+                setGeneratedMaterial(response.data.summary);
                 setGeneratingLoading(false);
               } catch (error: any) {
                 setGeneratingLoading(false);
@@ -128,7 +148,62 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
               }}
             />
           </FormLabel>
-
+          <FormLabel mb={2} fontWeight={'bold'}>
+            Summarize style:
+          </FormLabel>
+          <Select
+            paddingBottom={'5px'}
+            borderColor="grey"
+            onChange={(event) =>
+              setSummarizeStyle(event.currentTarget.value as SummarizeStyle)
+            }
+          >
+            {Object.values(SummarizeStyle).map((style) => (
+              <option
+                key={style}
+                value={style}
+                selected={summarizeStyle === style}
+              >
+                {style}
+              </option>
+            ))}
+          </Select>
+          <FormLabel mb={2} fontWeight={'bold'}>
+            Educational Level:
+          </FormLabel>
+          <Select
+            paddingBottom={'5px'}
+            borderColor={'grey'}
+            onChange={(event) =>
+              setEduLevel(event.currentTarget.value as EducationLevel)
+            }
+          >
+            {Object.values(EducationLevel).map((level) => (
+              <option key={level} value={level} selected={eduLevel === level}>
+                {level}
+              </option>
+            ))}
+          </Select>
+          <FormLabel mb={2} fontWeight={'bold'}>
+            Learning outcome:
+          </FormLabel>
+          <Select
+            paddingBottom={'5px'}
+            borderColor="grey"
+            onChange={(event) =>
+              setLearningOutcome(event.currentTarget.value as LearningOutcome)
+            }
+          >
+            {Object.values(LearningOutcome).map((outcome) => (
+              <option
+                key={outcome}
+                value={outcome}
+                selected={learningOutcome === outcome}
+              >
+                {outcome}
+              </option>
+            ))}
+          </Select>
           <FormLabel mb={2} fontWeight={'bold'}>
             Your material:
           </FormLabel>
@@ -142,7 +217,7 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
               setSourceMaterial(e.currentTarget.value);
             }}
           />
-          <FormLabel mb={2} fontWeight={'bold'}>
+          <FormLabel mb={2} fontWeight={'bold'} paddingTop={'5px'}>
             Generated Material:
           </FormLabel>
           <Textarea

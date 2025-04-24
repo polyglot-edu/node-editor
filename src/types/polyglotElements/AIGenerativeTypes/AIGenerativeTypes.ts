@@ -61,15 +61,33 @@ export type LessonNodeAI = {
 export type AnalyseType = { text: string; model?: string };
 
 export type AIExerciseType = {
-  title: string;
   macro_subject: string;
-  topics: LessonNodeAI[];
+  topic: string;
   education_level: EducationLevel;
   learning_outcome: LearningOutcome;
-  duration: number;
+  material: string;
+  solutions_number: number;
+  distractors_number: number;
+  easily_discardable_distractors_number: number;
+  type: QuestionType;
   language: string;
   model: string;
 };
+
+export type AIExerciseGenerated = {
+  macro_subject: string;
+  topic: string;
+  education_level: EducationLevel;
+  learning_outcome: LearningOutcome;
+  material: string;
+  assignment: string;
+  plus: string;
+  solutions: string[];
+  distractors: string[];
+  easily_discardable_distractors: string[];
+  type: QuestionType;
+  language: string;
+}
 
 export type LOType = {
   //outdate
@@ -87,6 +105,17 @@ export type MaterialType = {
   duration: number;
   language: string;
   model: string;
+};
+
+export type AIMaterialGenerated = {
+  title: string;
+  macro_subject: string;
+  topics: LessonNodeAI[];
+  education_level: EducationLevel;
+  learning_outcome: LearningOutcome;
+  duration: number;
+  material: string;
+  language: string;
 };
 
 export type SummerizerBody = {

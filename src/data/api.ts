@@ -14,7 +14,6 @@ import {
 import {
   AIExerciseType,
   AnalyseType,
-  LOType,
   MaterialType,
   SummerizerBody,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
