@@ -21,6 +21,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
+import { empty } from 'fp-ts/lib/ReadonlyRecord';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
@@ -32,7 +33,6 @@ import {
   QuestionType,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
-import { empty } from 'fp-ts/lib/ReadonlyRecord';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -489,7 +489,7 @@ const AIToolModal = ({
                           eda_n
                         ),
                       ].filter((statement) => statement !== 'empty');
-                     const shuffleTFAnswers = shuffleArray(statements);
+                      const shuffleTFAnswers = shuffleArray(statements);
                       const isStatementCorrect = new Array(
                         shuffleTFAnswers.length
                       ).fill(false);
