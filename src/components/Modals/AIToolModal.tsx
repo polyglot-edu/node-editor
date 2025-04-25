@@ -32,6 +32,7 @@ import {
   QuestionType,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import { empty } from 'fp-ts/lib/ReadonlyRecord';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -426,17 +427,7 @@ const AIToolModal = ({
                         aiQuestion: false,
                         possibleAnswer: dataGen.solutions[0],
                       };
-                      break; /*
-                  case 2:
-                    console.log('creating trueFalse');
-                    dataGen = {
-                      question: response.data.Assignment,
-                      material: sourceMaterial,
-                      aiQuestion: false,
-                      possibleAnswer: response.data.Solutions[0],
-                    };
-                    break;
-                  */
+                      break;
                     case QuestionType.ShortAnswerQuestion:
                       console.log('creating close_ended_question');
                       adaptedData = {
@@ -453,7 +444,7 @@ const AIToolModal = ({
                           0,
                           eda_n
                         ),
-                      ];
+                      ].filter((statement) => statement !== 'empty');
                       const shuffleAnswers = shuffleArray(answers);
 
                       const isAnswerCorrect = new Array(
@@ -486,15 +477,19 @@ const AIToolModal = ({
                       break;
                     case QuestionType.TrueOrFalse:
                       console.log('creating true or false');
+                      const solutions = dataGen.solutions.map((s) => {
+                        const splitIndex = s.indexOf('. ');
+                        return splitIndex !== -1 ? s.slice(splitIndex + 2) : s;
+                      });
                       const statements = [
-                        ...dataGen.solutions.slice(0, ca_n),
+                        ...solutions.slice(0, ca_n),
                         ...dataGen.distractors.slice(0, da_n),
                         ...dataGen.easily_discardable_distractors.slice(
                           0,
                           eda_n
                         ),
-                      ];
-                      const shuffleTFAnswers = shuffleArray(statements);
+                      ].filter((statement) => statement !== 'empty');
+                     const shuffleTFAnswers = shuffleArray(statements);
                       const isStatementCorrect = new Array(
                         shuffleTFAnswers.length
                       ).fill(false);
