@@ -42,6 +42,7 @@ import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow, PolyglotFlowInfo } from '../../types/polyglotElements';
+import CreateAILPModal from './CreateAILPModal';
 
 type CreateFlowModalProps = {
   isOpen: boolean;
@@ -376,6 +377,15 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                   language={'json'}
                   value={flow}
                   onChange={(value) => setFlow(value)}
+                />
+              </TabPanel>
+              <TabPanel>
+                <CreateAILPModal
+                  isOpen={false}
+                  onClose={function (): void {
+                    throw new Error('Function not implemented.');
+                  }}
+                  exType={''}
                 />
               </TabPanel>
             </TabPanels>

@@ -21,18 +21,19 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
-import { empty } from 'fp-ts/lib/ReadonlyRecord';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
 import {
-  AIExerciseGenerated,
-  AIMaterialGenerated,
+  AIPlanLessonResponse,
+  AnalyzedMaterial,
   EducationLevel,
   LearningOutcome,
+  PlanLessonNode,
   QuestionType,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import PlanLessonCard from '../Card/PlanLessonCard';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -54,14 +55,17 @@ function shuffleArray<T>(array: T[]) {
   return arr;
 }
 
-const AIToolModal = ({
+const CreateAILPModal = ({
   isOpen,
   onClose,
   exType,
   action,
 }: ModaTemplateProps) => {
+  const [analysedMaterial, setAnalyzedMaterial] = useState<AnalyzedMaterial>();
   const [generatingLoading, setGeneratingLoading] = useState(false);
   const [sourceMaterial, setSourceMaterial] = useState('');
+  const [context, setContext] = useState('');
+  const [AINodes, setAINodes] = useState<AIPlanLessonResponse>();
   const [titleGen, setTitle] = useState('');
   const [macroSubjectGen, setMacroSubject] = useState('');
   const [learningOutcome, setLearningOutcome] = useState<LearningOutcome>();
@@ -73,8 +77,28 @@ const AIToolModal = ({
   const [topicGen, setTopicGen] = useState<Topic[]>([
     { topic: 'prova', explanation: '' },
   ]);
+  const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
 
-  const [topicIndex, setTopicIndex] = useState(0);
+  const handleToggleNode = (id: number) => {
+    setSelectedNodeIds((prev) =>
+      prev.includes(id) ? prev.filter((i) => i !== id) : [...prev, id]
+    );
+  };
+
+  const updateNodeAt = (id: number, updatedNode: PlanLessonNode) => {
+    if (!AINodes) return;
+
+    const updatedNodes = AINodes.nodes.map((node, index) =>
+      index === id ? updatedNode : node
+    );
+
+    setAINodes({
+      ...AINodes,
+      nodes: updatedNodes,
+    });
+  };
+
+  const [selectedTopic, setSelectedTopic] = useState<Topic[]>([]);
   let exerciseType: QuestionType | string;
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(1);
@@ -149,20 +173,9 @@ const AIToolModal = ({
                 const response: AxiosResponse = await API.analyseMaterial({
                   text: sourceMaterial,
                 });
-                console.log(response);
-                setTitle(response.data.title);
-                setLanguage(response.data.language);
-                setMacroSubject(response.data.macro_subject);
-                setLearningOutcome(
-                  response.data.learning_outcome as LearningOutcome
-                );
-                setChoosingLearningOutcome(
-                  response.data.learning_outcome as LearningOutcome
-                );
-                setEduLevel(response.data.education_level as EducationLevel);
-                setLanguage(response.data.language);
-                setDuration(response.data.estimated_duration);
-                setTopicGen(response.data.topics);
+                console.log(response.data as AnalyzedMaterial);
+                setAnalyzedMaterial(response.data);
+                //continua da qui.
                 setScreen1(false);
                 setScreen2(true);
               } catch (error: any) {
@@ -219,7 +232,10 @@ const AIToolModal = ({
           </Button>
         </ModalBody>
         <ModalBody hidden={!screen2}>
-          <Text>STEP 2: Choose the Level and Topic you want to use.</Text>
+          <Text>
+            STEP 2: Choose the Level and Topic you want to use, additionally add
+            some context for the class.
+          </Text>
           <FormControl label="Level">
             <FormLabel
               mb={2}
@@ -236,8 +252,42 @@ const AIToolModal = ({
               }
             >
               {Object.values(EducationLevel).map((level) => (
-                <option key={level} value={level} selected={eduLevel === level}>
+                <option
+                  key={level}
+                  value={level}
+                  selected={analysedMaterial?.education_level === level}
+                >
+                  {analysedMaterial?.education_level === level ? '*' : ''}
                   {level}
+                  {analysedMaterial?.education_level === level ? '*' : ''}
+                </option>
+              ))}
+            </Select>
+          </FormControl>
+          <FormControl label="Learning Outcome">
+            <FormLabel
+              mb={2}
+              fontWeight={'bold'}
+              paddingTop={'5px'}
+              paddingBottom={'-5px'}
+            >
+              Learning Outcome:
+            </FormLabel>
+            <Select
+              borderColor={'grey'}
+              onChange={(event) =>
+                setLearningOutcome(event.currentTarget.value as LearningOutcome)
+              }
+            >
+              {Object.values(LearningOutcome).map((outcome) => (
+                <option
+                  key={outcome}
+                  value={outcome}
+                  selected={analysedMaterial?.learning_outcome === outcome}
+                >
+                  {analysedMaterial?.learning_outcome === outcome ? '*' : ''}
+                  {outcome}
+                  {analysedMaterial?.learning_outcome === outcome ? '*' : ''}
                 </option>
               ))}
             </Select>
@@ -252,17 +302,40 @@ const AIToolModal = ({
               Topic:
             </FormLabel>
             <Select
+              multiple
               borderColor={'grey'}
-              onChange={(event) =>
-                setTopicIndex(Number(event.currentTarget.value))
-              }
+              onChange={(event) => {
+                if (!analysedMaterial) return;
+                const selectedValues = Array.from(
+                  event.target.selectedOptions,
+                  (option) => Number(option.value)
+                );
+
+                const selectedTopics = selectedValues.map((id) => ({
+                  topic: analysedMaterial.topics[id].topic,
+                  explanation: analysedMaterial.topics[id].explanation,
+                }));
+
+                setSelectedTopic(selectedTopics);
+              }}
             >
               {
                 <>
-                  {topicGen.map((p, id) => {
+                  {analysedMaterial?.topics.map((p, id) => {
                     return (
                       <option key={id} value={id}>
-                        <Box width={'100px'}>{p.topic}</Box>
+                        <Box width={'100px'}>
+                          {p.topic}
+                          <FormLabel
+                            mb={2}
+                            fontWeight={'bold'}
+                            paddingTop={'5px'}
+                            paddingBottom={'-5px'}
+                          >
+                            Topic Description:
+                          </FormLabel>
+                          <Text>{p.explanation}</Text>
+                        </Box>
                       </option>
                     );
                   })}
@@ -270,20 +343,38 @@ const AIToolModal = ({
               }
             </Select>
           </FormControl>
-          <FormLabel
-            mb={2}
-            fontWeight={'bold'}
-            paddingTop={'5px'}
-            paddingBottom={'-5px'}
-          >
-            Topic Description:
+          <FormLabel mb={2} fontWeight={'bold'}>
+            Context (optional):
           </FormLabel>
-          <Text>{topicGen[topicIndex].explanation}</Text>
+          <Textarea
+            maxHeight={'200px'}
+            placeholder="Insert your material here, you can put your plain text or the link (attention some websites are crypted, sometimes the tool cannot access the actual text)..."
+            value={context}
+            overflowY={'auto'}
+            onChange={(e) => {
+              setGeneratingLoading(false);
+              setContext(e.currentTarget.value);
+            }}
+          />
           <Button
             marginTop={'15px'}
             onClick={async () => {
               try {
-                if (!topicGen) throw ': No topic generated';
+                if (!analysedMaterial) throw ': no analysed material given';
+                if (!eduLevel || !learningOutcome) throw ': error in datas';
+
+                API.planLesson({
+                  topics: selectedTopic,
+                  learning_outcome: learningOutcome,
+                  language: analysedMaterial.language,
+                  macro_subject: analysedMaterial.macro_subject,
+                  title: analysedMaterial.title,
+                  education_level: eduLevel,
+                  context: context,
+                  model: 'Gemini',
+                }).then((response) => {
+                  setAINodes(response.data);
+                });
                 setScreen2(false);
                 setScreen3(true);
               } catch (error: any) {
@@ -323,30 +414,25 @@ const AIToolModal = ({
             }}
             isLoading={generatingLoading}
           >
-            Select Educational Level and Topic
+            Plan Lesson
           </Button>
         </ModalBody>
         <ModalBody hidden={!screen3}>
-          <Text>STEP 3: Define the specifics for the activity.</Text>
-          <FormLabel paddingTop={'5px'}>Learning Objective</FormLabel>
-          <FormControl label="Learning Outcome">
-            <Select
-              value={choosingLearningOutcome}
-              borderColor="grey"
-              onChange={(event) =>
-                setChoosingLearningOutcome(
-                  event.currentTarget.value as LearningOutcome
-                )
-              }
-            >
-              {Object.entries(LearningOutcome).map(([key, value]) => (
-                <option key={key} value={value}>
-                  {learningOutcome === value ? '*' : ''}
-                  {value}
-                  {learningOutcome === value ? '*' : ''}
-                </option>
+          <Text>STEP 3: Define the specifics for each activities.</Text>
+          <FormLabel paddingTop={'5px'}>Select Nodes to generate</FormLabel>
+          <FormControl label="Nodes">
+            <Box display="flex" flexDirection="column">
+              {AINodes?.nodes.map((node, id) => (
+                <PlanLessonCard
+                  planNode={node}
+                  key={id}
+                  id={id}
+                  setSelectedNode={handleToggleNode}
+                  isSelected={selectedNodeIds.includes(id)}
+                  updateNodeAt={updateNodeAt}
+                />
               ))}
-            </Select>
+            </Box>
           </FormControl>
           {/*<Flex hidden={exerciseType != 8}></Flex>*/}
           <Flex
@@ -392,178 +478,7 @@ const AIToolModal = ({
             hidden={exerciseType == 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
-              try {
-                setGeneratingLoading(true);
-                setLearningOutcome(choosingLearningOutcome);
-                if (!topicGen) throw ': no topic generated';
-                if (eduLevel == undefined || learningOutcome == undefined)
-                  throw ': error in eduLevel and learningOutcome';
-                if (exerciseType != 'ReadMaterialNode') {
-                  const response: AxiosResponse = await API.generateNewExercise(
-                    {
-                      macro_subject: macroSubjectGen,
-                      topic: topicGen[topicIndex].topic,
-                      education_level: eduLevel,
-                      learning_outcome: learningOutcome,
-                      material: sourceMaterial,
-                      solutions_number: ca_n,
-                      distractors_number: da_n,
-                      easily_discardable_distractors_number: eda_n,
-                      type: exerciseType as QuestionType,
-                      language: language,
-                      model: 'Gemini',
-                    }
-                  );
-                  console.log(response.data);
-                  const dataGen: AIExerciseGenerated = response.data;
-                  let adaptedData;
-                  switch (exerciseType) {
-                    case QuestionType.OpenQuestion:
-                      console.log('creating openQuestion');
-                      adaptedData = {
-                        question: dataGen.assignment,
-                        material: dataGen.material,
-                        aiQuestion: false,
-                        possibleAnswer: dataGen.solutions[0],
-                      };
-                      break;
-                    case QuestionType.ShortAnswerQuestion:
-                      console.log('creating close_ended_question');
-                      adaptedData = {
-                        question: dataGen.assignment,
-                        correctAnswers: dataGen.solutions,
-                      };
-                      break;
-                    case QuestionType.MultipleChoice:
-                      console.log('creating multichoice');
-                      const answers = [
-                        ...dataGen.solutions.slice(0, ca_n),
-                        ...dataGen.distractors.slice(0, da_n),
-                        ...dataGen.easily_discardable_distractors.slice(
-                          0,
-                          eda_n
-                        ),
-                      ].filter((statement) => statement !== 'empty');
-                      const shuffleAnswers = shuffleArray(answers);
-
-                      const isAnswerCorrect = new Array(
-                        shuffleAnswers.length
-                      ).fill(false);
-                      shuffleAnswers.forEach((value, index) => {
-                        if (dataGen.solutions.includes(value))
-                          isAnswerCorrect[index] = true;
-                      });
-                      adaptedData = {
-                        question: dataGen.assignment,
-                        choices: shuffleAnswers,
-                        isChoiceCorrect: isAnswerCorrect,
-                      };
-                      if (
-                        !dataGen.distractors[0] &&
-                        !dataGen.easily_discardable_distractors[0]
-                      ) {
-                        toast({
-                          title: 'Generating Error',
-                          description:
-                            'The AI was not able to generate a complete multichoice exercise, we suggest to generate an Open Question or a Close Ended Question for this topic',
-                          status: 'warning',
-                          duration: 4000,
-                          position: 'bottom-left',
-                          isClosable: false,
-                        });
-                        await delay(3000);
-                      }
-                      break;
-                    case QuestionType.TrueOrFalse:
-                      console.log('creating true or false');
-                      const solutions = dataGen.solutions.map((s) => {
-                        const splitIndex = s.indexOf('. ');
-                        return splitIndex !== -1 ? s.slice(splitIndex + 2) : s;
-                      });
-                      const statements = [
-                        ...solutions.slice(0, ca_n),
-                        ...dataGen.distractors.slice(0, da_n),
-                        ...dataGen.easily_discardable_distractors.slice(
-                          0,
-                          eda_n
-                        ),
-                      ].filter((statement) => statement !== 'empty');
-                      const shuffleTFAnswers = shuffleArray(statements);
-                      const isStatementCorrect = new Array(
-                        shuffleTFAnswers.length
-                      ).fill(false);
-                      shuffleTFAnswers.map((value, index) => {
-                        console.log(index);
-                        if (dataGen.solutions.includes(value))
-                          isStatementCorrect[index] = true;
-                      });
-                      adaptedData = {
-                        instructions: 'Argument: ' + dataGen.assignment,
-                        questions: shuffleTFAnswers,
-                        isQuestionCorrect: isStatementCorrect,
-                      };
-                      if (
-                        !dataGen.distractors[0] &&
-                        !dataGen.easily_discardable_distractors[0]
-                      ) {
-                        toast({
-                          title: 'Generating Error',
-                          description:
-                            'The AI was not able to generate a complete true or false exercise, we suggest to generate an Open Question or a Close Ended Question for this topic',
-                          status: 'warning',
-                          duration: 4000,
-                          position: 'bottom-left',
-                          isClosable: false,
-                        });
-                        await delay(3000);
-                      }
-                      break;
-                    default:
-                      console.log('error in exerciseType');
-                      throw ': generated type error';
-                  }
-                  console.log(adaptedData);
-                  setValue('data', adaptedData);
-                  setValue('title', titleGen);
-                }
-                setScreen1(true);
-                setScreen3(false);
-                if (action) action(false);
-                onClose();
-              } catch (error: any) {
-                if ((error as Error).name === 'SyntaxError') {
-                  toast({
-                    title: 'Invalid syntax',
-                    description: (error as Error).toString(),
-                    status: 'error',
-                    duration: 3000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                  return;
-                }
-                if (error.response.status)
-                  toast({
-                    title: 'Exercise Error',
-                    description:
-                      'We are sorry, server was not able to generate the exercise. Please, try again, if the error persists, you should restart.',
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                else
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-              } finally {
-                setGeneratingLoading(false);
-              }
+              console.log('GenerateActivity');
             }}
             isLoading={generatingLoading}
           >
@@ -573,6 +488,8 @@ const AIToolModal = ({
             hidden={exerciseType != 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
+              console.log('generateMaterial: readMaterial');
+              /*
               try {
                 if (exerciseType != 'ReadMaterial') return;
                 if (eduLevel == undefined || learningOutcome == undefined)
@@ -650,7 +567,7 @@ const AIToolModal = ({
                   });
               } finally {
                 setGeneratingLoading(false);
-              }
+              }*/
             }}
             isLoading={generatingLoading}
           >
@@ -675,4 +592,4 @@ const AIToolModal = ({
   );
 };
 
-export default AIToolModal;
+export default CreateAILPModal;

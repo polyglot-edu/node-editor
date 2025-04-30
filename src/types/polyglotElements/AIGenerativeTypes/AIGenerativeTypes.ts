@@ -60,6 +60,18 @@ export type LessonNodeAI = {
 
 export type AnalyseType = { text: string; model?: string };
 
+export type AnalyzedMaterial = {
+  title: string;
+  macro_subject: string;
+  education_level: EducationLevel;
+  learning_outcome: LearningOutcome;
+  language: string;
+  topics: Topic[];
+  keywords: string[];
+  prerequisites: string[];
+  estimated_duration: number;
+};
+
 export type AIExerciseType = {
   macro_subject: string;
   topic: string;
@@ -124,4 +136,34 @@ export type SummerizerBody = {
   style: SummarizeStyle;
   education_level: EducationLevel;
   learning_outcome: LearningOutcome;
+};
+
+export type AIPlanLesson = {
+  topics: Topic[];
+  learning_outcome: LearningOutcome;
+  language: string;
+  macro_subject: string;
+  title: string;
+  education_level: EducationLevel;
+  context: string;
+  model: string;
+};
+
+export type PlanLessonNode = {
+  type: string;
+  topic: string;
+  details: string;
+  learning_outcome: LearningOutcome;
+  duration: number;
+};
+
+export type AIPlanLessonResponse = {
+  title: string;
+  macro_subject: string;
+  education_level: EducationLevel;
+  learning_outcome: LearningOutcome;
+  prerequisites: string[];
+  nodes: PlanLessonNode[];
+  context: string;
+  language: string;
 };

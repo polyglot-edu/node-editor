@@ -13,6 +13,7 @@ import {
 } from '../types/polyglotElements';
 import {
   AIExerciseType,
+  AIPlanLesson,
   AnalyseType,
   MaterialType,
   SummerizerBody,
@@ -418,6 +419,10 @@ export const API = {
       `/api/openai/ActivityGenerator`,
       body
     );
+  },
+
+  planLesson: (body: AIPlanLesson): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(`/api/openai/PlanLesson`, body);
   },
 
   getAssignmentProjects: (): Promise<AxiosResponse> => {
