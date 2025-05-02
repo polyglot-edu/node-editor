@@ -21,10 +21,18 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
+import { empty } from 'fp-ts/lib/ReadonlyRecord';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
-import { TypeOfExercise } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import {
+  AIExerciseGenerated,
+  AIMaterialGenerated,
+  EducationLevel,
+  LearningOutcome,
+  QuestionType,
+  Topic,
+} from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -33,14 +41,17 @@ export type ModaTemplateProps = {
   action?: (i: boolean) => void;
 };
 
-export type Topic = {
-  Topic: string;
-  Type: TypeOfExercise;
-  Description: string;
-};
-
 function delay(ms: number) {
   return new Promise((resolve) => setTimeout(resolve, ms));
+}
+
+function shuffleArray<T>(array: T[]) {
+  const arr = [...array];
+  for (let i = arr.length - 1; i > 0; i--) {
+    const j = Math.floor(Math.random() * (i + 1));
+    [arr[i], arr[j]] = [arr[j], arr[i]];
+  }
+  return arr;
 }
 
 const AIToolModal = ({
@@ -53,19 +64,21 @@ const AIToolModal = ({
   const [sourceMaterial, setSourceMaterial] = useState('');
   const [titleGen, setTitle] = useState('');
   const [macroSubjectGen, setMacroSubject] = useState('');
+  const [learningOutcome, setLearningOutcome] = useState<LearningOutcome>();
+  const [choosingLearningOutcome, setChoosingLearningOutcome] =
+    useState<LearningOutcome>();
   const [language, setLanguage] = useState('');
-  const [level, setLevel] = useState(0);
+  const [duration, setDuration] = useState(0);
+  const [eduLevel, setEduLevel] = useState<EducationLevel>();
   const [topicGen, setTopicGen] = useState<Topic[]>([
-    { Topic: 'prova', Type: 0, Description: '' },
+    { topic: 'prova', explanation: '' },
   ]);
+
   const [topicIndex, setTopicIndex] = useState(0);
-  let exerciseType: number;
-  const [noW, setNoW] = useState(200);
+  let exerciseType: QuestionType | string;
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(1);
   const [eda_n, setEDA_N] = useState(1);
-  const [choices, setChoices] = useState<string[]>(['']);
-  const [choiceIndex, setChoiceIndex] = useState(0);
   const [screen1, setScreen1] = useState(true);
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
@@ -74,19 +87,19 @@ const AIToolModal = ({
   const word = exType == 'TrueFalseNode' ? 'Statements' : 'Answers';
   switch (exType) {
     case 'closeEndedQuestionNode':
-      exerciseType = 3;
+      exerciseType = QuestionType.ShortAnswerQuestion;
       break;
     case 'OpenQuestionNode':
-      exerciseType = 0;
+      exerciseType = QuestionType.OpenQuestion;
       break;
     case 'TrueFalseNode':
-      exerciseType = 4;
+      exerciseType = QuestionType.TrueOrFalse;
       break;
     case 'multipleChoiceQuestionNode':
-      exerciseType = 4;
+      exerciseType = QuestionType.MultipleChoice;
       break;
     case 'ReadMaterialNode':
-      exerciseType = 100;
+      exerciseType = 'ReadMaterial';
       break;
     default:
       throw 'error in type';
@@ -134,16 +147,26 @@ const AIToolModal = ({
                   throw ': no text given';
                 }
                 const response: AxiosResponse = await API.analyseMaterial({
-                  material: sourceMaterial,
+                  text: sourceMaterial,
                 });
-                setTitle(response.data.Title);
-                setLanguage(response.data.Language);
-                setMacroSubject(response.data.MacroSubject);
-                setLevel(response.data.PerceivedDifficulty);
-                setTopicGen(response.data.MainTopics);
+                console.log(response);
+                setTitle(response.data.title);
+                setLanguage(response.data.language);
+                setMacroSubject(response.data.macro_subject);
+                setLearningOutcome(
+                  response.data.learning_outcome as LearningOutcome
+                );
+                setChoosingLearningOutcome(
+                  response.data.learning_outcome as LearningOutcome
+                );
+                setEduLevel(response.data.education_level as EducationLevel);
+                setLanguage(response.data.language);
+                setDuration(response.data.estimated_duration);
+                setTopicGen(response.data.topics);
                 setScreen1(false);
                 setScreen2(true);
               } catch (error: any) {
+                console.log(error);
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
                     title: 'Invalid syntax',
@@ -155,36 +178,37 @@ const AIToolModal = ({
                   });
                   return;
                 }
-                if (error.response.status) {
-                  if (error.response.status == 500)
+                if (error.response)
+                  if (error.response.status) {
+                    if (error.response.status == 500)
+                      toast({
+                        title: 'Material Error',
+                        description:
+                          'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
+                        status: 'error',
+                        duration: 5000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                    else if (error.response.status != 200)
+                      toast({
+                        title: 'AI API Error',
+                        description:
+                          'Internal Server error, try again. If the error persists try change material.',
+                        status: 'error',
+                        duration: 5000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                  } else
                     toast({
-                      title: 'Material Error',
-                      description:
-                        'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
+                      title: 'Generic Error',
+                      description: 'Try later ' + (error as Error),
                       status: 'error',
                       duration: 5000,
                       position: 'bottom-left',
                       isClosable: true,
                     });
-                  else if (error.response.status != 200)
-                    toast({
-                      title: 'AI API Error',
-                      description:
-                        'Internal Server error, try again. If the error persists try change material.',
-                      status: 'error',
-                      duration: 5000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
-                } else
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
               } finally {
                 setGeneratingLoading(false);
               }
@@ -203,19 +227,19 @@ const AIToolModal = ({
               paddingTop={'5px'}
               paddingBottom={'-5px'}
             >
-              Level:
+              Educational Level:
             </FormLabel>
             <Select
               borderColor={'grey'}
-              onChange={(event) => setLevel(Number(event.currentTarget.value))}
+              onChange={(event) =>
+                setEduLevel(event.currentTarget.value as EducationLevel)
+              }
             >
-              <option value={0} defaultChecked>
-                Primary School
-              </option>
-              <option value={1}>Middle School</option>
-              <option value={2}>High School</option>
-              <option value={3}>College</option>
-              <option value={4}>Academy</option>
+              {Object.values(EducationLevel).map((level) => (
+                <option key={level} value={level} selected={eduLevel === level}>
+                  {level}
+                </option>
+              ))}
             </Select>
           </FormControl>
           <FormControl label="Topic" paddingTop={'5px'}>
@@ -238,7 +262,7 @@ const AIToolModal = ({
                   {topicGen.map((p, id) => {
                     return (
                       <option key={id} value={id}>
-                        <Box width={'100px'}>{p.Topic}</Box>
+                        <Box width={'100px'}>{p.topic}</Box>
                       </option>
                     );
                   })}
@@ -254,32 +278,12 @@ const AIToolModal = ({
           >
             Topic Description:
           </FormLabel>
-          <Text>{topicGen[topicIndex].Description}</Text>
+          <Text>{topicGen[topicIndex].explanation}</Text>
           <Button
             marginTop={'15px'}
             onClick={async () => {
               try {
                 if (!topicGen) throw ': No topic generated';
-                setGeneratingLoading(true);
-                const response: AxiosResponse = await API.generateLO({
-                  Topic: topicGen[topicIndex].Topic,
-                  Level: level,
-                  Context: '',
-                });
-                setChoices([
-                  response.data.Remembering[0],
-                  response.data.Remembering[1],
-                  response.data.Understanding[0],
-                  response.data.Understanding[1],
-                  response.data.Applying[0],
-                  response.data.Applying[1],
-                  response.data.Analyzing[0],
-                  response.data.Analyzing[1],
-                  response.data.Evaluating[0],
-                  response.data.Evaluating[1],
-                ]);
-                console.log('step2');
-                console.log(choices);
                 setScreen2(false);
                 setScreen3(true);
               } catch (error: any) {
@@ -319,54 +323,53 @@ const AIToolModal = ({
             }}
             isLoading={generatingLoading}
           >
-            Select Level and Topic
+            Select Educational Level and Topic
           </Button>
         </ModalBody>
         <ModalBody hidden={!screen3}>
-          <Text>
-            STEP 3: Choose the learning objective you want to achieve.{' '}
-          </Text>
+          <Text>STEP 3: Define the specifics for the activity.</Text>
           <FormLabel paddingTop={'5px'}>Learning Objective</FormLabel>
-          <FormControl label="Topic">
+          <FormControl label="Learning Outcome">
             <Select
-              borderColor={'grey'}
+              value={choosingLearningOutcome}
+              borderColor="grey"
               onChange={(event) =>
-                setChoiceIndex(Number(event.currentTarget.value))
+                setChoosingLearningOutcome(
+                  event.currentTarget.value as LearningOutcome
+                )
               }
             >
-              {
-                <>
-                  {choices.map((p, id) => (
-                    <option key={id} value={id}>
-                      <p>{p}</p>
-                    </option>
-                  ))}
-                </>
-              }
+              {Object.entries(LearningOutcome).map(([key, value]) => (
+                <option key={key} value={value}>
+                  {learningOutcome === value ? '*' : ''}
+                  {value}
+                  {learningOutcome === value ? '*' : ''}
+                </option>
+              ))}
             </Select>
           </FormControl>
-          <Flex hidden={exerciseType != 8}></Flex>
+          {/*<Flex hidden={exerciseType != 8}></Flex>*/}
           <Flex
             paddingTop={'5px'}
             alignItems={'center'}
-            hidden={exerciseType != 4 && exerciseType != 2}
+            hidden={
+              exerciseType != QuestionType.TrueOrFalse &&
+              exerciseType != QuestionType.MultipleChoice
+            }
           >
             N° Correct {word}:
             <NumberInput
               float={'right'}
               defaultValue={ca_n}
               min={1}
-              max={1}
               width={'80px'}
               title="soon: multiple correct answer"
             >
               <NumberInputField />
-              {/*
               <NumberInputStepper>
                 <NumberIncrementStepper onClick={() => setCA_N(ca_n + 1)} />
                 <NumberDecrementStepper onClick={() => setCA_N(ca_n - 1)} />
               </NumberInputStepper>
-              */}
             </NumberInput>
             N° Wrong {word}:
             <NumberInput defaultValue={da_n} min={0} max={6} width={'80px'}>
@@ -376,7 +379,7 @@ const AIToolModal = ({
                 <NumberDecrementStepper onClick={() => setDA_N(da_n - 1)} />
               </NumberInputStepper>
             </NumberInput>
-            N° Easy Wrong {word}:
+            N° Easy Discardable {word}:
             <NumberInput defaultValue={eda_n} min={0} max={6} width={'80px'}>
               <NumberInputField />
               <NumberInputStepper>
@@ -386,113 +389,146 @@ const AIToolModal = ({
             </NumberInput>
           </Flex>
           <Button
-            hidden={exerciseType == 100}
+            hidden={exerciseType == 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
+                setLearningOutcome(choosingLearningOutcome);
                 if (!topicGen) throw ': no topic generated';
-                const response: AxiosResponse = await API.generateNewExercise({
-                  macroSubject: macroSubjectGen,
-                  title: titleGen,
-                  level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  typeOfActivity: exerciseType, //0=fill_the_gap, 1=question, 4=choice,
-                  learningObjective: choices[choiceIndex],
-                  bloomLevel: Math.round(choiceIndex / 2), //0=Remembering, 1=Understanding, 2=Applying, 3=Analyzing, 4=Evaluating, 5=Creating
-                  language: language,
-                  material: sourceMaterial,
-                  correctAnswersNumber: ca_n,
-                  distractorsNumber: da_n,
-                  easilyDiscardableDistractorsNumber: eda_n,
-                  assignmentType: topicGen[topicIndex].Type, //0=theoretical, 1=code, 2=problem_resolution,
-                  topic: topicGen[topicIndex].Topic,
-                  temperature: 0.2,
-                });
-                console.log(response.data);
-                let dataGen;
-                switch (exerciseType) {
-                  case 0:
-                    console.log('creating openQuestion');
-                    dataGen = {
-                      question: response.data.Assignment,
+                //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa sei arrivato qui: fixa i dati
+                if (eduLevel == undefined || learningOutcome == undefined)
+                  throw ': error in eduLevel and learningOutcome';
+                if (exerciseType != 'ReadMaterialNode') {
+                  const response: AxiosResponse = await API.generateNewExercise(
+                    {
+                      macro_subject: macroSubjectGen,
+                      topic: topicGen[topicIndex].topic,
+                      education_level: eduLevel,
+                      learning_outcome: learningOutcome,
                       material: sourceMaterial,
-                      aiQuestion: false,
-                      possibleAnswer: response.data.Solutions[0],
-                    };
-                    break; /*
-                  case 2:
-                    console.log('creating trueFalse');
-                    dataGen = {
-                      question: response.data.Assignment,
-                      material: sourceMaterial,
-                      aiQuestion: false,
-                      possibleAnswer: response.data.Solutions[0],
-                    };
-                    break;
-                  */
-                  case 3:
-                    console.log('creating close_ended_question');
-                    dataGen = {
-                      question:
-                        response.data.Assignment + '\n' + response.data.Plus,
-                      correctAnswers: response.data.Solutions,
-                    };
-                    break;
-                  case 4:
-                    console.log('creating multichoice');
-                    const answers = [].concat(
-                      response.data.Solutions,
-                      response.data.Distractors.splice(0, da_n),
-                      response.data.EasilyDiscardableDistractors.splice(
-                        0,
-                        eda_n
-                      )
-                    );
-                    answers.sort(() => Math.random() - 0.5);
-
-                    const isAnswerCorrect = new Array(answers.length).fill(
-                      false
-                    );
-                    answers.forEach((value, index) => {
-                      if (response.data.Solutions.includes(value))
-                        isAnswerCorrect[index] = true;
-                    });
-                    if (exType == 'TrueFalseNode')
-                      dataGen = {
-                        instructions: 'Argument: ' + response.data.Assignment,
-                        questions: answers,
-                        isQuestionCorrect: isAnswerCorrect,
+                      solutions_number: ca_n,
+                      distractors_number: da_n,
+                      easily_discardable_distractors_number: eda_n,
+                      type: exerciseType as QuestionType,
+                      language: language,
+                      model: 'Gemini',
+                    }
+                  );
+                  console.log(response.data);
+                  const dataGen: AIExerciseGenerated = response.data;
+                  let adaptedData;
+                  switch (exerciseType) {
+                    case QuestionType.OpenQuestion:
+                      console.log('creating openQuestion');
+                      adaptedData = {
+                        question: dataGen.assignment,
+                        material: dataGen.material,
+                        aiQuestion: false,
+                        possibleAnswer: dataGen.solutions[0],
                       };
-                    else
-                      dataGen = {
-                        question: response.data.Assignment,
-                        choices: answers,
+                      break;
+                    case QuestionType.ShortAnswerQuestion:
+                      console.log('creating close_ended_question');
+                      adaptedData = {
+                        question: dataGen.assignment,
+                        correctAnswers: dataGen.solutions,
+                      };
+                      break;
+                    case QuestionType.MultipleChoice:
+                      console.log('creating multichoice');
+                      const answers = [
+                        ...dataGen.solutions.slice(0, ca_n),
+                        ...dataGen.distractors.slice(0, da_n),
+                        ...dataGen.easily_discardable_distractors.slice(
+                          0,
+                          eda_n
+                        ),
+                      ].filter((statement) => statement !== 'empty');
+                      const shuffleAnswers = shuffleArray(answers);
+
+                      const isAnswerCorrect = new Array(
+                        shuffleAnswers.length
+                      ).fill(false);
+                      shuffleAnswers.forEach((value, index) => {
+                        if (dataGen.solutions.includes(value))
+                          isAnswerCorrect[index] = true;
+                      });
+                      adaptedData = {
+                        question: dataGen.assignment,
+                        choices: shuffleAnswers,
                         isChoiceCorrect: isAnswerCorrect,
                       };
-                    if (
-                      !response.data.Distractors[0] &&
-                      !response.data.EasilyDiscardableDistractors[0]
-                    ) {
-                      toast({
-                        title: 'Generating Error',
-                        description:
-                          'The AI was not able to generate a complete multichoice exercise, we suggest to generate an Open Question or a Close Ended Question for this topic',
-                        status: 'warning',
-                        duration: 4000,
-                        position: 'bottom-left',
-                        isClosable: false,
+                      if (
+                        !dataGen.distractors[0] &&
+                        !dataGen.easily_discardable_distractors[0]
+                      ) {
+                        toast({
+                          title: 'Generating Error',
+                          description:
+                            'The AI was not able to generate a complete multichoice exercise, we suggest to generate an Open Question or a Close Ended Question for this topic',
+                          status: 'warning',
+                          duration: 4000,
+                          position: 'bottom-left',
+                          isClosable: false,
+                        });
+                        await delay(3000);
+                      }
+                      break;
+                    case QuestionType.TrueOrFalse:
+                      console.log('creating true or false');
+                      const solutions = dataGen.solutions.map((s) => {
+                        const splitIndex = s.indexOf('. ');
+                        return splitIndex !== -1 ? s.slice(splitIndex + 2) : s;
                       });
-                      await delay(3000);
-                    }
-                    break;
-                  default:
-                    console.log('error in exerciseType');
-                    throw ': generated type error';
+                      const statements = [
+                        ...solutions.slice(0, ca_n),
+                        ...dataGen.distractors.slice(0, da_n),
+                        ...dataGen.easily_discardable_distractors.slice(
+                          0,
+                          eda_n
+                        ),
+                      ].filter((statement) => statement !== 'empty');
+                      const shuffleTFAnswers = shuffleArray(statements);
+                      const isStatementCorrect = new Array(
+                        shuffleTFAnswers.length
+                      ).fill(false);
+                      shuffleTFAnswers.map((value, index) => {
+                        console.log(index);
+                        if (dataGen.solutions.includes(value))
+                          isStatementCorrect[index] = true;
+                      });
+                      adaptedData = {
+                        instructions: 'Argument: ' + dataGen.assignment,
+                        questions: shuffleTFAnswers,
+                        isQuestionCorrect: isStatementCorrect,
+                      };
+                      if (
+                        !dataGen.distractors[0] &&
+                        !dataGen.easily_discardable_distractors[0]
+                      ) {
+                        toast({
+                          title: 'Generating Error',
+                          description:
+                            'The AI was not able to generate a complete true or false exercise, we suggest to generate an Open Question or a Close Ended Question for this topic',
+                          status: 'warning',
+                          duration: 4000,
+                          position: 'bottom-left',
+                          isClosable: false,
+                        });
+                        await delay(3000);
+                      }
+                      break;
+                    default:
+                      console.log('error in exerciseType');
+                      throw ': generated type error';
+                  }
+                  console.log(adaptedData);
+                  setValue('data', adaptedData);
+                  setValue('title', titleGen);
                 }
                 setScreen1(true);
                 setScreen3(false);
-                console.log(dataGen);
-                setValue('data', dataGen);
                 if (action) action(false);
                 onClose();
               } catch (error: any) {
@@ -535,27 +571,41 @@ const AIToolModal = ({
             Generate Learning Activity
           </Button>
           <Button
-            hidden={exerciseType != 100}
+            hidden={exerciseType != 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               try {
+                if (exerciseType != 'ReadMaterial') return;
+                if (eduLevel == undefined || learningOutcome == undefined)
+                  throw ': error in eduLevel and learningOutcome';
                 setGeneratingLoading(true);
                 if (!topicGen) throw ': no topic generated';
                 const response: AxiosResponse = await API.generateMaterial({
-                  numberOfWords: noW,
-                  level: level, //0=primary_school, 1=middle_school, 2=high_school, 3=college, 4=academy
-                  learningObjective: choices[choiceIndex],
-                  topic: topicGen[topicIndex].Topic,
+                  title: titleGen,
+                  macro_subject: macroSubjectGen,
+                  topics: [
+                    {
+                      title: titleGen,
+                      learning_outcome: learningOutcome,
+                      topics: topicGen,
+                    },
+                  ],
+                  education_level: eduLevel,
+                  learning_outcome: learningOutcome,
+                  duration: duration,
+                  language: language,
+                  model: 'Gemini',
                 });
                 setScreen1(true);
                 setScreen3(false);
                 console.log(response.data);
-                let dataGen;
+                const dataGen: AIMaterialGenerated = response.data;
+                let adaptedData;
                 switch (exerciseType) {
-                  case 100:
+                  case 'ReadMaterial':
                     console.log('creating readMaterial');
-                    dataGen = {
-                      text: response.data,
+                    adaptedData = {
+                      text: dataGen.material,
                       link: '',
                     };
                     break;
@@ -563,8 +613,9 @@ const AIToolModal = ({
                     console.log('error in exerciseType');
                     throw ': generated type error';
                 }
-                console.log(dataGen);
-                setValue('data', dataGen);
+                console.log(adaptedData);
+                setValue('data', adaptedData);
+                setValue('title', titleGen);
                 if (action) action(false);
                 onClose();
               } catch (error: any) {

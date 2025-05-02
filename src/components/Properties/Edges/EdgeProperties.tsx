@@ -13,6 +13,7 @@ const config = [
       'ReadMaterialNode',
       'MindMapNode',
       'SummaryNode',
+      'ScanningNode',
       'ProblemSolvingNode',
       'FindSolutionNode',
       'CreateKeywordsListNode',
@@ -22,7 +23,7 @@ const config = [
     ],
   },
   {
-    edgeTypes: ['manuallyProgressEdge'],
+    edgeTypes: ['manuallyProgressEdge', 'passFailEdge'],
     nodeTypes: ['CollaborativeModelingNode'],
   },
   {

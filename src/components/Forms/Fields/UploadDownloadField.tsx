@@ -8,39 +8,58 @@ import {
   useToast,
   VStack,
 } from '@chakra-ui/react';
+import { AxiosResponse } from 'axios';
 import { useEffect, useState } from 'react';
 import { API } from '../../../data/api';
 import useStore from '../../../store';
+import { PolyglotNode } from '../../../types/polyglotElements';
 
 const FileUploadDownload = () => {
   const [file, setFile] = useState<File>();
-  const [nodeId, setNodeId] = useState('1');
+  const [nodeId, setNodeId] = useState<string>();
+  const [filename, setFilename] = useState<string>();
   const toast = useToast();
   // Gestione del file selezionato
   const handleFileChange = (event: any) => {
     setFile(event.target.files[0]);
   };
 
-  useEffect(() => {
-    setNodeId(useStore.getState().getSelectedNode()?._id || '1');
-    console.log(nodeId);
-    API.downloadFile({ nodeId }).then((response) => {
-      if (response.data) setFile(response.data);
-    });
-  }, []);
+  const { selectedElement } = useStore((store) => ({
+    selectedElement: store.getSelectedElement,
+  }));
 
-  // Funzione per l'upload
+  useEffect(() => {
+    if (!selectedElement) return;
+    setNodeId((selectedElement as unknown as PolyglotNode)._id);
+    if (!nodeId) return;
+    API.downloadFile({ nodeId })
+      .then((response) => {
+        if (response.data) {
+          const contentDisposition = response.headers['content-disposition'];
+          const filename = contentDisposition
+            ?.split('filename=')?.[1]
+            ?.replace(/"/g, '');
+          setFilename(filename);
+        }
+      })
+      .catch((error: AxiosResponse) => {
+        console.log(error);
+        setFilename('Nessun file disponibile');
+      });
+  }, [selectedElement]);
+
   const handleUpload = async () => {
+    if (!nodeId) return;
     if (!file) {
       toast({
-        title: 'Seleziona un file e inserisci un ID nodo.',
+        title: 'Select a file.',
         status: 'warning',
       });
       return;
     }
     if (file.type !== 'application/pdf') {
       toast({
-        title: 'Il file selezionato non è un PDF.',
+        title: 'Selected file must be PDF.',
         status: 'warning',
       });
       return;
@@ -54,42 +73,53 @@ const FileUploadDownload = () => {
       API.uploadFile({
         nodeId,
         file: formData,
-      }).then((resp) =>
-        toast({
-          title: 'File caricato con successo.\n' + resp.data,
-          status: 'success',
-        })
-      );
+      })
+        .then((resp) =>
+          toast({
+            title: 'File uploaded successfully.\n' + resp.data,
+            status: 'success',
+          })
+        )
+        .catch((error: AxiosResponse) => {
+          if (error.status == 413)
+            toast({
+              title: 'Selected file is too Large.\n',
+              status: 'error',
+            });
+        });
     } catch (error) {
       toast({
-        title: 'Errore durante il caricamento del file.',
+        title: "File's upload failed",
         status: 'error',
       });
     }
   };
 
-  // Funzione per il download
   const handleDownload = async () => {
+    if (!nodeId) return;
     try {
       const response = await API.downloadFile({ nodeId });
-
+      const contentDisposition = response.headers['content-disposition'];
+      const filename = contentDisposition
+        ?.split('filename=')?.[1]
+        ?.replace(/"/g, '');
       const url = window.URL.createObjectURL(new Blob([response.data]));
       const link = document.createElement('a');
       link.href = url;
-      console.log(response.data.filename);
-
-      console.log(response.data);
-      link.setAttribute(
-        'download',
-        response.data.filename || 'uploadedFile.pdf'
-      );
-
+      link.setAttribute('download', filename || 'uploadedFile.pdf');
       document.body.appendChild(link);
       link.click();
-
       link.remove();
       window.URL.revokeObjectURL(url);
-    } catch (error) {
+
+      return;
+    } catch (error: any) {
+      console.log(error);
+      if (error.status == 304)
+        toast({
+          title: 'There are no file for this node',
+          status: 'info',
+        });
       toast({ title: 'Errore durante il download del file.', status: 'error' });
     }
   };
@@ -108,7 +138,7 @@ const FileUploadDownload = () => {
           Scarica File
         </Button>
       </Center>
-      <Text hidden={file == null}>Un File presente: {file && file.name}</Text>
+      <Text hidden={filename == null}>Existing file: {filename}</Text>
     </VStack>
   );
 };
