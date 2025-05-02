@@ -20,6 +20,7 @@ import { APIV2 } from '../../../data/api';
 import useStore from '../../../store';
 import { PolyglotFlow } from '../../../types/polyglotElements';
 import auth0 from '../../../utils/auth0';
+import { clearFlowCaches } from '../../../utils/cache';
 
 type FlowIndexProps = {
   accessToken: string | undefined;
@@ -66,6 +67,7 @@ const FlowIndex = ({ accessToken }: FlowIndexProps) => {
           });
         if (returnPath) router.push(returnPath);
         storeState.updateFlowInfo(response.data);
+        clearFlowCaches(response.data._id);
       } else {
         outputToast &&
           toast({
