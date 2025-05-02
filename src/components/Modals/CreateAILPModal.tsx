@@ -30,7 +30,7 @@ import {
   EducationLevel,
   LearningOutcome,
   PlanLessonNode,
-  QuestionType,
+  QuestionTypeMap,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import PlanLessonCard from '../Card/PlanLessonCard';
@@ -99,7 +99,10 @@ const CreateAILPModal = ({
   };
 
   const [selectedTopic, setSelectedTopic] = useState<Topic[]>([]);
-  let exerciseType: QuestionType | string;
+  let exerciseTypeKey = QuestionTypeMap.find(
+    (elem) => elem.nodeType == exType
+  )?.key;
+  if (!exerciseTypeKey) exerciseTypeKey = 'ReadMaterial';
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(1);
   const [eda_n, setEDA_N] = useState(1);
@@ -109,25 +112,6 @@ const CreateAILPModal = ({
   const toast = useToast();
   const { setValue } = useFormContext();
   const word = exType == 'TrueFalseNode' ? 'Statements' : 'Answers';
-  switch (exType) {
-    case 'closeEndedQuestionNode':
-      exerciseType = QuestionType.ShortAnswerQuestion;
-      break;
-    case 'OpenQuestionNode':
-      exerciseType = QuestionType.OpenQuestion;
-      break;
-    case 'TrueFalseNode':
-      exerciseType = QuestionType.TrueOrFalse;
-      break;
-    case 'multipleChoiceQuestionNode':
-      exerciseType = QuestionType.MultipleChoice;
-      break;
-    case 'ReadMaterialNode':
-      exerciseType = 'ReadMaterial';
-      break;
-    default:
-      throw 'error in type';
-  }
   return (
     <Modal
       isOpen={isOpen}
@@ -434,13 +418,13 @@ const CreateAILPModal = ({
               ))}
             </Box>
           </FormControl>
-          {/*<Flex hidden={exerciseType != 8}></Flex>*/}
+          {/*continue from here da mettere la decisione del tipo di attività*/}
           <Flex
             paddingTop={'5px'}
             alignItems={'center'}
             hidden={
-              exerciseType != QuestionType.TrueOrFalse &&
-              exerciseType != QuestionType.MultipleChoice
+              exerciseTypeKey != 'true or false' &&
+              exerciseTypeKey != 'multiple choice'
             }
           >
             N° Correct {word}:
@@ -475,7 +459,7 @@ const CreateAILPModal = ({
             </NumberInput>
           </Flex>
           <Button
-            hidden={exerciseType == 'ReadMaterial'}
+            hidden={exerciseTypeKey == 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               console.log('GenerateActivity');
@@ -485,7 +469,7 @@ const CreateAILPModal = ({
             Generate Learning Activity
           </Button>
           <Button
-            hidden={exerciseType != 'ReadMaterial'}
+            hidden={exerciseTypeKey != 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               console.log('generateMaterial: readMaterial');

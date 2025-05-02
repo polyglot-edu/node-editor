@@ -21,7 +21,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
-import { empty } from 'fp-ts/lib/ReadonlyRecord';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
@@ -30,7 +29,7 @@ import {
   AIMaterialGenerated,
   EducationLevel,
   LearningOutcome,
-  QuestionType,
+  QuestionTypeMap,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 
@@ -75,7 +74,10 @@ const AIToolModal = ({
   ]);
 
   const [topicIndex, setTopicIndex] = useState(0);
-  let exerciseType: QuestionType | string;
+  let exerciseTypeKey = QuestionTypeMap.find(
+    (elem) => elem.nodeType == exType
+  )?.key;
+  if (!exerciseTypeKey) exerciseTypeKey = 'ReadMaterial';
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(1);
   const [eda_n, setEDA_N] = useState(1);
@@ -85,25 +87,6 @@ const AIToolModal = ({
   const toast = useToast();
   const { setValue } = useFormContext();
   const word = exType == 'TrueFalseNode' ? 'Statements' : 'Answers';
-  switch (exType) {
-    case 'closeEndedQuestionNode':
-      exerciseType = QuestionType.ShortAnswerQuestion;
-      break;
-    case 'OpenQuestionNode':
-      exerciseType = QuestionType.OpenQuestion;
-      break;
-    case 'TrueFalseNode':
-      exerciseType = QuestionType.TrueOrFalse;
-      break;
-    case 'multipleChoiceQuestionNode':
-      exerciseType = QuestionType.MultipleChoice;
-      break;
-    case 'ReadMaterialNode':
-      exerciseType = 'ReadMaterial';
-      break;
-    default:
-      throw 'error in type';
-  }
   return (
     <Modal
       isOpen={isOpen}
@@ -353,8 +336,8 @@ const AIToolModal = ({
             paddingTop={'5px'}
             alignItems={'center'}
             hidden={
-              exerciseType != QuestionType.TrueOrFalse &&
-              exerciseType != QuestionType.MultipleChoice
+              exerciseTypeKey != 'true or false' &&
+              exerciseTypeKey != 'multiple choice'
             }
           >
             N° Correct {word}:
@@ -389,7 +372,7 @@ const AIToolModal = ({
             </NumberInput>
           </Flex>
           <Button
-            hidden={exerciseType == 'ReadMaterial'}
+            hidden={exerciseTypeKey == 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               try {
@@ -398,7 +381,7 @@ const AIToolModal = ({
                 if (!topicGen) throw ': no topic generated';
                 if (eduLevel == undefined || learningOutcome == undefined)
                   throw ': error in eduLevel and learningOutcome';
-                if (exerciseType != 'ReadMaterialNode') {
+                if (exerciseTypeKey != 'ReadMaterialNode') {
                   const response: AxiosResponse = await API.generateNewExercise(
                     {
                       macro_subject: macroSubjectGen,
@@ -409,7 +392,7 @@ const AIToolModal = ({
                       solutions_number: ca_n,
                       distractors_number: da_n,
                       easily_discardable_distractors_number: eda_n,
-                      type: exerciseType as QuestionType,
+                      type: exerciseTypeKey as string,
                       language: language,
                       model: 'Gemini',
                     }
@@ -417,9 +400,8 @@ const AIToolModal = ({
                   console.log(response.data);
                   const dataGen: AIExerciseGenerated = response.data;
                   let adaptedData;
-                  switch (exerciseType) {
-                    case QuestionType.OpenQuestion:
-                      console.log('creating openQuestion');
+                  switch (exerciseTypeKey) {
+                    case 'open question':
                       adaptedData = {
                         question: dataGen.assignment,
                         material: dataGen.material,
@@ -427,15 +409,13 @@ const AIToolModal = ({
                         possibleAnswer: dataGen.solutions[0],
                       };
                       break;
-                    case QuestionType.ShortAnswerQuestion:
-                      console.log('creating close_ended_question');
+                    case 'short answer question':
                       adaptedData = {
                         question: dataGen.assignment,
                         correctAnswers: dataGen.solutions,
                       };
                       break;
-                    case QuestionType.MultipleChoice:
-                      console.log('creating multichoice');
+                    case 'multiple choice':
                       const answers = [
                         ...dataGen.solutions.slice(0, ca_n),
                         ...dataGen.distractors.slice(0, da_n),
@@ -474,7 +454,7 @@ const AIToolModal = ({
                         await delay(3000);
                       }
                       break;
-                    case QuestionType.TrueOrFalse:
+                    case 'true or false':
                       console.log('creating true or false');
                       const solutions = dataGen.solutions.map((s) => {
                         const splitIndex = s.indexOf('. ');
@@ -570,11 +550,11 @@ const AIToolModal = ({
             Generate Learning Activity
           </Button>
           <Button
-            hidden={exerciseType != 'ReadMaterial'}
+            hidden={exerciseTypeKey != 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               try {
-                if (exerciseType != 'ReadMaterial') return;
+                if (exerciseTypeKey != 'ReadMaterial') return;
                 if (eduLevel == undefined || learningOutcome == undefined)
                   throw ': error in eduLevel and learningOutcome';
                 setGeneratingLoading(true);
@@ -600,7 +580,7 @@ const AIToolModal = ({
                 console.log(response.data);
                 const dataGen: AIMaterialGenerated = response.data;
                 let adaptedData;
-                switch (exerciseType) {
+                switch (exerciseTypeKey) {
                   case 'ReadMaterial':
                     console.log('creating readMaterial');
                     adaptedData = {
