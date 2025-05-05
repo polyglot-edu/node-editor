@@ -1,4 +1,10 @@
 import {
+  CheckIcon,
+  ChevronDownIcon,
+  ChevronUpIcon,
+  CloseIcon,
+} from '@chakra-ui/icons';
+import {
   Box,
   Card,
   CardBody,
@@ -19,7 +25,6 @@ import {
   PlanLessonNode,
   QuestionTypeMap,
 } from '../../types/polyglotElements';
-import { CheckIcon, ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@chakra-ui/icons';
 
 type FlowCardProps = {
   planNode: PlanLessonNode;
@@ -265,19 +270,13 @@ const PlanLessonCard = ({
                   </NumberInput>
                 </Flex>
               </Box>
-                <Checkbox
-                  isChecked={isSelected}
-                  onChange={() => setSelectedNode(id)}
-                  icon={
-                    isSelected ? (
-                      <CheckIcon />
-                    ) : (
-                      <CloseIcon />
-                    )
-                  }
-                  colorScheme="green"
-                  size="lg"
-                />
+              <Checkbox
+                isChecked={isSelected}
+                onChange={() => setSelectedNode(id)}
+                icon={isSelected ? <CheckIcon /> : <CloseIcon />}
+                colorScheme="green"
+                size="lg"
+              />
             </Flex>
           </Box>
         </CardBody>

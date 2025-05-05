@@ -15,6 +15,7 @@ import {
 import { GetServerSideProps } from 'next';
 import { useCallback, useEffect, useMemo, useState } from 'react';
 import FlowCard from '../../components/Card/FlowCard';
+import CreateAILPModal from '../../components/Modals/CreateAILPModal';
 import CreateFlowModal from '../../components/Modals/CreateFlowModal';
 import DeleteFlowModal from '../../components/Modals/DeleteFlowModal';
 import Navbar from '../../components/NavBars/NavBar';
@@ -22,7 +23,6 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
 import auth0 from '../../utils/auth0';
-import CreateAILPModal from '../../components/Modals/CreateAILPModal';
 
 type FlowIndexPageProps = {
   accessToken: string | undefined;

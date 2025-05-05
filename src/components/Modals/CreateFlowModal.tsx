@@ -387,7 +387,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
               </TabPanel>
             </TabPanels>
           </Tabs>
-          <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose}/>
+          <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose} />
         </ModalBody>
 
         <ModalFooter>
