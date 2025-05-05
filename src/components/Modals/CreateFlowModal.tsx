@@ -78,6 +78,12 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
   const [tags, setTags] = useState<{ name: string; color: string }[]>([]);
 
+  const {
+    isOpen: caifOpen,
+    onClose: caifOnClose,
+    onOpen: caifOnOpen,
+  } = useDisclosure();
+
   const toast = useToast();
   const router = useRouter();
 
@@ -379,17 +385,9 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                   onChange={(value) => setFlow(value)}
                 />
               </TabPanel>
-              <TabPanel>
-                <CreateAILPModal
-                  isOpen={false}
-                  onClose={function (): void {
-                    throw new Error('Function not implemented.');
-                  }}
-                  exType={''}
-                />
-              </TabPanel>
             </TabPanels>
           </Tabs>
+          <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose}/>
         </ModalBody>
 
         <ModalFooter>
@@ -402,6 +400,13 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
           >
             Create
           </Button>
+          <IconButton
+            aria-label="Create Flow"
+            isRound={true}
+            colorScheme="blue"
+            icon={<AddIcon fontSize={'xl'} color="white" />}
+            onClick={caifOnOpen}
+          />
         </ModalFooter>
       </ModalContent>
     </Modal>

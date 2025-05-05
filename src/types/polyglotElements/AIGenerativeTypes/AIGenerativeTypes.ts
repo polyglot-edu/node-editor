@@ -245,6 +245,7 @@ export type PlanLessonNode = {
   details: string;
   learning_outcome: LearningOutcome;
   duration: number;
+  data: any;
 };
 
 export type AIPlanLessonResponse = {

@@ -2,15 +2,24 @@ import {
   Box,
   Card,
   CardBody,
-  CardFooter,
   Checkbox,
-  Image,
+  Flex,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   SpaceProps,
   Text,
 } from '@chakra-ui/react';
-import cardImage from '../../public/test_card.png';
-import { LearningOutcome, PlanLessonNode } from '../../types/polyglotElements';
+import { useEffect, useState } from 'react';
+import {
+  LearningOutcome,
+  PlanLessonNode,
+  QuestionTypeMap,
+} from '../../types/polyglotElements';
+import { CheckIcon, ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@chakra-ui/icons';
 
 type FlowCardProps = {
   planNode: PlanLessonNode;
@@ -22,6 +31,12 @@ type FlowCardProps = {
   updateNodeAt: (id: number, updatedNode: PlanLessonNode) => void;
 };
 
+type SpecificData = {
+  solutions_number: number;
+  distractors_number: number;
+  easily_discardable_distractors_number: number;
+};
+
 const PlanLessonCard = ({
   planNode,
   px,
@@ -31,6 +46,25 @@ const PlanLessonCard = ({
   isSelected,
   updateNodeAt,
 }: FlowCardProps) => {
+  const [specificData, setSpecificData] = useState<SpecificData>({
+    solutions_number: 1,
+    distractors_number: 1,
+    easily_discardable_distractors_number: 1,
+  });
+
+  const planNodeSuggestedType = planNode.type;
+
+  useEffect(() => {
+    updateNodeAt(id, {
+      type: planNode.type,
+      topic: planNode.topic,
+      details: planNode.details,
+      learning_outcome: planNode.learning_outcome,
+      duration: planNode.duration,
+      data: specificData,
+    });
+  }, [specificData]);
+
   return (
     <Box px={px} py={py}>
       <Card
@@ -38,66 +72,215 @@ const PlanLessonCard = ({
         overflow=""
         variant="outline"
       >
-        <Image
-          objectFit="cover"
-          maxW={{ base: '100%', sm: '200px' }}
-          src={cardImage.src}
-          alt="Flow card"
-        />
         <CardBody>
           <Box key={1} p={3} borderWidth="1px" borderRadius="md">
-            <Text fontSize="sm">
-              <strong>Topic:</strong> {planNode.topic}
-            </Text>
-            <Text fontSize="sm">
-              <strong>Type:</strong> {planNode.type}
-            </Text>
-            <Text fontSize="sm">
-              <strong>Details:</strong> {planNode.details}
-            </Text>
-            <Select
-              borderColor={'grey'}
-              onChange={(event) =>
-                updateNodeAt(id, {
-                  type: planNode.type,
-                  topic: planNode.topic,
-                  details: planNode.details,
-                  learning_outcome: event.currentTarget
-                    .value as LearningOutcome,
-                  duration: planNode.duration,
-                })
-              }
-            >
-              {Object.values(LearningOutcome).map((outcome) => (
-                <option
-                  key={outcome}
-                  value={outcome}
-                  selected={planNode?.learning_outcome === outcome}
+            <Flex>
+              <Box>
+                <Text fontSize="sm">
+                  <strong>Topic:</strong> {planNode.topic}
+                </Text>
+                <Text fontSize="sm">
+                  <strong>Type:</strong> {planNode.type}
+                </Text>
+                <Text fontSize="sm">
+                  <strong>Details:</strong> {planNode.details}
+                </Text>
+                <Select
+                  borderColor={'grey'}
+                  onChange={(event) =>
+                    updateNodeAt(id, {
+                      type: planNode.type,
+                      topic: planNode.topic,
+                      details: planNode.details,
+                      learning_outcome: event.currentTarget
+                        .value as LearningOutcome,
+                      duration: planNode.duration,
+                      data: planNode.data,
+                    })
+                  }
                 >
-                  {planNode?.learning_outcome === outcome ? '*' : ''}
-                  {outcome}
-                  {planNode?.learning_outcome === outcome ? '*' : ''}
-                </option>
-              ))}
-            </Select>
+                  {Object.values(LearningOutcome).map((outcome) => (
+                    <option
+                      key={outcome}
+                      value={outcome}
+                      selected={planNode?.learning_outcome === outcome}
+                    >
+                      {planNode?.learning_outcome === outcome ? '*' : ''}
+                      {outcome}
+                      {planNode?.learning_outcome === outcome ? '*' : ''}
+                    </option>
+                  ))}
+                </Select>
+                <Select
+                  borderColor={'grey'}
+                  onChange={(event) =>
+                    updateNodeAt(id, {
+                      type: event.currentTarget.value,
+                      topic: planNode.topic,
+                      details: planNode.details,
+                      learning_outcome: planNode.learning_outcome,
+                      duration: planNode.duration,
+                      data: planNode.data,
+                    })
+                  }
+                >
+                  {QuestionTypeMap.map((qType) => {
+                    if (qType.integrated)
+                      return (
+                        <option
+                          key={qType.key}
+                          value={qType.key}
+                          selected={planNode?.type === qType.key}
+                        >
+                          {qType.key === planNodeSuggestedType ? '*' : ''}
+                          {qType.key}
+                          {qType.key === planNodeSuggestedType ? '*' : ''}
+                        </option>
+                      );
+                  })}
+                </Select>
+                {/*
             <Text fontSize="sm">
               <strong>Duration:</strong> {planNode.duration} min
-            </Text>
+            </Text>*/}
+                <Flex
+                  paddingTop={'5px'}
+                  alignItems={'center'}
+                  hidden={
+                    planNode.type != 'true or false' &&
+                    planNode.type != 'multiple choice'
+                  }
+                >
+                  N° Correct
+                  {planNode.type == 'multiple choice'
+                    ? ' answers'
+                    : ' statements'}
+                  :
+                  <NumberInput
+                    float={'right'}
+                    defaultValue={specificData.solutions_number}
+                    min={1}
+                    width={'80px'}
+                    title="soon: multiple correct answer"
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper
+                        onClick={() =>
+                          setSpecificData({
+                            solutions_number: specificData.solutions_number + 1,
+                            distractors_number: specificData.distractors_number,
+                            easily_discardable_distractors_number:
+                              specificData.easily_discardable_distractors_number,
+                          })
+                        }
+                      />
+                      <NumberDecrementStepper
+                        onClick={() =>
+                          setSpecificData({
+                            solutions_number: specificData.solutions_number - 1,
+                            distractors_number: specificData.distractors_number,
+                            easily_discardable_distractors_number:
+                              specificData.easily_discardable_distractors_number,
+                          })
+                        }
+                      />
+                    </NumberInputStepper>
+                  </NumberInput>
+                  N° Wrong
+                  {planNode.type == 'multiple choice'
+                    ? ' answers'
+                    : ' statements'}
+                  :
+                  <NumberInput
+                    defaultValue={specificData.solutions_number}
+                    min={0}
+                    max={6}
+                    width={'80px'}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper
+                        onClick={() =>
+                          setSpecificData({
+                            solutions_number: specificData.solutions_number,
+                            distractors_number:
+                              specificData.distractors_number + 1,
+                            easily_discardable_distractors_number:
+                              specificData.easily_discardable_distractors_number,
+                          })
+                        }
+                      />
+                      <NumberDecrementStepper
+                        onClick={() =>
+                          setSpecificData({
+                            solutions_number: specificData.solutions_number,
+                            distractors_number:
+                              specificData.distractors_number - 1,
+                            easily_discardable_distractors_number:
+                              specificData.easily_discardable_distractors_number,
+                          })
+                        }
+                      />
+                    </NumberInputStepper>
+                  </NumberInput>
+                  N° Easy Discardable
+                  {planNode.type == 'multiple choice'
+                    ? ' answers'
+                    : ' statements'}
+                  :
+                  <NumberInput
+                    defaultValue={
+                      specificData.easily_discardable_distractors_number
+                    }
+                    min={0}
+                    max={6}
+                    width={'80px'}
+                  >
+                    <NumberInputField />
+                    <NumberInputStepper>
+                      <NumberIncrementStepper
+                        onClick={() =>
+                          setSpecificData({
+                            solutions_number: specificData.solutions_number,
+                            distractors_number: specificData.distractors_number,
+                            easily_discardable_distractors_number:
+                              specificData.easily_discardable_distractors_number +
+                              1,
+                          })
+                        }
+                      />
+                      <NumberDecrementStepper
+                        onClick={() =>
+                          setSpecificData({
+                            solutions_number: specificData.solutions_number,
+                            distractors_number: specificData.distractors_number,
+                            easily_discardable_distractors_number:
+                              specificData.easily_discardable_distractors_number -
+                              1,
+                          })
+                        }
+                      />
+                    </NumberInputStepper>
+                  </NumberInput>
+                </Flex>
+              </Box>
+                <Checkbox
+                  isChecked={isSelected}
+                  onChange={() => setSelectedNode(id)}
+                  icon={
+                    isSelected ? (
+                      <CheckIcon />
+                    ) : (
+                      <CloseIcon />
+                    )
+                  }
+                  colorScheme="green"
+                  size="lg"
+                />
+            </Flex>
           </Box>
         </CardBody>
-
-        <CardFooter>
-          {!id && (
-            <>
-              <Checkbox
-                isChecked={isSelected}
-                onChange={() => setSelectedNode(id)}
-              >
-                {isSelected ? 'selected' : 'not selected'}
-              </Checkbox>
-            </>
-          )}
-        </CardFooter>
       </Card>
     </Box>
   );

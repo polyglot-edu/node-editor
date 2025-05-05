@@ -22,6 +22,7 @@ import SearchBar from '../../components/SearchBar/SearchBar';
 import { APIV2 } from '../../data/api';
 import { PolyglotFlow } from '../../types/polyglotElements';
 import auth0 from '../../utils/auth0';
+import CreateAILPModal from '../../components/Modals/CreateAILPModal';
 
 type FlowIndexPageProps = {
   accessToken: string | undefined;
