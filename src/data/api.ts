@@ -331,6 +331,9 @@ export const API = {
       createNewDefaultPolyglotFlow()
     );
   },
+  createNewFlowJson(flow: PolyglotFlow): Promise<AxiosResponse> {
+    return axios.post<{}, AxiosResponse, {}>(`/api/flows/json`, flow);
+  },
   saveFlowAsync: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     flow.nodes = flow.nodes?.map((e) =>
       polyglotNodeComponentMapping.applyTransformFunction(e)

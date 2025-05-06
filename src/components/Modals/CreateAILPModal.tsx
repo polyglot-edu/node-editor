@@ -15,18 +15,30 @@ import {
   ModalFooter,
   ModalHeader,
   ModalOverlay,
+  NumberDecrementStepper,
+  NumberIncrementStepper,
+  NumberInput,
+  NumberInputField,
+  NumberInputStepper,
   Select,
   Text,
   Textarea,
   useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { v4 as UUIDv4 } from 'uuid';
+import { API } from '../../data/api';
+import { PolyglotEdge, PolyglotFlow, PolyglotNode } from '../../types/polyglotElements';
 import {
+  AIExerciseGenerated,
+  AIMaterialGenerated,
   AIPlanLessonResponse,
   AnalyzedMaterial,
   EducationLevel,
   LearningOutcome,
+  LessonNodeAI,
   PlanLessonNode,
+  QuestionTypeMap,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import PlanLessonCard from '../Card/PlanLessonCard';
@@ -50,6 +62,64 @@ function shuffleArray<T>(array: T[]) {
   return arr;
 }
 
+const dataFactory: Record<string, (values: AIExerciseGenerated) => any> = {
+  OpenQuestionNode: (values) => ({
+    type: 'open',
+    question: values.assignment,
+    material: values.material,
+    aiQuestion: false,
+    possibleAnswer: values.solutions[0],
+  }),
+  closeEndedQuestionNode: (values) => ({
+    type: 'shortAnswer',
+    question: values.assignment,
+    correctAnswers: values.solutions,
+    isAnswerCorrect: [],
+  }),
+  TrueFalseNode: (values) => {
+    const solutions = values.solutions.map((s) => {
+      const splitIndex = s.indexOf('. ');
+      return splitIndex !== -1 ? s.slice(splitIndex + 2) : s;
+    });
+    const answers = [
+      ...solutions,
+      ...values.distractors,
+      ...values.easily_discardable_distractors,
+    ].filter((statement) => statement !== 'empty');
+    const shuffleAnswers = shuffleArray(answers);
+
+    const isAnswerCorrect = new Array(shuffleAnswers.length).fill(false);
+    shuffleAnswers.forEach((value, index) => {
+      if (values.solutions.includes(value)) isAnswerCorrect[index] = true;
+    });
+    return {
+      type: 'multipleChoice',
+      question: values.assignment,
+      choices: shuffleAnswers,
+      isChoiceCorrect: isAnswerCorrect,
+    };
+  },
+  multipleChoiceQuestionNode: (values) => {
+    const answers = [
+      ...values.solutions,
+      ...values.distractors,
+      ...values.easily_discardable_distractors,
+    ].filter((statement) => statement !== 'empty');
+    const shuffleAnswers = shuffleArray(answers);
+
+    const isAnswerCorrect = new Array(shuffleAnswers.length).fill(false);
+    shuffleAnswers.forEach((value, index) => {
+      if (values.solutions.includes(value)) isAnswerCorrect[index] = true;
+    });
+    return {
+      type: 'multipleChoice',
+      question: values.assignment,
+      choices: shuffleAnswers,
+      isChoiceCorrect: isAnswerCorrect,
+    };
+  },
+};
+
 const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [analysedMaterial, setAnalyzedMaterial] = useState<AnalyzedMaterial>();
   const [generatingLoading, setGeneratingLoading] = useState(false);
@@ -61,10 +131,25 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [selectedTopic, setSelectedTopic] = useState<Topic[]>([]);
   const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
+  const [nReadMaterial, setNReadMaterial] = useState(1);
+  const [generatedNodes, setGeneratedNodes] = useState<PolyglotNode[]>([]);
+  const [screen1, setScreen1] = useState(true);
+  const [screen2, setScreen2] = useState(false);
+  const [screen3, setScreen3] = useState(false);
 
   useEffect(() => {
-    console.log(selectedNodeIds);
-  }, [selectedNodeIds]);
+    if (analysedMaterial) {
+      setScreen1(false);
+      setScreen2(true);
+    }
+  }, [analysedMaterial]);
+
+  useEffect(() => {
+    if (AINodes) {
+      setScreen2(false);
+      setScreen3(true);
+    }
+  }, [AINodes]);
 
   //functions for topic handler
   const toggleTopic = (topic: Topic) => {
@@ -104,10 +189,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     });
   };
 
-  const [screen1, setScreen1] = useState(true);
-  const [screen2, setScreen2] = useState(false);
-  const [screen3, setScreen3] = useState(false);
+  const addGeneratedNode = (newNode: PolyglotNode) => {
+    setGeneratedNodes((prevNodes) => [...prevNodes, newNode]);
+  };
+
   const toast = useToast();
+
   return (
     <Modal
       isOpen={isOpen}
@@ -153,14 +240,23 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               setSourceMaterial(e.currentTarget.value);
             }}
           />
+
           <Button
             marginTop={'15px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
                 if (!sourceMaterial) {
-                  //
-                  throw ': no text given';
+                  toast({
+                    title: 'Material missing',
+                    description:
+                      'Please, insert your material before pressing analye button.',
+                    status: 'error',
+                    duration: 3000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
+                  return;
                 }
                 /*const response: AxiosResponse = await API.analyseMaterial({
                   text: sourceMaterial,
@@ -229,8 +325,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 setLearningOutcome(
                   response.data.learning_outcome as LearningOutcome
                 );
-                setScreen1(false);
-                setScreen2(true);
               } catch (error: any) {
                 console.log(error);
                 if ((error as Error).name === 'SyntaxError') {
@@ -386,6 +480,30 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               </Flex>
             ))}
           </FormControl>
+          <FormControl label="Learning Outcome">
+            <Flex paddingTop={'5px'} alignItems={'center'}>
+              <FormLabel mb={2} fontWeight={'bold'}>
+                Number of read material activities:
+              </FormLabel>
+              <NumberInput
+                float={'right'}
+                defaultValue={nReadMaterial}
+                min={1}
+                max={8}
+                width={'80px'}
+              >
+                <NumberInputField />
+                <NumberInputStepper>
+                  <NumberIncrementStepper
+                    onClick={() => setNReadMaterial(nReadMaterial + 1)}
+                  />
+                  <NumberDecrementStepper
+                    onClick={() => setNReadMaterial(nReadMaterial - 1)}
+                  />
+                </NumberInputStepper>
+              </NumberInput>
+            </Flex>
+          </FormControl>
           <FormLabel mb={2} fontWeight={'bold'}>
             Context (optional):
           </FormLabel>
@@ -403,29 +521,19 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
             marginTop={'15px'}
             onClick={async () => {
               try {
-                if (!analysedMaterial) {
+                setGeneratingLoading(true);
+                if (selectedTopic.length < 1) {
                   toast({
-                    title: 'Missing Material',
-                    description: 'No analysed material given',
+                    title: 'Missing topics',
+                    description: 'You need to select at least one topic.',
                     status: 'error',
-                    duration: 5000,
+                    duration: 3000,
                     position: 'bottom-left',
                     isClosable: true,
                   });
                   return;
                 }
-                if (!eduLevel || !learningOutcome) {
-                  console.log(eduLevel);
-                  toast({
-                    title: 'Missing Material',
-                    description: 'Error in datas',
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                  return;
-                } /*
+                /*
                 API.planLesson({
                   topics: selectedTopic,
                   learning_outcome: learningOutcome,
@@ -559,8 +667,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   },
                 };
                 setAINodes(response2.data as AIPlanLessonResponse);
-                setScreen2(false);
-                setScreen3(true);
               } catch (error: any) {
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
@@ -620,27 +726,191 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
             marginTop={'15px'}
             onClick={async () => {
               /*continue from here da mettere la creazione
-              un'idea potrebbe essere aggiungere un pulsante che dice "aggiungi attività read Material prima di questa activity" 
-                -> avrei già qualche valus settata ((topics sarebbe incasinata)):
-                  "topic": "Introduzione alla vita di Michelangelo",
-                  "details": "Presentazione della vita di Michelangelo Buonarroti: contesto storico, famiglia, e primi anni di formazione. Accennare alle influenze artistiche iniziali.",
-                  "learning_outcome": "the ability to recall or recognize simple facts and definitions",
-                  "duration": 20
-
-              un'altra idea è mettere nello step 2 una selezione con quante lezioni readMaterial mettere ed eventualmente capire a quanti topic sono legati
-                (mancherebbe il learning outcome ma si può scegliere dopo)
-              nota: da inserire anche l'aggiunta di readMaterial nodes->body:{
-                title: string;
-                macro_subject: string;
-                topics: LessonNodeAI[]; 
-                education_level: EducationLevel;
-                learning_outcome: LearningOutcome;
-                duration: number;
-                language: string;
-                model: string;
-              };
+              
               */
               console.log('GenerateLP');
+              setGeneratingLoading(true);
+              if (!analysedMaterial) return;
+              try {
+                const selectedNodes = AINodes?.nodes.map((aiNode, index) => {
+                  if (selectedNodeIds.includes(index)) return aiNode;
+                });
+                if (!selectedNodes || !selectedNodes[0]) {
+                  toast({
+                    title: 'Missing activities',
+                    description:
+                      'Please, select at least one activity to start generating the learning path.',
+                    status: 'error',
+                    duration: 3000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
+                  setGeneratingLoading(false);
+                  return;
+                }
+                const nTopicReadMaterial =
+                  nReadMaterial == 1
+                    ? selectedNodes.length
+                    : nReadMaterial > selectedNodes.length
+                    ? selectedNodes.length / nReadMaterial
+                    : 1;
+                let counter = 0;
+                do {
+                  if (counter == 0 && nReadMaterial != 0) {
+                    counter = nTopicReadMaterial;
+                    setNReadMaterial(nReadMaterial - 1);
+                    const readTopics: LessonNodeAI[] = selectedNodes
+                      .map((aiNode, index) => {
+                        if (aiNode && index < nTopicReadMaterial)
+                          return {
+                            title: '',
+                            learning_outcome: aiNode.learning_outcome,
+                            topics: [
+                              {
+                                topic: aiNode.topic,
+                                explanation:
+                                  analysedMaterial.topics.find(
+                                    (topic) => topic.topic == aiNode?.topic
+                                  )?.explanation || '',
+                              },
+                            ],
+                          };
+                      })
+                      .filter((node) => node !== undefined);
+                    try {
+                      const response = await API.generateMaterial({
+                        title: analysedMaterial.title,
+                        macro_subject: analysedMaterial.macro_subject,
+                        topics: readTopics,
+                        education_level: analysedMaterial.education_level,
+                        learning_outcome: analysedMaterial.learning_outcome,
+                        duration: analysedMaterial.estimated_duration,
+                        language: analysedMaterial.language,
+                        model: 'Gemini',
+                      });
+                      const readMaterialGen: AIMaterialGenerated =
+                        response.data;
+                      const _id = UUIDv4();
+                      addGeneratedNode({
+                        _id: _id,
+                        type: 'ReadMaterialNode',
+                        title: readMaterialGen.title,
+                        description: readMaterialGen.macro_subject,
+                        difficulty: 1,
+                        data: {
+                          text: readMaterialGen.material,
+                          link: '',
+                        },
+                        reactFlow: {
+                          id: _id,
+                          type: 'ReadMaterialNode',
+                          position: {
+                            x: -195,
+                            y: -210,
+                          },
+                          width: 88,
+                          height: 46,
+                          selected: false,
+                          dragging: false,
+                          positionAbsolute: {
+                            x: -195,
+                            y: -210,
+                          },
+                          data: {},
+                        },
+                      });
+                    } catch (error) {
+                      console.log('errror in generation readMaterial ' + error);
+                    }
+                  } else {
+                    counter--;
+                    const activity = selectedNodes.shift();
+                    if (!activity) break;
+                    const response = await API.generateNewExercise({
+                      macro_subject: activity?.learning_outcome,
+                      topic: activity.topic,
+                      education_level: analysedMaterial.education_level,
+                      learning_outcome: activity.learning_outcome,
+                      material: sourceMaterial,
+                      solutions_number: activity.data.solutions_number || 0,
+                      distractors_number: activity.data.distractors_number || 0,
+                      easily_discardable_distractors_number:
+                        activity.data.easily_discardable_distractors_number ||
+                        0,
+                      type: activity.type,
+                      language: analysedMaterial.language,
+                      model: 'Gemini',
+                    });
+                    const exerciseResponse: AIExerciseGenerated = response.data;
+                    const _id = UUIDv4();
+                    const typeNode =
+                      QuestionTypeMap.find(
+                        (type) => type.key == exerciseResponse.type
+                      )?.nodeType || 'OpenQuestionNode';
+                    const data =
+                      dataFactory[typeNode]?.(exerciseResponse) || null;
+
+                    addGeneratedNode({
+                      _id: _id,
+                      type: typeNode,
+                      title: exerciseResponse.topic,
+                      description: exerciseResponse.macro_subject,
+                      difficulty: 1,
+                      data: data,
+                      reactFlow: {
+                        id: _id,
+                        type: typeNode,
+                        position: {
+                          x: -195,
+                          y: -210,
+                        },
+                        width: 88,
+                        height: 46,
+                        selected: false,
+                        dragging: false,
+                        positionAbsolute: {
+                          x: -195,
+                          y: -210,
+                        },
+                        data: {},
+                      },
+                    });
+                  }
+                } while (
+                  generatedNodes?.length <
+                  nReadMaterial + selectedNodes.length
+                );
+                const tags: { name: string; color: string }[] = [
+                  { name: analysedMaterial.keywords[0], color: 'green' },
+                  { name: analysedMaterial.keywords[1], color: 'red' },
+                  { name: analysedMaterial.keywords[2], color: 'purple' },
+                  { name: analysedMaterial.keywords[3], color: 'blue' },
+                ];
+                const topics= analysedMaterial.topics.map((t)=>t.topic);
+
+                const newFlow: PolyglotFlow = {
+                  _id: UUIDv4(),
+                  author: {
+                    _id: 'afa2e0e7-e3d1-4837-b911-0eebac05f845',
+                    username: '',
+                  },
+                  title: analysedMaterial.title,
+                  description: analysedMaterial.macro_subject,
+                  publish: false,
+                  learningContext: analysedMaterial.learning_outcome,
+                  duration: analysedMaterial.estimated_duration.toString(),
+                  topics: topics,
+                  tags: tags,
+                  nodes: generatedNodes,
+                  edges: [],
+                };
+                const flowResponse = await API.createNewFlowJson(newFlow);
+                console.log(flowResponse);
+              } catch (error) {
+                console.log(error);
+              } finally {
+                setGeneratingLoading(false);
+              }
             }}
             isLoading={generatingLoading}
           >

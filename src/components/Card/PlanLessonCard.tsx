@@ -71,14 +71,13 @@ const PlanLessonCard = ({
   }, [specificData]);
 
   return (
-    <Box px={px} py={py}>
+    <Box px={px} py={py} paddingTop={'10px'}>
       <Card
         direction={{ base: 'column', sm: 'row' }}
         overflow=""
         variant="outline"
       >
         <CardBody>
-          <Box key={1} p={3} borderWidth="1px" borderRadius="md">
             <Flex>
               <Box>
                 <Text fontSize="sm">
@@ -278,7 +277,6 @@ const PlanLessonCard = ({
                 size="lg"
               />
             </Flex>
-          </Box>
         </CardBody>
       </Card>
     </Box>
