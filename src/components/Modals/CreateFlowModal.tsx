@@ -183,6 +183,10 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             <TabList>
               <Tab>Custom</Tab>
               <Tab>Import JSON</Tab>
+          <Tab onClick={()=>caifOnOpen()}>
+            Create with AI
+            
+          </Tab>
             </TabList>
 
             <TabPanels>
@@ -385,9 +389,12 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                   onChange={(value) => setFlow(value)}
                 />
               </TabPanel>
+              <TabPanel>
+                
+          <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose} />
+              </TabPanel>
             </TabPanels>
           </Tabs>
-          <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose} />
         </ModalBody>
 
         <ModalFooter>
@@ -400,13 +407,6 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
           >
             Create
           </Button>
-          <IconButton
-            aria-label="Create Flow"
-            isRound={true}
-            colorScheme="blue"
-            icon={<AddIcon fontSize={'xl'} color="white" />}
-            onClick={caifOnOpen}
-          />
         </ModalFooter>
       </ModalContent>
     </Modal>

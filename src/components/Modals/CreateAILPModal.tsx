@@ -25,6 +25,8 @@ import {
   Textarea,
   useToast,
 } from '@chakra-ui/react';
+import { AxiosResponse } from 'axios';
+import { useRouter } from 'next/router';
 import { useEffect, useState } from 'react';
 import { MarkerType } from 'reactflow';
 import { v4 as UUIDv4 } from 'uuid';
@@ -137,9 +139,8 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
 
-  useEffect(() => {
-    console.log(nReadMaterial);
-  }, [nReadMaterial]);
+  const router = useRouter();
+
   useEffect(() => {
     if (analysedMaterial) {
       setScreen1(false);
@@ -207,6 +208,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     >
       <ModalOverlay />
       <ModalContent>
+        
         <ModalHeader>
           Do you need help to generate your learning path?
           <Text hidden={!screen1}>
@@ -255,12 +257,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     position: 'bottom-left',
                     isClosable: true,
                   });
-                  return;
+                    throw new Error('Missing sourceMaterial');                  
                 }
-                /*const response: AxiosResponse = await API.analyseMaterial({
+                const response: AxiosResponse = await API.analyseMaterial({
                   text: sourceMaterial,
-                });*/
-                const response = {
+                });
+                /*const response = {
                   data: {
                     language: 'Italian',
                     macro_subject: 'Arte',
@@ -317,7 +319,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     ],
                     estimated_duration: 60,
                   },
-                };
+                };*/
                 console.log(response.data as AnalyzedMaterial);
                 setAnalyzedMaterial(response.data as AnalyzedMaterial);
                 setEduLevel(response.data.education_level as EducationLevel);
@@ -532,7 +534,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   });
                   return;
                 }
-                /*
+                if (!analysedMaterial) {
+                  throw new Error('Missing analysedMaterial');
+                }
+                if (!learningOutcome || !eduLevel) {
+                  throw new Error('Missing learningOutcome or eduLevel');
+                }
                 API.planLesson({
                   topics: selectedTopic,
                   learning_outcome: learningOutcome,
@@ -544,7 +551,8 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   model: 'Gemini',
                 }).then((response) => {
                   setAINodes(response.data);
-                });*/
+                });
+                /*
                 const response2 = {
                   data: {
                     title: 'Biografia di Michelangelo',
@@ -665,7 +673,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     language: 'Italian',
                   },
                 };
-                setAINodes(response2.data as AIPlanLessonResponse);
+                setAINodes(response2.data as AIPlanLessonResponse);*/
               } catch (error: any) {
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
@@ -688,15 +696,16 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     position: 'bottom-left',
                     isClosable: true,
                   });
-                else
+                else {
                   toast({
                     title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
+                    description: 'Try later: ' + (error as Error).message,
                     status: 'error',
                     duration: 5000,
                     position: 'bottom-left',
                     isClosable: true,
                   });
+                }
               } finally {
                 setGeneratingLoading(false);
               }
@@ -723,13 +732,10 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
           </FormControl>
           <Button
             marginTop={'15px'}
-            onClick={async () => {
-              /*continue from here da mettere la creazione
-              
-              */
-              console.log('GenerateLP');
+            onClick={async () => {              
               setGeneratingLoading(true);
-              if (!analysedMaterial) return;
+              if (!analysedMaterial) 
+                throw new Error('Missing analysedMaterial');
               try {
                 const selectedNodes = AINodes?.nodes
                   .map((aiNode, index) => {
@@ -746,8 +752,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     position: 'bottom-left',
                     isClosable: true,
                   });
-                  setGeneratingLoading(false);
-                  return;
+                  throw new Error('Missing selectedNodes');
                 }
                 const nTopicReadMaterial =
                   nReadMaterial == 1
@@ -757,8 +762,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     : 1;
                 const generatedNodes: PolyglotNode[] = [];
                 let counter = 0;
-                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
+                let check = 0;
                 do {
+                  check++;
                   if (counter == 0 && nReadMaterial != 0) {
                     counter = nTopicReadMaterial;
                     setNReadMaterial(nReadMaterial - 1);
@@ -832,13 +838,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       console.log('errror in generation readMaterial ' + error);
                     }
                   } else {
-                    console.log('generating activity');
                     counter--;
                     const activity = selectedNodes.shift();
-                    console.log(activity);
                     if (!activity) break;
-                    console.log('missing selected nodes:');
-                    console.log(selectedNodes);
                     try {
                       await API.generateNewExercise({
                         macro_subject: activity?.learning_outcome,
@@ -856,7 +858,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                         language: analysedMaterial.language,
                         model: 'Gemini',
                       }).then((response) => {
-                        console.log('creata' + response.data);
                         const exerciseResponse: AIExerciseGenerated =
                           response.data;
                         const _id = UUIDv4();
@@ -868,7 +869,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           dataFactory[typeNode]?.(exerciseResponse) || null;
                         const x = -195 + 50 * generatedNodes.length;
                         const y = -210 + 100 * generatedNodes.length;
-                        console.log('adding.................');
                         generatedNodes.push({
                           _id: _id,
                           type: typeNode,
@@ -895,23 +895,19 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                             data: {},
                           },
                         });
-                        console.log('added................');
                       });
                     } catch (error) {
                       console.log(error);
                     }
                   }
-                  console.log(generatedNodes);
-                  console.log('sto generando');
                 } while (
                   selectedNodes.length + nReadMaterial !=
-                  generatedNodes.length
-                );
-                console.log(
-                  selectedNodes.length + nReadMaterial != generatedNodes.length
+                    generatedNodes.length ||
+                  check < selectedNodes.length + nReadMaterial
                 );
                 const generatedEdges: PolyglotEdge[] = [];
 
+                //edges generation
                 for (let i = 0; i < generatedNodes.length - 1; i++) {
                   const node = generatedNodes[i];
                   const nextNode = generatedNodes[i + 1];
@@ -996,18 +992,14 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   }
                 }
 
-                console.log('finito di generare, ecco tutti i nodes: ');
-                console.log(generatedNodes);
                 const tags: { name: string; color: string }[] = [
                   { name: analysedMaterial.keywords[0], color: 'green' },
                   { name: analysedMaterial.keywords[1], color: 'red' },
                   { name: analysedMaterial.keywords[2], color: 'purple' },
                   { name: analysedMaterial.keywords[3], color: 'blue' },
                 ];
-                console.log('generato tags ' + tags);
                 const topics = analysedMaterial.topics.map((t) => t.topic);
 
-                console.log('generato topic ' + topics);
                 const newFlow: PolyglotFlow = {
                   _id: UUIDv4(),
                   author: {
@@ -1024,11 +1016,28 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   nodes: generatedNodes,
                   edges: generatedEdges,
                 };
-                console.log(newFlow);
                 const flowResponse = await API.createNewFlowJson(newFlow);
-                console.log(flowResponse);
+                if (flowResponse.status !== 200) {
+                  onClose();
+                  toast({
+                    title: 'Flow not created',
+                    description: 'Something is off with your flow! Try again',
+                    status: 'warning',
+                    duration: 3000,
+                    position: 'bottom-left',
+                    isClosable: true,
+                  });
+                }
+                router.push('/flows/' + flowResponse.data.id);
               } catch (error) {
-                console.log(error);
+                toast({
+                  title: 'Generic Error',
+                  description: 'Try later: ' + (error as Error).message,
+                  status: 'error',
+                  duration: 5000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
               } finally {
                 setGeneratingLoading(false);
               }
@@ -1053,6 +1062,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               setSelectedTopic([]);
               setSelectedNodeIds([]);
               setExpandedIndexes([]);
+              setNReadMaterial(1);
             }}
             width={'80px'}
           >
