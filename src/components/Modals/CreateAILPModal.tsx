@@ -208,7 +208,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     >
       <ModalOverlay />
       <ModalContent>
-        
         <ModalHeader>
           Do you need help to generate your learning path?
           <Text hidden={!screen1}>
@@ -257,7 +256,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     position: 'bottom-left',
                     isClosable: true,
                   });
-                    throw new Error('Missing sourceMaterial');                  
+                  throw new Error('Missing sourceMaterial');
                 }
                 const response: AxiosResponse = await API.analyseMaterial({
                   text: sourceMaterial,
@@ -732,9 +731,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
           </FormControl>
           <Button
             marginTop={'15px'}
-            onClick={async () => {              
+            onClick={async () => {
               setGeneratingLoading(true);
-              if (!analysedMaterial) 
+              if (!analysedMaterial)
                 throw new Error('Missing analysedMaterial');
               try {
                 const selectedNodes = AINodes?.nodes

@@ -183,10 +183,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             <TabList>
               <Tab>Custom</Tab>
               <Tab>Import JSON</Tab>
-          <Tab onClick={()=>caifOnOpen()}>
-            Create with AI
-            
-          </Tab>
+              <Tab onClick={() => caifOnOpen()}>Create with AI</Tab>
             </TabList>
 
             <TabPanels>
@@ -390,8 +387,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                 />
               </TabPanel>
               <TabPanel>
-                
-          <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose} />
+                <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose} />
               </TabPanel>
             </TabPanels>
           </Tabs>
