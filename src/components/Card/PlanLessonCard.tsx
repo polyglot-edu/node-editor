@@ -150,11 +150,13 @@ const PlanLessonCard = ({
                   planNode.type != 'multiple choice'
                 }
               >
-                <Text textStyle="sm">N° Correct
-                {planNode.type == 'multiple choice'
-                  ? ' answers'
-                  : ' statements'}
-                :</Text>
+                <Text textStyle="sm">
+                  N° Correct
+                  {planNode.type == 'multiple choice'
+                    ? ' answers'
+                    : ' statements'}
+                  :
+                </Text>
                 <NumberInput
                   float={'right'}
                   defaultValue={specificData.solutions_number}
@@ -186,11 +188,13 @@ const PlanLessonCard = ({
                     />
                   </NumberInputStepper>
                 </NumberInput>
-                <Text textStyle="sm">N° Wrong
-                {planNode.type == 'multiple choice'
-                  ? ' answers'
-                  : ' statements'}
-                :</Text>
+                <Text textStyle="sm">
+                  N° Wrong
+                  {planNode.type == 'multiple choice'
+                    ? ' answers'
+                    : ' statements'}
+                  :
+                </Text>
                 <NumberInput
                   defaultValue={specificData.solutions_number}
                   min={0}
@@ -223,11 +227,13 @@ const PlanLessonCard = ({
                     />
                   </NumberInputStepper>
                 </NumberInput>
-                <Text textStyle="sm">Easy wrong
-                {planNode.type == 'multiple choice'
-                  ? ' answers'
-                  : ' statements'}
-                :</Text>
+                <Text textStyle="sm">
+                  Easy wrong
+                  {planNode.type == 'multiple choice'
+                    ? ' answers'
+                    : ' statements'}
+                  :
+                </Text>
                 <NumberInput
                   defaultValue={
                     specificData.easily_discardable_distractors_number
