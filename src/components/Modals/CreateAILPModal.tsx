@@ -26,9 +26,14 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { useEffect, useState } from 'react';
+import { MarkerType } from 'reactflow';
 import { v4 as UUIDv4 } from 'uuid';
 import { API } from '../../data/api';
-import { PolyglotEdge, PolyglotFlow, PolyglotNode } from '../../types/polyglotElements';
+import {
+  PolyglotEdge,
+  PolyglotFlow,
+  PolyglotNode,
+} from '../../types/polyglotElements';
 import {
   AIExerciseGenerated,
   AIMaterialGenerated,
@@ -64,14 +69,12 @@ function shuffleArray<T>(array: T[]) {
 
 const dataFactory: Record<string, (values: AIExerciseGenerated) => any> = {
   OpenQuestionNode: (values) => ({
-    type: 'open',
     question: values.assignment,
     material: values.material,
     aiQuestion: false,
     possibleAnswer: values.solutions[0],
   }),
   closeEndedQuestionNode: (values) => ({
-    type: 'shortAnswer',
     question: values.assignment,
     correctAnswers: values.solutions,
     isAnswerCorrect: [],
@@ -93,7 +96,6 @@ const dataFactory: Record<string, (values: AIExerciseGenerated) => any> = {
       if (values.solutions.includes(value)) isAnswerCorrect[index] = true;
     });
     return {
-      type: 'multipleChoice',
       question: values.assignment,
       choices: shuffleAnswers,
       isChoiceCorrect: isAnswerCorrect,
@@ -112,7 +114,6 @@ const dataFactory: Record<string, (values: AIExerciseGenerated) => any> = {
       if (values.solutions.includes(value)) isAnswerCorrect[index] = true;
     });
     return {
-      type: 'multipleChoice',
       question: values.assignment,
       choices: shuffleAnswers,
       isChoiceCorrect: isAnswerCorrect,
@@ -132,11 +133,13 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
   const [nReadMaterial, setNReadMaterial] = useState(1);
-  const [generatedNodes, setGeneratedNodes] = useState<PolyglotNode[]>([]);
   const [screen1, setScreen1] = useState(true);
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
 
+  useEffect(() => {
+    console.log(nReadMaterial);
+  }, [nReadMaterial]);
   useEffect(() => {
     if (analysedMaterial) {
       setScreen1(false);
@@ -187,10 +190,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
       ...AINodes,
       nodes: updatedNodes,
     });
-  };
-
-  const addGeneratedNode = (newNode: PolyglotNode) => {
-    setGeneratedNodes((prevNodes) => [...prevNodes, newNode]);
   };
 
   const toast = useToast();
@@ -732,9 +731,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               setGeneratingLoading(true);
               if (!analysedMaterial) return;
               try {
-                const selectedNodes = AINodes?.nodes.map((aiNode, index) => {
-                  if (selectedNodeIds.includes(index)) return aiNode;
-                });
+                const selectedNodes = AINodes?.nodes
+                  .map((aiNode, index) => {
+                    if (selectedNodeIds.includes(index)) return aiNode;
+                  })
+                  .filter((node) => node != undefined);
                 if (!selectedNodes || !selectedNodes[0]) {
                   toast({
                     title: 'Missing activities',
@@ -751,10 +752,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 const nTopicReadMaterial =
                   nReadMaterial == 1
                     ? selectedNodes.length
-                    : nReadMaterial > selectedNodes.length
-                    ? selectedNodes.length / nReadMaterial
+                    : nReadMaterial < selectedNodes.length
+                    ? Math.ceil(selectedNodes.length / nReadMaterial)
                     : 1;
+                const generatedNodes: PolyglotNode[] = [];
                 let counter = 0;
+                console.log('aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa');
                 do {
                   if (counter == 0 && nReadMaterial != 0) {
                     counter = nTopicReadMaterial;
@@ -775,8 +778,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                               },
                             ],
                           };
+                        return undefined;
                       })
-                      .filter((node) => node !== undefined);
+                      .filter(
+                        (node): node is LessonNodeAI => node !== undefined
+                      );
                     try {
                       const response = await API.generateMaterial({
                         title: analysedMaterial.title,
@@ -791,12 +797,15 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       const readMaterialGen: AIMaterialGenerated =
                         response.data;
                       const _id = UUIDv4();
-                      addGeneratedNode({
+                      const x = -195 + 50 * generatedNodes.length;
+                      const y = -210 + 100 * generatedNodes.length;
+                      generatedNodes.push({
                         _id: _id,
                         type: 'ReadMaterialNode',
                         title: readMaterialGen.title,
                         description: readMaterialGen.macro_subject,
                         difficulty: 1,
+                        platform: 'WebApp',
                         data: {
                           text: readMaterialGen.material,
                           link: '',
@@ -805,16 +814,16 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           id: _id,
                           type: 'ReadMaterialNode',
                           position: {
-                            x: -195,
-                            y: -210,
+                            x: x,
+                            y: y,
                           },
                           width: 88,
                           height: 46,
                           selected: false,
                           dragging: false,
                           positionAbsolute: {
-                            x: -195,
-                            y: -210,
+                            x: x,
+                            y: y,
                           },
                           data: {},
                         },
@@ -823,71 +832,182 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       console.log('errror in generation readMaterial ' + error);
                     }
                   } else {
+                    console.log('generating activity');
                     counter--;
                     const activity = selectedNodes.shift();
+                    console.log(activity);
                     if (!activity) break;
-                    const response = await API.generateNewExercise({
-                      macro_subject: activity?.learning_outcome,
-                      topic: activity.topic,
-                      education_level: analysedMaterial.education_level,
-                      learning_outcome: activity.learning_outcome,
-                      material: sourceMaterial,
-                      solutions_number: activity.data.solutions_number || 0,
-                      distractors_number: activity.data.distractors_number || 0,
-                      easily_discardable_distractors_number:
-                        activity.data.easily_discardable_distractors_number ||
-                        0,
-                      type: activity.type,
-                      language: analysedMaterial.language,
-                      model: 'Gemini',
-                    });
-                    const exerciseResponse: AIExerciseGenerated = response.data;
-                    const _id = UUIDv4();
-                    const typeNode =
-                      QuestionTypeMap.find(
-                        (type) => type.key == exerciseResponse.type
-                      )?.nodeType || 'OpenQuestionNode';
-                    const data =
-                      dataFactory[typeNode]?.(exerciseResponse) || null;
+                    console.log('missing selected nodes:');
+                    console.log(selectedNodes);
+                    try {
+                      await API.generateNewExercise({
+                        macro_subject: activity?.learning_outcome,
+                        topic: activity.topic,
+                        education_level: analysedMaterial.education_level,
+                        learning_outcome: activity.learning_outcome,
+                        material: sourceMaterial,
+                        solutions_number: activity.data?.solutions_number || 0,
+                        distractors_number:
+                          activity.data?.distractors_number || 0,
+                        easily_discardable_distractors_number:
+                          activity.data
+                            ?.easily_discardable_distractors_number || 0,
+                        type: activity.type,
+                        language: analysedMaterial.language,
+                        model: 'Gemini',
+                      }).then((response) => {
+                        console.log('creata' + response.data);
+                        const exerciseResponse: AIExerciseGenerated =
+                          response.data;
+                        const _id = UUIDv4();
+                        const typeNode =
+                          QuestionTypeMap.find(
+                            (type) => type.key == exerciseResponse.type
+                          )?.nodeType || 'OpenQuestionNode';
+                        const data =
+                          dataFactory[typeNode]?.(exerciseResponse) || null;
+                        const x = -195 + 50 * generatedNodes.length;
+                        const y = -210 + 100 * generatedNodes.length;
+                        console.log('adding.................');
+                        generatedNodes.push({
+                          _id: _id,
+                          type: typeNode,
+                          title: exerciseResponse.topic,
+                          description: exerciseResponse.macro_subject,
+                          platform: 'WebApp',
+                          difficulty: 1,
+                          data: data,
+                          reactFlow: {
+                            id: _id,
+                            type: typeNode,
+                            position: {
+                              x: x,
+                              y: y,
+                            },
+                            width: 88,
+                            height: 46,
+                            selected: false,
+                            dragging: false,
+                            positionAbsolute: {
+                              x: x,
+                              y: y,
+                            },
+                            data: {},
+                          },
+                        });
+                        console.log('added................');
+                      });
+                    } catch (error) {
+                      console.log(error);
+                    }
+                  }
+                  console.log(generatedNodes);
+                  console.log('sto generando');
+                } while (
+                  selectedNodes.length + nReadMaterial !=
+                  generatedNodes.length
+                );
+                console.log(
+                  selectedNodes.length + nReadMaterial != generatedNodes.length
+                );
+                const generatedEdges: PolyglotEdge[] = [];
 
-                    addGeneratedNode({
-                      _id: _id,
-                      type: typeNode,
-                      title: exerciseResponse.topic,
-                      description: exerciseResponse.macro_subject,
-                      difficulty: 1,
-                      data: data,
-                      reactFlow: {
-                        id: _id,
-                        type: typeNode,
-                        position: {
-                          x: -195,
-                          y: -210,
-                        },
-                        width: 88,
-                        height: 46,
-                        selected: false,
-                        dragging: false,
-                        positionAbsolute: {
-                          x: -195,
-                          y: -210,
-                        },
-                        data: {},
+                for (let i = 0; i < generatedNodes.length - 1; i++) {
+                  const node = generatedNodes[i];
+                  const nextNode = generatedNodes[i + 1];
+
+                  if (node.type == 'ReadMaterialNode') {
+                    const id = UUIDv4();
+                    generatedEdges.push({
+                      _id: id,
+                      type: 'unconditionalEdge',
+                      code: `
+                    async Task<(bool, string)> validate(PolyglotValidationContext context) {
+                        return (true, "Unconditional edge");
+                    }
+                    `,
+                      data: {
+                        conditionKind: 'pass',
                       },
+                      reactFlow: {
+                        id: id,
+                        source: node._id,
+                        target: nextNode._id,
+                        type: 'unconditionalEdge',
+                        markerEnd: {
+                          color: 'grey',
+                          type: MarkerType.Arrow,
+                          width: 25,
+                          height: 25,
+                        },
+                        selected: true,
+                      },
+                      title: 'next',
+                    });
+                  } else {
+                    const id1 = UUIDv4();
+                    generatedEdges.push({
+                      _id: id1,
+                      type: 'passFailEdge',
+                      code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
+                    `,
+                      data: {
+                        conditionKind: 'pass',
+                      },
+                      reactFlow: {
+                        id: id1,
+                        source: node._id,
+                        target: nextNode._id,
+                        type: 'passFailEdge',
+                        markerEnd: {
+                          color: 'green',
+                          type: MarkerType.Arrow,
+                          width: 25,
+                          height: 25,
+                        },
+                        selected: true,
+                      },
+                      title: 'pass',
+                    });
+                    const id2 = UUIDv4();
+                    generatedEdges.push({
+                      _id: id2,
+                      type: 'passFailEdge',
+                      code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
+                    `,
+                      data: {
+                        conditionKind: 'fail',
+                      },
+                      reactFlow: {
+                        id: id2,
+                        source: node._id,
+                        target: node._id,
+                        type: 'passFailEdge',
+                        markerEnd: {
+                          color: 'red',
+                          type: MarkerType.Arrow,
+                          width: 25,
+                          height: 25,
+                        },
+                        selected: true,
+                      },
+                      title: 'fail',
                     });
                   }
-                } while (
-                  generatedNodes?.length <
-                  nReadMaterial + selectedNodes.length
-                );
+                }
+
+                console.log('finito di generare, ecco tutti i nodes: ');
+                console.log(generatedNodes);
                 const tags: { name: string; color: string }[] = [
                   { name: analysedMaterial.keywords[0], color: 'green' },
                   { name: analysedMaterial.keywords[1], color: 'red' },
                   { name: analysedMaterial.keywords[2], color: 'purple' },
                   { name: analysedMaterial.keywords[3], color: 'blue' },
                 ];
-                const topics= analysedMaterial.topics.map((t)=>t.topic);
+                console.log('generato tags ' + tags);
+                const topics = analysedMaterial.topics.map((t) => t.topic);
 
+                console.log('generato topic ' + topics);
                 const newFlow: PolyglotFlow = {
                   _id: UUIDv4(),
                   author: {
@@ -902,8 +1022,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   topics: topics,
                   tags: tags,
                   nodes: generatedNodes,
-                  edges: [],
+                  edges: generatedEdges,
                 };
+                console.log(newFlow);
                 const flowResponse = await API.createNewFlowJson(newFlow);
                 console.log(flowResponse);
               } catch (error) {
