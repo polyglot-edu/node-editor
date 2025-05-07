@@ -1,4 +1,4 @@
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CloseIcon, ViewIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -183,8 +183,17 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             <TabList>
               <Tab>Custom</Tab>
               <Tab>Import JSON</Tab>
-              <Tab onClick={() => caifOnOpen()}>Create with AI</Tab>
             </TabList>
+            <Text top={'-100px'} float={'right'} onClick={caifOnOpen}>
+              Create with AI{' '}
+              <IconButton
+                aria-label="Create Flow"
+                isRound={true}
+                height={'30px'}
+                colorScheme="blue"
+                icon={<ViewIcon color="white" />}
+              />
+            </Text>
 
             <TabPanels>
               <TabPanel>
@@ -386,11 +395,9 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
                   onChange={(value) => setFlow(value)}
                 />
               </TabPanel>
-              <TabPanel>
-                <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose} />
-              </TabPanel>
             </TabPanels>
           </Tabs>
+          <CreateAILPModal isOpen={caifOpen} onClose={caifOnClose} />
         </ModalBody>
 
         <ModalFooter>
