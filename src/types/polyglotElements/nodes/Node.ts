@@ -17,6 +17,7 @@ export const PolyglotNode_IoTs = t.type(
     description: t.string,
     difficulty: t.number,
     data: NodeData_IoTs,
+    platform: t.string,
   },
   'PolyglotNode'
 );

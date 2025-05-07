@@ -119,6 +119,7 @@ export const createNewDefaultPolyglotEdge = (
       target: targetId,
       type: type,
       markerEnd: {
+        color: type == 'unconditionalEdge' ? 'grey' : 'green',
         type: MarkerType.Arrow,
         width: 25,
         height: 25,

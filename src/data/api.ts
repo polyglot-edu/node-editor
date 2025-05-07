@@ -13,6 +13,7 @@ import {
 } from '../types/polyglotElements';
 import {
   AIExerciseType,
+  AIPlanLesson,
   AnalyseType,
   MaterialType,
   SummerizerBody,
@@ -330,6 +331,9 @@ export const API = {
       createNewDefaultPolyglotFlow()
     );
   },
+  createNewFlowJson(flow: PolyglotFlow): Promise<AxiosResponse> {
+    return axios.post<{}, AxiosResponse, {}>(`/api/flows/json`, flow);
+  },
   saveFlowAsync: (flow: PolyglotFlow): Promise<AxiosResponse> => {
     flow.nodes = flow.nodes?.map((e) =>
       polyglotNodeComponentMapping.applyTransformFunction(e)
@@ -418,6 +422,10 @@ export const API = {
       `/api/openai/ActivityGenerator`,
       body
     );
+  },
+
+  planLesson: (body: AIPlanLesson): Promise<AxiosResponse> => {
+    return axios.post<{}, AxiosResponse, {}>(`/api/openai/PlanLesson`, body);
   },
 
   getAssignmentProjects: (): Promise<AxiosResponse> => {

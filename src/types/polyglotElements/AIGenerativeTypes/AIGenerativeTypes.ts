@@ -16,29 +16,119 @@ export enum LearningOutcome {
   GenerateContribute = 'the ability to generate new knowledge, challenge existing paradigms, and make significant contributions to the field',
 }
 
-export enum QuestionType {
-  OpenQuestion = 'open question',
-  ShortAnswerQuestion = 'short answer question',
-  TrueOrFalse = 'true or false',
-  FillInTheBlanks = 'fill in the blanks',
-  Matching = 'matching',
-  Ordering = 'ordering',
-  MultipleChoice = 'multiple choice',
-  MultipleSelect = 'multiple select',
-  Coding = 'coding',
-  Essay = 'essay',
-  KnowledgeExposition = 'knowledge exposition',
-  Debate = 'debate',
-  Brainstorming = 'brainstorming',
-  GroupDiscussion = 'group discussion',
-  Simulation = 'simulation',
-  InquiryBasedLearning = 'inquiry based learning',
-  NonWrittenMaterialAnalysis = 'non written material analysis',
-  NonWrittenMaterialProduction = 'non written material production',
-  CaseStudyAnalysis = 'case study analysis',
-  ProjectBasedLearning = 'project based learning',
-  ProblemSolvingActivity = 'problem solving activity',
-}
+export const QuestionTypeMap = [
+  {
+    key: 'open question',
+    text: 'Open Question',
+    nodeType: 'OpenQuestionNode',
+    integrated: true,
+  },
+  {
+    key: 'short answer question',
+    text: 'Short Answer Question',
+    nodeType: 'closeEndedQuestionNode',
+    integrated: true,
+  },
+  {
+    key: 'true or false',
+    text: 'True or False',
+    nodeType: 'TrueFalseNode',
+    integrated: true,
+  },
+  {
+    key: 'fill in the blanks',
+    text: 'Fill in the Blanks',
+    nodeType: 'activity',
+    integrated: false,
+  },
+  {
+    key: 'matching',
+    text: 'Matching',
+    nodeType: 'activity',
+    integrated: false,
+  },
+  {
+    key: 'ordering',
+    text: 'Ordering',
+    nodeType: 'activity',
+    integrated: false,
+  },
+  {
+    key: 'multiple choice',
+    text: 'Multiple Choice',
+    nodeType: 'multipleChoiceQuestionNode',
+    integrated: true,
+  },
+  {
+    key: 'multiple select',
+    text: 'Multiple Select',
+    nodeType: 'activity',
+    integrated: false,
+  },
+  { key: 'coding', text: 'Coding', nodeType: 'activity', integrated: false },
+  { key: 'essay', text: 'Essay', nodeType: 'activity', integrated: false },
+  {
+    key: 'knowledge exposition',
+    text: 'Knowledge Exposition',
+    nodeType: 'discussion',
+    integrated: false,
+  },
+  { key: 'debate', text: 'Debate', nodeType: 'discussion', integrated: false },
+  {
+    key: 'brainstorming',
+    text: 'Brainstorming',
+    nodeType: 'discussion',
+    integrated: false,
+  },
+  {
+    key: 'group discussion',
+    text: 'Group Discussion',
+    nodeType: 'discussion',
+    integrated: false,
+  },
+  {
+    key: 'simulation',
+    text: 'Simulation',
+    nodeType: 'experiential',
+    integrated: false,
+  },
+  {
+    key: 'inquiry based learning',
+    text: 'Inquiry-Based Learning',
+    nodeType: 'experiential',
+    integrated: false,
+  },
+  {
+    key: 'non written material analysis',
+    text: 'Non-Written Material Analysis',
+    nodeType: 'experiential',
+    integrated: false,
+  },
+  {
+    key: 'non written material production',
+    text: 'Non-Written Material Production',
+    nodeType: 'experiential',
+    integrated: false,
+  },
+  {
+    key: 'case study analysis',
+    text: 'Case Study Analysis',
+    nodeType: 'project',
+    integrated: false,
+  },
+  {
+    key: 'project based learning',
+    text: 'Project-Based Learning',
+    nodeType: 'project',
+    integrated: false,
+  },
+  {
+    key: 'problem solving activity',
+    text: 'Problem Solving Activity',
+    nodeType: 'project',
+    integrated: false,
+  },
+];
 
 export enum SummarizeStyle {
   TopicSynthetic = 'topic / synthetic',
@@ -60,6 +150,18 @@ export type LessonNodeAI = {
 
 export type AnalyseType = { text: string; model?: string };
 
+export type AnalyzedMaterial = {
+  title: string;
+  macro_subject: string;
+  education_level: EducationLevel;
+  learning_outcome: LearningOutcome;
+  language: string;
+  topics: Topic[];
+  keywords: string[];
+  prerequisites: string[];
+  estimated_duration: number;
+};
+
 export type AIExerciseType = {
   macro_subject: string;
   topic: string;
@@ -69,7 +171,7 @@ export type AIExerciseType = {
   solutions_number: number;
   distractors_number: number;
   easily_discardable_distractors_number: number;
-  type: QuestionType;
+  type: string;
   language: string;
   model: string;
 };
@@ -85,7 +187,7 @@ export type AIExerciseGenerated = {
   solutions: string[];
   distractors: string[];
   easily_discardable_distractors: string[];
-  type: QuestionType;
+  type: string;
   language: string;
 };
 
@@ -124,4 +226,35 @@ export type SummerizerBody = {
   style: SummarizeStyle;
   education_level: EducationLevel;
   learning_outcome: LearningOutcome;
+};
+
+export type AIPlanLesson = {
+  topics: Topic[];
+  learning_outcome: LearningOutcome;
+  language: string;
+  macro_subject: string;
+  title: string;
+  education_level: EducationLevel;
+  context: string;
+  model: string;
+};
+
+export type PlanLessonNode = {
+  type: string;
+  topic: string;
+  details: string;
+  learning_outcome: LearningOutcome;
+  duration: number;
+  data: any;
+};
+
+export type AIPlanLessonResponse = {
+  title: string;
+  macro_subject: string;
+  education_level: EducationLevel;
+  learning_outcome: LearningOutcome;
+  prerequisites: string[];
+  nodes: PlanLessonNode[];
+  context: string;
+  language: string;
 };

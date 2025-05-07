@@ -28,6 +28,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
   const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {
       _id: ids[0],
+      platform: 'WebApp',
       type: 'multipleChoiceQuestionNode',
       title: 'Multiple Choice Question',
       description: 'Some description',
@@ -51,6 +52,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
       _id: UUIDv4(),
       type: 'closeEndedQuestionNode',
       title: 'Close Ended Question',
+      platform: 'WebApp',
       description: 'Some description',
       difficulty: 1,
       data: {
@@ -90,6 +92,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     {
       _id: ids[2],
       type: 'codingQuestionNode',
+      platform: 'VSCode',
       title: 'Coding Question',
       description: 'Some description',
       difficulty: 4,
@@ -111,6 +114,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     {
       _id: UUIDv4(),
       type: 'abstractNode',
+      platform: 'VSCode',
       title: 'Abstract Node',
       description: 'nice description',
       difficulty: 1,
@@ -128,6 +132,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     {
       _id: UUIDv4(),
       type: 'lessonNode',
+      platform: 'WebApp',
       title: 'Lesson',
       description: 'Some description',
       difficulty: 1,
@@ -169,6 +174,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[1],
         type: 'passFailEdge',
         markerEnd: {
+          color: 'green',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,
@@ -191,6 +197,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[3],
         type: 'exactValueEdge',
         markerEnd: {
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,
@@ -211,6 +218,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[5],
         type: 'unconditionalEdge',
         markerEnd: {
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,
@@ -235,6 +243,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[7],
         type: 'customValidationEdge',
         markerEnd: {
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,
