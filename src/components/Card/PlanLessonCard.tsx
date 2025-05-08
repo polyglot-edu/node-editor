@@ -27,6 +27,7 @@ type FlowCardProps = {
   px?: SpaceProps['px'];
   id: number;
   isSelected: boolean;
+  suggestedType: string;
   setSelectedNode: (id: number) => void;
   updateNodeAt: (id: number, updatedNode: PlanLessonNode) => void;
 };
@@ -45,13 +46,13 @@ const PlanLessonCard = ({
   setSelectedNode,
   isSelected,
   updateNodeAt,
+  suggestedType,
 }: FlowCardProps) => {
   const [specificData, setSpecificData] = useState<SpecificData>({
     solutions_number: 1,
     distractors_number: 1,
     easily_discardable_distractors_number: 1,
   });
-
   const planNodeSuggestedType = planNode.type;
 
   useEffect(() => {
@@ -79,7 +80,7 @@ const PlanLessonCard = ({
                 <strong>Topic:</strong> {planNode.topic}
               </Text>
               <Text fontSize="sm">
-                <strong>Type:</strong> {planNode.type}
+                <strong>Suggested Type:</strong> {suggestedType}
               </Text>
               <Text fontSize="sm">
                 <strong>Details:</strong> {planNode.details}
