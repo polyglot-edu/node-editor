@@ -717,17 +717,20 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
         <ModalBody hidden={!screen3}>
           <FormControl label="Nodes">
             <Box display="flex" flexDirection="column">
-              {AINodes?.nodes.map((node, id) => {const suggestedType= node.type; return(
-                <PlanLessonCard
-                  planNode={node}
-                  key={id}
-                  id={id}
-                  setSelectedNode={handleToggleNode}
-                  isSelected={selectedNodeIds.includes(id)}
-                  updateNodeAt={updateNodeAt}
-                  suggestedType={suggestedType}
-                />
-              )})}
+              {AINodes?.nodes.map((node, id) => {
+                const suggestedType = node.type;
+                return (
+                  <PlanLessonCard
+                    planNode={node}
+                    key={id}
+                    id={id}
+                    setSelectedNode={handleToggleNode}
+                    isSelected={selectedNodeIds.includes(id)}
+                    updateNodeAt={updateNodeAt}
+                    suggestedType={suggestedType}
+                  />
+                );
+              })}
             </Box>
           </FormControl>
           <Button
