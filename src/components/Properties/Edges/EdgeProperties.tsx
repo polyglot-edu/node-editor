@@ -19,7 +19,7 @@ const config = [
       'CreateKeywordsListNode',
       'MemoriseKeywordsListNode',
       'PromptEngineeringNode',
-      'ProblemSolvingNode',
+      'ProblemSolvingNode',      
     ],
   },
   {

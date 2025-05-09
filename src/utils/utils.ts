@@ -91,6 +91,7 @@ const configUnconditionalEdge = [
   'lessonTextNode',
   'WatchVideoNode',
   'ReadMaterialNode',
+  'ScanningNode',
   'MindMapNode',
   'SummaryNode',
   'ProblemSolvingNode',
