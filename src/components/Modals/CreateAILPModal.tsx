@@ -1012,6 +1012,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   duration: analysedMaterial.estimated_duration.toString(),
                   topics: topics,
                   tags: tags,
+                  sourceMaterial: sourceMaterial,
+                  learning_outcome: learningOutcome,
+                  education_level: eduLevel,
+                  topicsAI: selectedTopic,
+                  language: analysedMaterial.language,
+                  macro_subject: analysedMaterial.macro_subject,
                   nodes: generatedNodes,
                   edges: generatedEdges,
                 };
