@@ -411,7 +411,7 @@ const AIToolModal = ({
                       break;
                     case 'short answer question':
                       adaptedData = {
-                        question: dataGen.assignment,
+                        question: dataGen.assignment + ' ' + dataGen.plus,
                         correctAnswers: dataGen.solutions,
                       };
                       break;
