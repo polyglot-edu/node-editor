@@ -64,6 +64,7 @@ const configAssessment = [
 ];
 
 const listImplementedNodes = [
+  'abstractNode',
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
   'OpenQuestionNode',

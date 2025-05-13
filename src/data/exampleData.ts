@@ -110,24 +110,6 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     },
   ];
 
-  const abstractNodes: AbstractNode[] = [
-    {
-      _id: UUIDv4(),
-      type: 'abstractNode',
-      platform: 'VSCode',
-      title: 'Abstract Node',
-      description: 'nice description',
-      difficulty: 1,
-      data: { target: 'Goal?' },
-      reactFlow: {
-        id: UUIDv4(),
-        type: 'abstractNode',
-        position: { x: 250, y: 300 },
-        data: { label: 'Abstract Node' },
-      },
-    },
-  ];
-
   const lessonNodes: LessonNode[] = [
     {
       _id: UUIDv4(),
@@ -151,7 +133,6 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     ...codingNodes,
     ...closeEndedQuestionNodes,
     ...lessonNodes,
-    ...abstractNodes,
   ];
 
   /*
@@ -272,6 +253,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     learningContext: '',
     duration: '0',
     topics: [],
+    topicsAI: [],
     nodes: flowNodes,
     edges: flowEdges,
   });

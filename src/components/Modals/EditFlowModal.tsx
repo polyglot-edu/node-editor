@@ -279,6 +279,7 @@ const EditFlowModal = ({
             onClick={() => {
               if (!title || !description || !tags) return;
               updateInfo({
+                //aggiorna con material... ai data
                 title: title,
                 description: description,
                 tags: tags,
@@ -286,6 +287,7 @@ const EditFlowModal = ({
                 learningContext: learningContext,
                 duration: duration,
                 topics: topics,
+                topicsAI: [],
               });
               onClose();
             }}

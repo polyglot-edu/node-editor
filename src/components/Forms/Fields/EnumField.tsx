@@ -15,6 +15,7 @@ export type EnumFieldProps = {
   options: JSX.Element;
   constraints?: RegisterOptions;
   hidden?: boolean;
+  defaultValue?: any;
 };
 
 const EnumField = ({
@@ -24,6 +25,7 @@ const EnumField = ({
   options,
   constraints,
   width,
+  defaultValue,
 }: EnumFieldProps) => {
   const { register, getFieldState } = useFormContext();
   const { error } = getFieldState(name);
@@ -31,7 +33,11 @@ const EnumField = ({
   return (
     <Box p={2} width={width} hidden={hidden}>
       <FormControl isInvalid={error !== undefined}>
-        <Select {...register(name, constraints)} borderColor={'grey'}>
+        <Select
+          {...register(name, constraints)}
+          borderColor={'grey'}
+          defaultValue={defaultValue}
+        >
           {options}
         </Select>
         <FormLabel
