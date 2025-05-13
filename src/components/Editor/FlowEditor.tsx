@@ -35,7 +35,6 @@ import ContextMenu, {
   ContextMenuTypes,
 } from '../ContextMenu/ContextMenu';
 
-import { platform } from 'os';
 import { createNewDefaultPolyglotNode } from '../../utils/utils';
 import LateralMenu from '../LateralMenu/LateralMenu';
 import EditorNav from '../NavBars/EditorNav';
@@ -157,6 +156,8 @@ const FlowEditor = ({
           topicsAI: flow?.topicsAI,
           language: flow?.language,
           macro_subject: flow?.macro_subject,
+          title: flow?.title,
+          context: flow?.context,
         },
         reactFlow: {
           id: id,

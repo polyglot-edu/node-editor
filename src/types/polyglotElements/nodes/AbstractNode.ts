@@ -13,6 +13,8 @@ export type AbstractNodeData = NodeData & {
   topicsAI: Topic[];
   language: string;
   macro_subject: string;
+  title: string;
+  context?: string;
 };
 
 export type AbstractNode = PolyglotNode & {
@@ -35,6 +37,7 @@ polyglotNodeComponentMapping.registerMapping<AbstractNode>({
     education_level: EducationLevel.College,
     topicsAI: [],
     language: '',
+    title: '',
     macro_subject: '',
   },
 });
