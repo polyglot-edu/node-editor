@@ -13,19 +13,23 @@ jobs:
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
+
       - name: Set up Docker Buildx
         uses: docker/setup-buildx-action@v3
+
       - name: Login to ghcr.io
         uses: docker/login-action@v1
         with:
           registry: ghcr.io
           username: ${{ github.actor }}
           password: ${{ secrets.GITHUB_TOKEN }}
+
       - name: Extract metadata from repository
         uses: docker/metadata-action@v3
         id: meta
         with:
           images: ghcr.io/${{ github.repository }}
+
       - name: Build and push to ghcr.io
         uses: docker/build-push-action@v5
         with:
@@ -48,14 +52,43 @@ jobs:
             "SETUPMODEL=${{ secrets.SETUPMODEL }}"
             "AIGENERATION_URL=https://skapi.polyglot-edu.com"
           no-cache: true
-          # cache-from: type=gha
-          # cache-to: type=gha,mode=max
+
       - name: Push to ghcr.io with retries
         uses: nick-invision/retry@v2
         with:
           timeout_minutes: 5
           max_attempts: 5
           command: echo "${{ steps.meta.outputs.tags }}" | while IFS= read -r i; do echo "Pushing $i"; docker push $i; done
+
+      - name: Check pod and release status before deploy
+        run: |
+          echo "$KUBECONFIG_FILE" > ./kubeconfig.yml
+          export KUBECONFIG=./kubeconfig.yml
+
+          echo "🚦 Current pod status in namespace 'node-editor-staging':"
+          kubectl get pods -n node-editor-staging || echo "Namespace may not exist yet"
+
+          echo "🔍 Current Helm release status:"
+          helm status node-editor-staging --namespace node-editor-staging || echo "No existing release"
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+
+      - name: Clean stuck Helm release if needed
+        run: |
+          echo "$KUBECONFIG_FILE" > ./kubeconfig.yml
+          export KUBECONFIG=./kubeconfig.yml
+
+          echo "🔍 Checking for pending Helm release..."
+          release_status=$(helm status node-editor-staging --namespace node-editor-staging 2>&1 || true)
+          if echo "$release_status" | grep -q "pending"; then
+            echo "🧹 Uninstalling stuck release..."
+            helm uninstall node-editor-staging --namespace node-editor-staging || true
+          else
+            echo "✅ No stuck release found."
+          fi
+        env:
+          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
+
       - name: Deploy to Kubernetes cluster
         uses: daviFrag/helm@master
         with:
@@ -63,6 +96,7 @@ jobs:
           namespace: 'node-editor-staging'
           chart: 'charts'
           token: '${{ github.token }}'
+          args: --timeout 10m --atomic
           values: |
             url: staging.polyglot-edu.com
             cfOriginKey: ${{ secrets.CFORIGIN }}
