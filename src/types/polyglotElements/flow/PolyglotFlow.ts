@@ -22,7 +22,7 @@ export type PolyglotFlowInfo = {
   sourceMaterial?: string;
   learning_outcome?: LearningOutcome;
   education_level?: EducationLevel;
-  topicsAI?: Topic[];
+  topicsAI: Topic[];
   language?: string;
   macro_subject?: string;
   context?: string;

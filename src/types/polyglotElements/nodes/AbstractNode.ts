@@ -6,6 +6,7 @@ import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type AbstractNodeData = NodeData & {
+  useFlowData: boolean;
   sourceMaterial: string;
   learning_outcome: LearningOutcome;
   education_level: EducationLevel;
@@ -28,6 +29,7 @@ polyglotNodeComponentMapping.registerMapping<AbstractNode>({
   elementComponent: ReactFlowAbstractNode,
   defaultData: {
     ...defaultPolyglotNodeData,
+    useFlowData: true,
     sourceMaterial: '',
     learning_outcome: LearningOutcome.ApplyKnowledge,
     education_level: EducationLevel.College,
