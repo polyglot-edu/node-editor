@@ -1037,16 +1037,18 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     isClosable: true,
                   });
                 }
-                router.push('/flows/' + flowResponse.data.id);
-              } catch (error) {
                 toast({
-                  title: 'Generic Error',
-                  description: 'Try later: ' + (error as Error).message,
-                  status: 'error',
-                  duration: 5000,
+                  title: 'Flow created',
+                  description:
+                    'Flow created successfully, you will be redirected soon.',
+                  status: 'success',
+                  duration: 3000,
                   position: 'bottom-left',
                   isClosable: true,
                 });
+                router.push('/flows/' + flowResponse.data.id);
+              } catch (error) {
+                console.log((error as Error).message);
               } finally {
                 setGeneratingLoading(false);
               }
