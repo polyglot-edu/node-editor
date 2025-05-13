@@ -62,7 +62,14 @@ jobs:
           max_attempts: 5
           command: echo "${{ steps.meta.outputs.tags }}" | while IFS= read -r i; do echo "Pushing $i"; docker push $i; done
           
-      - name: Deploy to Kubernetes cluster
+      - name: Install Helm 3
+        run: |
+          curl https://get.helm.sh/helm-v3.9.4-linux-amd64.tar.gz -o helm-v3.9.4-linux-amd64.tar.gz
+          tar -zxvf helm-v3.9.4-linux-amd64.tar.gz
+          sudo mv linux-amd64/helm /usr/local/bin/helm3
+          helm3 version
+
+      - name: Deploy to Kubernetes cluster (with pending release fix)
         run: |
           echo "$KUBECONFIG_FILE" > ./kubeconfig.yml
           export KUBECONFIG=./kubeconfig.yml
