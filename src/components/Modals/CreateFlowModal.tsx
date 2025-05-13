@@ -109,6 +109,7 @@ const CreateFlowModal = ({ isOpen, onClose, API }: CreateFlowModalProps) => {
             duration: duration,
             learningContext: learningContext,
             topics: topics,
+            topicsAI: [],
           };
           response = await API.createNewFlow(base_Flow);
           break;

@@ -253,6 +253,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     learningContext: '',
     duration: '0',
     topics: [],
+    topicsAI: [],
     nodes: flowNodes,
     edges: flowEdges,
   });

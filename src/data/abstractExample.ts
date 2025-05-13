@@ -118,6 +118,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
       learningContext: '',
       duration: '0',
       topics: [],
+      topicsAI: [],
       publish: false,
       nodes: flowNodes,
       edges: flowEdges,
