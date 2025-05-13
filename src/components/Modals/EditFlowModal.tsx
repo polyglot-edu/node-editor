@@ -278,7 +278,8 @@ const EditFlowModal = ({
             colorScheme="blue"
             onClick={() => {
               if (!title || !description || !tags) return;
-              updateInfo({  //aggiorna con material... ai data
+              updateInfo({
+                //aggiorna con material... ai data
                 title: title,
                 description: description,
                 tags: tags,
@@ -286,7 +287,7 @@ const EditFlowModal = ({
                 learningContext: learningContext,
                 duration: duration,
                 topics: topics,
-                topicsAI: []
+                topicsAI: [],
               });
               onClose();
             }}

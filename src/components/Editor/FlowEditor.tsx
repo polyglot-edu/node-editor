@@ -24,6 +24,7 @@ import ReactFlow, {
   useStoreApi,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import { v4 as UUIDv4 } from 'uuid';
 import useStore from '../../store';
 import {
   polyglotEdgeComponentMapping,
@@ -34,6 +35,7 @@ import ContextMenu, {
   ContextMenuTypes,
 } from '../ContextMenu/ContextMenu';
 
+import { platform } from 'os';
 import { createNewDefaultPolyglotNode } from '../../utils/utils';
 import LateralMenu from '../LateralMenu/LateralMenu';
 import EditorNav from '../NavBars/EditorNav';
@@ -63,6 +65,7 @@ const FlowEditor = ({
     setSelectedElement,
     getSelectedElement,
     clearSelection,
+    flow,
   } = useStore((store) => ({
     getNodes: store.reactFlowNodes,
     getEdges: store.reactFlowEdges,
@@ -74,6 +77,7 @@ const FlowEditor = ({
     setSelectedElement: store.setSelectedElement,
     clearSelection: store.clearSelection,
     setLastSavedAction: store.setLastSavedAction,
+    flow: store.getFlow(),
   }));
   const { resetSelectedElements } = useStoreApi().getState();
   const { project } = useReactFlow();
@@ -133,6 +137,37 @@ const FlowEditor = ({
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     });
+
+    if (type == 'abstractNode') {
+      console.log('abstractNode creation');
+
+      const id = UUIDv4();
+      const nodeToAdd = {
+        _id: id,
+        type: type,
+        title: 'New Node',
+        description: '',
+        difficulty: 1,
+        platform: 'Library',
+        data: {
+          useFlowData: true,
+          sourceMaterial: flow?.sourceMaterial,
+          learning_outcome: flow?.learning_outcome,
+          education_level: flow?.education_level,
+          topicsAI: flow?.topicsAI,
+          language: flow?.language,
+          macro_subject: flow?.macro_subject,
+        },
+        reactFlow: {
+          id: id,
+          type: type,
+          position: pos,
+          data: undefined,
+        },
+      };
+      useStore.getState().addNode(nodeToAdd);
+      return;
+    }
     console.log(pos);
     const nodeToAdd = createNewDefaultPolyglotNode(pos, type);
     console.log(nodeToAdd);
