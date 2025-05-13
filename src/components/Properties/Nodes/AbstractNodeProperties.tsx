@@ -168,7 +168,7 @@ const AbstractNodeProperties = () => {
                   setMacroSubject(response.data.macro_subject);
                   setValue('data.macro_subject', response.data.macro_subject);
                   setValue('data.language', response.data.language);
-                  setValue('data.title', response.data.title)
+                  setValue('data.title', response.data.title);
                   setValue(
                     'data.learning_outcome',
                     response.data.learning_outcome as LearningOutcome
