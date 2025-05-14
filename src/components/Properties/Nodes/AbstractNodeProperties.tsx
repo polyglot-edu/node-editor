@@ -14,58 +14,30 @@ import {
 import { Toggle } from '@fluentui/react';
 import { AxiosResponse } from 'axios';
 import { useEffect, useMemo, useState } from 'react';
-import { useFormContext } from 'react-hook-form';
+import { useFormContext, useWatch } from 'react-hook-form';
 import { API } from '../../../data/api';
 import useStore from '../../../store';
-import {
-  EducationLevel,
-  LearningOutcome,
-  Topic,
-} from '../../../types/polyglotElements';
+import { LearningOutcome, Topic } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
 import NodeProperties from './NodeProperties';
 
 const AbstractNodeProperties = () => {
   const { setValue, getValues } = useFormContext();
-  const [toggleFlowData, setToggleFlowData] = useState<boolean>();
+  const toast = useToast();
+
+  const toggleFlowData = useWatch({ name: 'data.useFlowData' });
+  const sourceMaterial = useWatch({ name: 'data.sourceMaterial' });
+  const macroSubject = useWatch({ name: 'data.macro_subject' });
+  const topicsAI = useWatch({ name: 'data.topicsAI' });
+  const learningOutcome = useWatch({ name: 'data.learning_outcome' });
 
   const [generatingLoading, setGeneratingLoading] = useState(false);
-  const [learningOutcome, setLearningOutcome] = useState<LearningOutcome>(
-    getValues('data.learning_outcome') as LearningOutcome
-  );
-  const [sourceMaterial, setSourceMaterial] = useState<string>(
-    getValues('data.sourceMaterial')
-  );
-  const [macroSubject, setMacroSubject] = useState(
-    getValues('data.macro_subject')
-  );
-  const [topicsAI, setTopicsAI] = useState<Topic[]>(getValues('data.topicsAI'));
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
   const [flow] = useStore((state) => [state.getFlow()]);
 
-  useEffect(() => {
-    setToggleFlowData(getValues('data.useFlowData'));
-  }, []);
-
-  useEffect(() => {
-    setValue('data.useFlowData', toggleFlowData);
-    if (toggleFlowData) {
-      if (!flow) return;
-      setValue('data.learning_outcome', flow?.learning_outcome);
-      setLearningOutcome(flow?.learning_outcome as LearningOutcome);
-      setValue('data.sourceMaterial', flow?.sourceMaterial);
-      setSourceMaterial(flow?.sourceMaterial || '');
-      setValue('data.macro_subject', flow?.macro_subject);
-      setMacroSubject(flow?.macro_subject);
-      setValue('data.topicsAI', flow?.topicsAI);
-      console.log('testing topicsAI ');
-      setTopicsAI(flow.topicsAI || []);
-    }
-  }, [toggleFlowData]);
   const combinedTopics = useMemo(() => {
-    const allTopics = [...topicsAI, ...(flow?.topicsAI || [])];
+    const allTopics = [...(topicsAI || []), ...(flow?.topicsAI || [])];
 
-    // Rimuove duplicati basati su id
     const uniqueTopicsMap = new Map();
     allTopics.forEach((topic) => {
       uniqueTopicsMap.set(topic.topic, topic);
@@ -76,26 +48,90 @@ const AbstractNodeProperties = () => {
 
   const [topicsSelectable, setTopicsSelectable] =
     useState<Topic[]>(combinedTopics);
+
+  useEffect(() => {
+    setTopicsSelectable(combinedTopics);
+  }, [combinedTopics]);
+
   const toggleTopic = (topic: Topic) => {
-    setTopicsAI((prev) => {
-      const exists = prev.some((t) => t.topic === topic.topic);
-      return exists
-        ? prev.filter((t) => t.topic !== topic.topic)
-        : [...prev, topic];
-    });
+    const currentTopics = getValues('data.topicsAI') as Topic[];
+    const exists = currentTopics.some((t) => t.topic === topic.topic);
+    const updatedTopics = exists
+      ? currentTopics.filter((t) => t.topic !== topic.topic)
+      : [...currentTopics, topic];
+    setValue('data.topicsAI', updatedTopics);
+  };
+
+  const handleAnalyzeMaterial = async () => {
+    try {
+      setGeneratingLoading(true);
+      if (!sourceMaterial) {
+        toast({
+          title: 'Material missing',
+          description:
+            'Please, insert your material before pressing analyze button.',
+          status: 'error',
+          duration: 3000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
+        return;
+      }
+      if (sourceMaterial === flow?.sourceMaterial) {
+        toast({
+          title: 'Material duplicate',
+          description:
+            'You cannot analyze the same material of the Learning path.',
+          status: 'error',
+          duration: 3000,
+          position: 'bottom-left',
+          isClosable: true,
+        });
+        return;
+      }
+      const response: AxiosResponse = await API.analyseMaterial({
+        text: sourceMaterial,
+      });
+      setValue(
+        'data.learning_outcome',
+        response.data.learning_outcome as LearningOutcome
+      );
+      setValue('data.macro_subject', response.data.macro_subject);
+      setValue('data.language', response.data.language);
+      setValue('data.title', response.data.title);
+      setValue('data.education_level', response.data.education_level);
+      const genTopics=response.data.topics
+      const allTopics = [...(genTopics || []), ...(flow?.topicsAI || [])];
+
+      const uniqueTopicsMap = new Map();
+      allTopics.forEach((topic) => {
+        uniqueTopicsMap.set(topic.topic, topic);
+      });
+      setTopicsSelectable(Array.from(uniqueTopicsMap.values()));
+    } catch (error: any) {
+      console.log(error);
+      toast({
+        title: 'Generic Error',
+        description: 'Try later ' + (error as Error),
+        status: 'error',
+        duration: 5000,
+        position: 'bottom-left',
+        isClosable: true,
+      });
+    } finally {
+      setGeneratingLoading(false);
+    }
   };
 
   useEffect(() => {
-    setValue('data.topicsAI', topicsAI);
-  }, [topicsAI]);
+    if (toggleFlowData && flow) {
+      setValue('data.learning_outcome', flow?.learning_outcome);
+      setValue('data.sourceMaterial', flow?.sourceMaterial);
+      setValue('data.macro_subject', flow?.macro_subject);
+      setValue('data.topicsAI', flow?.topicsAI);
+    }
+  }, [toggleFlowData]);
 
-  const toggleExpand = (index: number) => {
-    setExpandedIndexes((prev) =>
-      prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
-    );
-  };
-
-  const toast = useToast();
   return (
     <>
       <NodeProperties platform={['Library', 'WebApp']} />
@@ -103,8 +139,8 @@ const AbstractNodeProperties = () => {
         Use learning path data
       </Text>
       <Toggle
-        checked={toggleFlowData || toggleFlowData == undefined}
-        onChange={() => setToggleFlowData(!toggleFlowData)}
+        checked={toggleFlowData ?? true}
+        onChange={() => setValue('data.useFlowData', !toggleFlowData)}
       />
       <Box hidden={toggleFlowData}>
         <SkeletonText
@@ -113,6 +149,7 @@ const AbstractNodeProperties = () => {
           skeletonHeight="2"
           isLoaded={!generatingLoading}
         >
+          {/* Material Section */}
           <Flex
             justifyContent="space-between"
             alignItems="center"
@@ -126,86 +163,22 @@ const AbstractNodeProperties = () => {
               float={'right'}
               title={
                 sourceMaterial === flow?.sourceMaterial
-                  ? 'Your material is the same of the learning path base material.'
+                  ? 'Your material is the same as the learning path base material.'
                   : 'Click to analyze the new material.'
               }
               isDisabled={sourceMaterial === flow?.sourceMaterial}
               isLoading={generatingLoading}
-              onClick={async () => {
-                try {
-                  setGeneratingLoading(true);
-                  if (!sourceMaterial) {
-                    toast({
-                      title: 'Material missing',
-                      description:
-                        'Please, insert your material before pressing analye button.',
-                      status: 'error',
-                      duration: 3000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
-                    return;
-                  }
-                  if (sourceMaterial === flow?.sourceMaterial) {
-                    toast({
-                      title: 'Material duplicate',
-                      description:
-                        'You cannot analyze the same material of the Learning path. Please, modify your material, then try again.',
-                      status: 'error',
-                      duration: 3000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
-                    return;
-                  }
-                  const response: AxiosResponse = await API.analyseMaterial({
-                    text: sourceMaterial,
-                  });
-                  setLearningOutcome(
-                    response.data.learning_outcome as LearningOutcome
-                  );
-                  setTopicsSelectable(response.data.topics);
-                  setMacroSubject(response.data.macro_subject);
-                  setValue('data.macro_subject', response.data.macro_subject);
-                  setValue('data.language', response.data.language);
-                  setValue('data.title', response.data.title);
-                  setValue(
-                    'data.learning_outcome',
-                    response.data.learning_outcome as LearningOutcome
-                  );
-                  setValue(
-                    'data.education_level',
-                    response.data.education_level as EducationLevel
-                  );
-                } catch (error: any) {
-                  console.log(error);
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                } finally {
-                  setGeneratingLoading(false);
-                }
-              }}
+              onClick={handleAnalyzeMaterial}
             >
               Analyze material
             </Button>
           </Flex>
-
           <Textarea
-            minHeight={'150px'}
-            maxHeight={'350px'}
-            placeholder="Insert your material here, you can put your plain text."
+            minHeight="150px"
+            maxHeight="350px"
+            placeholder="Insert your material here"
             value={sourceMaterial}
-            overflowY={'auto'}
-            onChange={(e) => {
-              setSourceMaterial(e.currentTarget.value);
-            }}
-            onBlur={() => setValue('data.sourceMaterial', sourceMaterial)}
+            onChange={(e) => setValue('data.sourceMaterial', e.target.value)}
           />
           <Flex alignItems="center" mt={'2'}>
             <Text fontWeight={'bold'} mr={2}>
@@ -222,18 +195,19 @@ const AbstractNodeProperties = () => {
           isLoaded={!generatingLoading}
         >
           <Text fontWeight={'bold'}>List of Topics</Text>
-
           {topicsSelectable.map((topicObj, index) => (
             <Flex key={index} align="start" mb={3} direction="column">
               <Flex align="center">
                 <Checkbox
-                  isChecked={topicsAI?.some((t) => t.topic === topicObj.topic)}
+                  isChecked={topicsAI?.some(
+                    (t: { topic: string }) => t.topic === topicObj.topic
+                  )}
                   onChange={() => toggleTopic(topicObj)}
                   size="lg"
                   mr={2}
                   colorScheme="green"
                 />
-                <Text>{topicObj.topic}</Text>
+                <Text>{topicObj.topic} {flow?.topicsAI.includes(topicObj)?'(from Learning Path)':''}</Text>
                 <IconButton
                   size="sm"
                   ml={2}
@@ -245,7 +219,13 @@ const AbstractNodeProperties = () => {
                       <ChevronDownIcon />
                     )
                   }
-                  onClick={() => toggleExpand(index)}
+                  onClick={() => {
+                    setExpandedIndexes((prev) =>
+                      prev.includes(index)
+                        ? prev.filter((i) => i !== index)
+                        : [...prev, index]
+                    );
+                  }}
                   variant="ghost"
                 />
               </Flex>
@@ -267,7 +247,6 @@ const AbstractNodeProperties = () => {
           isLoaded={!generatingLoading}
         >
           <Text fontWeight={'bold'}>List of Learning Outcomes</Text>
-
           <EnumField
             label="learning outcomes"
             name="data.learning_outcome"
