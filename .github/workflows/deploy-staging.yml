@@ -9,7 +9,8 @@ jobs:
     permissions: write-all
     name: Build and Deploy
     runs-on: ubuntu-latest
-    timeout-minutes: 20
+    timeout-minutes: 30
+
     steps:
       - name: Checkout repo
         uses: actions/checkout@v2
@@ -60,35 +61,6 @@ jobs:
           max_attempts: 5
           command: echo "${{ steps.meta.outputs.tags }}" | while IFS= read -r i; do echo "Pushing $i"; docker push $i; done
 
-      - name: Check pod and release status before deploy
-        run: |
-          echo "$KUBECONFIG_FILE" > ./kubeconfig.yml
-          export KUBECONFIG=./kubeconfig.yml
-
-          echo "🚦 Current pod status in namespace 'node-editor-staging':"
-          kubectl get pods -n node-editor-staging || echo "Namespace may not exist yet"
-
-          echo "🔍 Current Helm release status:"
-          helm status node-editor-staging --namespace node-editor-staging || echo "No existing release"
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
-
-      - name: Clean stuck Helm release if needed
-        run: |
-          echo "$KUBECONFIG_FILE" > ./kubeconfig.yml
-          export KUBECONFIG=./kubeconfig.yml
-
-          echo "🔍 Checking for pending Helm release..."
-          release_status=$(helm status node-editor-staging --namespace node-editor-staging 2>&1 || true)
-          if echo "$release_status" | grep -q "pending"; then
-            echo "🧹 Uninstalling stuck release..."
-            helm uninstall node-editor-staging --namespace node-editor-staging || true
-          else
-            echo "✅ No stuck release found."
-          fi
-        env:
-          KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
-
       - name: Deploy to Kubernetes cluster
         uses: daviFrag/helm@master
         with:
@@ -96,7 +68,10 @@ jobs:
           namespace: 'node-editor-staging'
           chart: 'charts'
           token: '${{ github.token }}'
-          args: --atomic --timeout 15m
+          install: true
+          wait: true
+          atomic: true
+          timeout: 900s
           values: |
             url: staging.polyglot-edu.com
             cfOriginKey: ${{ secrets.CFORIGIN }}
