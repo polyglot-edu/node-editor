@@ -149,7 +149,7 @@ const FlowEditor = ({
         difficulty: 1,
         platform: 'Library',
         data: {
-          useFlowData: flow?.sourceMaterial!=null,
+          useFlowData: flow?.sourceMaterial != null,
           sourceMaterial: flow?.sourceMaterial,
           learning_outcome: flow?.learning_outcome,
           education_level: flow?.education_level,

@@ -100,7 +100,7 @@ const AbstractNodeProperties = () => {
       setValue('data.language', response.data.language);
       setValue('data.title', response.data.title);
       setValue('data.education_level', response.data.education_level);
-      const genTopics=response.data.topics
+      const genTopics = response.data.topics;
       const allTopics = [...(genTopics || []), ...(flow?.topicsAI || [])];
 
       const uniqueTopicsMap = new Map();
@@ -207,7 +207,12 @@ const AbstractNodeProperties = () => {
                   mr={2}
                   colorScheme="green"
                 />
-                <Text>{topicObj.topic} {flow?.topicsAI.includes(topicObj)?'(from Learning Path)':''}</Text>
+                <Text>
+                  {topicObj.topic}{' '}
+                  {flow?.topicsAI.includes(topicObj)
+                    ? '(from Learning Path)'
+                    : ''}
+                </Text>
                 <IconButton
                   size="sm"
                   ml={2}
