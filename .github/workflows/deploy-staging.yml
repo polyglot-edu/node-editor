@@ -114,6 +114,6 @@ jobs:
               setupModel: ${{ secrets.SETUPMODEL }}
               aiGenerationUrl: https://skapi.polyglot-edu.com
               backUrl: https://polyglot-api-staging.polyglot-edu.com
-              testMode: false
+              testMode: true
         env:
           KUBECONFIG_FILE: '${{ secrets.KUBECONFIG }}'
