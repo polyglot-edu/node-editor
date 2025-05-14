@@ -96,7 +96,7 @@ jobs:
           namespace: 'node-editor-staging'
           chart: 'charts'
           token: '${{ github.token }}'
-          args: --timeout 10m --atomic
+          args: --atomic --timeout 15m
           values: |
             url: staging.polyglot-edu.com
             cfOriginKey: ${{ secrets.CFORIGIN }}
