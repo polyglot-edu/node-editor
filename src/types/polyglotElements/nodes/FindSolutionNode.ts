@@ -26,6 +26,7 @@ polyglotNodeComponentMapping.registerMapping<FindSolutionNode>({
   name: 'Find Solution',
   icon: icon.src,
   group: 'create_learning',
+  platform: 'WebApp',
   propertiesComponent: FindSolutionNodeProperties,
   elementComponent: ReactFlowFindSolutionNode,
   defaultData: {

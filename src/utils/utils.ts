@@ -79,6 +79,7 @@ export const createNewDefaultPolyglotNode: (
     title: 'New Node',
     description: '',
     difficulty: 1,
+    platform: polyglotNodeComponentMapping.defaultPlatformMapping[nodeType],
     data: polyglotNodeComponentMapping.defaultDataMapping[nodeType],
     reactFlow: {
       id: id,
@@ -101,6 +102,7 @@ const configUnconditionalEdge = [
   'MemoriseKeywordsListNode',
   'PromptEngineeringNode',
   'ProblemSolvingNode',
+  'CodingQuestionNode',
 ];
 
 export const createNewDefaultPolyglotEdge = (

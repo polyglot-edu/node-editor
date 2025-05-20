@@ -26,6 +26,7 @@ polyglotNodeComponentMapping.registerMapping<ProblemSolvingNode>({
   name: 'Problem Solving',
   icon: icon.src,
   group: 'apply_learning',
+  platform: 'WebApp',
   propertiesComponent: ProblemSolvingNodeProperties,
   elementComponent: ReactFlowProblemSolvingNode,
   defaultData: {

@@ -20,6 +20,7 @@ polyglotNodeComponentMapping.registerMapping<MultipleChoiceQuestionNode>({
   name: 'Multiple Choice Question',
   icon: icon.src,
   group: 'remember_assessment',
+  platform: 'WebApp',
   propertiesComponent: MultipleChoiceQuestionNodeProperties,
   elementComponent: ReactFlowMultipleChoiceQuestionNode,
   defaultData: {

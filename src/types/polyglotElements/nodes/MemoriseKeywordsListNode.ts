@@ -25,6 +25,7 @@ polyglotNodeComponentMapping.registerMapping<MemoriseKeywordsListNode>({
   name: 'Memorise keywords list',
   icon: icon.src,
   group: 'remember_learning',
+  platform: 'WebApp',
   propertiesComponent: MemoriseKeywordsListNodeProperties,
   elementComponent: ReactFlowMemoriseKeywordsListNode,
   defaultData: {

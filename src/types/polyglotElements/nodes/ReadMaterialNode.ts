@@ -19,6 +19,7 @@ polyglotNodeComponentMapping.registerMapping<ReadMaterialNode>({
   name: 'Read material',
   icon: icon.src,
   group: 'remember_learning',
+  platform: 'WebApp',
   propertiesComponent: ReadMaterialNodeProperties,
   elementComponent: ReactFlowReadMaterialNode,
   defaultData: {
