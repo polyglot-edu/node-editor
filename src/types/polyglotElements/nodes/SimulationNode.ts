@@ -19,6 +19,7 @@ polyglotNodeComponentMapping.registerMapping<SimulationNode>({
   name: 'Simulation',
   icon: icon.src,
   group: 'create_assessment',
+  platform: 'WebApp',
   propertiesComponent: SimulationNodeProperties,
   elementComponent: ReactFlowSimulationNode,
   defaultData: {

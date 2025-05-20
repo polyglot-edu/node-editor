@@ -21,6 +21,7 @@ polyglotNodeComponentMapping.registerMapping<NewTypeNode>({
   name: 'New Type xText',
   icon: icon.src,
   group: '',
+  platform: 'WebApp',
   propertiesComponent: NewTypeNodeProperties,
   elementComponent: ReactFlowNewTypeNode,
   defaultData: {

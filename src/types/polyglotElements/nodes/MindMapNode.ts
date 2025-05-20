@@ -26,6 +26,7 @@ polyglotNodeComponentMapping.registerMapping<MindMapNode>({
   name: 'MindMap',
   icon: icon.src,
   group: 'understand_learning',
+  platform: 'WebApp',
   propertiesComponent: MindMapNodeProperties,
   elementComponent: ReactFlowMindMapNode,
   defaultData: {

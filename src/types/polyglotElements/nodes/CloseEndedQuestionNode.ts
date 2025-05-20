@@ -21,6 +21,7 @@ polyglotNodeComponentMapping.registerMapping<CloseEndedQuestionNode>({
   name: 'Close Ended Question',
   icon: icon.src,
   group: 'remember_assessment',
+  platform: 'WebApp',
   propertiesComponent: CloseEndedQuestionNodeProperties,
   elementComponent: ReactFlowCloseEndedQuestionNode,
   defaultData: {

@@ -18,6 +18,7 @@ polyglotNodeComponentMapping.registerMapping<WatchVideoNode>({
   name: 'Watch Video',
   icon: icon.src,
   group: 'remember_learning',
+  platform: 'WebApp',
   propertiesComponent: WatchVideoNodeProperties,
   elementComponent: ReactFlowWatchVideoNode,
   defaultData: {
