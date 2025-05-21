@@ -98,9 +98,9 @@ const dataFactory: Record<string, (values: AIExerciseGenerated) => any> = {
       if (values.solutions.includes(value)) isAnswerCorrect[index] = true;
     });
     return {
-      question: values.assignment,
-      choices: shuffleAnswers,
-      isChoiceCorrect: isAnswerCorrect,
+      instructions: values.assignment,
+      questions: shuffleAnswers,
+      isQuestionCorrect: isAnswerCorrect,
     };
   },
   multipleChoiceQuestionNode: (values) => {
