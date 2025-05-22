@@ -623,7 +623,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     ? Math.ceil(selectedNodes.length / nReadMaterial)
                     : 1;
                 let counter = 0;
-                for (let i = 0; i < selectedNodes.length-1; i++) {
+                for (let i = 0; i < selectedNodes.length; i++) {
                   if (counter == 0 && nReadMaterial != 0) {
                     i--;
                     counter = nTopicReadMaterial;
