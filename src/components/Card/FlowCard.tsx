@@ -7,6 +7,7 @@ import {
   Card,
   CardBody,
   CardFooter,
+  Flex,
   Heading,
   HStack,
   IconButton,
@@ -17,7 +18,7 @@ import {
   Spacer,
   Stack,
   Text,
-  Tooltip,Flex
+  Tooltip,
 } from '@chakra-ui/react';
 import cardImage from '../../public/test_card.png';
 import { PolyglotFlow } from '../../types/polyglotElements';
@@ -47,23 +48,25 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
 
         <Stack w="full">
           <CardBody>
-            {canDelete && (<>
-              <Button
-                zIndex={11}
-                position="absolute"
-                top={4}
-                right={5}
-                variant="unstyled"
-              >
-                <Tooltip label="Delete" placement="right">
-                  <DeleteIcon
-                    onClick={() => setSelected?.(flow._id!)}
-                    w={5}
-                    h={5}
-                    color="red"
-                  />
-                </Tooltip>
-              </Button></>
+            {canDelete && (
+              <>
+                <Button
+                  zIndex={11}
+                  position="absolute"
+                  top={4}
+                  right={5}
+                  variant="unstyled"
+                >
+                  <Tooltip label="Delete" placement="right">
+                    <DeleteIcon
+                      onClick={() => setSelected?.(flow._id!)}
+                      w={5}
+                      h={5}
+                      color="red"
+                    />
+                  </Tooltip>
+                </Button>
+              </>
             )}
             <Heading size="md">{flow.title}</Heading>
             {flow.tags &&
@@ -79,7 +82,6 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
               In this Learning Path there are: {flow.nodes.length} learning
               activities
             </Text>
-            
           </CardBody>
 
           <CardFooter>
@@ -91,9 +93,11 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
                   <Avatar name={flow.author?.username} size="sm" />
                 </HStack>
               </>
-            )}<Flex right={'35px'} bottom={5} position={'absolute'}>
+            )}
+            <Flex right={'35px'} bottom={5} position={'absolute'}>
               {flow.publish ? 'Published' : 'Not published'}:
-              <IconButton size={'xs'}
+              <IconButton
+                size={'xs'}
                 backgroundColor={flow.publish ? 'green.500' : 'red.500'}
                 aria-label={''}
                 left={'5px'}

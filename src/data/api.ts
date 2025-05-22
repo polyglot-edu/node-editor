@@ -36,6 +36,7 @@ export type aiAPIResponse = {
 
 const axios = axiosCreate.create({
   baseURL: process.env.BACK_URL,
+  timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
   },

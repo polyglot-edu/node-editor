@@ -509,7 +509,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
           </FormLabel>
           <Textarea
             maxHeight={'200px'}
-            placeholder="Insert your material here, you can put your plain text or the link (attention some websites are crypted, sometimes the tool cannot access the actual text)..."
+            placeholder="Here, you can define the context of the learning path's application."
             value={context}
             overflowY={'auto'}
             onChange={(e) => {
@@ -765,10 +765,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     : 1;
                 const generatedNodes: PolyglotNode[] = [];
                 let counter = 0;
-                let check = 0;
-                do {
-                  check++;
+                for (let i = 0; i < selectedNodes.length; i++) {
                   if (counter == 0 && nReadMaterial != 0) {
+                    i--;
                     counter = nTopicReadMaterial;
                     setNReadMaterial(nReadMaterial - 1);
                     const readTopics: LessonNodeAI[] = selectedNodes
@@ -842,7 +841,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     }
                   } else {
                     counter--;
-                    const activity = selectedNodes.shift();
+                    const activity = selectedNodes[i];
                     if (!activity) break;
                     try {
                       await API.generateNewExercise({
@@ -903,11 +902,8 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       console.log(error);
                     }
                   }
-                } while (
-                  selectedNodes.length + nReadMaterial !=
-                    generatedNodes.length ||
-                  check < selectedNodes.length + nReadMaterial
-                );
+                }
+
                 const generatedEdges: PolyglotEdge[] = [];
 
                 //edges generation
@@ -944,6 +940,45 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       title: 'next',
                     });
                   } else {
+                    const idRecovery = UUIDv4();
+                    const x = node.reactFlow.position.x;
+                    const y = node.reactFlow.position.y + 50;
+                    generatedNodes.push({
+                      _id: idRecovery,
+                      type: 'abstractNode',
+                      title: 'Recovery Activity',
+                      description: 'Recovery activity',
+                      platform: 'Library',
+                      difficulty: 1,
+                      data: {
+                        useFlowData: true,
+                        sourceMaterial: sourceMaterial,
+                        learning_outcome: learningOutcome,
+                        education_level: eduLevel,
+                        topicsAI: selectedTopic,
+                        language: analysedMaterial.language,
+                        macro_subject: analysedMaterial.macro_subject,
+                        title: analysedMaterial.title,
+                        context: context,
+                      },
+                      reactFlow: {
+                        id: idRecovery,
+                        type: 'abstractNode',
+                        position: {
+                          x: x,
+                          y: y,
+                        },
+                        width: 88,
+                        height: 46,
+                        selected: false,
+                        dragging: false,
+                        positionAbsolute: {
+                          x: x,
+                          y: y,
+                        },
+                        data: {},
+                      },
+                    });
                     const id1 = UUIDv4();
                     generatedEdges.push({
                       _id: id1,
@@ -980,7 +1015,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       reactFlow: {
                         id: id2,
                         source: node._id,
-                        target: node._id,
+                        target: idRecovery,
                         type: 'passFailEdge',
                         markerEnd: {
                           color: 'red',
@@ -991,6 +1026,30 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                         selected: true,
                       },
                       title: 'fail',
+                    });
+                    const id3 = UUIDv4();
+                    generatedEdges.push({
+                      _id: id3,
+                      type: 'passFailEdge',
+                      code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
+                    `,
+                      data: {
+                        conditionKind: 'pass',
+                      },
+                      reactFlow: {
+                        id: id3,
+                        source: idRecovery,
+                        target: nextNode._id,
+                        type: 'passFailEdge',
+                        markerEnd: {
+                          color: 'green',
+                          type: MarkerType.Arrow,
+                          width: 25,
+                          height: 25,
+                        },
+                        selected: true,
+                      },
+                      title: 'pass',
                     });
                   }
                 }
