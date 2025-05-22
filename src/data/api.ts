@@ -56,6 +56,17 @@ const axiosPapyGame = axiosCreate.create({
   },
 });
 
+
+const axiosAIAPIGeneration = axiosCreate.create({
+  baseURL: "http://131.114.22.98:8000",
+  headers: {
+    "Content-Type": "application/json",
+    withCredentials: true,
+    Access: "*",
+    "access-key": "7hXzB9w4r1",
+  },
+});
+
 type AutocompleteOutput = string[];
 
 export class APIV2 {
@@ -416,8 +427,8 @@ export const API = {
   },
 
   generateNewExercise: (body: AIExerciseType): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
-      `/api/openai/ActivityGenerator`,
+    return axiosAIAPIGeneration.post<{}, AxiosResponse, {}>(
+      `/tasks/generate_activity`,
       body
     );
   },
