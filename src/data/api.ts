@@ -56,14 +56,13 @@ const axiosPapyGame = axiosCreate.create({
   },
 });
 
-
 const axiosAIAPIGeneration = axiosCreate.create({
-  baseURL: "http://131.114.22.98:8000",
+  baseURL: 'http://131.114.22.98:8000',
   headers: {
-    "Content-Type": "application/json",
+    'Content-Type': 'application/json',
     withCredentials: true,
-    Access: "*",
-    "access-key": "7hXzB9w4r1",
+    Access: '*',
+    'access-key': '7hXzB9w4r1',
   },
 });
 
