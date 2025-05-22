@@ -24,6 +24,7 @@ polyglotNodeComponentMapping.registerMapping<UMLModelingNode>({
   name: 'UML Modeling',
   icon: icon.src,
   group: 'understand_assessment',
+  platform: 'PapyrusWeb',
   propertiesComponent: UMLModelingNodeProperties,
   elementComponent: ReactFlowUMLModelingNode,
   defaultData: {

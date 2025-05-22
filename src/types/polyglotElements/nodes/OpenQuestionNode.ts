@@ -20,6 +20,7 @@ polyglotNodeComponentMapping.registerMapping<OpenQuestionNode>({
   name: 'Open Question',
   icon: icon.src,
   group: 'remember_assessment',
+  platform: 'WebApp',
   propertiesComponent: OpenQuestionNodeProperties,
   elementComponent: ReactFlowOpenQuestionNode,
   defaultData: {

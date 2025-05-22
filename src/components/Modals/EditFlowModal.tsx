@@ -1,4 +1,4 @@
-import { AddIcon, CloseIcon } from '@chakra-ui/icons';
+import { AddIcon, CheckIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -54,7 +54,7 @@ const EditFlowModal = ({
   const [topicName, setTopicName] = useState('');
   const [topics, setTopics] = useState([...flow.topics]);
   const [tagName, setTagName] = useState('');
-  const [publish] = useState(false);
+  const [publish, setPublish] = useState(false);
   const [colorTag, setColorTag] = useState(colors[0]);
   const [tags, setTags] = useState([...flow.tags]);
   const { isOpen: ioPop, onClose: ocPop, onOpen: opPop } = useDisclosure();
@@ -67,6 +67,7 @@ const EditFlowModal = ({
     setTopics([...flow.topics]);
     setColorTag(colors[0]);
     setTags([...flow.tags]);
+    setPublish(flow.publish);
   }, [flow]);
 
   return (
@@ -270,6 +271,19 @@ const EditFlowModal = ({
             </Button>
           ))}
         </ModalBody>
+        <Box position={'absolute'} bottom={'15px'} left={'27px'}>
+          {publish ? 'Published' : 'Not published'}:{' '}
+          <IconButton
+            backgroundColor={publish ? 'green.500' : 'red.500'}
+            onClick={() => {
+              console.log(publish);
+              setPublish(!publish);
+            }}
+            aria-label={''}
+          >
+            {publish ? <CheckIcon /> : <CloseIcon />}
+          </IconButton>
+        </Box>
 
         <ModalFooter>
           <Button
@@ -287,7 +301,7 @@ const EditFlowModal = ({
                 learningContext: learningContext,
                 duration: duration,
                 topics: topics,
-                topicsAI: [],
+                topicsAI: flow.topicsAI,
               });
               onClose();
             }}

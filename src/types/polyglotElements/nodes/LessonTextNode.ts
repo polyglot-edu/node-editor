@@ -18,6 +18,7 @@ polyglotNodeComponentMapping.registerMapping<LessonTextNode>({
   name: 'Lesson (Text)',
   icon: icon.src,
   group: ' ',
+  platform: 'WebApp',
   propertiesComponent: LessonTextNodeProperties,
   elementComponent: ReactFlowLessonNode,
   defaultData: {

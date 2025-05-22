@@ -1,13 +1,16 @@
-import { DeleteIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
   Avatar,
   Badge,
+  Box,
   Button,
   Card,
   CardBody,
   CardFooter,
+  Flex,
   Heading,
   HStack,
+  IconButton,
   Image,
   LinkBox,
   LinkOverlay,
@@ -46,22 +49,24 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
         <Stack w="full">
           <CardBody>
             {canDelete && (
-              <Button
-                zIndex={11}
-                position="absolute"
-                top={4}
-                right={5}
-                variant="unstyled"
-              >
-                <Tooltip label="Delete" placement="right">
-                  <DeleteIcon
-                    onClick={() => setSelected?.(flow._id!)}
-                    w={5}
-                    h={5}
-                    color="red"
-                  />
-                </Tooltip>
-              </Button>
+              <>
+                <Button
+                  zIndex={11}
+                  position="absolute"
+                  top={4}
+                  right={5}
+                  variant="unstyled"
+                >
+                  <Tooltip label="Delete" placement="right">
+                    <DeleteIcon
+                      onClick={() => setSelected?.(flow._id!)}
+                      w={5}
+                      h={5}
+                      color="red"
+                    />
+                  </Tooltip>
+                </Button>
+              </>
             )}
             <Heading size="md">{flow.title}</Heading>
             {flow.tags &&
@@ -89,6 +94,17 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
                 </HStack>
               </>
             )}
+            <Flex right={'35px'} bottom={5} position={'absolute'}>
+              {flow.publish ? 'Published' : 'Not published'}:
+              <IconButton
+                size={'xs'}
+                backgroundColor={flow.publish ? 'green.500' : 'red.500'}
+                aria-label={''}
+                left={'5px'}
+              >
+                {flow.publish ? <CheckIcon /> : <CloseIcon />}
+              </IconButton>
+            </Flex>
           </CardFooter>
         </Stack>
       </Card>

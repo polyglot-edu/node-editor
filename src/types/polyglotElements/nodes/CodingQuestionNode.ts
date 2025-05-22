@@ -20,6 +20,7 @@ polyglotNodeComponentMapping.registerMapping<CodingQuestionNode>({
   name: 'Coding Question',
   icon: icon.src,
   group: 'create_assessment',
+  platform: 'CodingWebApp',
   propertiesComponent: CodingQuestionNodeProperties,
   elementComponent: ReactFlowCodingQuestionNode,
   defaultData: {
@@ -30,7 +31,7 @@ int main() {
     Console.WriteLine("Hello World!");
     return 0;
 }`,
-    language: 'csharp',
+    language: 'javascript',
     ...defaultPolyglotNodeData,
   },
 });

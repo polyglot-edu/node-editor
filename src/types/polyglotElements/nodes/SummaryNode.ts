@@ -20,6 +20,7 @@ polyglotNodeComponentMapping.registerMapping<SummaryNode>({
   name: 'Summary',
   icon: icon.src,
   group: 'understand_learning',
+  platform: 'WebApp',
   propertiesComponent: SummaryNodeProperties,
   elementComponent: ReactFlowSummaryNode,
   defaultData: {

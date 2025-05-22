@@ -21,6 +21,7 @@ polyglotNodeComponentMapping.registerMapping<BrainstormingNode>({
   name: 'Brainstorming',
   icon: icon.src,
   group: 'create_assessment',
+  platform: 'WebApp',
   propertiesComponent: BrainstormingNodeProperties,
   elementComponent: ReactFlowBrainstormingNode,
   defaultData: {
