@@ -1,13 +1,15 @@
-import { DeleteIcon } from '@chakra-ui/icons';
+import { CheckIcon, CloseIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
   Avatar,
   Badge,
+  Box,
   Button,
   Card,
   CardBody,
   CardFooter,
   Heading,
   HStack,
+  IconButton,
   Image,
   LinkBox,
   LinkOverlay,
@@ -15,7 +17,7 @@ import {
   Spacer,
   Stack,
   Text,
-  Tooltip,
+  Tooltip,Flex
 } from '@chakra-ui/react';
 import cardImage from '../../public/test_card.png';
 import { PolyglotFlow } from '../../types/polyglotElements';
@@ -45,7 +47,7 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
 
         <Stack w="full">
           <CardBody>
-            {canDelete && (
+            {canDelete && (<>
               <Button
                 zIndex={11}
                 position="absolute"
@@ -61,7 +63,7 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
                     color="red"
                   />
                 </Tooltip>
-              </Button>
+              </Button></>
             )}
             <Heading size="md">{flow.title}</Heading>
             {flow.tags &&
@@ -77,6 +79,7 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
               In this Learning Path there are: {flow.nodes.length} learning
               activities
             </Text>
+            
           </CardBody>
 
           <CardFooter>
@@ -88,7 +91,16 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
                   <Avatar name={flow.author?.username} size="sm" />
                 </HStack>
               </>
-            )}
+            )}<Flex right={'35px'} bottom={5} position={'absolute'}>
+              {flow.publish ? 'Published' : 'Not published'}:
+              <IconButton size={'xs'}
+                backgroundColor={flow.publish ? 'green.500' : 'red.500'}
+                aria-label={''}
+                left={'5px'}
+              >
+                {flow.publish ? <CheckIcon /> : <CloseIcon />}
+              </IconButton>
+            </Flex>
           </CardFooter>
         </Stack>
       </Card>
