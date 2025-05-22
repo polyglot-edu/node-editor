@@ -623,6 +623,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     ? Math.ceil(selectedNodes.length / nReadMaterial)
                     : 1;
                 let counter = 0;
+                console.log('Starting node generation');
+                let x = -195;
+                let y = -210;
                 for (let i = 0; i < selectedNodes.length; i++) {
                   if (counter == 0 && nReadMaterial != 0) {
                     i--;
@@ -663,8 +666,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       const readMaterialGen: AIMaterialGenerated =
                         response.data;
                       const _id = UUIDv4();
-                      const x = -195 + 50 * generatedNodes.length;
-                      const y = -210 + 100 * generatedNodes.length;
                       generatedNodes.push({
                         _id: _id,
                         type: 'ReadMaterialNode',
@@ -694,6 +695,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           data: {},
                         },
                       });
+
+                      x = x + 120;
+                      y = y + 80;
                     } catch (error) {
                       console.log('errror in generation readMaterial ' + error);
                     }
@@ -756,10 +760,46 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   }
                 }
 
+                const idEnd = UUIDv4();
+                generatedNodes.push({
+                  _id: idEnd,
+                  type: 'ReadMaterialNode',
+                  title: 'End',
+                  description: 'End of the learning path',
+                  difficulty: 1,
+                  platform: 'WebApp',
+                  data: {
+                    text:
+                      'You have completed this learning path on ' +
+                      analysedMaterial.macro_subject +
+                      ', congratulation!',
+                    link: '',
+                  },
+                  reactFlow: {
+                    id: idEnd,
+                    type: 'ReadMaterialNode',
+                    position: {
+                      x: x,
+                      y: y,
+                    },
+                    width: 88,
+                    height: 46,
+                    selected: false,
+                    dragging: false,
+                    positionAbsolute: {
+                      x: x,
+                      y: y,
+                    },
+                    data: {},
+                  },
+                });
+
+                console.log('End data generation');
                 const generatedEdges: PolyglotEdge[] = [];
 
                 //edges generation
-                for (let i = 0; i < generatedNodes.length - 1; i++) {
+                const length = generatedNodes.length;
+                for (let i = 0; i < length; i++) {
                   const node = generatedNodes[i];
                   const nextNode = generatedNodes[i + 1];
 
@@ -794,7 +834,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   } else {
                     const idRecovery = UUIDv4();
                     const x = node.reactFlow.position.x;
-                    const y = node.reactFlow.position.y + 50;
+                    const y = node.reactFlow.position.y + 80;
                     generatedNodes.push({
                       _id: idRecovery,
                       type: 'abstractNode',
@@ -906,6 +946,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   }
                 }
 
+                console.log('end node generation');
                 const tags: { name: string; color: string }[] = [
                   { name: analysedMaterial.keywords[0], color: 'green' },
                   { name: analysedMaterial.keywords[1], color: 'red' },
