@@ -195,6 +195,45 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
 
   const toast = useToast();
 
+  const generatedNodes: PolyglotNode[] = [];
+
+  const handleResponseNewExercise = (response: any) => {
+    const exerciseResponse: AIExerciseGenerated = response.data;
+    const _id = UUIDv4();
+    const typeNode =
+      QuestionTypeMap.find((type) => type.key == exerciseResponse.type)
+        ?.nodeType || 'OpenQuestionNode';
+    const data = dataFactory[typeNode]?.(exerciseResponse) || null;
+    const x = -195 + 50 * generatedNodes.length;
+    const y = -210 + 100 * generatedNodes.length;
+    generatedNodes.push({
+      _id: _id,
+      type: typeNode,
+      title: exerciseResponse.topic,
+      description: exerciseResponse.macro_subject,
+      platform: 'WebApp',
+      difficulty: 1,
+      data: data,
+      reactFlow: {
+        id: _id,
+        type: typeNode,
+        position: {
+          x: x,
+          y: y,
+        },
+        width: 88,
+        height: 46,
+        selected: false,
+        dragging: false,
+        positionAbsolute: {
+          x: x,
+          y: y,
+        },
+        data: {},
+      },
+    });
+  };
+
   return (
     <Modal
       isOpen={isOpen}
@@ -261,64 +300,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 const response: AxiosResponse = await API.analyseMaterial({
                   text: sourceMaterial,
                 });
-                /*const response = {
-                  data: {
-                    language: 'Italian',
-                    macro_subject: 'Arte',
-                    title: 'Biografia di Michelangelo',
-                    education_level: 'high school',
-                    learning_outcome:
-                      'the ability to explain concepts and principles, and recognize how different ideas are related',
-                    topics: [
-                      {
-                        topic: 'Infanzia e formazione',
-                        explanation:
-                          "Nascita a Caprese, primi anni a Firenze, apprendistato presso Ghirlandaio e l'influenza di Lorenzo de' Medici.",
-                      },
-                      {
-                        topic: 'Primi lavori a Firenze e Bologna',
-                        explanation:
-                          "Realizzazione delle prime sculture, inclusi 'La battaglia dei Centauri' e la 'Madonna della scala'. Breve soggiorno a Venezia e Bologna, con partecipazione alla scultura dell' Arca di San Domenico.",
-                      },
-                      {
-                        topic: 'Periodo Romano',
-                        explanation:
-                          "Trasferimento a Roma, realizzazione del 'Bacco' e della 'Pietà'. Commissione e realizzazione della tomba di Giulio II e della Cappella Sistina.",
-                      },
-                      {
-                        topic: 'Ritorno a Firenze e Progetti Medicei',
-                        explanation:
-                          "Lavori per Leone X e Clemente VII, inclusa la Sagrestia Nuova e la Biblioteca Laurenziana. Coinvolgimento nelle fortificazioni di Firenze durante l'assedio.",
-                      },
-                      {
-                        topic: 'Ultimi anni a Roma',
-                        explanation:
-                          "Realizzazione del 'Giudizio Universale' nella Cappella Sistina. Scultura della 'Pietà Rondanini' e altri progetti architettonici, inclusa la cupola di San Pietro. Riflessioni sulla morte e opere incompiute.",
-                      },
-                    ],
-                    keywords: [
-                      'Michelangelo',
-                      'Buonarroti',
-                      'biografia',
-                      'scultura',
-                      'pittura',
-                      'Rinascimento',
-                      'Firenze',
-                      'Roma',
-                      'Cappella Sistina',
-                      'David',
-                      'Pietà',
-                      'arte',
-                      "storia dell'arte",
-                    ],
-                    prerequisites: [
-                      'Conoscenza generale del Rinascimento italiano',
-                      'Familiarità con i principali artisti del Rinascimento',
-                      "Interesse per la storia dell'arte",
-                    ],
-                    estimated_duration: 60,
-                  },
-                };*/
                 console.log(response.data as AnalyzedMaterial);
                 setAnalyzedMaterial(response.data as AnalyzedMaterial);
                 setEduLevel(response.data.education_level as EducationLevel);
@@ -551,128 +532,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 }).then((response) => {
                   setAINodes(response.data);
                 });
-                /*
-                const response2 = {
-                  data: {
-                    title: 'Biografia di Michelangelo',
-                    macro_subject: 'Arte',
-                    education_level: 'college',
-                    learning_outcome:
-                      'the ability to recall or recognize simple facts and definitions',
-                    prerequisites: [
-                      "Conoscenza di base della storia dell'arte rinascimentale",
-                      'Familiarità con le principali tecniche artistiche (scultura, pittura, architettura)',
-                      'Capacità di analisi iconografica e stilistica',
-                      'Conoscenza del contesto storico e culturale del Rinascimento italiano',
-                    ],
-                    nodes: [
-                      {
-                        type: 'knowledge exposition',
-                        topic: 'Introduzione alla vita di Michelangelo',
-                        details:
-                          'Presentazione della vita di Michelangelo Buonarroti: contesto storico, famiglia, e primi anni di formazione. Accennare alle influenze artistiche iniziali.',
-                        learning_outcome:
-                          'the ability to recall or recognize simple facts and definitions',
-                        duration: 20,
-                      },
-                      {
-                        type: 'non written material analysis',
-                        topic: "Le prime opere e l'influenza di Firenze",
-                        details:
-                          "Analisi di immagini delle prime sculture di Michelangelo (es. Madonna della Scala, Battaglia dei Centauri). Discussione sull'influenza dell'arte classica e di Donatello.",
-                        learning_outcome:
-                          'the ability to explain concepts and principles, and recognize how different ideas are related',
-                        duration: 30,
-                      },
-                      {
-                        type: 'knowledge exposition',
-                        topic: 'Il David e la consacrazione a Firenze',
-                        details:
-                          "Spiegazione del contesto della commissione del David, la sua realizzazione e il significato politico e artistico dell'opera. Approfondimento sulle tecniche scultoree utilizzate.",
-                        learning_outcome:
-                          'the ability to recall or recognize simple facts and definitions',
-                        duration: 25,
-                      },
-                      {
-                        type: 'group discussion',
-                        topic: 'Discussione: Il David come simbolo',
-                        details:
-                          "Organizzare una discussione di gruppo sul significato del David come simbolo di Firenze e della sua importanza nella storia dell'arte. Incoraggiare gli studenti a esprimere le proprie interpretazioni.",
-                        learning_outcome:
-                          'the ability to explain concepts and principles, and recognize how different ideas are related',
-                        duration: 30,
-                      },
-                      {
-                        type: 'knowledge exposition',
-                        topic: 'Il trasferimento a Roma e il periodo papale',
-                        details:
-                          'Presentazione del trasferimento di Michelangelo a Roma e delle commissioni papali: la Pietà, la Cappella Sistina (volta e Giudizio Universale), e il progetto per la tomba di Giulio II.',
-                        learning_outcome:
-                          'the ability to recall or recognize simple facts and definitions',
-                        duration: 30,
-                      },
-                      {
-                        type: 'non written material analysis',
-                        topic: 'Analisi della Cappella Sistina',
-                        details:
-                          "Analisi dettagliata di alcune scene della volta della Cappella Sistina (es. Creazione di Adamo) e del Giudizio Universale. Discussione sull'iconografia, lo stile e le tecniche pittoriche utilizzate.",
-                        learning_outcome:
-                          'the ability to explain concepts and principles, and recognize how different ideas are related',
-                        duration: 40,
-                      },
-                      {
-                        type: 'essay',
-                        topic:
-                          'Saggio breve: Confronto tra la Pietà vaticana e la Pietà Rondanini',
-                        details:
-                          'Assegnare un saggio breve in cui gli studenti confrontano la Pietà vaticana con la Pietà Rondanini, analizzando le differenze stilistiche e il cambiamento nella visione artistica di Michelangelo.',
-                        learning_outcome:
-                          'the ability to apply knowledge and perform operations in practical contexts',
-                        duration: 45,
-                      },
-                      {
-                        type: 'knowledge exposition',
-                        topic: 'Michelangelo architetto: San Pietro',
-                        details:
-                          'Presentazione del ruolo di Michelangelo come architetto nella costruzione della Basilica di San Pietro. Focus sulla cupola e sulle modifiche apportate al progetto originale.',
-                        learning_outcome:
-                          'the ability to recall or recognize simple facts and definitions',
-                        duration: 20,
-                      },
-                      {
-                        type: 'problem solving activity',
-                        topic: 'Sfida: Progettare una cupola',
-                        details:
-                          'Proporre agli studenti una sfida di problem solving in cui devono progettare una cupola ispirata a quella di San Pietro, tenendo conto dei principi di statica e resistenza dei materiali.',
-                        learning_outcome:
-                          'the ability to apply knowledge and perform operations in practical contexts',
-                        duration: 40,
-                      },
-                      {
-                        type: 'knowledge exposition',
-                        topic: "Gli ultimi anni e l'eredità artistica",
-                        details:
-                          "Presentazione degli ultimi anni di vita di Michelangelo, le sue riflessioni sull'arte e la sua eredità artistica. Accennare all'influenza di Michelangelo sui successivi artisti.",
-                        learning_outcome:
-                          'the ability to recall or recognize simple facts and definitions',
-                        duration: 20,
-                      },
-                      {
-                        type: 'open question',
-                        topic:
-                          "Discussione finale: L'importanza di Michelangelo",
-                        details:
-                          "Aprire una discussione finale sull'importanza di Michelangelo nella storia dell'arte e sulla sua influenza sulla cultura occidentale. Incoraggiare gli studenti a condividere le proprie riflessioni e conclusioni.",
-                        learning_outcome:
-                          'the ability to assess your own understanding, identify gaps in knowledge, and strategize ways to close those gaps',
-                        duration: 20,
-                      },
-                    ],
-                    context: '',
-                    language: 'Italian',
-                  },
-                };
-                setAINodes(response2.data as AIPlanLessonResponse);*/
               } catch (error: any) {
                 if ((error as Error).name === 'SyntaxError') {
                   toast({
@@ -763,9 +622,8 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     : nReadMaterial < selectedNodes.length
                     ? Math.ceil(selectedNodes.length / nReadMaterial)
                     : 1;
-                const generatedNodes: PolyglotNode[] = [];
                 let counter = 0;
-                for (let i = 0; i < selectedNodes.length; i++) {
+                for (let i = 0; i < selectedNodes.length-1; i++) {
                   if (counter == 0 && nReadMaterial != 0) {
                     i--;
                     counter = nTopicReadMaterial;
@@ -844,62 +702,56 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     const activity = selectedNodes[i];
                     if (!activity) break;
                     try {
-                      await API.generateNewExercise({
-                        macro_subject: activity?.learning_outcome,
-                        topic: activity.topic,
-                        education_level: analysedMaterial.education_level,
-                        learning_outcome: activity.learning_outcome,
-                        material: sourceMaterial,
-                        solutions_number: activity.data?.solutions_number || 0,
-                        distractors_number:
-                          activity.data?.distractors_number || 0,
-                        easily_discardable_distractors_number:
-                          activity.data
-                            ?.easily_discardable_distractors_number || 0,
-                        type: activity.type,
-                        language: analysedMaterial.language,
-                        model: 'Gemini',
-                      }).then((response) => {
-                        const exerciseResponse: AIExerciseGenerated =
-                          response.data;
-                        const _id = UUIDv4();
-                        const typeNode =
-                          QuestionTypeMap.find(
-                            (type) => type.key == exerciseResponse.type
-                          )?.nodeType || 'OpenQuestionNode';
-                        const data =
-                          dataFactory[typeNode]?.(exerciseResponse) || null;
-                        const x = -195 + 50 * generatedNodes.length;
-                        const y = -210 + 100 * generatedNodes.length;
-                        generatedNodes.push({
-                          _id: _id,
-                          type: typeNode,
-                          title: exerciseResponse.topic,
-                          description: exerciseResponse.macro_subject,
-                          platform: 'WebApp',
-                          difficulty: 1,
-                          data: data,
-                          reactFlow: {
-                            id: _id,
-                            type: typeNode,
-                            position: {
-                              x: x,
-                              y: y,
-                            },
-                            width: 88,
-                            height: 46,
-                            selected: false,
-                            dragging: false,
-                            positionAbsolute: {
-                              x: x,
-                              y: y,
-                            },
-                            data: {},
-                          },
+                      let response: AxiosResponse | null = null;
+
+                      try {
+                        // Primo tentativo
+                        response = await API.generateNewExercise({
+                          macro_subject: activity?.learning_outcome,
+                          topic: activity.topic,
+                          education_level: analysedMaterial.education_level,
+                          learning_outcome: activity.learning_outcome,
+                          material: sourceMaterial,
+                          solutions_number:
+                            activity.data?.solutions_number || 0,
+                          distractors_number:
+                            activity.data?.distractors_number || 0,
+                          easily_discardable_distractors_number:
+                            activity.data
+                              ?.easily_discardable_distractors_number || 0,
+                          type: activity.type,
+                          language: analysedMaterial.language,
+                          model: 'Gemini',
                         });
-                      });
+                      } catch (err) {
+                        console.warn('retry', err);
+
+                        // Retry una volta
+                        response = await API.generateNewExercise({
+                          macro_subject: activity?.learning_outcome,
+                          topic: activity.topic,
+                          education_level: analysedMaterial.education_level,
+                          learning_outcome: activity.learning_outcome,
+                          material: sourceMaterial,
+                          solutions_number:
+                            activity.data?.solutions_number || 0,
+                          distractors_number:
+                            activity.data?.distractors_number || 0,
+                          easily_discardable_distractors_number:
+                            activity.data
+                              ?.easily_discardable_distractors_number || 0,
+                          type: activity.type,
+                          language: analysedMaterial.language,
+                          model: 'Gemini',
+                        });
+                      }
+
+                      // Se uno dei due tentativi ha avuto successo
+                      if (response) {
+                        handleResponseNewExercise(response);
+                      }
                     } catch (error) {
-                      console.log(error);
+                      console.error('Error on generating exercise: ', error);
                     }
                   }
                 }
