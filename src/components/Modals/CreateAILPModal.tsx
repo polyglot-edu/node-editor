@@ -803,147 +803,148 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   const node = generatedNodes[i];
                   const nextNode = generatedNodes[i + 1];
 
-                  if (node.type == 'ReadMaterialNode') {
-                    const id = UUIDv4();
-                    generatedEdges.push({
-                      _id: id,
-                      type: 'unconditionalEdge',
-                      code: `
+                  if (node.title != 'End')
+                    if (node.type == 'ReadMaterialNode') {
+                      const id = UUIDv4();
+                      generatedEdges.push({
+                        _id: id,
+                        type: 'unconditionalEdge',
+                        code: `
                     async Task<(bool, string)> validate(PolyglotValidationContext context) {
                         return (true, "Unconditional edge");
                     }
                     `,
-                      data: {
-                        conditionKind: 'pass',
-                      },
-                      reactFlow: {
-                        id: id,
-                        source: node._id,
-                        target: nextNode._id,
-                        type: 'unconditionalEdge',
-                        markerEnd: {
-                          color: 'grey',
-                          type: MarkerType.Arrow,
-                          width: 25,
-                          height: 25,
+                        data: {
+                          conditionKind: 'pass',
                         },
-                        selected: true,
-                      },
-                      title: 'next',
-                    });
-                  } else {
-                    const idRecovery = UUIDv4();
-                    const x = node.reactFlow.position.x;
-                    const y = node.reactFlow.position.y + 80;
-                    generatedNodes.push({
-                      _id: idRecovery,
-                      type: 'abstractNode',
-                      title: 'Recovery Activity',
-                      description: 'Recovery activity',
-                      platform: 'Library',
-                      difficulty: 1,
-                      data: {
-                        useFlowData: true,
-                        sourceMaterial: sourceMaterial,
-                        learning_outcome: learningOutcome,
-                        education_level: eduLevel,
-                        topicsAI: selectedTopic,
-                        language: analysedMaterial.language,
-                        macro_subject: analysedMaterial.macro_subject,
-                        title: analysedMaterial.title,
-                        context: context,
-                      },
-                      reactFlow: {
-                        id: idRecovery,
+                        reactFlow: {
+                          id: id,
+                          source: node._id,
+                          target: nextNode._id,
+                          type: 'unconditionalEdge',
+                          markerEnd: {
+                            color: 'grey',
+                            type: MarkerType.Arrow,
+                            width: 25,
+                            height: 25,
+                          },
+                          selected: true,
+                        },
+                        title: 'next',
+                      });
+                    } else {
+                      const idRecovery = UUIDv4();
+                      const x = node.reactFlow.position.x;
+                      const y = node.reactFlow.position.y + 80;
+                      generatedNodes.push({
+                        _id: idRecovery,
                         type: 'abstractNode',
-                        position: {
-                          x: x,
-                          y: y,
+                        title: 'Recovery Activity',
+                        description: 'Recovery activity',
+                        platform: 'Library',
+                        difficulty: 1,
+                        data: {
+                          useFlowData: true,
+                          sourceMaterial: sourceMaterial,
+                          learning_outcome: learningOutcome,
+                          education_level: eduLevel,
+                          topicsAI: selectedTopic,
+                          language: analysedMaterial.language,
+                          macro_subject: analysedMaterial.macro_subject,
+                          title: analysedMaterial.title,
+                          context: context,
                         },
-                        width: 88,
-                        height: 46,
-                        selected: false,
-                        dragging: false,
-                        positionAbsolute: {
-                          x: x,
-                          y: y,
+                        reactFlow: {
+                          id: idRecovery,
+                          type: 'abstractNode',
+                          position: {
+                            x: x,
+                            y: y,
+                          },
+                          width: 88,
+                          height: 46,
+                          selected: false,
+                          dragging: false,
+                          positionAbsolute: {
+                            x: x,
+                            y: y,
+                          },
+                          data: {},
                         },
-                        data: {},
-                      },
-                    });
-                    const id1 = UUIDv4();
-                    generatedEdges.push({
-                      _id: id1,
-                      type: 'passFailEdge',
-                      code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
-                    `,
-                      data: {
-                        conditionKind: 'pass',
-                      },
-                      reactFlow: {
-                        id: id1,
-                        source: node._id,
-                        target: nextNode._id,
+                      });
+                      const id1 = UUIDv4();
+                      generatedEdges.push({
+                        _id: id1,
                         type: 'passFailEdge',
-                        markerEnd: {
-                          color: 'green',
-                          type: MarkerType.Arrow,
-                          width: 25,
-                          height: 25,
-                        },
-                        selected: true,
-                      },
-                      title: 'pass',
-                    });
-                    const id2 = UUIDv4();
-                    generatedEdges.push({
-                      _id: id2,
-                      type: 'passFailEdge',
-                      code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
+                        code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
                     `,
-                      data: {
-                        conditionKind: 'fail',
-                      },
-                      reactFlow: {
-                        id: id2,
-                        source: node._id,
-                        target: idRecovery,
-                        type: 'passFailEdge',
-                        markerEnd: {
-                          color: 'red',
-                          type: MarkerType.Arrow,
-                          width: 25,
-                          height: 25,
+                        data: {
+                          conditionKind: 'pass',
                         },
-                        selected: true,
-                      },
-                      title: 'fail',
-                    });
-                    const id3 = UUIDv4();
-                    generatedEdges.push({
-                      _id: id3,
-                      type: 'passFailEdge',
-                      code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
+                        reactFlow: {
+                          id: id1,
+                          source: node._id,
+                          target: nextNode._id,
+                          type: 'passFailEdge',
+                          markerEnd: {
+                            color: 'green',
+                            type: MarkerType.Arrow,
+                            width: 25,
+                            height: 25,
+                          },
+                          selected: true,
+                        },
+                        title: 'pass',
+                      });
+                      const id2 = UUIDv4();
+                      generatedEdges.push({
+                        _id: id2,
+                        type: 'passFailEdge',
+                        code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
                     `,
-                      data: {
-                        conditionKind: 'pass',
-                      },
-                      reactFlow: {
-                        id: id3,
-                        source: idRecovery,
-                        target: nextNode._id,
-                        type: 'passFailEdge',
-                        markerEnd: {
-                          color: 'green',
-                          type: MarkerType.Arrow,
-                          width: 25,
-                          height: 25,
+                        data: {
+                          conditionKind: 'fail',
                         },
-                        selected: true,
-                      },
-                      title: 'pass',
-                    });
-                  }
+                        reactFlow: {
+                          id: id2,
+                          source: node._id,
+                          target: idRecovery,
+                          type: 'passFailEdge',
+                          markerEnd: {
+                            color: 'red',
+                            type: MarkerType.Arrow,
+                            width: 25,
+                            height: 25,
+                          },
+                          selected: true,
+                        },
+                        title: 'fail',
+                      });
+                      const id3 = UUIDv4();
+                      generatedEdges.push({
+                        _id: id3,
+                        type: 'passFailEdge',
+                        code: `\nasync Task<(bool, string)> validate(PolyglotValidationContext context) {\n    var getMultipleChoiceAnswer = () => {\n        var submitted = context.JourneyContext.EventsProduced.OfType<ReturnValueProduced>().FirstOrDefault()?.Value as HashSet<string>;\n        var answersCorrect = ((List<object>)context.Exercise.Data.isChoiceCorrect).Select((c, i) => (c, i))\n                                                                                .Where(c => bool.Parse(c.c.ToString()))\n                                                                                .Select(c => (c.i + 1).ToString())\n                                                                                .ToHashSet();\n        return submitted.SetEquals(answersCorrect);\n    };\n\n    var isSubmissionCorrect = context.Exercise.NodeType switch\n    {\n        \"multipleChoiceQuestionNode\" => getMultipleChoiceAnswer(),\n        _ => context.Exercise.Data.correctAnswers.Contains(context.JourneyContext.SubmittedCode),\n    };\n\n    var conditionKind = context.Condition.Data.conditionKind switch\n    {\n        \"pass\" => true,\n        \"fail\" => false,\n        _ => throw new Exception(\"Unknown condition kind\")\n    };\n    return (conditionKind == isSubmissionCorrect, \"Pass/Fail edge\");\n}    \n
+                    `,
+                        data: {
+                          conditionKind: 'pass',
+                        },
+                        reactFlow: {
+                          id: id3,
+                          source: idRecovery,
+                          target: nextNode._id,
+                          type: 'passFailEdge',
+                          markerEnd: {
+                            color: 'green',
+                            type: MarkerType.Arrow,
+                            width: 25,
+                            height: 25,
+                          },
+                          selected: true,
+                        },
+                        title: 'pass',
+                      });
+                    }
                 }
 
                 console.log('end node generation');
