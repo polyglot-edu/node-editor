@@ -197,15 +197,13 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
 
   const generatedNodes: PolyglotNode[] = [];
 
-  const handleResponseNewExercise = (response: any) => {
+  const handleResponseNewExercise = (response: any, x: number, y: number) => {
     const exerciseResponse: AIExerciseGenerated = response.data;
     const _id = UUIDv4();
     const typeNode =
       QuestionTypeMap.find((type) => type.key == exerciseResponse.type)
         ?.nodeType || 'OpenQuestionNode';
     const data = dataFactory[typeNode]?.(exerciseResponse) || null;
-    const x = -195 + 50 * generatedNodes.length;
-    const y = -210 + 100 * generatedNodes.length;
     generatedNodes.push({
       _id: _id,
       type: typeNode,
@@ -625,7 +623,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 let counter = 0;
                 console.log('Starting node generation');
                 let x = -195;
-                let y = -210;
+                const y = -210;
                 for (let i = 0; i < selectedNodes.length; i++) {
                   if (counter == 0 && nReadMaterial != 0) {
                     i--;
@@ -695,9 +693,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           data: {},
                         },
                       });
-
-                      x = x + 120;
-                      y = y + 80;
                     } catch (error) {
                       console.log('errror in generation readMaterial ' + error);
                     }
@@ -752,12 +747,13 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
 
                       // Se uno dei due tentativi ha avuto successo
                       if (response) {
-                        handleResponseNewExercise(response);
+                        handleResponseNewExercise(response, x, y);
                       }
                     } catch (error) {
                       console.error('Error on generating exercise: ', error);
                     }
                   }
+                  x = x + 500;
                 }
 
                 const idEnd = UUIDv4();
@@ -835,7 +831,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     } else {
                       const idRecovery = UUIDv4();
                       const x = node.reactFlow.position.x;
-                      const y = node.reactFlow.position.y + 80;
+                      const y = node.reactFlow.position.y + 100;
                       generatedNodes.push({
                         _id: idRecovery,
                         type: 'abstractNode',
