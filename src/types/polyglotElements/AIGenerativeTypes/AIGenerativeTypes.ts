@@ -65,67 +65,72 @@ export const QuestionTypeMap = [
     nodeType: 'activity',
     integrated: false,
   },
-  { key: 'coding', text: 'Coding', nodeType: 'activity', integrated: false },
+  {
+    key: 'coding',
+    text: 'Coding',
+    nodeType: 'codingQuestionNode', //da capire se si può usare per il tool che ha fatto riccardo
+    integrated: false,
+  },
   { key: 'essay', text: 'Essay', nodeType: 'activity', integrated: false },
   {
     key: 'knowledge exposition',
     text: 'Knowledge Exposition',
-    nodeType: 'discussion',
+    nodeType: 'InnovationPitchNode', //forse si può cambiare in un generale "PitchNode"
     integrated: false,
   },
-  { key: 'debate', text: 'Debate', nodeType: 'discussion', integrated: false },
+  { key: 'debate', text: 'Debate', nodeType: 'activity', integrated: false },
   {
     key: 'brainstorming',
     text: 'Brainstorming',
-    nodeType: 'discussion',
+    nodeType: 'BrainstormingNode',
     integrated: false,
   },
   {
     key: 'group discussion',
     text: 'Group Discussion',
-    nodeType: 'discussion',
+    nodeType: 'activity',
     integrated: false,
   },
   {
     key: 'simulation',
     text: 'Simulation',
-    nodeType: 'experiential',
+    nodeType: 'SimulationNode',
     integrated: false,
   },
   {
     key: 'inquiry based learning',
     text: 'Inquiry-Based Learning',
-    nodeType: 'experiential',
+    nodeType: 'activity',
     integrated: false,
   },
   {
     key: 'non written material analysis',
     text: 'Non-Written Material Analysis',
-    nodeType: 'experiential',
+    nodeType: 'activity',
     integrated: false,
   },
   {
     key: 'non written material production',
     text: 'Non-Written Material Production',
-    nodeType: 'experiential',
+    nodeType: 'ImageEvaluationNode', //oppure c'è anche AnalyzingPlottingDataNode
     integrated: false,
   },
   {
     key: 'case study analysis',
     text: 'Case Study Analysis',
-    nodeType: 'project',
+    nodeType: 'CasesEvaluationNode',
     integrated: false,
   },
   {
     key: 'project based learning',
     text: 'Project-Based Learning',
-    nodeType: 'project',
+    nodeType: 'activity',
     integrated: false,
   },
   {
     key: 'problem solving activity',
     text: 'Problem Solving Activity',
-    nodeType: 'project',
+    nodeType: 'ProblemSolvingNode', //oppure c'è anche FindSolutionNode
     integrated: false,
   },
 ];

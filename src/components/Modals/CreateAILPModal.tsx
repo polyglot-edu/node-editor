@@ -129,6 +129,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [sourceMaterial, setSourceMaterial] = useState('');
   const [context, setContext] = useState('');
   const [AINodes, setAINodes] = useState<AIPlanLessonResponse>();
+  const [selectedNodes, setSelectedNodes] = useState<AIPlanLessonResponse>();
   const [learningOutcome, setLearningOutcome] = useState<LearningOutcome>();
   const [eduLevel, setEduLevel] = useState<EducationLevel>();
   const [selectedTopic, setSelectedTopic] = useState<Topic[]>([]);
@@ -155,6 +156,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     }
   }, [AINodes]);
 
+  useEffect(() => {
+    console.log(selectedNodes?.nodes);
+    console.log('change triggered');
+  }, [selectedNodes]);
+
   //functions for topic handler
   const toggleTopic = (topic: Topic) => {
     setSelectedTopic((prev) => {
@@ -180,15 +186,14 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     );
   };
 
-  const updateNodeAt = (id: number, updatedNode: PlanLessonNode) => {
-    if (!AINodes) return;
-
-    const updatedNodes = AINodes.nodes.map((node, index) =>
+  const updateNodeAt = async (id: number, updatedNode: PlanLessonNode) => {
+    if (!selectedNodes) return;
+    const updatedNodes = selectedNodes.nodes.map((node, index) =>
       index === id ? updatedNode : node
     );
 
-    setAINodes({
-      ...AINodes,
+    await setSelectedNodes({
+      ...selectedNodes,
       nodes: updatedNodes,
     });
   };
@@ -239,7 +244,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
         if (action) action(false);
         onClose();
       }}
-      size={'2xl'}
+      size={'4xl'}
       isCentered
       scrollBehavior="inside"
     >
@@ -529,6 +534,31 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   model: 'Gemini',
                 }).then((response) => {
                   setAINodes(response.data);
+                  const data: AIPlanLessonResponse = response.data;
+                  const updatedNodes: PlanLessonNode[] = data.nodes.map(
+                    (node) => {
+                      console.log('old type:' + node.type);
+                      console.log('^^^^^^^^^^^^^^^^^^^^^^');
+
+                      const isIntegrated = QuestionTypeMap.find(
+                        (qType) => qType.integrated && qType.key === node.type
+                      );
+
+                      return {
+                        type: isIntegrated ? node.type : 'open question',
+                        topic: node.topic,
+                        details: node.details,
+                        learning_outcome: node.learning_outcome,
+                        duration: node.duration,
+                        data: node.data,
+                      };
+                    }
+                  );
+
+                  setSelectedNodes({
+                    ...data,
+                    nodes: updatedNodes,
+                  });
                 });
               } catch (error: any) {
                 if ((error as Error).name === 'SyntaxError') {
@@ -574,35 +604,37 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
         <ModalBody hidden={!screen3}>
           <FormControl label="Nodes">
             <Box display="flex" flexDirection="column">
-              {AINodes?.nodes.map((node, id) => {
-                const suggestedType = node.type;
-                return (
-                  <PlanLessonCard
-                    planNode={node}
-                    key={id}
-                    id={id}
-                    setSelectedNode={handleToggleNode}
-                    isSelected={selectedNodeIds.includes(id)}
-                    updateNodeAt={updateNodeAt}
-                    suggestedType={suggestedType}
-                  />
-                );
-              })}
+              {AINodes &&
+                selectedNodes &&
+                selectedNodes?.nodes.map((node, id) => {
+                  return (
+                    <PlanLessonCard
+                      plannedNode={AINodes.nodes[id]}
+                      planNode={node}
+                      key={id}
+                      id={id}
+                      setSelectedNode={handleToggleNode}
+                      isSelected={selectedNodeIds.includes(id)}
+                      updateNodeAt={updateNodeAt}
+                    />
+                  );
+                })}
             </Box>
           </FormControl>
           <Button
             marginTop={'15px'}
             onClick={async () => {
+              generatedNodes.length = 0;
               setGeneratingLoading(true);
               if (!analysedMaterial)
                 throw new Error('Missing analysedMaterial');
               try {
-                const selectedNodes = AINodes?.nodes
+                const nodesToGenerate = selectedNodes?.nodes
                   .map((aiNode, index) => {
                     if (selectedNodeIds.includes(index)) return aiNode;
                   })
                   .filter((node) => node != undefined);
-                if (!selectedNodes || !selectedNodes[0]) {
+                if (!nodesToGenerate || !nodesToGenerate[0]) {
                   toast({
                     title: 'Missing activities',
                     description:
@@ -616,20 +648,20 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 }
                 const nTopicReadMaterial =
                   nReadMaterial == 1
-                    ? selectedNodes.length
-                    : nReadMaterial < selectedNodes.length
-                    ? Math.ceil(selectedNodes.length / nReadMaterial)
+                    ? nodesToGenerate.length
+                    : nReadMaterial < nodesToGenerate.length
+                    ? Math.ceil(nodesToGenerate.length / nReadMaterial)
                     : 1;
                 let counter = 0;
                 console.log('Starting node generation');
                 let x = -195;
                 const y = -210;
-                for (let i = 0; i < selectedNodes.length; i++) {
+                for (let i = 0; i < nodesToGenerate.length; i++) {
                   if (counter == 0 && nReadMaterial != 0) {
                     i--;
                     counter = nTopicReadMaterial;
                     setNReadMaterial(nReadMaterial - 1);
-                    const readTopics: LessonNodeAI[] = selectedNodes
+                    const readTopics: LessonNodeAI[] = nodesToGenerate
                       .map((aiNode, index) => {
                         if (aiNode && index < nTopicReadMaterial)
                           return {
@@ -698,7 +730,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     }
                   } else {
                     counter--;
-                    const activity = selectedNodes[i];
+                    const activity = nodesToGenerate[i];
                     if (!activity) break;
                     try {
                       let response: AxiosResponse | null = null;
@@ -753,7 +785,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       console.error('Error on generating exercise: ', error);
                     }
                   }
-                  x = x + 500;
+                  x = x + 450;
                 }
 
                 const idEnd = UUIDv4();
@@ -1017,6 +1049,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               setGeneratingLoading(false);
               setContext('');
               setAINodes(undefined);
+              setSelectedNodes(undefined);
               setLearningOutcome(undefined);
               setEduLevel(undefined);
               setSelectedTopic([]);
