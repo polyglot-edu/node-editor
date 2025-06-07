@@ -655,7 +655,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 let counter = 0;
                 console.log('Starting node generation');
                 let x = -195;
-                const y = -210;
+                let y = -210;
                 for (let i = 0; i < nodesToGenerate.length; i++) {
                   if (counter == 0 && nReadMaterial != 0) {
                     i--;
@@ -786,6 +786,10 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     }
                   }
                   x = x + 450;
+                  if (x > 1605) {
+                    x = -195;
+                    y = y + 195;
+                  }
                 }
 
                 const idEnd = UUIDv4();
