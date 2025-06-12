@@ -49,7 +49,8 @@ import {
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import PlanLessonCard from '../Card/PlanLessonCard';
-import InfoButton from '../InfoButton/InfoButton';
+import InfoButton from '../UtilityComponents/InfoButton';
+import ProgressBar from '../UtilityComponents/ProgressBar';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -137,10 +138,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [selectedNodeIds, setSelectedNodeIds] = useState<number[]>([]);
   const [expandedIndexes, setExpandedIndexes] = useState<number[]>([]);
   const [nReadMaterial, setNReadMaterial] = useState(1);
+  const [stepGeneration, setStepGeneration] = useState(0);
   const [screen1, setScreen1] = useState(true);
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
-  const [generatedNodes, setGeneratedNodes] = useState<PolyglotNode[]>([]);
+  const generatedNodes: PolyglotNode[] = [];
 
   const router = useRouter();
 
@@ -204,35 +206,32 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
       QuestionTypeMap.find((type) => type.key == exerciseResponse.type)
         ?.nodeType || 'OpenQuestionNode';
     const data = dataFactory[typeNode]?.(exerciseResponse) || null;
-    setGeneratedNodes((prev) => [
-      ...prev,
-      {
-        _id: _id,
+    generatedNodes.push({
+      _id: _id,
+      type: typeNode,
+      title: exerciseResponse.topic,
+      description: exerciseResponse.macro_subject,
+      platform: 'WebApp',
+      difficulty: 1,
+      data: data,
+      reactFlow: {
+        id: _id,
         type: typeNode,
-        title: exerciseResponse.topic,
-        description: exerciseResponse.macro_subject,
-        platform: 'WebApp',
-        difficulty: 1,
-        data: data,
-        reactFlow: {
-          id: _id,
-          type: typeNode,
-          position: {
-            x: x,
-            y: y,
-          },
-          width: 88,
-          height: 46,
-          selected: false,
-          dragging: false,
-          positionAbsolute: {
-            x: x,
-            y: y,
-          },
-          data: {},
+        position: {
+          x: x,
+          y: y,
         },
+        width: 88,
+        height: 46,
+        selected: false,
+        dragging: false,
+        positionAbsolute: {
+          x: x,
+          y: y,
+        },
+        data: {},
       },
-    ]);
+    });
   };
 
   const resetAll = () => {
@@ -250,7 +249,8 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     setScreen1(true);
     setScreen2(false);
     setScreen3(false);
-    setGeneratedNodes([]);
+    generatedNodes.length = 0;
+    setStepGeneration(0);
   };
 
   return (
@@ -511,7 +511,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 min={1}
                 max={8}
                 width="80px"
-                onChange={(valueString, valueNumber) => {                  
+                onChange={(valueString, valueNumber) => {
                   if (!isNaN(valueNumber)) setNReadMaterial(valueNumber);
                 }}
               >
@@ -658,6 +658,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 })}
             </Box>
           </FormControl>
+          <ProgressBar
+            currentStep={stepGeneration}
+            totalSteps={nReadMaterial + selectedNodeIds.length}
+            isHidden={!generatingLoading && generatedNodes.length == 0}
+            label="Activities generation"
+          />
           <Button
             marginTop={'15px'}
             onClick={async () => {
@@ -828,6 +834,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     x = -195;
                     y = y + 195;
                   }
+                  setStepGeneration(generatedNodes.length);
                 }
                 setNReadMaterial(0);
                 const idEnd = UUIDv4();
@@ -1077,6 +1084,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               }
             }}
             isLoading={generatingLoading}
+            isDisabled={generatingLoading && generatedNodes.length != 0}
           >
             Generate Learning Path
           </Button>

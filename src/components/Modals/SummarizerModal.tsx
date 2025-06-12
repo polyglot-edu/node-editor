@@ -21,7 +21,7 @@ import {
   LearningOutcome,
   SummarizeStyle,
 } from '../../types/polyglotElements';
-import InfoButton from '../InfoButton/InfoButton';
+import InfoButton from '../UtilityComponents/InfoButton';
 
 export type ModaTemplateProps = {
   isOpen: boolean;

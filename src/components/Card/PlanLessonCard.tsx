@@ -32,7 +32,7 @@ import {
   PlanLessonNode,
   QuestionTypeMap,
 } from '../../types/polyglotElements';
-import InfoButton from '../InfoButton/InfoButton';
+import InfoButton from '../UtilityComponents/InfoButton';
 
 type LessonCardProps = {
   plannedNode: PlanLessonNode;
@@ -79,7 +79,7 @@ const PlanLessonCard = ({
   }, [specificData]);
 
   return (
-    <Box px={px} py={py} paddingTop={'10px'} height={'100%'} overflowY={'auto'}>
+    <Box px={px} py={py} paddingTop={'10px'}>
       <Card>
         <CardBody>
           <Box>

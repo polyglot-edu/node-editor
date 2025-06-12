@@ -19,7 +19,7 @@ import { API } from '../../../data/api';
 import useStore from '../../../store';
 import { LearningOutcome, Topic } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
-import InfoButton from '../../InfoButton/InfoButton';
+import InfoButton from '../../UtilityComponents/InfoButton';
 import NodeProperties from './NodeProperties';
 
 const AbstractNodeProperties = () => {

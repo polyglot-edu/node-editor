@@ -32,7 +32,7 @@ import {
   QuestionTypeMap,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
-import InfoButton from '../InfoButton/InfoButton';
+import InfoButton from '../UtilityComponents/InfoButton';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
