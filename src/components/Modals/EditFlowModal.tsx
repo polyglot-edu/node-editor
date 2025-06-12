@@ -276,7 +276,6 @@ const EditFlowModal = ({
           <IconButton
             backgroundColor={publish ? 'green.500' : 'red.500'}
             onClick={() => {
-              console.log(publish);
               setPublish(!publish);
             }}
             aria-label={''}

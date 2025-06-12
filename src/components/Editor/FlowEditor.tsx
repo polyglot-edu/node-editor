@@ -43,17 +43,12 @@ import ElementProperties from '../Panels/ElementProperties';
 type FlowEditorProps = {
   mode: 'read' | 'write';
   saveFlow: () => Promise<void>;
-  publishFlow: () => Promise<boolean>;
   onSelectionChange?: (selection: OnSelectionChangeParams) => void;
 };
 
 const deleteKeyCodes = ['Backspace', 'Delete'];
 
-const FlowEditor = ({
-  saveFlow,
-  publishFlow,
-  onSelectionChange,
-}: FlowEditorProps) => {
+const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
   const {
     getNodes,
     getEdges,
@@ -260,7 +255,7 @@ const FlowEditor = ({
 
   return (
     <Flex direction={'column'} h="100vh" fontFamily={'Roboto'}>
-      <EditorNav saveFunc={saveFlow} publishFlow={publishFlow} />
+      <EditorNav saveFunc={saveFlow} />
       <Flex h={'full'} overflow="hidden">
         <ReactFlow
           // nodes setup
