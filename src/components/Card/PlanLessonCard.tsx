@@ -32,6 +32,7 @@ import {
   PlanLessonNode,
   QuestionTypeMap,
 } from '../../types/polyglotElements';
+import InfoButton from '../InfoButton/InfoButton';
 
 type LessonCardProps = {
   plannedNode: PlanLessonNode;
@@ -78,7 +79,7 @@ const PlanLessonCard = ({
   }, [specificData]);
 
   return (
-    <Box px={px} py={py} paddingTop={'10px'}>
+    <Box px={px} py={py} paddingTop={'10px'} height={'100%'} overflowY={'auto'}>
       <Card>
         <CardBody>
           <Box>
@@ -92,6 +93,16 @@ const PlanLessonCard = ({
               <strong>Details:</strong> {plannedNode.details}
             </Text>
 
+            <Text fontSize="md" paddingTop={'5px'}>
+              <strong>
+                Learning outcome:
+                <InfoButton
+                  title="Learning Outcome"
+                  description="Describe the intended educational goal of the learning path. For example: 'the ability to recall or recognize simple facts and definitions.'"
+                  placement="right"
+                />
+              </strong>
+            </Text>
             <Menu>
               <MenuButton
                 as={Button}
@@ -146,6 +157,15 @@ const PlanLessonCard = ({
                 ))}
               </MenuList>
             </Menu>
+            <Text fontSize="md" paddingTop={'5px'}>
+              <strong>
+                Learning Task:
+                <InfoButton title="Learning Task Type" description="Select the kind of tasks learners should perform from the list provided. Please note that the system may suggest activities not yet included in the list, as we are continuously expanding the available options."
+
+                  placement="right"
+                />
+              </strong>
+            </Text>
             <Menu>
               <MenuButton
                 as={Button}

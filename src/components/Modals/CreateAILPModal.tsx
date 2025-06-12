@@ -49,6 +49,7 @@ import {
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import PlanLessonCard from '../Card/PlanLessonCard';
+import InfoButton from '../InfoButton/InfoButton';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -155,11 +156,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
       setScreen3(true);
     }
   }, [AINodes]);
-
-  useEffect(() => {
-    console.log(selectedNodes?.nodes);
-    console.log('change triggered');
-  }, [selectedNodes]);
 
   //functions for topic handler
   const toggleTopic = (topic: Topic) => {
@@ -270,6 +266,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
         <ModalBody hidden={!screen1}>
           <FormLabel mb={2} fontWeight={'bold'}>
             Your material:
+            <InfoButton
+              title="Material to Analyze"
+              description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
+              placement="right"
+            />
           </FormLabel>
           <Textarea
             minHeight={'150px'}
@@ -371,6 +372,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               paddingBottom={'-5px'}
             >
               Educational Level:
+              <InfoButton
+                title="Educational Level"
+                description="Specify the academic level of the target audience, such as elementary school, high school, or college, to tailor the learning path appropriately."
+                placement="right"
+              />
             </FormLabel>
             <Select
               borderColor={'grey'}
@@ -399,6 +405,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               paddingBottom={'-5px'}
             >
               Learning Outcome:
+              <InfoButton
+                title="Learning Outcome"
+                description="Describe the intended educational goal of the learning path. For example: 'the ability to recall or recognize simple facts and definitions.'"
+                placement="right"
+              />
             </FormLabel>
             <Select
               borderColor={'grey'}
@@ -464,10 +475,15 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               </Flex>
             ))}
           </FormControl>
-          <FormControl label="Learning Outcome">
+          <FormControl label="Read Material Activities">
             <Flex paddingTop={'5px'} alignItems={'center'}>
               <FormLabel mb={2} fontWeight={'bold'}>
                 Number of read material activities:
+                <InfoButton
+                  title="Number of Reading Activities"
+                  description="Indicate how many activities should involve reading custom-generated texts. These texts will be tailored to the specific topics and context of the learning path."
+                  placement="right"
+                />
               </FormLabel>
               <NumberInput
                 float={'right'}
@@ -490,6 +506,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
           </FormControl>
           <FormLabel mb={2} fontWeight={'bold'}>
             Context (optional):
+            <InfoButton
+              title="Context"
+              description="Explain the educational setting in which the learning path will be used. For instance: 'Middle school class with a focus on individual learning activities.'"
+              placement="right"
+            />
           </FormLabel>
           <Textarea
             maxHeight={'200px'}
@@ -537,9 +558,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   const data: AIPlanLessonResponse = response.data;
                   const updatedNodes: PlanLessonNode[] = data.nodes.map(
                     (node) => {
-                      console.log('old type:' + node.type);
-                      console.log('^^^^^^^^^^^^^^^^^^^^^^');
-
                       const isIntegrated = QuestionTypeMap.find(
                         (qType) => qType.integrated && qType.key === node.type
                       );
@@ -603,7 +621,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
         </ModalBody>
         <ModalBody hidden={!screen3}>
           <FormControl label="Nodes">
-            <Box display="flex" flexDirection="column">
+            <Box display="flex" flexDirection="column" overflowY="auto">
               {AINodes &&
                 selectedNodes &&
                 selectedNodes?.nodes.map((node, id) => {
