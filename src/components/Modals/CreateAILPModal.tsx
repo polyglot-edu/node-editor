@@ -140,6 +140,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [screen1, setScreen1] = useState(true);
   const [screen2, setScreen2] = useState(false);
   const [screen3, setScreen3] = useState(false);
+  const [generatedNodes, setGeneratedNodes] = useState<PolyglotNode[]>([]);
 
   const router = useRouter();
 
@@ -196,8 +197,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
 
   const toast = useToast();
 
-  const generatedNodes: PolyglotNode[] = [];
-
   const handleResponseNewExercise = (response: any, x: number, y: number) => {
     const exerciseResponse: AIExerciseGenerated = response.data;
     const _id = UUIDv4();
@@ -205,32 +204,53 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
       QuestionTypeMap.find((type) => type.key == exerciseResponse.type)
         ?.nodeType || 'OpenQuestionNode';
     const data = dataFactory[typeNode]?.(exerciseResponse) || null;
-    generatedNodes.push({
-      _id: _id,
-      type: typeNode,
-      title: exerciseResponse.topic,
-      description: exerciseResponse.macro_subject,
-      platform: 'WebApp',
-      difficulty: 1,
-      data: data,
-      reactFlow: {
-        id: _id,
+    setGeneratedNodes((prev) => [
+      ...prev,
+      {
+        _id: _id,
         type: typeNode,
-        position: {
-          x: x,
-          y: y,
+        title: exerciseResponse.topic,
+        description: exerciseResponse.macro_subject,
+        platform: 'WebApp',
+        difficulty: 1,
+        data: data,
+        reactFlow: {
+          id: _id,
+          type: typeNode,
+          position: {
+            x: x,
+            y: y,
+          },
+          width: 88,
+          height: 46,
+          selected: false,
+          dragging: false,
+          positionAbsolute: {
+            x: x,
+            y: y,
+          },
+          data: {},
         },
-        width: 88,
-        height: 46,
-        selected: false,
-        dragging: false,
-        positionAbsolute: {
-          x: x,
-          y: y,
-        },
-        data: {},
       },
-    });
+    ]);
+  };
+
+  const resetAll = () => {
+    setGeneratingLoading(false);
+    setSourceMaterial('');
+    setContext('');
+    setAINodes(undefined);
+    setSelectedNodes(undefined);
+    setLearningOutcome(undefined);
+    setEduLevel(undefined);
+    setSelectedTopic([]);
+    setSelectedNodeIds([]);
+    setExpandedIndexes([]);
+    setNReadMaterial(1);
+    setScreen1(true);
+    setScreen2(false);
+    setScreen3(false);
+    setGeneratedNodes([]);
   };
 
   return (
@@ -486,20 +506,19 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 />
               </FormLabel>
               <NumberInput
-                float={'right'}
-                defaultValue={nReadMaterial}
+                float="right"
+                value={nReadMaterial}
                 min={1}
                 max={8}
-                width={'80px'}
+                width="80px"
+                onChange={(valueString, valueNumber) => {                  
+                  if (!isNaN(valueNumber)) setNReadMaterial(valueNumber);
+                }}
               >
                 <NumberInputField />
                 <NumberInputStepper>
-                  <NumberIncrementStepper
-                    onClick={() => setNReadMaterial(nReadMaterial + 1)}
-                  />
-                  <NumberDecrementStepper
-                    onClick={() => setNReadMaterial(nReadMaterial - 1)}
-                  />
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
             </Flex>
@@ -674,11 +693,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 console.log('Starting node generation');
                 let x = -195;
                 let y = -210;
+                let localReadMaterial = nReadMaterial;
                 for (let i = 0; i < nodesToGenerate.length; i++) {
-                  if (counter == 0 && nReadMaterial != 0) {
+                  if (counter == 0 && localReadMaterial != 0) {
                     i--;
                     counter = nTopicReadMaterial;
-                    setNReadMaterial(nReadMaterial - 1);
+                    localReadMaterial--;
                     const readTopics: LessonNodeAI[] = nodesToGenerate
                       .map((aiNode, index) => {
                         if (aiNode && index < nTopicReadMaterial)
@@ -809,7 +829,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     y = y + 195;
                   }
                 }
-
+                setNReadMaterial(0);
                 const idEnd = UUIDv4();
                 generatedNodes.push({
                   _id: idEnd,
@@ -1062,25 +1082,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
           </Button>
         </ModalBody>
         <ModalFooter>
-          <Button
-            onClick={() => {
-              setScreen1(true);
-              setScreen2(false);
-              setScreen3(false);
-              setSourceMaterial('');
-              setGeneratingLoading(false);
-              setContext('');
-              setAINodes(undefined);
-              setSelectedNodes(undefined);
-              setLearningOutcome(undefined);
-              setEduLevel(undefined);
-              setSelectedTopic([]);
-              setSelectedNodeIds([]);
-              setExpandedIndexes([]);
-              setNReadMaterial(1);
-            }}
-            width={'80px'}
-          >
+          <Button onClick={resetAll} width={'80px'}>
             Restart
           </Button>
         </ModalFooter>

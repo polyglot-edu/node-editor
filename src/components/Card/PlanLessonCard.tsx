@@ -253,34 +253,24 @@ const PlanLessonCard = ({
                 :
               </Text>
               <NumberInput
-                float={'right'}
-                defaultValue={specificData.solutions_number}
+                float="right"
+                value={specificData.solutions_number}
                 min={1}
-                width={'80px'}
+                width="80px"
                 title="soon: multiple correct answer"
+                onChange={(valueString, valueNumber) => {
+                  if (!isNaN(valueNumber) && valueNumber >= 1) {
+                    setSpecificData((prev) => ({
+                      ...prev,
+                      solutions_number: valueNumber,
+                    }));
+                  }
+                }}
               >
                 <NumberInputField />
                 <NumberInputStepper>
-                  <NumberIncrementStepper
-                    onClick={() =>
-                      setSpecificData({
-                        solutions_number: specificData.solutions_number + 1,
-                        distractors_number: specificData.distractors_number,
-                        easily_discardable_distractors_number:
-                          specificData.easily_discardable_distractors_number,
-                      })
-                    }
-                  />
-                  <NumberDecrementStepper
-                    onClick={() =>
-                      setSpecificData({
-                        solutions_number: specificData.solutions_number - 1,
-                        distractors_number: specificData.distractors_number,
-                        easily_discardable_distractors_number:
-                          specificData.easily_discardable_distractors_number,
-                      })
-                    }
-                  />
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
               <Text textStyle="sm">
@@ -291,33 +281,27 @@ const PlanLessonCard = ({
                 :
               </Text>
               <NumberInput
-                defaultValue={specificData.solutions_number}
+                value={specificData.distractors_number}
                 min={0}
                 max={6}
-                width={'80px'}
+                width="80px"
+                onChange={(valueString, valueNumber) => {
+                  if (
+                    !isNaN(valueNumber) &&
+                    valueNumber >= 0 &&
+                    valueNumber <= 6
+                  ) {
+                    setSpecificData((prev) => ({
+                      ...prev,
+                      distractors_number: valueNumber,
+                    }));
+                  }
+                }}
               >
                 <NumberInputField />
                 <NumberInputStepper>
-                  <NumberIncrementStepper
-                    onClick={() =>
-                      setSpecificData({
-                        solutions_number: specificData.solutions_number,
-                        distractors_number: specificData.distractors_number + 1,
-                        easily_discardable_distractors_number:
-                          specificData.easily_discardable_distractors_number,
-                      })
-                    }
-                  />
-                  <NumberDecrementStepper
-                    onClick={() =>
-                      setSpecificData({
-                        solutions_number: specificData.solutions_number,
-                        distractors_number: specificData.distractors_number - 1,
-                        easily_discardable_distractors_number:
-                          specificData.easily_discardable_distractors_number,
-                      })
-                    }
-                  />
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
               <Text textStyle="sm">
@@ -328,37 +312,27 @@ const PlanLessonCard = ({
                 :
               </Text>
               <NumberInput
-                defaultValue={
-                  specificData.easily_discardable_distractors_number
-                }
+                value={specificData.easily_discardable_distractors_number}
                 min={0}
                 max={6}
-                width={'80px'}
+                width="80px"
+                onChange={(valueString, valueNumber) => {
+                  if (
+                    !isNaN(valueNumber) &&
+                    valueNumber >= 0 &&
+                    valueNumber <= 6
+                  ) {
+                    setSpecificData((prev) => ({
+                      ...prev,
+                      easily_discardable_distractors_number: valueNumber,
+                    }));
+                  }
+                }}
               >
                 <NumberInputField />
                 <NumberInputStepper>
-                  <NumberIncrementStepper
-                    onClick={() =>
-                      setSpecificData({
-                        solutions_number: specificData.solutions_number,
-                        distractors_number: specificData.distractors_number,
-                        easily_discardable_distractors_number:
-                          specificData.easily_discardable_distractors_number +
-                          1,
-                      })
-                    }
-                  />
-                  <NumberDecrementStepper
-                    onClick={() =>
-                      setSpecificData({
-                        solutions_number: specificData.solutions_number,
-                        distractors_number: specificData.distractors_number,
-                        easily_discardable_distractors_number:
-                          specificData.easily_discardable_distractors_number -
-                          1,
-                      })
-                    }
-                  />
+                  <NumberIncrementStepper />
+                  <NumberDecrementStepper />
                 </NumberInputStepper>
               </NumberInput>
             </Flex>
