@@ -109,7 +109,8 @@ const AIToolModal = ({
             STEP 1: Submit your material in this box to use our analyser.
           </Text>
           <FormLabel mb={2} fontWeight={'bold'}>
-            Your material:<InfoButton
+            Your material:
+            <InfoButton
               title="Material to Analyze"
               description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
               placement="right"
@@ -321,12 +322,14 @@ const AIToolModal = ({
         </ModalBody>
         <ModalBody hidden={!screen3}>
           <Text>STEP 3: Define the specifics for the activity.</Text>
-          <FormLabel paddingTop={'5px'}>Learning Objective
+          <FormLabel paddingTop={'5px'}>
+            Learning Objective
             <InfoButton
               title="Learning Outcome"
               description="Describe the intended educational goal of the learning path. For example: 'the ability to recall or recognize simple facts and definitions.'"
               placement="right"
-            /></FormLabel>
+            />
+          </FormLabel>
           <FormControl label="Learning Outcome">
             <Select
               value={choosingLearningOutcome}

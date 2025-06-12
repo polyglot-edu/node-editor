@@ -19,8 +19,8 @@ import { API } from '../../../data/api';
 import useStore from '../../../store';
 import { LearningOutcome, Topic } from '../../../types/polyglotElements';
 import EnumField from '../../Forms/Fields/EnumField';
-import NodeProperties from './NodeProperties';
 import InfoButton from '../../InfoButton/InfoButton';
+import NodeProperties from './NodeProperties';
 
 const AbstractNodeProperties = () => {
   const { setValue, getValues } = useFormContext();
@@ -158,7 +158,8 @@ const AbstractNodeProperties = () => {
             width="100%"
             mb={2}
           >
-            Material to use:{' '}<InfoButton
+            Material to use:{' '}
+            <InfoButton
               title="Material to Analyze"
               description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
               placement="right"
@@ -256,12 +257,14 @@ const AbstractNodeProperties = () => {
           skeletonHeight="10"
           isLoaded={!generatingLoading}
         >
-          <Text fontWeight={'bold'}>List of Learning Outcomes
+          <Text fontWeight={'bold'}>
+            List of Learning Outcomes
             <InfoButton
               title="Learning Outcome"
               description="Describe the intended educational goal of the learning path. For example: 'the ability to recall or recognize simple facts and definitions.'"
               placement="right"
-            /></Text>
+            />
+          </Text>
           <EnumField
             label="learning outcomes"
             name="data.learning_outcome"

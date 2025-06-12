@@ -160,8 +160,9 @@ const PlanLessonCard = ({
             <Text fontSize="md" paddingTop={'5px'}>
               <strong>
                 Learning Task:
-                <InfoButton title="Learning Task Type" description="Select the kind of tasks learners should perform from the list provided. Please note that the system may suggest activities not yet included in the list, as we are continuously expanding the available options."
-
+                <InfoButton
+                  title="Learning Task Type"
+                  description="Select the kind of tasks learners should perform from the list provided. Please note that the system may suggest activities not yet included in the list, as we are continuously expanding the available options."
                   placement="right"
                 />
               </strong>
