@@ -275,6 +275,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
           <Box color="gray.600">
             <strong>{publish ? 'Published' : 'Not published'} </strong>
             <IconButton
+              size="xs"
               isLoading={publishLoading}
               backgroundColor={publish ? 'green.500' : 'red.500'}
               _hover={{ bg: 'gray.300' }}
@@ -294,7 +295,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
                 }
                 setPublishLoading(false);
               }}
-              aria-label={''}
+              aria-label={'publish'}
             >
               {publish ? <CheckIcon /> : <CloseIcon />}
             </IconButton>
