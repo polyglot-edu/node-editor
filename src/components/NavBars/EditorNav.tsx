@@ -115,7 +115,12 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     return true; // numeri, boolean, ecc.
   };
 
-  const allowedEmptyFields = ['link', 'isAnswerCorrect', 'context'];
+  const allowedEmptyFields = [
+    'link',
+    'isAnswerCorrect',
+    'context',
+    'madatoryTopics',
+  ];
 
   const checkPublish = (): boolean => {
     if (flow == null) return false;

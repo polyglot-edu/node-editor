@@ -11,6 +11,7 @@ export type AbstractNodeData = NodeData & {
   learning_outcome: LearningOutcome;
   education_level: EducationLevel;
   topicsAI: Topic[];
+  mandatoryTopics?: string[];
   language: string;
   macro_subject: string;
   title: string;
@@ -36,6 +37,7 @@ polyglotNodeComponentMapping.registerMapping<AbstractNode>({
     learning_outcome: LearningOutcome.ApplyKnowledge,
     education_level: EducationLevel.College,
     topicsAI: [],
+    mandatoryTopics: [],
     language: '',
     title: '',
     macro_subject: '',

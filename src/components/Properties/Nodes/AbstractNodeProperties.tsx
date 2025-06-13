@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, ChevronUpIcon, StarIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -30,6 +30,7 @@ const AbstractNodeProperties = () => {
   const sourceMaterial = useWatch({ name: 'data.sourceMaterial' });
   const macroSubject = useWatch({ name: 'data.macro_subject' });
   const topicsAI = useWatch({ name: 'data.topicsAI' });
+  const mandatoryTopics = useWatch({ name: 'data.mandatoryTopics' });
   const learningOutcome = useWatch({ name: 'data.learning_outcome' });
 
   const [generatingLoading, setGeneratingLoading] = useState(false);
@@ -60,7 +61,52 @@ const AbstractNodeProperties = () => {
     const updatedTopics = exists
       ? currentTopics.filter((t) => t.topic !== topic.topic)
       : [...currentTopics, topic];
+    if (exists) {
+      const currentMandatory =
+        getValues('data.mandatoryTopics') || ([] as string[]);
+      const isMandatory = currentMandatory.includes(topic.topic);
+      if (isMandatory) {
+        const updatedMandatory = currentMandatory.filter(
+          (id: string) => id !== topic.topic
+        );
+
+        if (updatedMandatory.length !== currentMandatory.length) {
+          setValue('data.mandatoryTopics', updatedMandatory);
+        }
+      }
+    }
     setValue('data.topicsAI', updatedTopics);
+  };
+
+  const toggleMandatoryTopic = (topic: Topic) => {
+    const topicId = topic.topic;
+    const currentMandatories =
+      getValues('data.mandatoryTopics') || ([] as string[]);
+    if (!currentMandatories) setValue('data.mandatoryTopics', []);
+    const currentTopics = getValues('data.topicsAI') as Topic[];
+
+    const isMandatory = currentMandatories.includes(topicId);
+    let updatedMandatories: string[];
+
+    if (isMandatory) {
+      updatedMandatories = currentMandatories.filter(
+        (id: string) => id !== topicId
+      );
+    } else {
+      updatedMandatories = [...currentMandatories, topicId];
+    }
+
+    const topicExistsInTopicsAI = currentTopics.some(
+      (t) => t.topic === topicId
+    );
+    let updatedTopics = currentTopics;
+
+    if (!topicExistsInTopicsAI && !isMandatory) {
+      updatedTopics = [...currentTopics, topic];
+      setValue('data.topicsAI', updatedTopics);
+    }
+
+    setValue('data.mandatoryTopics', updatedMandatories);
   };
 
   const handleAnalyzeMaterial = async () => {
@@ -158,12 +204,14 @@ const AbstractNodeProperties = () => {
             width="100%"
             mb={2}
           >
-            Material to use:{' '}
-            <InfoButton
-              title="Material to Analyze"
-              description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
-              placement="right"
-            />
+            <Text>
+              Material to use:
+              <InfoButton
+                title="Material to Analyze"
+                description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
+                placement="right"
+              />
+            </Text>
             <Button
               mb="2"
               float={'right'}
@@ -200,10 +248,29 @@ const AbstractNodeProperties = () => {
           skeletonHeight="10"
           isLoaded={!generatingLoading}
         >
-          <Text fontWeight={'bold'}>List of Topics</Text>
+          <Text fontWeight={'bold'}>
+            List of Topics{' '}
+            <InfoButton
+              title="List of Topics"
+              description="Select the topics the student should practice using the checkboxes. You can also mark specific topics as mandatory by clicking the star icon."
+            />
+          </Text>
           {topicsSelectable.map((topicObj, index) => (
             <Flex key={index} align="start" mb={3} direction="column">
               <Flex align="center">
+                <IconButton
+                  aria-label={'index'}
+                  bg={'transparent'}
+                  onClick={() => toggleMandatoryTopic(topicObj)}
+                >
+                  <StarIcon
+                    color={
+                      mandatoryTopics?.some((t: string) => t === topicObj.topic)
+                        ? 'yellow.300'
+                        : 'red.300'
+                    }
+                  />
+                </IconButton>
                 <Checkbox
                   isChecked={topicsAI?.some(
                     (t: { topic: string }) => t.topic === topicObj.topic
