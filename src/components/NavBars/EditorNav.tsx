@@ -119,7 +119,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     'link',
     'isAnswerCorrect',
     'context',
-    'madatoryTopics',
+    'mandatoryTopics',
     'textToFill',
     'material',
     'negativePoints',
