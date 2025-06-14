@@ -15,7 +15,7 @@ const ProgressBar: React.FC<ProgressBarProps> = ({
   totalSteps,
   isHidden,
   label,
-  description
+  description,
 }) => {
   const toast = useToast();
   const progress =
