@@ -663,6 +663,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
             totalSteps={nReadMaterial + selectedNodeIds.length}
             isHidden={!generatingLoading && generatedNodes.length == 0}
             label="Activities generation"
+            description="Success! All activities have been generated. Finalizing the learning path..."
           />
           <Button
             marginTop={'15px'}
@@ -788,12 +789,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,
                           solutions_number:
-                            activity.data?.solutions_number || 0,
+                            activity.data?.solutions_number || 1,
                           distractors_number:
-                            activity.data?.distractors_number || 0,
+                            activity.data?.distractors_number || 2,
                           easily_discardable_distractors_number:
                             activity.data
-                              ?.easily_discardable_distractors_number || 0,
+                              ?.easily_discardable_distractors_number || 1,
                           type: activity.type,
                           language: analysedMaterial.language,
                           model: 'Gemini',
@@ -809,12 +810,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,
                           solutions_number:
-                            activity.data?.solutions_number || 0,
+                            activity.data?.solutions_number || 1,
                           distractors_number:
-                            activity.data?.distractors_number || 0,
+                            activity.data?.distractors_number || 2,
                           easily_discardable_distractors_number:
                             activity.data
-                              ?.easily_discardable_distractors_number || 0,
+                              ?.easily_discardable_distractors_number || 1,
                           type: activity.type,
                           language: analysedMaterial.language,
                           model: 'Gemini',
@@ -1084,7 +1085,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
               }
             }}
             isLoading={generatingLoading}
-            isDisabled={generatingLoading && generatedNodes.length != 0}
+            isDisabled={generatingLoading || generatedNodes.length != 0}
           >
             Generate Learning Path
           </Button>

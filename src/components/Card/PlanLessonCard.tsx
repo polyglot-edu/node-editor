@@ -63,7 +63,7 @@ const PlanLessonCard = ({
 }: LessonCardProps) => {
   const [specificData, setSpecificData] = useState<SpecificData>({
     solutions_number: 1,
-    distractors_number: 1,
+    distractors_number: 2,
     easily_discardable_distractors_number: 1,
   });
 
