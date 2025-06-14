@@ -62,7 +62,7 @@ export const QuestionTypeMap = [
   {
     key: 'multiple select',
     text: 'Multiple Select',
-    nodeType: 'activity',
+    nodeType: 'multipleChoiceQuestionNode',
     integrated: false,
   },
   {

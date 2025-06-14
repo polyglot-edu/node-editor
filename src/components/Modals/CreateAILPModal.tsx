@@ -779,7 +779,19 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     if (!activity) break;
                     try {
                       let response: AxiosResponse | null = null;
-
+                      const typeExercise =
+                        activity.type != 'multiple choice'
+                          ? activity.type
+                          : activity.data?.solutions_number > 1
+                          ? 'multiple select'
+                          : 'multiple choice';
+                      console.log('step');
+                      console.log(activity.type);
+                      console.log(typeExercise);
+                      console.log(
+                        'solutions:',
+                        activity.data?.solutions_number
+                      );
                       try {
                         // Primo tentativo
                         response = await API.generateNewExercise({
@@ -795,7 +807,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           easily_discardable_distractors_number:
                             activity.data
                               ?.easily_discardable_distractors_number || 1,
-                          type: activity.type,
+                          type: typeExercise,
                           language: analysedMaterial.language,
                           model: 'Gemini',
                         });
@@ -816,7 +828,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           easily_discardable_distractors_number:
                             activity.data
                               ?.easily_discardable_distractors_number || 1,
-                          type: activity.type,
+                          type: typeExercise,
                           language: analysedMaterial.language,
                           model: 'Gemini',
                         });
