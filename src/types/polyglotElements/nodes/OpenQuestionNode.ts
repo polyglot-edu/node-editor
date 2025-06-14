@@ -7,7 +7,7 @@ import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 export type OpenQuestionNodeData = NodeData & {
   question: string;
   material: string;
-  possibleAnswer?: string;
+  possibleAnswer: string;
 };
 
 export type OpenQuestionNode = PolyglotNode & {

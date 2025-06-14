@@ -112,7 +112,7 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
         Object.values(value).every(isValidField)
       );
 
-    return true; // numeri, boolean, ecc.
+    return true;
   };
 
   const allowedEmptyFields = [
@@ -120,7 +120,16 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
     'isAnswerCorrect',
     'context',
     'madatoryTopics',
+    'textToFill',
+    'material',
+    'negativePoints',
+    'positivePoints',
   ];
+
+  //check for specific types
+  const typeSpecificChecks: Record<string, (data: any) => boolean> = {
+    WatchVideoNode: (data) => isValidField(data.link),
+  };
 
   const checkPublish = (): boolean => {
     if (flow == null) return false;
@@ -155,6 +164,12 @@ export default function EditorNav({ saveFunc }: EditorNavProps) {
           infoCheck = false;
           break;
         }
+      }
+      if (
+        typeSpecificChecks[node.type] &&
+        !typeSpecificChecks[node.type](data)
+      ) {
+        infoCheck = false;
       }
 
       if (!infoCheck) {
