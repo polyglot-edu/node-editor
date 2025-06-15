@@ -347,8 +347,13 @@ const PlanLessonCard = ({
               aria-label="Reset"
               title="Reset this node"
               onClick={() => {
+                const type = QuestionTypeMap.find(
+                  (qType) => qType.key === plannedNode.type
+                )?.integrated
+                  ? plannedNode.type
+                  : 'open question';
                 updateNodeAt(id, {
-                  type: plannedNode.type,
+                  type: type,
                   topic: plannedNode.topic,
                   details: plannedNode.details,
                   learning_outcome: plannedNode.learning_outcome,
