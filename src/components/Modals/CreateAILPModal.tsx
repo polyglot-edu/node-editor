@@ -584,6 +584,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       return {
                         type: isIntegrated ? node.type : 'open question',
                         topic: node.topic,
+                        explanation: node.explanation || '',
                         details: node.details,
                         learning_outcome: node.learning_outcome,
                         duration: node.duration,
@@ -784,19 +785,13 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           ? activity.type
                           : activity.data?.solutions_number > 1
                           ? 'multiple select'
-                          : 'multiple choice';
-                      console.log('step');
-                      console.log(activity.type);
-                      console.log(typeExercise);
-                      console.log(
-                        'solutions:',
-                        activity.data?.solutions_number
-                      );
+                          : 'multiple choice';                     
                       try {
                         // Primo tentativo
                         response = await API.generateNewExercise({
                           macro_subject: activity?.learning_outcome,
                           topic: activity.topic,
+                          topic_explanation: activity.explanation,
                           education_level: analysedMaterial.education_level,
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,
@@ -818,6 +813,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                         response = await API.generateNewExercise({
                           macro_subject: activity?.learning_outcome,
                           topic: activity.topic,
+                          topic_explanation: activity.explanation,
                           education_level: analysedMaterial.education_level,
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,

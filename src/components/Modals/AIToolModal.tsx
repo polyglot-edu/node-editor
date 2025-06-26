@@ -404,6 +404,7 @@ const AIToolModal = ({
                     {
                       macro_subject: macroSubjectGen,
                       topic: topicGen[topicIndex].topic,
+                      topic_explanation: topicGen[topicIndex].explanation,
                       education_level: eduLevel,
                       learning_outcome: learningOutcome,
                       material: sourceMaterial,

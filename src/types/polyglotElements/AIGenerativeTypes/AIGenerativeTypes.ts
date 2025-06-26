@@ -33,7 +33,7 @@ export const QuestionTypeMap = [
     key: 'true or false',
     text: 'True or False',
     nodeType: 'TrueFalseNode',
-    integrated: true,
+    integrated: false,
   },
   {
     key: 'fill in the blanks',
@@ -145,7 +145,11 @@ export enum SummarizeStyle {
   StructuredInformative = 'structured and informative',
 }
 
-export type Topic = { topic: string; explanation: string };
+export type Topic = {
+  topic: string;
+  explanation: string;
+  learning_outcome?: LearningOutcome;
+};
 
 export type LessonNodeAI = {
   title: string;
@@ -170,6 +174,7 @@ export type AnalyzedMaterial = {
 export type AIExerciseType = {
   macro_subject: string;
   topic: string;
+  topic_explanation: string;
   education_level: EducationLevel;
   learning_outcome: LearningOutcome;
   material: string;
@@ -247,6 +252,7 @@ export type AIPlanLesson = {
 export type PlanLessonNode = {
   type: string;
   topic: string;
+  explanation: string;
   details: string;
   learning_outcome: LearningOutcome;
   duration: number;
