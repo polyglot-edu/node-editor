@@ -785,7 +785,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           ? activity.type
                           : activity.data?.solutions_number > 1
                           ? 'multiple select'
-                          : 'multiple choice';                     
+                          : 'multiple choice';
                       try {
                         // Primo tentativo
                         response = await API.generateNewExercise({
