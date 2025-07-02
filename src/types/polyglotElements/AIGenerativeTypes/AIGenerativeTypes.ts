@@ -189,6 +189,7 @@ export type AIExerciseType = {
 export type AIExerciseGenerated = {
   macro_subject: string;
   topic: string;
+  topic_explanation: string;
   education_level: EducationLevel;
   learning_outcome: LearningOutcome;
   material: string;

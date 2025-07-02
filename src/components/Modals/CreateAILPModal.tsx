@@ -210,7 +210,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
       _id: _id,
       type: typeNode,
       title: exerciseResponse.topic,
-      description: exerciseResponse.macro_subject,
+      description: exerciseResponse.topic_explanation,
       platform: 'WebApp',
       difficulty: 1,
       data: data,
