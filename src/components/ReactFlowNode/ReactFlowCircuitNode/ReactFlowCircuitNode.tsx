@@ -6,8 +6,7 @@ import { CircuitNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
-type ReactFlowCircuitNodeProps = ReactFlowNodeProps &
-  CircuitNode;
+type ReactFlowCircuitNodeProps = ReactFlowNodeProps & CircuitNode;
 
 const ReactFlowMultipleChoiceQuestionNode = ({
   id,

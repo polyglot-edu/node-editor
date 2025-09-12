@@ -3,6 +3,7 @@ export * from './AnalyzingPlottingDataNode';
 export * from './BrainstormingNode';
 export * from './CalculationNode';
 export * from './CasesEvaluationNode';
+export * from './CircuitNode';
 export * from './CloseEndedQuestionNode';
 export * from './CodingQuestionNode';
 export * from './CollaborativeModelingNode';
@@ -28,4 +29,3 @@ export * from './SummaryNode';
 export * from './TrueFalseNode';
 export * from './UMLModelingNode';
 export * from './WatchVideoNode';
-export * from './CircuitNode'
