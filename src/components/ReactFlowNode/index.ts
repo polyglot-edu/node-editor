@@ -26,3 +26,4 @@ export { default as ReactFlowSummaryNode } from './ReactFlowSummaryNode/ReactFlo
 export { default as ReactFlowTrueFalseNode } from './ReactFlowTrueFalseNode/ReactFlowTrueFalseNode';
 export { default as ReactFlowUMLModelingNode } from './ReactFlowUMLModelingNode/ReactFlowUMLModelingNode';
 export { default as ReactFlowWatchVideoNode } from './ReactFlowWatchVideoNode/ReactFlowWatchVideoNode';
+export { default as ReactFlowCircuitNode } from './ReactFlowCircuitNode/ReactFlowCircuitNode';

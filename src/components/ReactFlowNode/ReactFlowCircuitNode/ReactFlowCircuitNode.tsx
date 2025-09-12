@@ -1,14 +1,17 @@
 import { useTheme } from '@fluentui/react';
 import { Handle, Position } from 'reactflow';
-import icon from '../../../public/trueFalse_icon.png';
+import icon from '../../../public/circuitIcon.png';
 import useStore from '../../../store';
 import { CircuitNode } from '../../../types/polyglotElements';
 import Card from '../../Card/Card';
 import { ReactFlowNodeProps } from '../ReactFlowNode';
 
-type ReactFlowTrueFalseNodeProps = ReactFlowNodeProps & CircuitNode;
+type ReactFlowCircuitNodeProps = ReactFlowNodeProps &
+  CircuitNode;
 
-const ReactFlowTrueFalseNode = ({ id }: ReactFlowTrueFalseNodeProps) => {
+const ReactFlowMultipleChoiceQuestionNode = ({
+  id,
+}: ReactFlowCircuitNodeProps) => {
   const [onConnect, label] = useStore((state) => [
     state.onConnect,
     state.nodeMap.get(id)?.title,
@@ -51,4 +54,4 @@ const ReactFlowTrueFalseNode = ({ id }: ReactFlowTrueFalseNodeProps) => {
   );
 };
 
-export default ReactFlowTrueFalseNode;
+export default ReactFlowMultipleChoiceQuestionNode;

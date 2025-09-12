@@ -28,3 +28,4 @@ export * from './SummaryNode';
 export * from './TrueFalseNode';
 export * from './UMLModelingNode';
 export * from './WatchVideoNode';
+export * from './CircuitNode'
