@@ -169,6 +169,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[1],
         type: 'passFailEdge',
         markerEnd: {
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,
@@ -191,6 +192,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[3],
         type: 'exactValueEdge',
         markerEnd: {
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,
@@ -211,6 +213,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[5],
         type: 'unconditionalEdge',
         markerEnd: {
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,
@@ -235,6 +238,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[7],
         type: 'customValidationEdge',
         markerEnd: {
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,

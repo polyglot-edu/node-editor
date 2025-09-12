@@ -88,6 +88,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
         type: 'passFailEdge',
         markerEnd: {
           type: MarkerType.Arrow,
+          color: 'grey', // or any color you prefer
           width: 25,
           height: 25,
         },

@@ -39,29 +39,4 @@ int main() {
     language: 'csharp',
     ...defaultPolyglotNodeData,
   },
-  transformData: (node) => {
-    const oldData = node as PromptEngineeringNode;
-
-    const challengeSetup: ChallengeSetup[] = [];
-    const challengeContent: ChallengeContent[] = [
-      {
-        type: 'markdown',
-        content: oldData.data?.question,
-        priority: 0,
-      },
-      {
-        type: oldData.data?.language,
-        content: oldData.data?.codeTemplate,
-        priority: 1,
-      },
-    ];
-
-    return {
-      ...node,
-      runtimeData: {
-        challengeSetup,
-        challengeContent,
-      },
-    };
-  },
 });
