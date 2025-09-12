@@ -69,8 +69,13 @@ export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
 
 export const createNewDefaultPolyglotNode: (
   pos: { x: number; y: number },
-  nodeType?: string
-) => any = (pos, nodeType = 'multipleChoiceQuestionNode') => {
+  nodeType?: string,
+  platform?: string
+) => any = (
+  pos,
+  nodeType = 'multipleChoiceQuestionNode',
+  platform = 'WebApp'
+) => {
   const id = UUIDv4();
   return {
     _id: id,
@@ -78,6 +83,7 @@ export const createNewDefaultPolyglotNode: (
     title: 'New Node',
     description: '',
     difficulty: 1,
+    platform: platform,
     data: polyglotNodeComponentMapping.defaultDataMapping[nodeType],
     reactFlow: {
       id: id,
@@ -120,6 +126,7 @@ export const createNewDefaultPolyglotEdge = (
       type: type,
       markerEnd: {
         type: MarkerType.Arrow,
+        color: 'grey', //to change for pass fail edge
         width: 25,
         height: 25,
       },

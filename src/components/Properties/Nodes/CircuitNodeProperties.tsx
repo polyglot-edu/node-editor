@@ -6,7 +6,7 @@ const CircuitNodeProperties = () => {
   return (
     <>
       <NodeProperties
-        platform={['WebApp']}
+        platform={['Arduino']}
         activityDescription="In this activity learners will follow the instruction and his knowledge to create a circuit"
       />
       <TextField label="Instructions" name="data.instructions" isTextArea />

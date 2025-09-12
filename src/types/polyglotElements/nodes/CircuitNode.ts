@@ -19,7 +19,6 @@ polyglotNodeComponentMapping.registerMapping<CircuitNode>({
   name: 'Circuit',
   icon: icon.src,
   group: 'apply_assessment',
-  platform: 'Arduino',
   propertiesComponent: CircuitNodeProperties,
   elementComponent: ReactFlowCircuitNode,
   defaultData: {
