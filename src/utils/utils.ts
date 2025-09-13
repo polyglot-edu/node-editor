@@ -70,8 +70,13 @@ export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
 
 export const createNewDefaultPolyglotNode: (
   pos: { x: number; y: number },
-  nodeType?: string
-) => any = (pos, nodeType = 'multipleChoiceQuestionNode') => {
+  nodeType?: string,
+  platform?: string
+) => any = (
+  pos,
+  nodeType = 'multipleChoiceQuestionNode',
+  platform = 'WebApp'
+) => {
   const id = UUIDv4();
   return {
     _id: id,

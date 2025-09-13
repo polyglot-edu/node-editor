@@ -155,7 +155,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
         target: ids[1],
         type: 'passFailEdge',
         markerEnd: {
-          color: 'green',
+          color: 'grey',
           type: MarkerType.Arrow,
           width: 25,
           height: 25,

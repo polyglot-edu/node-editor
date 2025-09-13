@@ -76,6 +76,7 @@ const listImplementedNodes = [
   'codingQuestionNode',
   'CollaborativeModelingNode',
   'UMLModelingNode',
+  'CircuitNode',
 ];
 export type LateralMenuProps = {
   isOpen: boolean;

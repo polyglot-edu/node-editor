@@ -3,6 +3,7 @@ export { default as ReactFlowAnalyzingPlottingDataNode } from './ReactFlowAnalyz
 export { default as ReactFlowBrainstormingNode } from './ReactFlowBrainstormingNode/ReactFlowBrainstormingNode';
 export { default as ReactFlowCalculationNode } from './ReactFlowCalculationNode/ReactFlowCalculationNode';
 export { default as ReactFlowCasesEvaluationNode } from './ReactFlowCasesEvaluationNode/ReactFlowCasesEvaluationNode';
+export { default as ReactFlowCircuitNode } from './ReactFlowCircuitNode/ReactFlowCircuitNode';
 export { default as ReactFlowCloseEndedQuestionNode } from './ReactFlowCloseEndedQuestionNode/ReactFlowCloseEndedQuestionNode';
 export { default as ReactFlowCodingQuestionNode } from './ReactFlowCodingQuestionNode/ReactFlowCodingQuestionNode';
 export { default as ReactFlowCollaborativeModelingNode } from './ReactFlowCollaborativeModelingNode/ReactFlowCollaborativeModelingNode';
