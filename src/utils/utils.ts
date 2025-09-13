@@ -130,7 +130,6 @@ export const createNewDefaultPolyglotEdge = (
       markerEnd: {
         color: type == 'unconditionalEdge' ? 'grey' : 'green',
         type: MarkerType.Arrow,
-        color: 'grey', //to change for pass fail edge
         width: 25,
         height: 25,
       },
