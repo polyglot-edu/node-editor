@@ -1,4 +1,10 @@
-import { PolyglotEdge, PolyglotNode } from '..';
+import {
+  EducationLevel,
+  LearningOutcome,
+  PolyglotEdge,
+  PolyglotNode,
+  Topic,
+} from '..';
 
 export type PolyglotFlowInfo = {
   _id?: string;
@@ -13,11 +19,13 @@ export type PolyglotFlowInfo = {
   duration: string;
   topics: string[];
   publish: boolean;
-  /* to be discussed: do we want to save in the database the last summarized material of the professor? Or we give the tool to be live usage?
   sourceMaterial?: string;
-  levelMaterial?: string;
-  generatedMaterial?: string;
-  noW?: number;*/
+  learning_outcome?: LearningOutcome;
+  education_level?: EducationLevel;
+  topicsAI: Topic[];
+  language?: string;
+  macro_subject?: string;
+  context?: string;
 };
 
 export type PolyglotFlow = PolyglotFlowInfo & {

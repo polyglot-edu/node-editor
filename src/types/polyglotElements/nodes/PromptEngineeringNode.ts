@@ -26,6 +26,7 @@ polyglotNodeComponentMapping.registerMapping<PromptEngineeringNode>({
   name: 'Prompt Engineering',
   icon: icon.src,
   group: 'apply_learning',
+  platform: 'WebApp',
   propertiesComponent: PromptEngineeringNodeProperties,
   elementComponent: ReactFlowPromptEngineeringNode,
   defaultData: {

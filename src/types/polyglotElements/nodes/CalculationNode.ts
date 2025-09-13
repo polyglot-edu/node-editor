@@ -19,6 +19,7 @@ polyglotNodeComponentMapping.registerMapping<CalculationNode>({
   name: 'Calculation',
   icon: icon.src,
   group: 'apply_assessment',
+  platform: 'WebApp',
   propertiesComponent: CalculationNodeProperties,
   elementComponent: ReactFlowCalculationNode,
   defaultData: {

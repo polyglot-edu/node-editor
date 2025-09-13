@@ -22,6 +22,7 @@ polyglotNodeComponentMapping.registerMapping<ImageEvaluationNode>({
   name: 'Image Evaluation',
   icon: icon.src,
   group: 'apply_assessment',
+  platform: 'WebApp',
   propertiesComponent: ImageEvaluationNodeProperties,
   elementComponent: ReactFlowImageEvaluationNode,
   defaultData: {

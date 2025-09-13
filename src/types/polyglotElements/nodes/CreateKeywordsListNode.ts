@@ -24,6 +24,7 @@ polyglotNodeComponentMapping.registerMapping<CreateKeywordsListNode>({
   name: 'Create keywords list',
   icon: icon.src,
   group: 'remember_learning',
+  platform: 'WebApp',
   propertiesComponent: CreateKeywordsListNodeProperties,
   elementComponent: ReactFlowCreateKeywordsListNode,
   defaultData: {

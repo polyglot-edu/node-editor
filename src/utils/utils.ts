@@ -60,6 +60,7 @@ export const createNewDefaultPolyglotFlow = (): PolyglotFlow => {
     publish: false,
     tags: [],
     topics: [],
+    topicsAI: [],
     learningContext: '',
     duration: '0',
     nodes: [],
@@ -83,7 +84,7 @@ export const createNewDefaultPolyglotNode: (
     title: 'New Node',
     description: '',
     difficulty: 1,
-    platform: platform,
+    platform: polyglotNodeComponentMapping.defaultPlatformMapping[nodeType],
     data: polyglotNodeComponentMapping.defaultDataMapping[nodeType],
     reactFlow: {
       id: id,
@@ -97,6 +98,7 @@ const configUnconditionalEdge = [
   'lessonTextNode',
   'WatchVideoNode',
   'ReadMaterialNode',
+  'ScanningNode',
   'MindMapNode',
   'SummaryNode',
   'ProblemSolvingNode',
@@ -105,6 +107,7 @@ const configUnconditionalEdge = [
   'MemoriseKeywordsListNode',
   'PromptEngineeringNode',
   'ProblemSolvingNode',
+  'CodingQuestionNode',
 ];
 
 export const createNewDefaultPolyglotEdge = (
@@ -125,6 +128,7 @@ export const createNewDefaultPolyglotEdge = (
       target: targetId,
       type: type,
       markerEnd: {
+        color: type == 'unconditionalEdge' ? 'grey' : 'green',
         type: MarkerType.Arrow,
         color: 'grey', //to change for pass fail edge
         width: 25,

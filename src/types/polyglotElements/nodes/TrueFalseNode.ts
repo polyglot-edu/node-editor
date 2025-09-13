@@ -22,6 +22,7 @@ polyglotNodeComponentMapping.registerMapping<TrueFalseNode>({
   name: 'True False',
   icon: icon.src,
   group: 'remember_assessment',
+  platform: 'WebApp',
   propertiesComponent: TrueFalseNodeProperties,
   elementComponent: ReactFlowTrueFalseNode,
   defaultData: {

@@ -21,6 +21,7 @@ polyglotNodeComponentMapping.registerMapping<CasesEvaluationNode>({
   name: 'Cases Evaluation',
   icon: icon.src,
   group: 'understand_assessment',
+  platform: 'WebApp',
   propertiesComponent: CasesEvaluationNodeProperties,
   elementComponent: ReactFlowCasesEvaluationNode,
   defaultData: {

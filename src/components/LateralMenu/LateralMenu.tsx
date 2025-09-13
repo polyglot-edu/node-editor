@@ -64,6 +64,7 @@ const configAssessment = [
 ];
 
 const listImplementedNodes = [
+  'abstractNode',
   'multipleChoiceQuestionNode',
   'closeEndedQuestionNode',
   'OpenQuestionNode',
@@ -144,7 +145,7 @@ const LateralMenu = ({ isOpen }: LateralMenuProps) => {
                       {type.label}
                     </AccordionButton>
 
-                    <AccordionPanel>
+                    <AccordionPanel key={id}>
                       {nodes
                         .filter((node) => node.group === type.group)
                         .map((nodes) => (

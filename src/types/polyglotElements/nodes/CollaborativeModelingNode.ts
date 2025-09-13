@@ -19,6 +19,7 @@ polyglotNodeComponentMapping.registerMapping<CollaborativeModelingNode>({
   name: 'Collaborative Modeling',
   icon: icon.src,
   group: 'understand_assessment',
+  platform: 'WebApp',
   propertiesComponent: CollaborativeModelingNodeProperties,
   elementComponent: ReactFlowCollaborativeModelingNode,
   defaultData: {

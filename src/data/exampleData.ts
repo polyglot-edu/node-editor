@@ -28,6 +28,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
   const multipleChoiceNodes: MultipleChoiceQuestionNode[] = [
     {
       _id: ids[0],
+      platform: 'WebApp',
       type: 'multipleChoiceQuestionNode',
       title: 'Multiple Choice Question',
       description: 'Some description',
@@ -51,6 +52,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
       _id: UUIDv4(),
       type: 'closeEndedQuestionNode',
       title: 'Close Ended Question',
+      platform: 'WebApp',
       description: 'Some description',
       difficulty: 1,
       data: {
@@ -90,6 +92,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     {
       _id: ids[2],
       type: 'codingQuestionNode',
+      platform: 'VSCode',
       title: 'Coding Question',
       description: 'Some description',
       difficulty: 4,
@@ -107,27 +110,11 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     },
   ];
 
-  const abstractNodes: AbstractNode[] = [
-    {
-      _id: UUIDv4(),
-      type: 'abstractNode',
-      title: 'Abstract Node',
-      description: 'nice description',
-      difficulty: 1,
-      data: { target: 'Goal?' },
-      reactFlow: {
-        id: UUIDv4(),
-        type: 'abstractNode',
-        position: { x: 250, y: 300 },
-        data: { label: 'Abstract Node' },
-      },
-    },
-  ];
-
   const lessonNodes: LessonNode[] = [
     {
       _id: UUIDv4(),
       type: 'lessonNode',
+      platform: 'WebApp',
       title: 'Lesson',
       description: 'Some description',
       difficulty: 1,
@@ -146,7 +133,6 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     ...codingNodes,
     ...closeEndedQuestionNodes,
     ...lessonNodes,
-    ...abstractNodes,
   ];
 
   /*
@@ -267,6 +253,7 @@ const exampleFlows = new Map<string, PolyglotFlow>();
     learningContext: '',
     duration: '0',
     topics: [],
+    topicsAI: [],
     nodes: flowNodes,
     edges: flowEdges,
   });

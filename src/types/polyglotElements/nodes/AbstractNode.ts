@@ -1,12 +1,21 @@
 import AbstractNodeProperties from '../../../components/Properties/Nodes/AbstractNodeProperties';
 import { ReactFlowAbstractNode } from '../../../components/ReactFlowNode';
 import icon from '../../../public/abstract_icon.png';
+import { EducationLevel, LearningOutcome, Topic } from '../AIGenerativeTypes';
 import { polyglotNodeComponentMapping } from '../elementMapping';
 import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 
 export type AbstractNodeData = NodeData & {
-  target: string;
-  conceptmap?: object;
+  useFlowData: boolean;
+  sourceMaterial: string;
+  learning_outcome: LearningOutcome;
+  education_level: EducationLevel;
+  topicsAI: Topic[];
+  mandatoryTopics?: string[];
+  language: string;
+  macro_subject: string;
+  title: string;
+  context?: string;
 };
 
 export type AbstractNode = PolyglotNode & {
@@ -23,6 +32,14 @@ polyglotNodeComponentMapping.registerMapping<AbstractNode>({
   elementComponent: ReactFlowAbstractNode,
   defaultData: {
     ...defaultPolyglotNodeData,
-    target: '',
+    useFlowData: true,
+    sourceMaterial: '',
+    learning_outcome: LearningOutcome.ApplyKnowledge,
+    education_level: EducationLevel.College,
+    topicsAI: [],
+    mandatoryTopics: [],
+    language: '',
+    title: '',
+    macro_subject: '',
   },
 });

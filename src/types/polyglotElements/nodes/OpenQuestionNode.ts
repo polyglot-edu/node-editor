@@ -7,7 +7,7 @@ import { defaultPolyglotNodeData, NodeData, PolyglotNode } from './Node';
 export type OpenQuestionNodeData = NodeData & {
   question: string;
   material: string;
-  possibleAnswer?: string;
+  possibleAnswer: string;
 };
 
 export type OpenQuestionNode = PolyglotNode & {
@@ -20,6 +20,7 @@ polyglotNodeComponentMapping.registerMapping<OpenQuestionNode>({
   name: 'Open Question',
   icon: icon.src,
   group: 'remember_assessment',
+  platform: 'WebApp',
   propertiesComponent: OpenQuestionNodeProperties,
   elementComponent: ReactFlowOpenQuestionNode,
   defaultData: {

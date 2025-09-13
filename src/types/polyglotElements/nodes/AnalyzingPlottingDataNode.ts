@@ -18,6 +18,7 @@ polyglotNodeComponentMapping.registerMapping<AnalyzingPlottingDataNode>({
   name: 'Analyzing-Plotting Data',
   icon: icon.src,
   group: 'apply_assessment',
+  platform: 'WebApp',
   propertiesComponent: AnalyzingPlottingDataNodeProperties,
   elementComponent: ReactFlowAnalyzingPlottingDataNode,
   defaultData: {

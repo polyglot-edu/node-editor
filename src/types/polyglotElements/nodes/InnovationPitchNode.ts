@@ -21,6 +21,7 @@ polyglotNodeComponentMapping.registerMapping<InnovationPitchNode>({
   name: 'Innovation Pitch',
   icon: icon.src,
   group: 'create_assessment',
+  platform: 'WebApp',
   propertiesComponent: InnovationPitchNodeProperties,
   elementComponent: ReactFlowInnovationPitchNode,
   defaultData: {

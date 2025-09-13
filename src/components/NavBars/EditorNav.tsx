@@ -1,7 +1,7 @@
 import {
   ArrowBackIcon,
   ArrowForwardIcon,
-  ArrowUpIcon,
+  CheckIcon,
   CloseIcon,
   CopyIcon,
   EditIcon,
@@ -13,12 +13,14 @@ import {
   Button,
   Flex,
   HStack,
+  IconButton,
   Image,
   Spacer,
   Stack,
   Text,
   Tooltip,
   useDisclosure,
+  useToast,
 } from '@chakra-ui/react';
 import Router from 'next/router';
 import { ReactNode, useEffect, useState } from 'react';
@@ -32,10 +34,9 @@ import SaveFlowModal from '../Modals/SaveFlowModal';
 import SummarizerModal from '../Modals/SummarizerModal';
 type EditorNavProps = {
   saveFunc: () => Promise<void>;
-  publishFlow: () => Promise<boolean>;
 };
 
-export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
+export default function EditorNav({ saveFunc }: EditorNavProps) {
   const hydrated = useHasHydrated();
   const [
     updateFlowInfo,
@@ -45,7 +46,6 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     flow,
     backAction,
     forwardAction,
-    getPublished,
   ] = useStore((state) => [
     state.updateFlowInfo,
     state.checkSave(),
@@ -54,16 +54,11 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     state.getFlow(),
     state.backAction,
     state.forwardAction,
-    state.published,
   ]);
-
-  let color = getPublished() ? 'green.500' : 'red.500';
-  function setColor(check: boolean) {
-    color = check ? 'green.500' : 'red.500';
-  }
 
   const [saveLoading, setSaveLoading] = useState(false);
   const [publishLoading, setPublishLoading] = useState(false);
+  const [publish, setPublish] = useState(false);
   const { isOpen, onOpen, onClose } = useDisclosure();
   const {
     isOpen: isOpenEdit,
@@ -80,6 +75,8 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     onOpen: onOpenSummarizeTool,
     onClose: onCloseAITool,
   } = useDisclosure();
+
+  const toast = useToast();
 
   useEffect(() => {
     const isMac =
@@ -99,6 +96,122 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
     document.addEventListener('keydown', onKeyDown);
     return () => document.removeEventListener('keydown', onKeyDown);
   }, [saveFunc]);
+  useEffect(() => {
+    if (flow != null) setPublish(flow.publish);
+  }, []);
+
+  const isValidField = (value: any): boolean => {
+    if (value === null || value === undefined) return false;
+
+    if (typeof value === 'string') return value.trim() !== '';
+    if (Array.isArray(value))
+      return value.length > 0 && value.every(isValidField);
+    if (typeof value === 'object')
+      return (
+        Object.keys(value).length > 0 &&
+        Object.values(value).every(isValidField)
+      );
+
+    return true;
+  };
+
+  const allowedEmptyFields = [
+    'link',
+    'isAnswerCorrect',
+    'context',
+    'mandatoryTopics',
+    'textToFill',
+    'material',
+    'negativePoints',
+    'positivePoints',
+  ];
+
+  //check for specific types
+  const typeSpecificChecks: Record<string, (data: any) => boolean> = {
+    WatchVideoNode: (data) => isValidField(data.link),
+  };
+
+  const checkPublish = (): boolean => {
+    if (flow == null) return false;
+    if (!flow.nodes) {
+      toast({
+        title: 'Flow not published',
+        description: 'Something is off with your flow! Error: no nodes found',
+        status: 'warning',
+        duration: 4000,
+        position: 'bottom-left',
+        isClosable: true,
+      });
+      return false;
+    }
+
+    let missingData = '';
+
+    if (flow.description === '') missingData += 'description; ';
+    if (flow.duration === '') missingData += 'duration; ';
+    if (flow.learningContext === '') missingData += 'learning context; ';
+
+    let startingNode = 0;
+
+    for (const node of flow.nodes) {
+      let infoCheck = true;
+      if (!node.description) infoCheck = false;
+
+      const data = node.data;
+      for (const key in data) {
+        if (allowedEmptyFields.includes(key)) continue;
+        if (!isValidField(data[key])) {
+          infoCheck = false;
+          break;
+        }
+      }
+      if (
+        typeSpecificChecks[node.type] &&
+        !typeSpecificChecks[node.type](data)
+      ) {
+        infoCheck = false;
+      }
+
+      if (!infoCheck) {
+        missingData += node.title + '; ';
+        continue;
+      }
+
+      // Check if node has at least one incoming edge
+      const hasIncomingEdge = flow.edges.some(
+        (edge: { reactFlow: { target: any } }) =>
+          edge.reactFlow.target === node._id
+      );
+      if (!hasIncomingEdge) startingNode++;
+    }
+
+    if (missingData !== '') {
+      toast({
+        title: 'Flow not published',
+        description:
+          'Something is off with your flow! Missing data for: ' + missingData,
+        status: 'warning',
+        duration: 4000,
+        position: 'bottom-left',
+        isClosable: true,
+      });
+      return false;
+    }
+
+    if (startingNode !== 1) {
+      toast({
+        title: 'Flow not published',
+        description: `Something is off with your flow! Detected ${startingNode} starting nodes, exactly 1 must have no incoming edges.`,
+        status: 'warning',
+        duration: 4000,
+        position: 'bottom-left',
+        isClosable: true,
+      });
+      return false;
+    }
+
+    return true;
+  };
 
   return (
     <Nav p={2} bg="gray.200" justify="start">
@@ -131,25 +244,12 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             onClick={async () => {
               setSaveLoading(true);
               await saveFunc();
-              setColor(false);
               setSaveLoading(false);
             }}
             icon={<CopyIcon w={6} h={6} color="blue.500" />}
             isLoading={saveLoading}
           />
-          <ActionButton
-            label="Publish"
-            disabled={hydrated ? !checkSave : true}
-            onClick={async () => {
-              setPublishLoading(true);
-              const published = await publishFlow();
-              setColor(published);
-              setPublishLoading(false);
-              return;
-            }}
-            icon={<ArrowUpIcon w={6} h={6} color={color} />}
-            isLoading={publishLoading}
-          />
+
           <DropDown
             name="File"
             options={[
@@ -187,6 +287,34 @@ export default function EditorNav({ saveFunc, publishFlow }: EditorNavProps) {
             onClick={onOpenSummarizeTool}
             icon={<ViewIcon color="blue.500" />}
           />
+          <Box color="gray.600">
+            <strong>{publish ? 'Published' : 'Not published'} </strong>
+            <IconButton
+              size="xs"
+              isLoading={publishLoading}
+              backgroundColor={publish ? 'green.500' : 'red.500'}
+              _hover={{ bg: 'gray.300' }}
+              onClick={() => {
+                setPublishLoading(true);
+                if (!publish) {
+                  const check = checkPublish();
+                  setPublish(check);
+                  updateFlowInfo({
+                    publish: check,
+                  });
+                } else {
+                  setPublish(false);
+                  updateFlowInfo({
+                    publish: publish,
+                  });
+                }
+                setPublishLoading(false);
+              }}
+              aria-label={'publish'}
+            >
+              {publish ? <CheckIcon /> : <CloseIcon />}
+            </IconButton>
+          </Box>
           <Spacer />
           <Button
             leftIcon={<CloseIcon />}

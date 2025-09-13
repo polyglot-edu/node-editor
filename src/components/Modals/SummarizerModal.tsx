@@ -21,6 +21,7 @@ import {
   LearningOutcome,
   SummarizeStyle,
 } from '../../types/polyglotElements';
+import InfoButton from '../UtilityComponents/InfoButton';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -59,7 +60,14 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
         <ModalHeader>Do you need help to summarize your material?</ModalHeader>
         <ModalCloseButton />
         <ModalBody>
-          <Text>Submit your material in this box to use our summirizer.</Text>
+          <Text>
+            Submit your material in this box to use our summirizer.
+            <InfoButton
+              title="Material to Analyze"
+              description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
+              placement="right"
+            />
+          </Text>
           <Button
             marginBottom={'5px'}
             marginTop={'5px'}
@@ -170,6 +178,11 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
           </Select>
           <FormLabel mb={2} fontWeight={'bold'}>
             Educational Level:
+            <InfoButton
+              title="Educational Level"
+              description="Specify the academic level of the target audience, such as elementary school, high school, or college, to tailor the learning path appropriately."
+              placement="right"
+            />
           </FormLabel>
           <Select
             paddingBottom={'5px'}
@@ -186,6 +199,11 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
           </Select>
           <FormLabel mb={2} fontWeight={'bold'}>
             Learning outcome:
+            <InfoButton
+              title="Learning Outcome"
+              description="Describe the intended educational goal of the learning path. For example: 'the ability to recall or recognize simple facts and definitions.'"
+              placement="right"
+            />
           </FormLabel>
           <Select
             paddingBottom={'5px'}

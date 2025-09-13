@@ -27,6 +27,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
       title: 'Multiple Choice Question',
       description: 'Some description',
       difficulty: 1,
+      platform: 'WebApp',
       data: {
         question: 'Test',
         isChoiceCorrect: [false],
@@ -54,6 +55,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
     {
       _id: UUIDv4(),
       type: 'codingQuestionNode',
+      platform: 'VSCode',
       title: 'Coding Question',
       description: 'Some description',
       difficulty: 4,
@@ -87,6 +89,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
         target: ids[1],
         type: 'passFailEdge',
         markerEnd: {
+          color: 'green',
           type: MarkerType.Arrow,
           color: 'grey', // or any color you prefer
           width: 25,
@@ -116,6 +119,7 @@ const subFlow = new Map<PlanningGoal, PolyglotFlow>();
       learningContext: '',
       duration: '0',
       topics: [],
+      topicsAI: [],
       publish: false,
       nodes: flowNodes,
       edges: flowEdges,

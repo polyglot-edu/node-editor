@@ -24,6 +24,7 @@ import ReactFlow, {
   useStoreApi,
 } from 'reactflow';
 import 'reactflow/dist/style.css';
+import { v4 as UUIDv4 } from 'uuid';
 import useStore from '../../store';
 import {
   polyglotEdgeComponentMapping,
@@ -42,17 +43,12 @@ import ElementProperties from '../Panels/ElementProperties';
 type FlowEditorProps = {
   mode: 'read' | 'write';
   saveFlow: () => Promise<void>;
-  publishFlow: () => Promise<boolean>;
   onSelectionChange?: (selection: OnSelectionChangeParams) => void;
 };
 
 const deleteKeyCodes = ['Backspace', 'Delete'];
 
-const FlowEditor = ({
-  saveFlow,
-  publishFlow,
-  onSelectionChange,
-}: FlowEditorProps) => {
+const FlowEditor = ({ saveFlow, onSelectionChange }: FlowEditorProps) => {
   const {
     getNodes,
     getEdges,
@@ -63,6 +59,7 @@ const FlowEditor = ({
     setSelectedElement,
     getSelectedElement,
     clearSelection,
+    flow,
   } = useStore((store) => ({
     getNodes: store.reactFlowNodes,
     getEdges: store.reactFlowEdges,
@@ -74,6 +71,7 @@ const FlowEditor = ({
     setSelectedElement: store.setSelectedElement,
     clearSelection: store.clearSelection,
     setLastSavedAction: store.setLastSavedAction,
+    flow: store.getFlow(),
   }));
   const { resetSelectedElements } = useStoreApi().getState();
   const { project } = useReactFlow();
@@ -133,6 +131,39 @@ const FlowEditor = ({
       x: event.clientX - rect.left,
       y: event.clientY - rect.top,
     });
+
+    if (type == 'abstractNode') {
+      console.log('abstractNode creation');
+
+      const id = UUIDv4();
+      const nodeToAdd = {
+        _id: id,
+        type: type,
+        title: 'New Node',
+        description: '',
+        difficulty: 1,
+        platform: 'Library',
+        data: {
+          useFlowData: flow?.sourceMaterial != null,
+          sourceMaterial: flow?.sourceMaterial,
+          learning_outcome: flow?.learning_outcome,
+          education_level: flow?.education_level,
+          topicsAI: flow?.topicsAI,
+          language: flow?.language,
+          macro_subject: flow?.macro_subject,
+          title: flow?.title,
+          context: flow?.context,
+        },
+        reactFlow: {
+          id: id,
+          type: type,
+          position: pos,
+          data: undefined,
+        },
+      };
+      useStore.getState().addNode(nodeToAdd);
+      return;
+    }
     console.log(pos);
     const nodeToAdd = createNewDefaultPolyglotNode(pos, type);
     console.log(nodeToAdd);
@@ -224,7 +255,7 @@ const FlowEditor = ({
 
   return (
     <Flex direction={'column'} h="100vh" fontFamily={'Roboto'}>
-      <EditorNav saveFunc={saveFlow} publishFlow={publishFlow} />
+      <EditorNav saveFunc={saveFlow} />
       <Flex h={'full'} overflow="hidden">
         <ReactFlow
           // nodes setup

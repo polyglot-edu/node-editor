@@ -9,7 +9,7 @@ const CodingQuestionNodeProperties = () => {
   return (
     <>
       <NodeProperties
-        platform={['VSCode']}
+        platform={['CodingWebApp']}
         activityDescription="In this activity learners will have to complete a coding exercise"
       />
       <MarkDownField label="Question" name="data.question" />
@@ -24,8 +24,8 @@ const CodingQuestionNodeProperties = () => {
         constraints={{ onChange: (event) => setLanguage(event.target.value) }}
         options={
           <>
-            <option value="csharp">csharp</option>
-            <option value="sysml">sysml</option>
+            <option value="javascript">javascript</option>
+            <option value="html">html</option>
           </>
         }
       />

@@ -21,6 +21,7 @@ type ElementToReactFlowComponentMapping<T> = {
 };
 type ElementToNameMapping = { [elementType: string]: string };
 type ElementToIconMapping = { [elementType: string]: string | undefined };
+type ElementToPlatformMapping = { [elementType: string]: string | undefined };
 type ElementToGroupMapping = { [elementType: string]: string | undefined };
 type ElementToDefaultDataMapping<T> = { [elementType: string]: T };
 type ElementToTransformDataMapping<T> = {
@@ -33,6 +34,7 @@ type MappingType<T, U, K extends TypeWithData, V extends TypeWithData> = {
   name: string;
   icon?: string;
   group?: string;
+  platform?: string;
   propertiesComponent: PropertiesComponent<T>;
   elementComponent: ReactFlowComponent<U>;
   defaultData: K['data'] & V['data'];
@@ -44,6 +46,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
   private _elementMapping: ElementToReactFlowComponentMapping<U> = {};
   private _nameMapping: ElementToNameMapping = {};
   private _iconMapping: ElementToIconMapping = {};
+  private _defaulPlatformMapping: ElementToPlatformMapping = {};
   private _groupMapping: ElementToGroupMapping = {};
   private _defaultDataMapping: ElementToDefaultDataMapping<K['data']> = {};
   private _transformMapping: ElementToTransformDataMapping<K> = {};
@@ -55,6 +58,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     name,
     icon,
     group,
+    platform,
     propertiesComponent,
     elementComponent,
     defaultData,
@@ -69,6 +73,7 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
     this._elementMapping[elementType] = elementComponent;
     this._nameMapping[elementType] = name;
     this._iconMapping[elementType] = icon;
+    this._defaulPlatformMapping[elementType] = platform;
     this._groupMapping[elementType] = group;
     this._defaultDataMapping[elementType] = defaultData;
     this._transformMapping[elementType] = transformData;
@@ -88,6 +93,10 @@ class PolyglotComponentMapping<T, U, K extends TypeWithData> {
 
   get iconMapping(): Readonly<ElementToIconMapping> {
     return this._iconMapping;
+  }
+
+  get defaultPlatformMapping(): Readonly<ElementToPlatformMapping> {
+    return this._defaulPlatformMapping;
   }
 
   get groupMapping(): Readonly<ElementToGroupMapping> {

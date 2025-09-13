@@ -18,6 +18,7 @@ polyglotNodeComponentMapping.registerMapping<ScanningNode>({
   name: 'AR Scan',
   icon: icon.src,
   group: 'understand_learning',
+  platform: 'MuNDAR',
   propertiesComponent: ScanningNodeProperties,
   elementComponent: ReactFlowScanningNode,
   defaultData: {

@@ -19,6 +19,7 @@ polyglotNodeComponentMapping.registerMapping<FlowChartNode>({
   name: 'Flow Chart',
   icon: icon.src,
   group: 'understand_assessment',
+  platform: 'WebApp',
   propertiesComponent: FlowChartNodeProperties,
   elementComponent: ReactFlowFlowChartNode,
   defaultData: {

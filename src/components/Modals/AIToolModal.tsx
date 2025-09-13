@@ -21,7 +21,6 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { AxiosResponse } from 'axios';
-import { empty } from 'fp-ts/lib/ReadonlyRecord';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
@@ -30,9 +29,10 @@ import {
   AIMaterialGenerated,
   EducationLevel,
   LearningOutcome,
-  QuestionType,
+  QuestionTypeMap,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import InfoButton from '../UtilityComponents/InfoButton';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -75,7 +75,10 @@ const AIToolModal = ({
   ]);
 
   const [topicIndex, setTopicIndex] = useState(0);
-  let exerciseType: QuestionType | string;
+  let exerciseTypeKey = QuestionTypeMap.find(
+    (elem) => elem.nodeType == exType
+  )?.key;
+  if (!exerciseTypeKey) exerciseTypeKey = 'ReadMaterial';
   const [ca_n, setCA_N] = useState(1);
   const [da_n, setDA_N] = useState(1);
   const [eda_n, setEDA_N] = useState(1);
@@ -85,25 +88,6 @@ const AIToolModal = ({
   const toast = useToast();
   const { setValue } = useFormContext();
   const word = exType == 'TrueFalseNode' ? 'Statements' : 'Answers';
-  switch (exType) {
-    case 'closeEndedQuestionNode':
-      exerciseType = QuestionType.ShortAnswerQuestion;
-      break;
-    case 'OpenQuestionNode':
-      exerciseType = QuestionType.OpenQuestion;
-      break;
-    case 'TrueFalseNode':
-      exerciseType = QuestionType.TrueOrFalse;
-      break;
-    case 'multipleChoiceQuestionNode':
-      exerciseType = QuestionType.MultipleChoice;
-      break;
-    case 'ReadMaterialNode':
-      exerciseType = 'ReadMaterial';
-      break;
-    default:
-      throw 'error in type';
-  }
   return (
     <Modal
       isOpen={isOpen}
@@ -126,6 +110,11 @@ const AIToolModal = ({
           </Text>
           <FormLabel mb={2} fontWeight={'bold'}>
             Your material:
+            <InfoButton
+              title="Material to Analyze"
+              description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
+              placement="right"
+            />
           </FormLabel>
           <Textarea
             maxHeight={'200px'}
@@ -228,6 +217,11 @@ const AIToolModal = ({
               paddingBottom={'-5px'}
             >
               Educational Level:
+              <InfoButton
+                title="Educational Level"
+                description="Specify the academic level of the target audience, such as elementary school, high school, or college, to tailor the learning path appropriately."
+                placement="right"
+              />
             </FormLabel>
             <Select
               borderColor={'grey'}
@@ -328,7 +322,14 @@ const AIToolModal = ({
         </ModalBody>
         <ModalBody hidden={!screen3}>
           <Text>STEP 3: Define the specifics for the activity.</Text>
-          <FormLabel paddingTop={'5px'}>Learning Objective</FormLabel>
+          <FormLabel paddingTop={'5px'}>
+            Learning Objective
+            <InfoButton
+              title="Learning Outcome"
+              description="Describe the intended educational goal of the learning path. For example: 'the ability to recall or recognize simple facts and definitions.'"
+              placement="right"
+            />
+          </FormLabel>
           <FormControl label="Learning Outcome">
             <Select
               value={choosingLearningOutcome}
@@ -353,8 +354,8 @@ const AIToolModal = ({
             paddingTop={'5px'}
             alignItems={'center'}
             hidden={
-              exerciseType != QuestionType.TrueOrFalse &&
-              exerciseType != QuestionType.MultipleChoice
+              exerciseTypeKey != 'true or false' &&
+              exerciseTypeKey != 'multiple choice'
             }
           >
             N° Correct {word}:
@@ -389,28 +390,28 @@ const AIToolModal = ({
             </NumberInput>
           </Flex>
           <Button
-            hidden={exerciseType == 'ReadMaterial'}
+            hidden={exerciseTypeKey == 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
                 setLearningOutcome(choosingLearningOutcome);
                 if (!topicGen) throw ': no topic generated';
-                //aaaaaaaaaaaaaaaaaaaaaaaaaaaaaaa sei arrivato qui: fixa i dati
                 if (eduLevel == undefined || learningOutcome == undefined)
                   throw ': error in eduLevel and learningOutcome';
-                if (exerciseType != 'ReadMaterialNode') {
+                if (exerciseTypeKey != 'ReadMaterialNode') {
                   const response: AxiosResponse = await API.generateNewExercise(
                     {
                       macro_subject: macroSubjectGen,
                       topic: topicGen[topicIndex].topic,
+                      topic_explanation: topicGen[topicIndex].explanation,
                       education_level: eduLevel,
                       learning_outcome: learningOutcome,
                       material: sourceMaterial,
                       solutions_number: ca_n,
                       distractors_number: da_n,
                       easily_discardable_distractors_number: eda_n,
-                      type: exerciseType as QuestionType,
+                      type: exerciseTypeKey as string,
                       language: language,
                       model: 'Gemini',
                     }
@@ -418,9 +419,8 @@ const AIToolModal = ({
                   console.log(response.data);
                   const dataGen: AIExerciseGenerated = response.data;
                   let adaptedData;
-                  switch (exerciseType) {
-                    case QuestionType.OpenQuestion:
-                      console.log('creating openQuestion');
+                  switch (exerciseTypeKey) {
+                    case 'open question':
                       adaptedData = {
                         question: dataGen.assignment,
                         material: dataGen.material,
@@ -428,15 +428,13 @@ const AIToolModal = ({
                         possibleAnswer: dataGen.solutions[0],
                       };
                       break;
-                    case QuestionType.ShortAnswerQuestion:
-                      console.log('creating close_ended_question');
+                    case 'short answer question':
                       adaptedData = {
-                        question: dataGen.assignment,
+                        question: dataGen.assignment + ' ' + dataGen.plus,
                         correctAnswers: dataGen.solutions,
                       };
                       break;
-                    case QuestionType.MultipleChoice:
-                      console.log('creating multichoice');
+                    case 'multiple choice':
                       const answers = [
                         ...dataGen.solutions.slice(0, ca_n),
                         ...dataGen.distractors.slice(0, da_n),
@@ -475,7 +473,7 @@ const AIToolModal = ({
                         await delay(3000);
                       }
                       break;
-                    case QuestionType.TrueOrFalse:
+                    case 'true or false':
                       console.log('creating true or false');
                       const solutions = dataGen.solutions.map((s) => {
                         const splitIndex = s.indexOf('. ');
@@ -571,11 +569,11 @@ const AIToolModal = ({
             Generate Learning Activity
           </Button>
           <Button
-            hidden={exerciseType != 'ReadMaterial'}
+            hidden={exerciseTypeKey != 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
               try {
-                if (exerciseType != 'ReadMaterial') return;
+                if (exerciseTypeKey != 'ReadMaterial') return;
                 if (eduLevel == undefined || learningOutcome == undefined)
                   throw ': error in eduLevel and learningOutcome';
                 setGeneratingLoading(true);
@@ -601,7 +599,7 @@ const AIToolModal = ({
                 console.log(response.data);
                 const dataGen: AIMaterialGenerated = response.data;
                 let adaptedData;
-                switch (exerciseType) {
+                switch (exerciseTypeKey) {
                   case 'ReadMaterial':
                     console.log('creating readMaterial');
                     adaptedData = {
