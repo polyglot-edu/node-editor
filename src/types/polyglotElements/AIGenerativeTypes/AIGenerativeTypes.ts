@@ -225,7 +225,6 @@ export type AIMaterialType = {
   type_of_file: string;
 };
 
-
 export type AIMaterialGenerated = { type_of_file: string; content: any };
 
 export type SummerizerBody = {
