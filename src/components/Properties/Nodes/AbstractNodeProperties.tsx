@@ -137,7 +137,7 @@ const AbstractNodeProperties = () => {
         return;
       }
       const response: AxiosResponse = await API.analyseMaterial({
-        text: sourceMaterial,
+        url: sourceMaterial,
       });
       setValue(
         'data.learning_outcome',

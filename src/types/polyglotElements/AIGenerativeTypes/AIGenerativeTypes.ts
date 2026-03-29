@@ -157,7 +157,11 @@ export type LessonNodeAI = {
   topics: Topic[];
 };
 
-export type AnalyseType = { text: string; model?: string };
+export type AnalyseType = {
+  file?: string;
+  url: string;
+  model?: string;
+};
 
 export type AnalyzedMaterial = {
   title: string;
@@ -209,7 +213,7 @@ export type LOType = {
   Context: string;
 };
 
-export type MaterialType = {
+export type AIMaterialType = {
   title: string;
   macro_subject: string;
   topics: LessonNodeAI[];
@@ -218,18 +222,11 @@ export type MaterialType = {
   duration: number;
   language: string;
   model: string;
+  type_of_file: string;
 };
 
-export type AIMaterialGenerated = {
-  title: string;
-  macro_subject: string;
-  topics: LessonNodeAI[];
-  education_level: EducationLevel;
-  learning_outcome: LearningOutcome;
-  duration: number;
-  material: string;
-  language: string;
-};
+
+export type AIMaterialGenerated = { type_of_file: string; content: any };
 
 export type SummerizerBody = {
   text: string;
@@ -253,7 +250,6 @@ export type AIPlanLesson = {
 export type PlanLessonNode = {
   type: string;
   topic: string;
-  explanation: string;
   details: string;
   learning_outcome: LearningOutcome;
   duration: number;
@@ -269,4 +265,5 @@ export type AIPlanLessonResponse = {
   nodes: PlanLessonNode[];
   context: string;
   language: string;
+  data?: any;
 };

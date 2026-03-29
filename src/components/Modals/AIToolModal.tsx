@@ -27,6 +27,7 @@ import { API } from '../../data/api';
 import {
   AIExerciseGenerated,
   AIMaterialGenerated,
+  AIMaterialType,
   EducationLevel,
   LearningOutcome,
   QuestionTypeMap,
@@ -136,7 +137,7 @@ const AIToolModal = ({
                   throw ': no text given';
                 }
                 const response: AxiosResponse = await API.analyseMaterial({
-                  text: sourceMaterial,
+                  url: sourceMaterial,
                 });
                 console.log(response);
                 setTitle(response.data.title);
@@ -583,27 +584,38 @@ const AIToolModal = ({
                   macro_subject: macroSubjectGen,
                   topics: [
                     {
-                      title: titleGen,
-                      learning_outcome: learningOutcome,
                       topics: topicGen,
+                      title: '',
+                      learning_outcome: learningOutcome,
                     },
                   ],
                   education_level: eduLevel,
                   learning_outcome: learningOutcome,
                   duration: duration,
                   language: language,
+                  type_of_file: 'md',
                   model: 'Gemini',
-                });
+                } as AIMaterialType);
+
                 setScreen1(true);
                 setScreen3(false);
+
+                if (!response) throw 'Error generate';
+
                 console.log(response.data);
-                const dataGen: AIMaterialGenerated = response.data;
+
+                const dataGen: AIMaterialGenerated = {
+                  type_of_file: 'md',
+                  content: response.data,
+                };
+
                 let adaptedData;
+
                 switch (exerciseTypeKey) {
                   case 'ReadMaterial':
                     console.log('creating readMaterial');
                     adaptedData = {
-                      text: dataGen.material,
+                      text: dataGen.content,
                       link: '',
                     };
                     break;
