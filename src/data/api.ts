@@ -13,9 +13,8 @@ import {
 } from '../types/polyglotElements';
 import {
   AIExerciseType,
+  AIMaterialType,
   AIPlanLesson,
-  AnalyseType,
-  MaterialType,
   SummerizerBody,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
@@ -334,18 +333,22 @@ export const API = {
     );
   },
 
-  analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
-      `/api/openai/MaterialAnalyser`,
-      body
-    );
+  analyseMaterial: (body: Record<string, any>): Promise<AxiosResponse> => {
+    const formData = new FormData();
+
+    Object.entries(body).forEach(([key, value]) => {
+      if (value !== undefined && value !== null) {
+        formData.append(key, value);
+      }
+    });
+
+    return axios.post(`/api/openai/MaterialAnalyser`, formData, {
+      headers: { 'Content-Type': 'multipart/form-data' },
+    });
   },
 
-  generateMaterial: (body: MaterialType): Promise<AxiosResponse> => {
-    return axios.post<{}, AxiosResponse, {}>(
-      `/api/openai/MaterialGenerator`,
-      body
-    );
+  generateMaterial: (body: AIMaterialType): Promise<any> => {
+    return axios.post(`/api/openai/MaterialGenerator`, body);
   },
 
   summarize: (body: SummerizerBody): Promise<AxiosResponse> => {

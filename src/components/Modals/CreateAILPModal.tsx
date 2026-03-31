@@ -39,6 +39,7 @@ import {
 import {
   AIExerciseGenerated,
   AIMaterialGenerated,
+  AIMaterialType,
   AIPlanLessonResponse,
   AnalyzedMaterial,
   EducationLevel,
@@ -322,7 +323,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   throw new Error('Missing sourceMaterial');
                 }
                 const response: AxiosResponse = await API.analyseMaterial({
-                  text: sourceMaterial,
+                  url: sourceMaterial,
                 });
                 console.log(response.data as AnalyzedMaterial);
                 setAnalyzedMaterial(response.data as AnalyzedMaterial);
@@ -580,11 +581,14 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       const isIntegrated = QuestionTypeMap.find(
                         (qType) => qType.integrated && qType.key === node.type
                       );
+                      const topicExplanation = selectedTopic.find(
+                        (topic) => topic.topic === node.topic
+                      )?.explanation;
 
                       return {
                         type: isIntegrated ? node.type : 'open question',
                         topic: node.topic,
-                        explanation: node.explanation || '',
+                        explanation: topicExplanation || '',
                         details: node.details,
                         learning_outcome: node.learning_outcome,
                         duration: node.duration,
@@ -737,20 +741,26 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                         learning_outcome: analysedMaterial.learning_outcome,
                         duration: analysedMaterial.estimated_duration,
                         language: analysedMaterial.language,
+                        type_of_file: 'md',
                         model: 'Gemini',
-                      });
-                      const readMaterialGen: AIMaterialGenerated =
-                        response.data;
+                      } as AIMaterialType);
+
+                      const readMaterialGen: AIMaterialGenerated = {
+                        type_of_file: 'md',
+                        content: response.data,
+                      };
+
                       const _id = UUIDv4();
+
                       generatedNodes.push({
                         _id: _id,
                         type: 'ReadMaterialNode',
-                        title: readMaterialGen.title,
-                        description: readMaterialGen.macro_subject,
+                        title: analysedMaterial.title,
+                        description: analysedMaterial.macro_subject,
                         difficulty: 1,
                         platform: 'WebApp',
                         data: {
-                          text: readMaterialGen.material,
+                          text: readMaterialGen.content,
                           link: '',
                         },
                         reactFlow: {
@@ -771,6 +781,12 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           data: {},
                         },
                       });
+
+                      x += 450;
+                      if (x > 1605) {
+                        x = -195;
+                        y += 195;
+                      }
                     } catch (error) {
                       console.log('errror in generation readMaterial ' + error);
                     }
@@ -778,6 +794,9 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                     counter--;
                     const activity = nodesToGenerate[i];
                     if (!activity) break;
+                    const topicExplanation = selectedTopic.find(
+                      (topic) => topic.topic === activity.topic
+                    )?.explanation;
                     try {
                       let response: AxiosResponse | null = null;
                       const typeExercise =
@@ -791,7 +810,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                         response = await API.generateNewExercise({
                           macro_subject: activity?.learning_outcome,
                           topic: activity.topic,
-                          topic_explanation: activity.explanation,
+                          topic_explanation: topicExplanation || '',
                           education_level: analysedMaterial.education_level,
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,
@@ -813,7 +832,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                         response = await API.generateNewExercise({
                           macro_subject: activity?.learning_outcome,
                           topic: activity.topic,
-                          topic_explanation: activity.explanation,
+                          topic_explanation: topicExplanation || '',
                           education_level: analysedMaterial.education_level,
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,

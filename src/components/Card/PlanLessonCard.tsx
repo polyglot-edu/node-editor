@@ -71,7 +71,6 @@ const PlanLessonCard = ({
     updateNodeAt(id, {
       type: planNode.type,
       topic: planNode.topic,
-      explanation: planNode.explanation,
       details: planNode.details,
       learning_outcome: planNode.learning_outcome,
       duration: planNode.duration,
@@ -356,7 +355,6 @@ const PlanLessonCard = ({
                 updateNodeAt(id, {
                   type: type,
                   topic: plannedNode.topic,
-                  explanation: plannedNode.explanation,
                   details: plannedNode.details,
                   learning_outcome: plannedNode.learning_outcome,
                   duration: plannedNode.duration,

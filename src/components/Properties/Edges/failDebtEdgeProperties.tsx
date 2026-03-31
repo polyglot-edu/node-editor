@@ -78,7 +78,7 @@ const FailDebtEdgeProperties = () => {
               if (!generatingLoading) return;
               setGeneratingLoading(true);
               const response: AxiosResponse = await API.analyseMaterial({
-                text: getValues('data.material'),
+                url: getValues('data.material'),
               });
               //da gestire la response è cambiata aaaaaaaaaaaaaaaaaaaaaaaaa
               setValue('data.title', response.data.Title);
