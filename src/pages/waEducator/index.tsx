@@ -19,6 +19,7 @@ import {
   useToast,
 } from '@chakra-ui/react';
 import { GetServerSideProps } from 'next';
+import { getServerSession } from 'next-auth/next';
 import { useEffect, useMemo, useState } from 'react';
 import CourseCardSemplified from '../../components/Card/CourseCardSimplified';
 import CreateCourseModal from '../../components/Modals/CreateCourseModal';
@@ -31,7 +32,7 @@ import {
   PolyglotNodeValidation,
   UserBaseInfo,
 } from '../../types/polyglotElements';
-import auth0 from '../../utils/auth0';
+import { authOptions } from '../../utils/authOptions';
 
 type UserCardProps = {
   py?: SpaceProps['py'];
@@ -396,13 +397,13 @@ const FlowsListWorkadventure = ({ accessToken }: FlowIndexProps) => {
 export default FlowsListWorkadventure;
 
 export const getServerSideProps: GetServerSideProps = async (ctx) => {
-  const session = await auth0.getSession(ctx.req, ctx.res);
+  const session = await getServerSession(ctx.req, ctx.res, authOptions);
 
   if (!session) return { props: {} };
 
   return {
     props: {
-      accessToken: session.accessToken,
+      accessToken: session.idToken ?? null,
     },
   };
 };

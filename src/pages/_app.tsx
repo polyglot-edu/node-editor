@@ -4,11 +4,11 @@ import '../components/AppMain.css';
 import '../components/Card.css';
 import '../styles/globals.css';
 
-import { UserProvider } from '@auth0/nextjs-auth0/client';
 import { ChakraProvider, extendTheme } from '@chakra-ui/react';
 import { initializeIcons } from '@fluentui/font-icons-mdl2';
 import { withProse } from '@nikolovlazar/chakra-ui-prose';
 import { Analytics } from '@vercel/analytics/react';
+import { SessionProvider } from 'next-auth/react';
 import type { AppProps } from 'next/app';
 import reportWebVitals from '../reportWebVitals';
 
@@ -22,14 +22,17 @@ const theme = extendTheme(
   withProse()
 );
 
-export default function App({ Component, pageProps }: AppProps) {
+export default function App({
+  Component,
+  pageProps: { session, ...pageProps },
+}: AppProps) {
   return (
-    <UserProvider>
+    <SessionProvider session={session}>
       <ChakraProvider theme={theme}>
         <Component {...pageProps} />
         <Analytics />
       </ChakraProvider>
-    </UserProvider>
+    </SessionProvider>
   );
 }
 

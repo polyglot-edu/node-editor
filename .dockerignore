@@ -1,5 +1,11 @@
 node_modules
 .next
 dist
-.env.local
+.env
+*.env
+.env.*
+.git
+.github
+.husky
+.vscode
 Dockerfile

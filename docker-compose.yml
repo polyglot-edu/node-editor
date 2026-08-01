@@ -1,0 +1,52 @@
+# Deployment compose, consumed by Coolify's Docker Compose build pack.
+# Every ${VAR} below is supplied from Coolify's environment panel.
+
+services:
+  editor:
+    build:
+      context: .
+      args:
+        # BUILD-TIME ONLY. next.config.js lists TEST_MODE in its `env` block,
+        # which Next inlines into the bundle during `next build`. Setting it
+        # under `environment:` below would have no effect whatsoever.
+        # Must match the backend's TEST_MODE.
+        - TEST_MODE=${TEST_MODE:-false}
+    restart: always
+    # expose, not ports: Coolify's proxy reaches the container over the
+    # internal network, so nothing needs publishing on the host.
+    expose:
+      - '3000'
+    environment:
+      # Public URL this app is served from — scheme + host, no trailing slash.
+      # NextAuth derives its OAuth callback from it, so it must match the
+      # redirect URI registered in Google Cloud Console:
+      #   <NEXTAUTH_URL>/api/auth/callback/google
+      # Behind a reverse proxy NextAuth cannot infer this; omit it and sign-in
+      # redirects to localhost.
+      - NEXTAUTH_URL=${NEXTAUTH_URL}
+      # Cookie/JWT encryption key. Generate once with:
+      #   node -e "console.log(require('crypto').randomBytes(32).toString('base64'))"
+      # Required even when TEST_MODE=true — NextAuth v4 hard-fails without it.
+      - NEXTAUTH_SECRET=${NEXTAUTH_SECRET}
+
+      # Google Sign-In. GOOGLE_CLIENT_ID must be the SAME value the backend
+      # verifies against, since it is the `aud` of the ID tokens we forward.
+      - GOOGLE_CLIENT_ID=${GOOGLE_CLIENT_ID}
+      - GOOGLE_CLIENT_SECRET=${GOOGLE_CLIENT_SECRET}
+
+      # Backend base URL used by the /api/[...proxy] route.
+      # NOTE: this proxy forwards the incoming path VERBATIM, and callers in
+      # src/data/api.ts already include the `/api` prefix the backend mounts
+      # under. So this must be a BARE ORIGIN and must NOT end in `/api` —
+      # e.g. http://backend:5000. Adding the suffix yields /api/api/... and
+      # 404s everything. (This is the opposite of the pisco editor's rule.)
+      - BACK_URL=${BACK_URL}
+
+    healthcheck:
+      # /api/health is a static route that wins over the [...proxy] catch-all,
+      # so this stays green even when the backend is down, and needs no session.
+      test: ['CMD', 'wget', '-qO-', 'http://127.0.0.1:3000/api/health']
+      interval: 30s
+      timeout: 10s
+      retries: 3
+      start_period: 25s

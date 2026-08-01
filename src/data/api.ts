@@ -1,4 +1,5 @@
 import axiosCreate, { AxiosError, AxiosInstance, AxiosResponse } from 'axios';
+import { signIn, signOut } from 'next-auth/react';
 import Router from 'next/router';
 import { GeneralMetadata, Metadata } from '../types/metadata';
 import {
@@ -33,8 +34,10 @@ export type aiAPIResponse = {
   CorrectAnswer: string;
 };
 
+// No baseURL: requests go to this Next server's own /api/* routes, which the
+// [...proxy] handler forwards to BACK_URL after attaching the bearer token
+// server-side. Keeping them same-origin also means no CORS is involved.
 const axios = axiosCreate.create({
-  baseURL: process.env.BACK_URL,
   timeout: 60000,
   headers: {
     'Content-Type': 'application/json',
@@ -43,7 +46,6 @@ const axios = axiosCreate.create({
 });
 
 const axiosProgress = axiosCreate.create({
-  baseURL: process.env.BACK_URL,
   headers: {
     'Content-Type': 'application/json',
   },
@@ -68,11 +70,12 @@ export class APIV2 {
   constructor(access_token: string | undefined) {
     this.redirect401 = false;
     this.error401 = true;
+    // Same-origin like the module-level instances above. The token is still
+    // accepted for callers that have one, but the proxy attaches it anyway.
     this.axios = axiosCreate.create({
-      baseURL: process.env.BACK_URL,
       headers: {
         'Content-Type': 'application/json',
-        Authorization: access_token ? 'Bearer ' + access_token : '',
+        ...(access_token && { Authorization: 'Bearer ' + access_token }),
       },
     });
   }
@@ -94,10 +97,10 @@ export class APIV2 {
       return resp;
     } catch (err) {
       if ((err as AxiosError)?.response?.status === 401) {
-        const BACK_URL = process.env.BACK_URL;
-        const LOGIN_URL =
-          BACK_URL + '/api/auth/google?returnUrl=' + Router.asPath;
-        if (this.redirect401) await Router.push(LOGIN_URL);
+        // Previously redirected to a backend /api/auth/google route that has
+        // never existed; NextAuth owns sign-in now.
+        if (this.redirect401)
+          await signIn('google', { callbackUrl: Router.asPath });
         if (this.error401) throw err;
         return;
       }
@@ -110,8 +113,10 @@ export class APIV2 {
   getUserInfo(): Promise<AxiosResponse<User>> {
     return this.axios.get('/api/user/me');
   }
-  logout(): Promise<AxiosResponse> {
-    return this.axios.post('/api/auth/logout');
+  logout(): Promise<void> {
+    // The backend has no logout route; the NextAuth session cookie is the
+    // only thing to clear.
+    return signOut();
   }
   loadExampleFlowElementsAsync(flowId: string): any {
     const flow = exampleFlows.get(flowId);

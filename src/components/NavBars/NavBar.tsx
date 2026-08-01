@@ -1,12 +1,14 @@
-import { UserProfile } from '@auth0/nextjs-auth0/client';
 import { Button, HStack, Image } from '@chakra-ui/react';
-import Link from 'next/link';
+import type { Session } from 'next-auth';
+import { signIn, signOut } from 'next-auth/react';
 import brandLogo from '../../public/solo_logo.png';
 import brandWrite from '../../public/solo_scritta.png';
 import Nav from '../Layout/NavBar';
 
+const testMode = process.env.TEST_MODE === 'true';
+
 type NavBarProps = {
-  user: UserProfile | undefined;
+  user: Session['user'] | undefined;
 };
 
 export default function Navbar({ user }: NavBarProps) {
@@ -28,25 +30,26 @@ export default function Navbar({ user }: NavBarProps) {
       </HStack>
       {!user ? (
         <div className="rounded-lg bg-cyan-400 pr-2 pl-2 pt-1 pb-1">
-          <Link
-            href={process.env.TEST_MODE === 'true' ? {} : '/api/auth/login'}
+          <button
+            type="button"
             className="text-white"
-            style={{ textDecoration: 'none' }}
+            disabled={testMode}
+            onClick={() => signIn('google')}
           >
             Sign in
-          </Link>
+          </button>
         </div>
       ) : (
         <HStack>
           <div>{user.name}</div>
-          <Link
-            href={process.env.TEST_MODE === 'true' ? {} : '/api/auth/logout'}
-            style={{ textDecoration: 'none' }}
+          <Button
+            colorScheme="red"
+            size={['sm', 'md']}
+            isDisabled={testMode}
+            onClick={() => signOut()}
           >
-            <Button colorScheme="red" size={['sm', 'md']}>
-              Log out
-            </Button>
-          </Link>
+            Log out
+          </Button>
         </HStack>
       )}
     </Nav>

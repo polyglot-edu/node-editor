@@ -1,43 +1,52 @@
-FROM node:21-alpine
+# syntax=docker.io/docker/dockerfile:1
 
+FROM node:21-alpine AS base
+
+# The only build-time value: next.config.js inlines TEST_MODE into the bundle,
+# so it cannot be changed at runtime. Everything else (NEXTAUTH_*, GOOGLE_*,
+# BACK_URL) is read from process.env by server-only code and is a plain
+# runtime environment variable.
 ARG TEST_MODE=false
-ARG DEPLOY_URL=https://staging.polyglot-edu.com
-ARG BACK_URL=https://polyglot-api-staging.polyglot-edu.com
-ARG AUTH0_SECRET
-ARG AUTH0_AUDIENCE
-ARG AUTH0_SCOPE
-ARG AUTH0_CLIENT_ID
-ARG AUTH0_CLIENT_SECRET
-ARG AUTH0_ISSUER_BASE_URL
-ARG APIKEY
-ARG SETUPMODEL
-ARG AIGENERATION_URL
 
 
-ARG WORKDIR=web-client
+FROM base AS deps
+# See https://github.com/nodejs/docker-node#nodealpine for why libc6-compat.
+RUN apk add --no-cache libc6-compat
+WORKDIR /app
 
-WORKDIR $WORKDIR
+COPY package.json package-lock.json* ./
+RUN npm ci
 
-COPY package.json .
-COPY package-lock.json .
-COPY tsconfig.json .
 
-RUN npm install
-
+FROM base AS builder
+WORKDIR /app
+COPY --from=deps /app/node_modules ./node_modules
 COPY . .
 
-RUN export DEPLOY_URL=${DEPLOY_URL} && \
-    export TEST_MODE=${TEST_MODE} && \
-    export BACK_URL=${BACK_URL} && \
-    export AUTH0_SECRET=${AUTH0_SECRET} && \
-    export AUTH0_ISSUER_BASE_URL=${AUTH0_ISSUER_BASE_URL} && \
-    export AUTH0_CLIENT_ID=${AUTH0_CLIENT_ID} && \
-    export AUTH0_CLIENT_SECRET=${AUTH0_CLIENT_SECRET} && \
-    export AUTH0_AUDIENCE=${AUTH0_AUDIENCE} && \
-    export AUTH0_SCOPE=${AUTH0_SCOPE} && \
-    export APIKEY=${APIKEY} && \
-    export SETUPMODEL=${SETUPMODEL} && \
-    export AIGENERATION_URL=${AIGENERATION_URL} && \
-    npm run build
+RUN TEST_MODE=$TEST_MODE npm run build
 
-CMD npm run start
+
+FROM base AS runner
+WORKDIR /app
+
+ENV NODE_ENV=production
+
+RUN addgroup --system --gid 1001 nodejs
+RUN adduser --system --uid 1001 nextjs
+
+# No root public/ dir: assets live in src/public and are imported as modules,
+# so webpack emits them into .next/static.
+COPY --from=builder --chown=nextjs:nodejs /app/.next/standalone ./
+COPY --from=builder --chown=nextjs:nodejs /app/.next/static ./.next/static
+
+USER nextjs
+
+EXPOSE 3000
+
+ENV PORT=3000
+ENV HOSTNAME="0.0.0.0"
+
+HEALTHCHECK --interval=30s --timeout=5s --start-period=25s --retries=3 \
+  CMD wget -qO- http://127.0.0.1:3000/api/health || exit 1
+
+CMD ["node", "server.js"]

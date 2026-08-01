@@ -34,9 +34,9 @@ const RunExecutionModal = ({ isOpen, onClose, flow }: ModaTemplateProps) => {
         <ModalFooter>
           <LinkBox>
             <Button colorScheme="blue">Download</Button>
-            <LinkOverlay
-              href={`${process.env.BACK_URL}/api/flows/${flow._id}/runFirst`}
-            />
+            {/* Relative so it goes through the proxy: BACK_URL is server-only
+                and rendered as `undefined` in the browser. */}
+            <LinkOverlay href={`/api/flows/${flow._id}/runFirst`} />
           </LinkBox>
         </ModalFooter>
       </ModalContent>
