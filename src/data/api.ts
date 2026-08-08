@@ -34,6 +34,18 @@ export type aiAPIResponse = {
   CorrectAnswer: string;
 };
 
+/** A Polyglot API key. `token` is present only in the create response. */
+export type ApiKey = {
+  _id: string;
+  name: string;
+  /** Truncated prefix such as `pgk_eaEsCn…` — the full key is never returned. */
+  display: string;
+  createdAt: string;
+  lastUsedAt: string | null;
+  expiresAt: string | null;
+  revokedAt: string | null;
+};
+
 // No baseURL: requests go to this Next server's own /api/* routes, which the
 // [...proxy] handler forwards to BACK_URL after attaching the bearer token
 // server-side. Keeping them same-origin also means no CORS is involved.
@@ -207,6 +219,30 @@ export class APIV2 {
 
   deleteCourse(courseId: string): Promise<AxiosResponse> {
     return this.axios.delete('/api/course/' + courseId);
+  }
+
+  // --- API keys -------------------------------------------------------------
+  // These go through the [...proxy] route, which attaches the signed-in user's
+  // Google ID token server-side. That matters: the backend rejects API keys on
+  // these endpoints, so a Google session is required to manage keys.
+
+  listApiKeys(): Promise<AxiosResponse<ApiKey[]>> {
+    return this.axios.get('/api/user/apikeys');
+  }
+
+  /** The plaintext `token` is returned only by this call, and never again. */
+  createApiKey(
+    name: string,
+    expiresInDays?: number
+  ): Promise<AxiosResponse<ApiKey & { token: string; warning: string }>> {
+    return this.axios.post('/api/user/apikeys', {
+      name,
+      ...(expiresInDays ? { expiresInDays } : {}),
+    });
+  }
+
+  revokeApiKey(id: string): Promise<AxiosResponse> {
+    return this.axios.delete('/api/user/apikeys/' + id);
   }
 }
 

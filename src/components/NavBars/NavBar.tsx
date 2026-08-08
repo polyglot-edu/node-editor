@@ -1,6 +1,7 @@
 import { Button, HStack, Image } from '@chakra-ui/react';
 import type { Session } from 'next-auth';
 import { signIn, signOut } from 'next-auth/react';
+import Link from 'next/link';
 import brandLogo from '../../public/solo_logo.png';
 import brandWrite from '../../public/solo_scritta.png';
 import Nav from '../Layout/NavBar';
@@ -42,6 +43,15 @@ export default function Navbar({ user }: NavBarProps) {
       ) : (
         <HStack>
           <div>{user.name}</div>
+          {/* Key management needs a Google session, so only show it when
+              signed in — in TEST_MODE there is no real user to own a key. */}
+          {!testMode && (
+            <Link href="/settings/api-keys" style={{ textDecoration: 'none' }}>
+              <Button colorScheme="blue" variant="ghost" size={['sm', 'md']}>
+                API keys
+              </Button>
+            </Link>
+          )}
           <Button
             colorScheme="red"
             size={['sm', 'md']}
