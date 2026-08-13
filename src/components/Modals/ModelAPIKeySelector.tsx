@@ -1,10 +1,4 @@
-import {
-    Flex,
-  FormControl,
-  FormLabel,
-  Input,
-  Select,
-} from '@chakra-ui/react';
+import { Flex, FormControl, FormLabel, Input, Select } from '@chakra-ui/react';
 import InfoButton from '../UtilityComponents/InfoButton';
 
 export type ModelAPIKeyProps = {
@@ -23,13 +17,15 @@ const ModelAPIKey = ({
   hidden = false,
 }: ModelAPIKeyProps) => {
   return (
-    <Flex direction={'row'} paddingBottom={'10px'} alignItems={'center'} justifyContent={'space-between'} hidden={hidden}>
-      <FormControl label="Model"
-          width={'40%'}>
-        <FormLabel
-          mb={2}
-          fontWeight={'bold'}
-        >
+    <Flex
+      direction={'row'}
+      paddingBottom={'10px'}
+      alignItems={'center'}
+      justifyContent={'space-between'}
+      hidden={hidden}
+    >
+      <FormControl label="Model" width={'40%'}>
+        <FormLabel mb={2} fontWeight={'bold'}>
           Model:
           <InfoButton
             title="Model"
@@ -57,10 +53,7 @@ const ModelAPIKey = ({
 
       {model && model !== 'default' && (
         <FormControl width={'40%'}>
-          <FormLabel
-            mb={2}
-            fontWeight={'bold'}
-          >
+          <FormLabel mb={2} fontWeight={'bold'}>
             {model} API Key:
             <InfoButton
               title="API Key"

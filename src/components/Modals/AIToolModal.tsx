@@ -57,6 +57,18 @@ function shuffleArray<T>(array: T[]) {
   return arr;
 }
 
+// exerciseTypeKey values (see QuestionTypeMap / the 'ReadMaterial' fallback)
+// the free default model is allowed to generate. Everything else requires
+// the user to bring their own model + API key.
+const DEFAULT_MODEL_ALLOWED_TYPES = [
+  'ReadMaterial',
+  'multiple choice',
+  'short answer question',
+];
+
+const isAllowedForModel = (exerciseTypeKey: string, model: string) =>
+  model !== 'default' || DEFAULT_MODEL_ALLOWED_TYPES.includes(exerciseTypeKey);
+
 const AIToolModal = ({
   isOpen,
   onClose,
@@ -141,9 +153,20 @@ const AIToolModal = ({
             }}
           />
           <Button
-            isDisabled={model == 'default' || llm_token.length == 0}
+            isDisabled={!model || (model !== 'default' && llm_token.length == 0)}
             marginTop={'15px'}
             onClick={async () => {
+              if (!isAllowedForModel(exerciseTypeKey as string, model)) {
+                toast({
+                  title: 'Premium feature',
+                  description: "This feature isn't allowed with the default model.",
+                  status: 'warning',
+                  duration: 4000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
+                return;
+              }
               try {
                 setGeneratingLoading(true);
                 setManualMode(false);
@@ -225,9 +248,21 @@ const AIToolModal = ({
             Analyse Material
           </Button>
           <Button
-          isDisabled={model == 'default' || llm_token.length == 0}
-            marginTop={'15px'} marginLeft={'10px'}
+            isDisabled={!model || (model !== 'default' && llm_token.length == 0)}
+            marginTop={'15px'}
+            marginLeft={'10px'}
             onClick={() => {
+              if (!isAllowedForModel(exerciseTypeKey as string, model)) {
+                toast({
+                  title: 'Premium feature',
+                  description: "This feature isn't allowed with the default model.",
+                  status: 'warning',
+                  duration: 4000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
+                return;
+              }
               setManualMode(true);
               setTitle('');
               setMacroSubject('');
@@ -244,12 +279,23 @@ const AIToolModal = ({
             Skip step
           </Button>
           <Button
-            isDisabled={model == 'default' || llm_token.length == 0}
+            isDisabled={!model || (model !== 'default' && llm_token.length == 0)}
             marginTop={'15px'}
             marginLeft={'10px'}
             variant={'outline'}
             colorScheme={'teal'}
             onClick={() => {
+              if (!isAllowedForModel(exerciseTypeKey as string, model)) {
+                toast({
+                  title: 'Premium feature',
+                  description: "This feature isn't allowed with the default model.",
+                  status: 'warning',
+                  duration: 4000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
+                return;
+              }
               setManualMode(true);
               setTitle(EXAMPLE_ANALYZED_MATERIAL.title);
               setMacroSubject(EXAMPLE_ANALYZED_MATERIAL.macro_subject);
@@ -649,6 +695,17 @@ const AIToolModal = ({
             hidden={exerciseTypeKey == 'ReadMaterial'}
             marginTop={'15px'}
             onClick={async () => {
+              if (!isAllowedForModel(exerciseTypeKey as string, model)) {
+                toast({
+                  title: 'Premium feature',
+                  description: "This feature isn't allowed with the default model.",
+                  status: 'warning',
+                  duration: 4000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
+                return;
+              }
               try {
                 setGeneratingLoading(true);
                 setLearningOutcome(choosingLearningOutcome);
@@ -929,7 +986,7 @@ const AIToolModal = ({
             Generate Material
           </Button>
         </ModalBody>
-        
+
         <Button
           onClick={() => {
             setScreen1(true);
@@ -938,7 +995,7 @@ const AIToolModal = ({
             setSourceMaterial('');
             setTitle('');
             setMacroSubject('');
-            setLearningOutcome('' as LearningOutcome);  
+            setLearningOutcome('' as LearningOutcome);
             setManualMode(false);
             setChoosingLearningOutcome('' as LearningOutcome);
             setEduLevel({} as EducationLevel);
