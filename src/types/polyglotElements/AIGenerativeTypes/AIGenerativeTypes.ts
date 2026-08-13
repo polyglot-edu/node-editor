@@ -161,6 +161,7 @@ export type AnalyseType = {
   file?: string;
   url: string;
   model?: string;
+  llm_token?: string;
 };
 
 export type AnalyzedMaterial = {
@@ -175,6 +176,13 @@ export type AnalyzedMaterial = {
   estimated_duration: number;
 };
 
+export type ParamsExercise = {
+  solutions_number: number;
+  distractors_number: number;
+  easily_discardable_distractors_number: number;
+  type: string;
+};
+
 export type AIExerciseType = {
   macro_subject: string;
   topic: string;
@@ -182,12 +190,10 @@ export type AIExerciseType = {
   education_level: EducationLevel;
   learning_outcome: LearningOutcome;
   material: string;
-  solutions_number: number;
-  distractors_number: number;
-  easily_discardable_distractors_number: number;
-  type: string;
+  params: ParamsExercise[];
   language: string;
   model: string;
+  llm_token?: string;
 };
 
 export type AIExerciseGenerated = {
@@ -223,6 +229,7 @@ export type AIMaterialType = {
   language: string;
   model: string;
   type_of_file: string;
+  llm_token?: string;
 };
 
 export type AIMaterialGenerated = { type_of_file: string; content: any };
@@ -233,6 +240,7 @@ export type SummerizerBody = {
   style: SummarizeStyle;
   education_level: EducationLevel;
   learning_outcome: LearningOutcome;
+  llm_token?: string;
 };
 
 export type AIPlanLesson = {
@@ -244,6 +252,34 @@ export type AIPlanLesson = {
   education_level: EducationLevel;
   context: string;
   model: string;
+  llm_token?: string;
+};
+
+export type LearningObjectives = {
+  knowledge: string;
+  skills: string;
+  attitude: string;
+};
+
+export type AIPlanCourse = {
+  title: string;
+  macro_subject: string;
+  education_level: EducationLevel;
+  learning_objectives: LearningObjectives;
+  number_of_lessons: number;
+  duration_of_lesson: number;
+  language: string;
+  model?: string;
+  llm_token?: string;
+};
+
+export type AIDefineSyllabus = {
+  general_subject: string;
+  education_level: EducationLevel;
+  additional_information: string;
+  language: string;
+  model?: string;
+  llm_token?: string;
 };
 
 export type PlanLessonNode = {

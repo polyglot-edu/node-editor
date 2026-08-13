@@ -1,9 +1,9 @@
 import {
-  Box,
   Button,
   Flex,
   FormControl,
   FormLabel,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -24,6 +24,7 @@ import { AxiosResponse } from 'axios';
 import { useState } from 'react';
 import { useFormContext } from 'react-hook-form';
 import { API } from '../../data/api';
+import { EXAMPLE_ANALYZED_MATERIAL } from '../../data/exampleAnalyzedMaterial';
 import {
   AIExerciseGenerated,
   AIMaterialGenerated,
@@ -34,6 +35,7 @@ import {
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import InfoButton from '../UtilityComponents/InfoButton';
+import ModelAPIKey from './ModelAPIKeySelector';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -75,6 +77,11 @@ const AIToolModal = ({
     { topic: 'prova', explanation: '' },
   ]);
 
+  const [model, setModel] = useState('');
+  const [llm_token, setLLMToken] = useState('');
+
+  const [manualMode, setManualMode] = useState(false);
+
   const [topicIndex, setTopicIndex] = useState(0);
   let exerciseTypeKey = QuestionTypeMap.find(
     (elem) => elem.nodeType == exType
@@ -106,6 +113,12 @@ const AIToolModal = ({
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody hidden={!screen1}>
+          <ModelAPIKey
+            model={model}
+            setModel={setModel}
+            llm_token={llm_token}
+            setLlm_token={setLLMToken}
+          />
           <Text>
             STEP 1: Submit your material in this box to use our analyser.
           </Text>
@@ -128,16 +141,20 @@ const AIToolModal = ({
             }}
           />
           <Button
+            isDisabled={model == 'default' || llm_token.length == 0}
             marginTop={'15px'}
             onClick={async () => {
               try {
                 setGeneratingLoading(true);
+                setManualMode(false);
                 if (!sourceMaterial) {
                   //
                   throw ': no text given';
                 }
                 const response: AxiosResponse = await API.analyseMaterial({
                   url: sourceMaterial,
+                  model: model,
+                  llm_token: llm_token,
                 });
                 console.log(response);
                 setTitle(response.data.title);
@@ -207,9 +224,56 @@ const AIToolModal = ({
           >
             Analyse Material
           </Button>
+          <Button
+          isDisabled={model == 'default' || llm_token.length == 0}
+            marginTop={'15px'} marginLeft={'10px'}
+            onClick={() => {
+              setManualMode(true);
+              setTitle('');
+              setMacroSubject('');
+              setLearningOutcome('' as LearningOutcome);
+              setChoosingLearningOutcome('' as LearningOutcome);
+              setEduLevel({} as EducationLevel);
+              setLanguage('english');
+              setDuration(20);
+              setTopicGen([{ topic: '', explanation: '' }] as Topic[]);
+              setScreen1(false);
+              setScreen2(true);
+            }}
+          >
+            Skip step
+          </Button>
+          <Button
+            isDisabled={model == 'default' || llm_token.length == 0}
+            marginTop={'15px'}
+            marginLeft={'10px'}
+            variant={'outline'}
+            colorScheme={'teal'}
+            onClick={() => {
+              setManualMode(true);
+              setTitle(EXAMPLE_ANALYZED_MATERIAL.title);
+              setMacroSubject(EXAMPLE_ANALYZED_MATERIAL.macro_subject);
+              setLearningOutcome(EXAMPLE_ANALYZED_MATERIAL.learning_outcome);
+              setChoosingLearningOutcome(
+                EXAMPLE_ANALYZED_MATERIAL.learning_outcome
+              );
+              setEduLevel(EXAMPLE_ANALYZED_MATERIAL.education_level);
+              setLanguage(EXAMPLE_ANALYZED_MATERIAL.language);
+              setDuration(EXAMPLE_ANALYZED_MATERIAL.estimated_duration);
+              setTopicGen(EXAMPLE_ANALYZED_MATERIAL.topics);
+              setScreen1(false);
+              setScreen2(true);
+            }}
+          >
+            Insert example
+          </Button>
         </ModalBody>
         <ModalBody hidden={!screen2}>
-          <Text>STEP 2: Choose the Level and Topic you want to use.</Text>
+          <Text>
+            {!manualMode
+              ? 'STEP 2: Choose the Level and Topic you want to use.'
+              : 'STEP 2: Define the characteristics of the learning activity.'}
+          </Text>
           <FormControl label="Level">
             <FormLabel
               mb={2}
@@ -237,89 +301,281 @@ const AIToolModal = ({
               ))}
             </Select>
           </FormControl>
-          <FormControl label="Topic" paddingTop={'5px'}>
-            <FormLabel
-              mb={2}
-              fontWeight={'bold'}
-              paddingTop={'5px'}
-              paddingBottom={'-5px'}
-            >
-              Topic:
-            </FormLabel>
-            <Select
-              borderColor={'grey'}
-              onChange={(event) =>
-                setTopicIndex(Number(event.currentTarget.value))
-              }
-            >
-              {
-                <>
-                  {topicGen.map((p, id) => {
-                    return (
+
+          {manualMode ? (
+            <>
+              <FormControl paddingTop={'5px'}>
+                <FormLabel
+                  mb={2}
+                  fontWeight={'bold'}
+                  paddingTop={'5px'}
+                  paddingBottom={'-5px'}
+                >
+                  Title:
+                  <InfoButton
+                    title="Title"
+                    description="Give the learning activity a title, it will be used to label the generated content."
+                    placement="right"
+                  />
+                </FormLabel>
+                <Input
+                  borderColor={'grey'}
+                  placeholder="Insert a title for the learning activity..."
+                  value={titleGen}
+                  onChange={(e) => setTitle(e.currentTarget.value)}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel
+                  mb={2}
+                  fontWeight={'bold'}
+                  paddingTop={'5px'}
+                  paddingBottom={'-5px'}
+                >
+                  Macro Subject:
+                  <InfoButton
+                    title="Macro Subject"
+                    description="The general subject area the activity belongs to, e.g. 'Biology' or 'European History'."
+                    placement="right"
+                  />
+                </FormLabel>
+                <Input
+                  borderColor={'grey'}
+                  placeholder="Insert the macro subject..."
+                  value={macroSubjectGen}
+                  onChange={(e) => setMacroSubject(e.currentTarget.value)}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel
+                  mb={2}
+                  fontWeight={'bold'}
+                  paddingTop={'5px'}
+                  paddingBottom={'-5px'}
+                >
+                  Topic:
+                </FormLabel>
+                <Textarea
+                  maxHeight={'200px'}
+                  placeholder="Insert the topic for the learning activity..."
+                  value={topicGen[0].topic}
+                  overflowY={'auto'}
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    setTopicGen((prev) => {
+                      const updated = [...prev];
+                      updated[0] = { ...updated[0], topic: value };
+                      return updated;
+                    });
+                  }}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel
+                  mb={2}
+                  fontWeight={'bold'}
+                  paddingTop={'5px'}
+                  paddingBottom={'-5px'}
+                >
+                  Topic Description:
+                </FormLabel>
+                <Textarea
+                  maxHeight={'200px'}
+                  placeholder="Insert the description for the learning activity..."
+                  value={topicGen[0].explanation}
+                  overflowY={'auto'}
+                  onChange={(e) => {
+                    const value = e.currentTarget.value;
+                    setTopicGen((prev) => {
+                      const updated = [...prev];
+                      updated[0] = { ...updated[0], explanation: value };
+                      return updated;
+                    });
+                  }}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel
+                  mb={2}
+                  fontWeight={'bold'}
+                  paddingTop={'5px'}
+                  paddingBottom={'-5px'}
+                >
+                  Language:
+                  <InfoButton
+                    title="Language"
+                    description="The language the learning activity should be generated in."
+                    placement="right"
+                  />
+                </FormLabel>
+                <Input
+                  borderColor={'grey'}
+                  placeholder="e.g. english"
+                  value={language}
+                  onChange={(e) => setLanguage(e.currentTarget.value)}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel
+                  mb={2}
+                  fontWeight={'bold'}
+                  paddingTop={'5px'}
+                  paddingBottom={'-5px'}
+                >
+                  Estimated Duration (minutes):
+                </FormLabel>
+                <NumberInput defaultValue={duration} min={1} width={'100px'}>
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper
+                      onClick={() => setDuration(duration + 1)}
+                    />
+                    <NumberDecrementStepper
+                      onClick={() => setDuration(duration - 1)}
+                    />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+
+              <Button
+                marginTop={'15px'}
+                onClick={async () => {
+                  try {
+                    if (!topicGen) throw new Error('No topic generated');
+                    setScreen2(false);
+                    setScreen3(true);
+                  } catch (error: any) {
+                    if ((error as Error).name === 'SyntaxError') {
+                      toast({
+                        title: 'Invalid syntax',
+                        description: (error as Error).toString(),
+                        status: 'error',
+                        duration: 3000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                      return;
+                    }
+                    if (error.response?.status)
+                      toast({
+                        title: 'LearningObjective Error',
+                        description:
+                          'We are sorry, server was not able to generate the learning objective. Please, try again, if the error persists try a different topic',
+                        status: 'error',
+                        duration: 5000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                    else
+                      toast({
+                        title: 'Generic Error',
+                        description: 'Try later ' + (error as Error),
+                        status: 'error',
+                        duration: 5000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                  } finally {
+                    setGeneratingLoading(false);
+                  }
+                }}
+                isLoading={generatingLoading}
+              >
+                Confirm Manual Input
+              </Button>
+            </>
+          ) : (
+            topicGen &&
+            topicGen.length > 0 && (
+              <>
+                <FormControl label="Topic" paddingTop={'5px'}>
+                  <FormLabel
+                    mb={2}
+                    fontWeight={'bold'}
+                    paddingTop={'5px'}
+                    paddingBottom={'-5px'}
+                  >
+                    Topic:
+                  </FormLabel>
+
+                  <Select
+                    borderColor={'grey'}
+                    onChange={(event) =>
+                      setTopicIndex(Number(event.currentTarget.value))
+                    }
+                  >
+                    {topicGen.map((p, id) => (
                       <option key={id} value={id}>
-                        <Box width={'100px'}>{p.topic}</Box>
+                        {p.topic}
                       </option>
-                    );
-                  })}
-                </>
-              }
-            </Select>
-          </FormControl>
-          <FormLabel
-            mb={2}
-            fontWeight={'bold'}
-            paddingTop={'5px'}
-            paddingBottom={'-5px'}
-          >
-            Topic Description:
-          </FormLabel>
-          <Text>{topicGen[topicIndex].explanation}</Text>
-          <Button
-            marginTop={'15px'}
-            onClick={async () => {
-              try {
-                if (!topicGen) throw ': No topic generated';
-                setScreen2(false);
-                setScreen3(true);
-              } catch (error: any) {
-                if ((error as Error).name === 'SyntaxError') {
-                  toast({
-                    title: 'Invalid syntax',
-                    description: (error as Error).toString(),
-                    status: 'error',
-                    duration: 3000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                  return;
-                }
-                if (error.response.status)
-                  toast({
-                    title: 'LearningObjective Error',
-                    description:
-                      'We are sorry, server was not able to generate the learning objective. Please, try again, if the error persists try a different topic',
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                else
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-              } finally {
-                setGeneratingLoading(false);
-              }
-            }}
-            isLoading={generatingLoading}
-          >
-            Select Educational Level and Topic
-          </Button>
+                    ))}
+                  </Select>
+                </FormControl>
+
+                <FormLabel
+                  mb={2}
+                  fontWeight={'bold'}
+                  paddingTop={'5px'}
+                  paddingBottom={'-5px'}
+                >
+                  Topic Description:
+                </FormLabel>
+                <Text>{topicGen[topicIndex]?.explanation}</Text>
+
+                <Button
+                  marginTop={'15px'}
+                  onClick={async () => {
+                    try {
+                      if (!topicGen) throw new Error('No topic generated');
+                      setScreen2(false);
+                      setScreen3(true);
+                    } catch (error: any) {
+                      if ((error as Error).name === 'SyntaxError') {
+                        toast({
+                          title: 'Invalid syntax',
+                          description: (error as Error).toString(),
+                          status: 'error',
+                          duration: 3000,
+                          position: 'bottom-left',
+                          isClosable: true,
+                        });
+                        return;
+                      }
+                      if (error.response?.status)
+                        toast({
+                          title: 'LearningObjective Error',
+                          description:
+                            'We are sorry, server was not able to generate the learning objective. Please, try again, if the error persists try a different topic',
+                          status: 'error',
+                          duration: 5000,
+                          position: 'bottom-left',
+                          isClosable: true,
+                        });
+                      else
+                        toast({
+                          title: 'Generic Error',
+                          description: 'Try later ' + (error as Error),
+                          status: 'error',
+                          duration: 5000,
+                          position: 'bottom-left',
+                          isClosable: true,
+                        });
+                    } finally {
+                      setGeneratingLoading(false);
+                    }
+                  }}
+                  isLoading={generatingLoading}
+                >
+                  Select Educational Level and Topic
+                </Button>
+              </>
+            )
+          )}
         </ModalBody>
         <ModalBody hidden={!screen3}>
           <Text>STEP 3: Define the specifics for the activity.</Text>
@@ -350,7 +606,6 @@ const AIToolModal = ({
               ))}
             </Select>
           </FormControl>
-          {/*<Flex hidden={exerciseType != 8}></Flex>*/}
           <Flex
             paddingTop={'5px'}
             alignItems={'center'}
@@ -409,12 +664,17 @@ const AIToolModal = ({
                       education_level: eduLevel,
                       learning_outcome: learningOutcome,
                       material: sourceMaterial,
-                      solutions_number: ca_n,
-                      distractors_number: da_n,
-                      easily_discardable_distractors_number: eda_n,
-                      type: exerciseTypeKey as string,
+                      params: [
+                        {
+                          solutions_number: ca_n,
+                          distractors_number: da_n,
+                          easily_discardable_distractors_number: eda_n,
+                          type: exerciseTypeKey as string,
+                        },
+                      ],
                       language: language,
-                      model: 'Gemini',
+                      model: model,
+                      llm_token: llm_token,
                     }
                   );
                   console.log(response.data);
@@ -594,7 +854,8 @@ const AIToolModal = ({
                   duration: duration,
                   language: language,
                   type_of_file: 'md',
-                  model: 'Gemini',
+                  model: model,
+                  llm_token: llm_token,
                 } as AIMaterialType);
 
                 setScreen1(true);
@@ -668,16 +929,27 @@ const AIToolModal = ({
             Generate Material
           </Button>
         </ModalBody>
+        
         <Button
           onClick={() => {
             setScreen1(true);
             setScreen2(false);
             setScreen3(false);
             setSourceMaterial('');
+            setTitle('');
+            setMacroSubject('');
+            setLearningOutcome('' as LearningOutcome);  
+            setManualMode(false);
+            setChoosingLearningOutcome('' as LearningOutcome);
+            setEduLevel({} as EducationLevel);
+            setLanguage('english');
+            setDuration(20);
+            setTopicGen([{ topic: '', explanation: '' }] as Topic[]);
           }}
           width={'80px'}
           bottom={'12'}
-          alignSelf={'center'}
+          alignSelf={'flex-end'}
+          right={'12'}
         >
           Restart
         </Button>

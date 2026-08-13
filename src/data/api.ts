@@ -16,6 +16,7 @@ import {
   AIExerciseType,
   AIMaterialType,
   AIPlanLesson,
+  AnalyseType,
   SummerizerBody,
 } from '../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import { ConceptMap } from '../types/polyglotElements/concept/Conceptmap';
@@ -374,7 +375,7 @@ export const API = {
     );
   },
 
-  analyseMaterial: (body: Record<string, any>): Promise<AxiosResponse> => {
+  analyseMaterial: (body: AnalyseType): Promise<AxiosResponse> => {
     const formData = new FormData();
 
     Object.entries(body).forEach(([key, value]) => {

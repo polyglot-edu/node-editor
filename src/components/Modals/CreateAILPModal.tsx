@@ -1,4 +1,4 @@
-import { ChevronDownIcon, ChevronUpIcon } from '@chakra-ui/icons';
+import { ChevronDownIcon, ChevronUpIcon, CloseIcon } from '@chakra-ui/icons';
 import {
   Box,
   Button,
@@ -8,6 +8,7 @@ import {
   FormControl,
   FormLabel,
   IconButton,
+  Input,
   Modal,
   ModalBody,
   ModalCloseButton,
@@ -31,6 +32,7 @@ import { useEffect, useState } from 'react';
 import { MarkerType } from 'reactflow';
 import { v4 as UUIDv4 } from 'uuid';
 import { API } from '../../data/api';
+import { EXAMPLE_ANALYZED_MATERIAL } from '../../data/exampleAnalyzedMaterial';
 import {
   PolyglotEdge,
   PolyglotFlow,
@@ -52,6 +54,7 @@ import {
 import PlanLessonCard from '../Card/PlanLessonCard';
 import InfoButton from '../UtilityComponents/InfoButton';
 import ProgressBar from '../UtilityComponents/ProgressBar';
+import ModelAPIKey from './ModelAPIKeySelector';
 
 export type ModaTemplateProps = {
   isOpen: boolean;
@@ -145,6 +148,24 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const [screen3, setScreen3] = useState(false);
   const generatedNodes: PolyglotNode[] = [];
 
+  const [model, setModel] = useState('');
+  const [llm_token, setLLMToken] = useState('');
+
+  const [manualMode, setManualMode] = useState(false);
+  const [manualTitle, setManualTitle] = useState('');
+  const [manualMacroSubject, setManualMacroSubject] = useState('');
+  const [manualLanguage, setManualLanguage] = useState('english');
+  const [manualDuration, setManualDuration] = useState(20);
+  const [manualTopics, setManualTopics] = useState<Topic[]>([
+    { topic: '', explanation: '' },
+  ]);
+  const [manualKeywords, setManualKeywords] = useState<string[]>([
+    '',
+    '',
+    '',
+    '',
+  ]);
+
   const router = useRouter();
 
   useEffect(() => {
@@ -177,6 +198,35 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     setExpandedIndexes((prev) =>
       prev.includes(index) ? prev.filter((i) => i !== index) : [...prev, index]
     );
+  };
+
+  //functions for the manual topics editor
+  const updateManualTopic = (
+    index: number,
+    field: 'topic' | 'explanation',
+    value: string
+  ) => {
+    setManualTopics((prev) => {
+      const updated = [...prev];
+      updated[index] = { ...updated[index], [field]: value };
+      return updated;
+    });
+  };
+
+  const addManualTopic = () => {
+    setManualTopics((prev) => [...prev, { topic: '', explanation: '' }]);
+  };
+
+  const removeManualTopic = (index: number) => {
+    setManualTopics((prev) => prev.filter((_, i) => i !== index));
+  };
+
+  const updateManualKeyword = (index: number, value: string) => {
+    setManualKeywords((prev) => {
+      const updated = [...prev];
+      updated[index] = value;
+      return updated;
+    });
   };
 
   //function for lessonNode handler
@@ -239,6 +289,7 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     setGeneratingLoading(false);
     setSourceMaterial('');
     setContext('');
+    setAnalyzedMaterial(undefined);
     setAINodes(undefined);
     setSelectedNodes(undefined);
     setLearningOutcome(undefined);
@@ -252,6 +303,13 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
     setScreen3(false);
     generatedNodes.length = 0;
     setStepGeneration(0);
+    setManualMode(false);
+    setManualTitle('');
+    setManualMacroSubject('');
+    setManualLanguage('english');
+    setManualDuration(20);
+    setManualTopics([{ topic: '', explanation: '' }]);
+    setManualKeywords(['', '', '', '']);
   };
 
   return (
@@ -269,6 +327,13 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
       <ModalContent>
         <ModalHeader>
           Do you need help to generate your learning path?
+          <ModelAPIKey
+            hidden={!screen1}
+            model={model}
+            setModel={setModel}
+            llm_token={llm_token}
+            setLlm_token={setLLMToken}
+          />
           <Text hidden={!screen1}>
             STEP 1: Submit your material in this box to use our analyser.
           </Text>
@@ -285,104 +350,407 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
         </ModalHeader>
         <ModalCloseButton />
         <ModalBody hidden={!screen1}>
-          <FormLabel mb={2} fontWeight={'bold'}>
-            Your material:
-            <InfoButton
-              title="Material to Analyze"
-              description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
-              placement="right"
-            />
-          </FormLabel>
-          <Textarea
-            minHeight={'150px'}
-            maxHeight={'350px'}
-            placeholder="Insert your material here, you can put your plain text."
-            value={sourceMaterial}
-            overflowY={'auto'}
-            onChange={(e) => {
-              setGeneratingLoading(false);
-              setSourceMaterial(e.currentTarget.value);
-            }}
-          />
+          {!manualMode ? (
+            <>
+              <FormLabel mb={2} fontWeight={'bold'}>
+                Your material:
+                <InfoButton
+                  title="Material to Analyze"
+                  description="Provide the source content you want the learning path to be built upon. This could be a text, article, lesson plan, or any other educational material."
+                  placement="right"
+                />
+              </FormLabel>
+              <Textarea
+                minHeight={'150px'}
+                maxHeight={'350px'}
+                placeholder="Insert your material here, you can put your plain text."
+                value={sourceMaterial}
+                overflowY={'auto'}
+                onChange={(e) => {
+                  setGeneratingLoading(false);
+                  setSourceMaterial(e.currentTarget.value);
+                }}
+              />
 
-          <Button
-            marginTop={'15px'}
-            onClick={async () => {
-              try {
-                setGeneratingLoading(true);
-                if (!sourceMaterial) {
-                  toast({
-                    title: 'Material missing',
-                    description:
-                      'Please, insert your material before pressing analye button.',
-                    status: 'error',
-                    duration: 3000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                  throw new Error('Missing sourceMaterial');
+              <Button
+                isDisabled={
+                  !model || (model !== 'default' && llm_token.length === 0)
                 }
-                const response: AxiosResponse = await API.analyseMaterial({
-                  url: sourceMaterial,
-                });
-                console.log(response.data as AnalyzedMaterial);
-                setAnalyzedMaterial(response.data as AnalyzedMaterial);
-                setEduLevel(response.data.education_level as EducationLevel);
-                setLearningOutcome(
-                  response.data.learning_outcome as LearningOutcome
-                );
-              } catch (error: any) {
-                console.log(error);
-                if ((error as Error).name === 'SyntaxError') {
-                  toast({
-                    title: 'Invalid syntax',
-                    description: (error as Error).toString(),
-                    status: 'error',
-                    duration: 3000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                  return;
-                }
-                if (error.response)
-                  if (error.response.status) {
-                    if (error.response.status == 500)
+                marginTop={'15px'}
+                onClick={async () => {
+                  try {
+                    setGeneratingLoading(true);
+                    if (!sourceMaterial) {
                       toast({
-                        title: 'Material Error',
+                        title: 'Material missing',
                         description:
-                          'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
+                          'Please, insert your material before pressing analye button.',
                         status: 'error',
-                        duration: 5000,
+                        duration: 3000,
                         position: 'bottom-left',
                         isClosable: true,
                       });
-                    else if (error.response.status != 200)
-                      toast({
-                        title: 'AI API Error',
-                        description:
-                          'Internal Server error, try again. If the error persists try change material.',
-                        status: 'error',
-                        duration: 5000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      });
-                  } else
-                    toast({
-                      title: 'Generic Error',
-                      description: 'Try later ' + (error as Error),
-                      status: 'error',
-                      duration: 5000,
-                      position: 'bottom-left',
-                      isClosable: true,
+                      throw new Error('Missing sourceMaterial');
+                    }
+                    const response: AxiosResponse = await API.analyseMaterial({
+                      url: sourceMaterial,
+                      model: model,
+                      llm_token: llm_token,
                     });
-              } finally {
-                setGeneratingLoading(false);
-              }
-            }}
-            isLoading={generatingLoading}
-          >
-            Analyse Material
-          </Button>
+                    console.log(response.data as AnalyzedMaterial);
+                    setAnalyzedMaterial(response.data as AnalyzedMaterial);
+                    setEduLevel(
+                      response.data.education_level as EducationLevel
+                    );
+                    setLearningOutcome(
+                      response.data.learning_outcome as LearningOutcome
+                    );
+                  } catch (error: any) {
+                    console.log(error);
+                    if ((error as Error).name === 'SyntaxError') {
+                      toast({
+                        title: 'Invalid syntax',
+                        description: (error as Error).toString(),
+                        status: 'error',
+                        duration: 3000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                      return;
+                    }
+                    if (error.response)
+                      if (error.response.status) {
+                        if (error.response.status == 500)
+                          toast({
+                            title: 'Material Error',
+                            description:
+                              'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
+                            status: 'error',
+                            duration: 5000,
+                            position: 'bottom-left',
+                            isClosable: true,
+                          });
+                        else if (error.response.status != 200)
+                          toast({
+                            title: 'AI API Error',
+                            description:
+                              'Internal Server error, try again. If the error persists try change material.',
+                            status: 'error',
+                            duration: 5000,
+                            position: 'bottom-left',
+                            isClosable: true,
+                          });
+                      } else
+                        toast({
+                          title: 'Generic Error',
+                          description: 'Try later ' + (error as Error),
+                          status: 'error',
+                          duration: 5000,
+                          position: 'bottom-left',
+                          isClosable: true,
+                        });
+                  } finally {
+                    setGeneratingLoading(false);
+                  }
+                }}
+                isLoading={generatingLoading}
+              >
+                Analyse Material
+              </Button>
+
+              <Button
+                marginTop={'15px'}
+                marginLeft={'10px'}
+                variant={'outline'}
+                onClick={() => setManualMode(true)}
+              >
+                Skip step
+              </Button>
+            </>
+          ) : (
+            <>
+              <Text>
+                Fill in the information the analyser would normally have
+                produced for you.
+              </Text>
+
+              <FormLabel mb={2} fontWeight={'bold'}>
+                Material (optional, used as extra context for the activities):
+              </FormLabel>
+              <Textarea
+                minHeight={'80px'}
+                maxHeight={'200px'}
+                placeholder="You can still paste some material here if you want it to inform the activities, this is optional."
+                value={sourceMaterial}
+                overflowY={'auto'}
+                onChange={(e) => setSourceMaterial(e.currentTarget.value)}
+              />
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Title:
+                </FormLabel>
+                <Input
+                  borderColor={'grey'}
+                  placeholder="Insert a title for the learning path..."
+                  value={manualTitle}
+                  onChange={(e) => setManualTitle(e.currentTarget.value)}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Macro Subject:
+                </FormLabel>
+                <Input
+                  borderColor={'grey'}
+                  placeholder="Insert the macro subject..."
+                  value={manualMacroSubject}
+                  onChange={(e) => setManualMacroSubject(e.currentTarget.value)}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Language:
+                </FormLabel>
+                <Input
+                  borderColor={'grey'}
+                  placeholder="e.g. english"
+                  value={manualLanguage}
+                  onChange={(e) => setManualLanguage(e.currentTarget.value)}
+                />
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Estimated Duration (minutes):
+                </FormLabel>
+                <NumberInput
+                  value={manualDuration}
+                  min={1}
+                  width={'100px'}
+                  onChange={(valueString, valueNumber) => {
+                    if (!isNaN(valueNumber)) setManualDuration(valueNumber);
+                  }}
+                >
+                  <NumberInputField />
+                  <NumberInputStepper>
+                    <NumberIncrementStepper />
+                    <NumberDecrementStepper />
+                  </NumberInputStepper>
+                </NumberInput>
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Educational Level:
+                </FormLabel>
+                <Select
+                  borderColor={'grey'}
+                  value={eduLevel || ''}
+                  onChange={(event) =>
+                    setEduLevel(event.currentTarget.value as EducationLevel)
+                  }
+                >
+                  <option value="" disabled hidden>
+                    Select a level...
+                  </option>
+                  {Object.values(EducationLevel).map((level) => (
+                    <option key={level} value={level}>
+                      {level}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Learning Outcome:
+                </FormLabel>
+                <Select
+                  borderColor={'grey'}
+                  value={learningOutcome || ''}
+                  onChange={(event) =>
+                    setLearningOutcome(
+                      event.currentTarget.value as LearningOutcome
+                    )
+                  }
+                >
+                  <option value="" disabled hidden>
+                    Select a learning outcome...
+                  </option>
+                  {Object.values(LearningOutcome).map((outcome) => (
+                    <option key={outcome} value={outcome}>
+                      {outcome}
+                    </option>
+                  ))}
+                </Select>
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Tags (used to label the learning path, up to 4):
+                </FormLabel>
+                <Flex gap={2} wrap={'wrap'}>
+                  {manualKeywords.map((keyword, index) => (
+                    <Input
+                      key={index}
+                      borderColor={'grey'}
+                      width={'150px'}
+                      placeholder={`Tag ${index + 1}`}
+                      value={keyword}
+                      onChange={(e) =>
+                        updateManualKeyword(index, e.currentTarget.value)
+                      }
+                    />
+                  ))}
+                </Flex>
+              </FormControl>
+
+              <FormControl paddingTop={'5px'}>
+                <FormLabel mb={2} fontWeight={'bold'}>
+                  Topics:
+                </FormLabel>
+                {manualTopics.map((topicObj, index) => (
+                  <Flex key={index} align="start" mb={3} gap={2}>
+                    <Box flex={1}>
+                      <Input
+                        borderColor={'grey'}
+                        marginBottom={'5px'}
+                        placeholder="Topic name..."
+                        value={topicObj.topic}
+                        onChange={(e) =>
+                          updateManualTopic(
+                            index,
+                            'topic',
+                            e.currentTarget.value
+                          )
+                        }
+                      />
+                      <Textarea
+                        borderColor={'grey'}
+                        maxHeight={'120px'}
+                        placeholder="Topic description..."
+                        value={topicObj.explanation}
+                        onChange={(e) =>
+                          updateManualTopic(
+                            index,
+                            'explanation',
+                            e.currentTarget.value
+                          )
+                        }
+                      />
+                    </Box>
+                    <IconButton
+                      aria-label="Remove topic"
+                      icon={<CloseIcon />}
+                      size="sm"
+                      variant="ghost"
+                      isDisabled={manualTopics.length <= 1}
+                      onClick={() => removeManualTopic(index)}
+                    />
+                  </Flex>
+                ))}
+                <Button size="sm" onClick={addManualTopic}>
+                  + Add topic
+                </Button>
+              </FormControl>
+
+              <Flex marginTop={'15px'} gap={2}>
+                <Button
+                  isDisabled={
+                    !model || (model !== 'default' && llm_token.length === 0)
+                  }
+                  onClick={() => {
+                    if (
+                      !manualTitle ||
+                      !manualMacroSubject ||
+                      !manualLanguage
+                    ) {
+                      toast({
+                        title: 'Missing information',
+                        description:
+                          'Please fill in the title, macro subject and language before continuing.',
+                        status: 'error',
+                        duration: 3000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                      return;
+                    }
+                    if (!eduLevel || !learningOutcome) {
+                      toast({
+                        title: 'Missing information',
+                        description:
+                          'Please select an educational level and a learning outcome before continuing.',
+                        status: 'error',
+                        duration: 3000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                      return;
+                    }
+                    if (
+                      manualTopics.length < 1 ||
+                      manualTopics.some((t) => !t.topic)
+                    ) {
+                      toast({
+                        title: 'Missing topics',
+                        description:
+                          'Please add at least one topic, and make sure every topic has a name.',
+                        status: 'error',
+                        duration: 3000,
+                        position: 'bottom-left',
+                        isClosable: true,
+                      });
+                      return;
+                    }
+                    setAnalyzedMaterial({
+                      title: manualTitle,
+                      macro_subject: manualMacroSubject,
+                      language: manualLanguage,
+                      education_level: eduLevel,
+                      learning_outcome: learningOutcome,
+                      estimated_duration: manualDuration,
+                      topics: manualTopics,
+                      keywords: manualKeywords,
+                    } as AnalyzedMaterial);
+                  }}
+                >
+                  Confirm Details
+                </Button>
+                <Button
+                  variant={'outline'}
+                  colorScheme={'teal'}
+                  onClick={() => {
+                    setManualTitle(EXAMPLE_ANALYZED_MATERIAL.title);
+                    setManualMacroSubject(
+                      EXAMPLE_ANALYZED_MATERIAL.macro_subject
+                    );
+                    setManualLanguage(EXAMPLE_ANALYZED_MATERIAL.language);
+                    setManualDuration(
+                      EXAMPLE_ANALYZED_MATERIAL.estimated_duration
+                    );
+                    setEduLevel(EXAMPLE_ANALYZED_MATERIAL.education_level);
+                    setLearningOutcome(
+                      EXAMPLE_ANALYZED_MATERIAL.learning_outcome
+                    );
+                    setManualTopics(EXAMPLE_ANALYZED_MATERIAL.topics);
+                    setManualKeywords(EXAMPLE_ANALYZED_MATERIAL.keywords);
+                  }}
+                >
+                  Insert example
+                </Button>
+                <Button
+                  variant={'outline'}
+                  onClick={() => setManualMode(false)}
+                >
+                  Back
+                </Button>
+              </Flex>
+            </>
+          )}
         </ModalBody>
         <ModalBody hidden={!screen2}>
           <FormControl label="Level">
@@ -572,7 +940,8 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   title: analysedMaterial.title,
                   education_level: eduLevel,
                   context: context,
-                  model: 'Gemini',
+                  model: model,
+                  llm_token: llm_token,
                 }).then((response) => {
                   setAINodes(response.data);
                   const data: AIPlanLessonResponse = response.data;
@@ -742,7 +1111,8 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                         duration: analysedMaterial.estimated_duration,
                         language: analysedMaterial.language,
                         type_of_file: 'md',
-                        model: 'Gemini',
+                        model: model,
+                        llm_token: llm_token,
                       } as AIMaterialType);
 
                       const readMaterialGen: AIMaterialGenerated = {
@@ -806,7 +1176,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           ? 'multiple select'
                           : 'multiple choice';
                       try {
-                        // Primo tentativo
                         response = await API.generateNewExercise({
                           macro_subject: activity?.learning_outcome,
                           topic: activity.topic,
@@ -814,21 +1183,26 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           education_level: analysedMaterial.education_level,
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,
-                          solutions_number:
-                            activity.data?.solutions_number || 1,
-                          distractors_number:
-                            activity.data?.distractors_number || 2,
-                          easily_discardable_distractors_number:
-                            activity.data
-                              ?.easily_discardable_distractors_number || 1,
-                          type: typeExercise,
+                          params: [
+                            {
+                              solutions_number:
+                                activity.data?.solutions_number || 1,
+                              distractors_number:
+                                activity.data?.distractors_number || 2,
+                              easily_discardable_distractors_number:
+                                activity.data
+                                  ?.easily_discardable_distractors_number || 1,
+                              type: typeExercise,
+                            },
+                          ],
                           language: analysedMaterial.language,
-                          model: 'Gemini',
+                          model: model,
+                          llm_token: llm_token,
                         });
                       } catch (err) {
                         console.warn('retry', err);
 
-                        // Retry una volta
+                        // Retry
                         response = await API.generateNewExercise({
                           macro_subject: activity?.learning_outcome,
                           topic: activity.topic,
@@ -836,20 +1210,25 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                           education_level: analysedMaterial.education_level,
                           learning_outcome: activity.learning_outcome,
                           material: sourceMaterial,
-                          solutions_number:
-                            activity.data?.solutions_number || 1,
-                          distractors_number:
-                            activity.data?.distractors_number || 2,
-                          easily_discardable_distractors_number:
-                            activity.data
-                              ?.easily_discardable_distractors_number || 1,
-                          type: typeExercise,
+                          params: [
+                            {
+                              solutions_number:
+                                activity.data?.solutions_number || 1,
+                              distractors_number:
+                                activity.data?.distractors_number || 2,
+                              easily_discardable_distractors_number:
+                                activity.data
+                                  ?.easily_discardable_distractors_number || 1,
+                              type: typeExercise,
+                            },
+                          ],
                           language: analysedMaterial.language,
-                          model: 'Gemini',
+                          model: model,
+                          llm_token: llm_token,
                         });
                       }
 
-                      // Se uno dei due tentativi ha avuto successo
+                      // if one of the retries worked, handle the response
                       if (response) {
                         handleResponseNewExercise(response, x, y);
                       }
