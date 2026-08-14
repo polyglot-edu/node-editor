@@ -153,13 +153,16 @@ const AIToolModal = ({
             }}
           />
           <Button
-            isDisabled={!model || (model !== 'default' && llm_token.length == 0)}
+            isDisabled={
+              !model || (model !== 'default' && llm_token.length == 0)
+            }
             marginTop={'15px'}
             onClick={async () => {
               if (!isAllowedForModel(exerciseTypeKey as string, model)) {
                 toast({
                   title: 'Premium feature',
-                  description: "This feature isn't allowed with the default model.",
+                  description:
+                    "This feature isn't allowed with the default model.",
                   status: 'warning',
                   duration: 4000,
                   position: 'bottom-left',
@@ -248,14 +251,17 @@ const AIToolModal = ({
             Analyse Material
           </Button>
           <Button
-            isDisabled={!model || (model !== 'default' && llm_token.length == 0)}
+            isDisabled={
+              !model || (model !== 'default' && llm_token.length == 0)
+            }
             marginTop={'15px'}
             marginLeft={'10px'}
             onClick={() => {
               if (!isAllowedForModel(exerciseTypeKey as string, model)) {
                 toast({
                   title: 'Premium feature',
-                  description: "This feature isn't allowed with the default model.",
+                  description:
+                    "This feature isn't allowed with the default model.",
                   status: 'warning',
                   duration: 4000,
                   position: 'bottom-left',
@@ -279,7 +285,9 @@ const AIToolModal = ({
             Skip step
           </Button>
           <Button
-            isDisabled={!model || (model !== 'default' && llm_token.length == 0)}
+            isDisabled={
+              !model || (model !== 'default' && llm_token.length == 0)
+            }
             marginTop={'15px'}
             marginLeft={'10px'}
             variant={'outline'}
@@ -288,7 +296,8 @@ const AIToolModal = ({
               if (!isAllowedForModel(exerciseTypeKey as string, model)) {
                 toast({
                   title: 'Premium feature',
-                  description: "This feature isn't allowed with the default model.",
+                  description:
+                    "This feature isn't allowed with the default model.",
                   status: 'warning',
                   duration: 4000,
                   position: 'bottom-left',
@@ -698,7 +707,8 @@ const AIToolModal = ({
               if (!isAllowedForModel(exerciseTypeKey as string, model)) {
                 toast({
                   title: 'Premium feature',
-                  description: "This feature isn't allowed with the default model.",
+                  description:
+                    "This feature isn't allowed with the default model.",
                   status: 'warning',
                   duration: 4000,
                   position: 'bottom-left',
@@ -735,7 +745,11 @@ const AIToolModal = ({
                     }
                   );
                   console.log(response.data);
-                  const dataGen: AIExerciseGenerated = response.data;
+                  
+                  const dataGen: AIExerciseGenerated = {
+                    ...response.data,
+                    ...response.data.generated_activities?.[0],
+                  };
                   let adaptedData;
                   switch (exerciseTypeKey) {
                     case 'open question':

@@ -251,7 +251,11 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const toast = useToast();
 
   const handleResponseNewExercise = (response: any, x: number, y: number) => {
-    const exerciseResponse: AIExerciseGenerated = response.data;
+   
+    const exerciseResponse: AIExerciseGenerated = {
+      ...response.data,
+      ...response.data.generated_activities?.[0],
+    };
     const _id = UUIDv4();
     const typeNode =
       QuestionTypeMap.find((type) => type.key == exerciseResponse.type)
