@@ -21,6 +21,7 @@ import {
   LearningOutcome,
   SummarizeStyle,
 } from '../../types/polyglotElements';
+import { getApiErrorMessage } from '../../utils/apiError';
 import InfoButton from '../UtilityComponents/InfoButton';
 
 export type ModaTemplateProps = {
@@ -116,25 +117,17 @@ const SummarizerModal = ({ isOpen, onClose }: ModaTemplateProps) => {
                   });
                   return;
                 }
-                if (error.response.status)
-                  toast({
-                    title: 'Generation Error',
-                    description:
-                      'We are sorry, server was not able to generate the material, please, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                else
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
+                toast({
+                  title: 'Generation Error',
+                  description: getApiErrorMessage(
+                    error,
+                    'We are sorry, server was not able to generate the material, please, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly'
+                  ),
+                  status: 'error',
+                  duration: 6000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
               }
             }}
             isLoading={generatingLoading}

@@ -52,6 +52,7 @@ import {
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
 import PlanLessonCard from '../Card/PlanLessonCard';
+import { getApiErrorMessage } from '../../utils/apiError';
 import InfoButton from '../UtilityComponents/InfoButton';
 import ProgressBar from '../UtilityComponents/ProgressBar';
 import ModelAPIKey from './ModelAPIKeySelector';
@@ -251,7 +252,6 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
   const toast = useToast();
 
   const handleResponseNewExercise = (response: any, x: number, y: number) => {
-   
     const exerciseResponse: AIExerciseGenerated = {
       ...response.data,
       ...response.data.generated_activities?.[0],
@@ -422,37 +422,17 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                       });
                       return;
                     }
-                    if (error.response)
-                      if (error.response.status) {
-                        if (error.response.status == 500)
-                          toast({
-                            title: 'Material Error',
-                            description:
-                              'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
-                            status: 'error',
-                            duration: 5000,
-                            position: 'bottom-left',
-                            isClosable: true,
-                          });
-                        else if (error.response.status != 200)
-                          toast({
-                            title: 'AI API Error',
-                            description:
-                              'Internal Server error, try again. If the error persists try change material.',
-                            status: 'error',
-                            duration: 5000,
-                            position: 'bottom-left',
-                            isClosable: true,
-                          });
-                      } else
-                        toast({
-                          title: 'Generic Error',
-                          description: 'Try later ' + (error as Error),
-                          status: 'error',
-                          duration: 5000,
-                          position: 'bottom-left',
-                          isClosable: true,
-                        });
+                    toast({
+                      title: 'Material Error',
+                      description: getApiErrorMessage(
+                        error,
+                        'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly'
+                      ),
+                      status: 'error',
+                      duration: 6000,
+                      position: 'bottom-left',
+                      isClosable: true,
+                    });
                   } finally {
                     setGeneratingLoading(false);
                   }
@@ -987,26 +967,17 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                   });
                   return;
                 }
-                if (error.response.status)
-                  toast({
-                    title: 'LearningObjective Error',
-                    description:
-                      'We are sorry, server was not able to generate the learning objective. Please, try again, if the error persists try a different topic',
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                else {
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later: ' + (error as Error).message,
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                }
+                toast({
+                  title: 'LearningObjective Error',
+                  description: getApiErrorMessage(
+                    error,
+                    'We are sorry, server was not able to generate the learning objective. Please, try again, if the error persists try a different topic'
+                  ),
+                  status: 'error',
+                  duration: 6000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
               } finally {
                 setGeneratingLoading(false);
               }
@@ -1489,7 +1460,17 @@ const CreateAILPModal = ({ isOpen, onClose, action }: ModaTemplateProps) => {
                 });
                 router.push('/flows/' + flowResponse.data.id);
               } catch (error) {
-                console.log((error as Error).message);
+                toast({
+                  title: 'Learning Path Error',
+                  description: getApiErrorMessage(
+                    error,
+                    'We are sorry, server was not able to generate the learning path. Please, try again, if the error persists, you should restart.'
+                  ),
+                  status: 'error',
+                  duration: 6000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
               } finally {
                 setGeneratingLoading(false);
               }

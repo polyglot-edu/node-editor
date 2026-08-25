@@ -2,12 +2,10 @@ import { CheckIcon, CloseIcon, DeleteIcon } from '@chakra-ui/icons';
 import {
   Avatar,
   Badge,
-  Box,
   Button,
   Card,
   CardBody,
   CardFooter,
-  Flex,
   Heading,
   HStack,
   IconButton,
@@ -15,7 +13,6 @@ import {
   LinkBox,
   LinkOverlay,
   SpaceProps,
-  Spacer,
   Stack,
   Text,
   Tooltip,
@@ -85,26 +82,26 @@ const FlowCard = ({ flow, px, py, canDelete, setSelected }: FlowCardProps) => {
           </CardBody>
 
           <CardFooter>
-            {!canDelete && (
-              <>
-                <Spacer />
-                <HStack pl={5} spacing="2" align="center" h="full">
-                  <Text fontSize={'xs'}>{flow.author?.username}</Text>
+            <HStack spacing={4} align="center" justify="flex-end" w="full">
+              {!canDelete && (
+                <HStack spacing={2} align="center">
+                  <Text fontSize="xs">{flow.author?.username}</Text>
                   <Avatar name={flow.author?.username} size="sm" />
                 </HStack>
-              </>
-            )}
-            <Flex right={'35px'} bottom={5} position={'absolute'}>
-              {flow.publish ? 'Published' : 'Not published'}:
-              <IconButton
-                size={'xs'}
-                backgroundColor={flow.publish ? 'green.500' : 'red.500'}
-                aria-label={''}
-                left={'5px'}
-              >
-                {flow.publish ? <CheckIcon /> : <CloseIcon />}
-              </IconButton>
-            </Flex>
+              )}
+
+              <HStack spacing={2} align="center">
+                <Text fontSize="xs">
+                  {flow.publish ? 'Published' : 'Not published'}
+                </Text>
+                <IconButton
+                  size="xs"
+                  backgroundColor={flow.publish ? 'green.500' : 'red.500'}
+                  aria-label={flow.publish ? 'Published' : 'Not published'}
+                  icon={flow.publish ? <CheckIcon /> : <CloseIcon />}
+                />
+              </HStack>
+            </HStack>
           </CardFooter>
         </Stack>
       </Card>

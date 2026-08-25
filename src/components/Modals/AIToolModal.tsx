@@ -34,6 +34,7 @@ import {
   QuestionTypeMap,
   Topic,
 } from '../../types/polyglotElements/AIGenerativeTypes/AIGenerativeTypes';
+import { getApiErrorMessage } from '../../utils/apiError';
 import InfoButton from '../UtilityComponents/InfoButton';
 import ModelAPIKey from './ModelAPIKeySelector';
 
@@ -211,37 +212,17 @@ const AIToolModal = ({
                   });
                   return;
                 }
-                if (error.response)
-                  if (error.response.status) {
-                    if (error.response.status == 500)
-                      toast({
-                        title: 'Material Error',
-                        description:
-                          'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly',
-                        status: 'error',
-                        duration: 5000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      });
-                    else if (error.response.status != 200)
-                      toast({
-                        title: 'AI API Error',
-                        description:
-                          'Internal Server error, try again. If the error persists try change material.',
-                        status: 'error',
-                        duration: 5000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      });
-                  } else
-                    toast({
-                      title: 'Generic Error',
-                      description: 'Try later ' + (error as Error),
-                      status: 'error',
-                      duration: 5000,
-                      position: 'bottom-left',
-                      isClosable: true,
-                    });
+                toast({
+                  title: 'Material Error',
+                  description: getApiErrorMessage(
+                    error,
+                    'We are sorry, the resource is not analyzable, try with different material. Do not provide pages that are too long (e.g. Wikipedia pages) or too short, as they can not be analyzed correctly'
+                  ),
+                  status: 'error',
+                  duration: 6000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
               } finally {
                 setGeneratingLoading(false);
               }
@@ -516,25 +497,17 @@ const AIToolModal = ({
                       });
                       return;
                     }
-                    if (error.response?.status)
-                      toast({
-                        title: 'LearningObjective Error',
-                        description:
-                          'We are sorry, server was not able to generate the learning objective. Please, try again, if the error persists try a different topic',
-                        status: 'error',
-                        duration: 5000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      });
-                    else
-                      toast({
-                        title: 'Generic Error',
-                        description: 'Try later ' + (error as Error),
-                        status: 'error',
-                        duration: 5000,
-                        position: 'bottom-left',
-                        isClosable: true,
-                      });
+                    toast({
+                      title: 'LearningObjective Error',
+                      description: getApiErrorMessage(
+                        error,
+                        'We are sorry, server was not able to generate the learning objective. Please, try again, if the error persists try a different topic'
+                      ),
+                      status: 'error',
+                      duration: 6000,
+                      position: 'bottom-left',
+                      isClosable: true,
+                    });
                   } finally {
                     setGeneratingLoading(false);
                   }
@@ -745,7 +718,7 @@ const AIToolModal = ({
                     }
                   );
                   console.log(response.data);
-                  
+
                   const dataGen: AIExerciseGenerated = {
                     ...response.data,
                     ...response.data.generated_activities?.[0],
@@ -873,25 +846,17 @@ const AIToolModal = ({
                   });
                   return;
                 }
-                if (error.response.status)
-                  toast({
-                    title: 'Exercise Error',
-                    description:
-                      'We are sorry, server was not able to generate the exercise. Please, try again, if the error persists, you should restart.',
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                else
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
+                toast({
+                  title: 'Exercise Error',
+                  description: getApiErrorMessage(
+                    error,
+                    'We are sorry, server was not able to generate the exercise. Please, try again, if the error persists, you should restart.'
+                  ),
+                  status: 'error',
+                  duration: 6000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
               } finally {
                 setGeneratingLoading(false);
               }
@@ -972,25 +937,17 @@ const AIToolModal = ({
                   });
                   return;
                 }
-                if (error.response.status)
-                  toast({
-                    title: 'Generation Error',
-                    description:
-                      'We are sorry, server was not able to generate the material. Please, try again, if the error persists, you should restart.',
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
-                else
-                  toast({
-                    title: 'Generic Error',
-                    description: 'Try later ' + (error as Error),
-                    status: 'error',
-                    duration: 5000,
-                    position: 'bottom-left',
-                    isClosable: true,
-                  });
+                toast({
+                  title: 'Generation Error',
+                  description: getApiErrorMessage(
+                    error,
+                    'We are sorry, server was not able to generate the material. Please, try again, if the error persists, you should restart.'
+                  ),
+                  status: 'error',
+                  duration: 6000,
+                  position: 'bottom-left',
+                  isClosable: true,
+                });
               } finally {
                 setGeneratingLoading(false);
               }
